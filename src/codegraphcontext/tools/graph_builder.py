@@ -9,6 +9,7 @@ from datetime import datetime
 
 from ..core.database import DatabaseManager
 from ..core.jobs import JobManager, JobStatus
+from .notebook_parser import NotebookParser
 
 logger = logging.getLogger(__name__)
 
@@ -570,6 +571,7 @@ class GraphBuilder:
         self.job_manager = job_manager
         self.loop = loop  # Store the main event loop
         self.driver = self.db_manager.get_driver()
+        self.notebook_parser = NotebookParser()
         self.create_schema()
 
     def create_schema(self):
@@ -600,13 +602,28 @@ class GraphBuilder:
         imports_map = {}
         for file_path in files:
             try:
-                with open(file_path, "r", encoding="utf-8") as f:
-                    tree = ast.parse(f.read())
-                    for node in ast.walk(tree):
-                        if isinstance(node, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
-                            if node.name not in imports_map:
-                                imports_map[node.name] = []
-                            imports_map[node.name].append(str(file_path.resolve()))
+                if self.notebook_parser.is_notebook_file(file_path):
+                    # Handle notebook files
+                    notebook_data = self.notebook_parser.parse_notebook(file_path, {}, False)
+                    if "error" not in notebook_data:
+                        # Extract Python code and parse it
+                        python_code = self.notebook_parser._extract_python_code_from_notebook(file_path)
+                        if python_code.strip():
+                            tree = ast.parse(python_code)
+                            for node in ast.walk(tree):
+                                if isinstance(node, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
+                                    if node.name not in imports_map:
+                                        imports_map[node.name] = []
+                                    imports_map[node.name].append(str(file_path.resolve()))
+                else:
+                    # Handle regular Python files
+                    with open(file_path, "r", encoding="utf-8") as f:
+                        tree = ast.parse(f.read())
+                        for node in ast.walk(tree):
+                            if isinstance(node, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
+                                if node.name not in imports_map:
+                                    imports_map[node.name] = []
+                                imports_map[node.name].append(str(file_path.resolve()))
             except Exception as e:
                 logger.warning(f"Pre-scan failed for {file_path}: {e}")
         return imports_map
@@ -988,26 +1005,37 @@ class GraphBuilder:
             return {"deleted": True, "path": file_path_str}
 
     def parse_python_file(self, repo_path: Path, file_path: Path, imports_map: dict, is_dependency: bool = False) -> Dict:
-        """Parse a Python file and extract code elements"""
+        """Parse a Python file or notebook and extract code elements"""
         debug_log(f"[parse_python_file] Starting parsing for: {file_path}")
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
-                source_code = f.read()
-            tree = ast.parse(source_code)
-            visitor = CodeVisitor(str(file_path), imports_map, is_dependency)
-            visitor.visit(tree)
-            if debug_mode:
-                debug_log(f"[parse_python_file] Successfully parsed: {file_path}")
-            return {
-                "repo_path": str(repo_path),
-                "file_path": str(file_path),
-                "functions": visitor.functions,
-                "classes": visitor.classes,
-                "variables": visitor.variables,
-                "imports": visitor.imports,
-                "function_calls": visitor.function_calls,
-                "is_dependency": is_dependency,
-            }
+            if self.notebook_parser.is_notebook_file(file_path):
+                # Handle notebook files
+                debug_log(f"[parse_python_file] Parsing notebook: {file_path}")
+                notebook_data = self.notebook_parser.parse_notebook(file_path, imports_map, is_dependency)
+                if "error" not in notebook_data:
+                    notebook_data["repo_path"] = str(repo_path)
+                    if debug_mode:
+                        debug_log(f"[parse_python_file] Successfully parsed notebook: {file_path}")
+                return notebook_data
+            else:
+                # Handle regular Python files
+                with open(file_path, "r", encoding="utf-8") as f:
+                    source_code = f.read()
+                tree = ast.parse(source_code)
+                visitor = CodeVisitor(str(file_path), imports_map, is_dependency)
+                visitor.visit(tree)
+                if debug_mode:
+                    debug_log(f"[parse_python_file] Successfully parsed: {file_path}")
+                return {
+                    "repo_path": str(repo_path),
+                    "file_path": str(file_path),
+                    "functions": visitor.functions,
+                    "classes": visitor.classes,
+                    "variables": visitor.variables,
+                    "imports": visitor.imports,
+                    "function_calls": visitor.function_calls,
+                    "is_dependency": is_dependency,
+                }
         except Exception as e:
             logger.error(f"Error parsing {file_path}: {e}")
             debug_log(f"[parse_python_file] Error parsing {file_path}: {e}")
@@ -1019,7 +1047,10 @@ class GraphBuilder:
             if path.is_file():
                 files = [path]
             else:
-                files = list(path.rglob("*.py"))
+                # Include both Python files and notebook files
+                python_files = list(path.rglob("*.py"))
+                notebook_files = list(path.rglob("*.ipynb"))
+                files = python_files + notebook_files
             
             total_files = len(files)
             # Simple heuristic: 0.1 seconds per file
@@ -1040,7 +1071,13 @@ class GraphBuilder:
             self.add_repository_to_graph(path, is_dependency)
             repo_name = path.name
 
-            files = list(path.rglob("*.py")) if path.is_dir() else [path]
+            if path.is_dir():
+                # Include both Python files and notebook files
+                python_files = list(path.rglob("*.py"))
+                notebook_files = list(path.rglob("*.ipynb"))
+                files = python_files + notebook_files
+            else:
+                files = [path]
             if job_id:
                 self.job_manager.update_job(job_id, total_files=len(files))
             
@@ -1079,6 +1116,9 @@ class GraphBuilder:
                 self.job_manager.update_job(
                     job_id, status=JobStatus.FAILED, end_time=datetime.now(), errors=[str(e)]
                 )
+        finally:
+            # Clean up temporary files created by notebook parser
+            self.notebook_parser.cleanup_temp_files()
 
     def add_code_to_graph_tool(
         self, path: str, is_dependency: bool = False
