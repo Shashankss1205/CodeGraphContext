@@ -36,7 +36,10 @@ class RepositoryEventHandler(FileSystemEventHandler):
     def _initial_scan(self):
         """Scans the entire repository and builds the initial graph."""
         logger.info(f"Performing initial scan for watcher: {self.repo_path}")
-        all_files = list(self.repo_path.rglob("*.py"))
+        # Include both Python files and notebook files
+        python_files = list(self.repo_path.rglob("*.py"))
+        notebook_files = list(self.repo_path.rglob("*.ipynb"))
+        all_files = python_files + notebook_files
         
         # 1. Pre-scan for the global import map
         self.imports_map = self.graph_builder._pre_scan_for_imports(all_files)
@@ -85,21 +88,25 @@ class RepositoryEventHandler(FileSystemEventHandler):
         self.graph_builder._create_all_function_calls(self.all_file_data, self.imports_map)
         logger.info(f"Graph update for {event_path_str} complete! ✅")
 
+    def _is_relevant_file(self, file_path):
+        """Check if the file is a Python file or notebook file."""
+        return file_path.endswith('.py') or file_path.endswith('.ipynb')
+
     def on_created(self, event):
-        if not event.is_directory and event.src_path.endswith('.py'):
+        if not event.is_directory and self._is_relevant_file(event.src_path):
             self._debounce(event.src_path, lambda: self._handle_modification(event.src_path))
 
     def on_modified(self, event):
-        if not event.is_directory and event.src_path.endswith('.py'):
+        if not event.is_directory and self._is_relevant_file(event.src_path):
             self._debounce(event.src_path, lambda: self._handle_modification(event.src_path))
 
     def on_deleted(self, event):
-        if not event.is_directory and event.src_path.endswith('.py'):
+        if not event.is_directory and self._is_relevant_file(event.src_path):
             # Deletion is handled inside _handle_modification
             self._debounce(event.src_path, lambda: self._handle_modification(event.src_path))
 
     def on_moved(self, event):
-        if not event.is_directory and event.src_path.endswith('.py'):
+        if not event.is_directory and self._is_relevant_file(event.src_path):
             # A move is a deletion from the old path and a creation at the new path
             self._debounce(event.src_path, lambda: self._handle_modification(event.src_path))
             self._debounce(event.dest_path, lambda: self._handle_modification(event.dest_path))
