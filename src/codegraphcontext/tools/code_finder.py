@@ -284,14 +284,18 @@ class CodeFinder:
                 MATCH (file:File)-[imp:IMPORTS]->(module:Module)
                 WHERE module.name = $module_name OR module.full_import_name CONTAINS $module_name
                 OPTIONAL MATCH (repo:Repository)-[:CONTAINS]->(file)
-                RETURN DISTINCT
-                    file.name as file_name,
-                    file.path as file_path,
-                    file.relative_path as file_relative_path,
-                    module.name as imported_module,
-                    module.alias as import_alias,
-                    file.is_dependency as file_is_dependency,
-                    repo.name as repository_name
+                WITH file, repo, COLLECT({
+                    imported_module: module.name,
+                    import_alias: module.alias,
+                    full_import_name: module.full_import_name
+                }) AS imports
+                RETURN
+                    file.name AS file_name,
+                    file.path AS file_path,
+                    file.relative_path AS file_relative_path,
+                    file.is_dependency AS file_is_dependency,
+                    repo.name AS repository_name,
+                    imports
                 ORDER BY file.is_dependency ASC, file.path
                 LIMIT 20
             """, module_name=module_name)
@@ -329,11 +333,17 @@ class CodeFinder:
             
             return [dict(record) for record in result]
     
-    def find_class_hierarchy(self, class_name: str) -> Dict[str, Any]:
+    def find_class_hierarchy(self, class_name: str, file_path: str = None) -> Dict[str, Any]:
         """Find class inheritance relationships using INHERITS_FROM relationships"""
         with self.driver.session() as session:
-            parents_result = session.run("""
-                MATCH (child:Class {name: $class_name})-[:INHERITS_FROM]->(parent:Class)
+            if file_path:
+                match_clause = "MATCH (child:Class {name: $class_name, file_path: $file_path})"
+            else:
+                match_clause = "MATCH (child:Class {name: $class_name})"
+
+            parents_query = f"""
+                {match_clause}
+                MATCH (child)-[:INHERITS_FROM]->(parent:Class)
                 OPTIONAL MATCH (parent_file:File)-[:CONTAINS]->(parent)
                 RETURN DISTINCT
                     parent.name as parent_class,
@@ -342,22 +352,26 @@ class CodeFinder:
                     parent.docstring as parent_docstring,
                     parent.is_dependency as parent_is_dependency
                 ORDER BY parent.is_dependency ASC, parent.name
-            """, class_name=class_name)
+            """
+            parents_result = session.run(parents_query, class_name=class_name, file_path=file_path)
             
-            children_result = session.run("""
-                MATCH (child:Class)-[:INHERITS_FROM]->(parent:Class {name: $class_name})
-                OPTIONAL MATCH (child_file:File)-[:CONTAINS]->(child)
+            children_query = f"""
+                {match_clause}
+                MATCH (grandchild:Class)-[:INHERITS_FROM]->(child)
+                OPTIONAL MATCH (child_file:File)-[:CONTAINS]->(grandchild)
                 RETURN DISTINCT
-                    child.name as child_class,
-                    child.file_path as child_file_path,
-                    child.line_number as child_line_number,
-                    child.docstring as child_docstring,
-                    child.is_dependency as child_is_dependency
-                ORDER BY child.is_dependency ASC, child.name
-            """, class_name=class_name)
+                    grandchild.name as child_class,
+                    grandchild.file_path as child_file_path,
+                    grandchild.line_number as child_line_number,
+                    grandchild.docstring as child_docstring,
+                    grandchild.is_dependency as child_is_dependency
+                ORDER BY grandchild.is_dependency ASC, grandchild.name
+            """
+            children_result = session.run(children_query, class_name=class_name, file_path=file_path)
             
-            methods_result = session.run("""
-                MATCH (class:Class {name: $class_name})-[:CONTAINS]->(method:Function)
+            methods_query = f"""
+                {match_clause}
+                MATCH (child)-[:CONTAINS]->(method:Function)
                 RETURN DISTINCT
                     method.name as method_name,
                     method.file_path as method_file_path,
@@ -366,7 +380,8 @@ class CodeFinder:
                     method.docstring as method_docstring,
                     method.is_dependency as method_is_dependency
                 ORDER BY method.is_dependency ASC, method.line_number
-            """, class_name=class_name)
+            """
+            methods_result = session.run(methods_query, class_name=class_name, file_path=file_path)
             
             return {
                 "class_name": class_name,
@@ -618,7 +633,7 @@ class CodeFinder:
                 }
             
             elif query_type in ["class_hierarchy", "inheritance", "extends"]:
-                results = self.find_class_hierarchy(target)
+                results = self.find_class_hierarchy(target, context)
                 return {
                     "query_type": "class_hierarchy", "target": target, "results": results,
                     "summary": f"Class '{target}' has {len(results['parent_classes'])} parents, {len(results['child_classes'])} children, and {len(results['methods'])} methods"

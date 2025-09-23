@@ -1,15 +1,20 @@
+
 # src/codegraphcontext/tools/graph_builder.py
 import asyncio
-import ast
 import logging
 import os
 from pathlib import Path
 from typing import Any, Coroutine, Dict, Optional, Tuple
 from datetime import datetime
+import ast
 
 from ..core.database import DatabaseManager
 from ..core.jobs import JobManager, JobStatus
 from ..utils.debug_log import debug_log
+
+# New imports for tree-sitter
+from tree_sitter import Language, Parser
+from tree_sitter_languages import get_language
 
 logger = logging.getLogger(__name__)
 
@@ -17,542 +22,325 @@ logger = logging.getLogger(__name__)
 # Set to 1 to enable, 0 to disable.
 debug_mode = 0
 
-class CyclomaticComplexityVisitor(ast.NodeVisitor):
-    """Calculates cyclomatic complexity for a given AST node."""
-    def __init__(self):
-        self.complexity = 1
+# Define tree-sitter queries for Python
+PY_QUERIES = {
+    "imports": """
+        (import_statement name: (_) @import)
+        (import_from_statement module_name: (_) @from_import)
+    """,
+    "classes": """
+        (class_definition
+            name: (identifier) @name
+            superclasses: (argument_list)? @superclasses
+            body: (block) @body)
+    """,
+    "functions": """
+        (function_definition
+            name: (identifier) @name
+            parameters: (parameters) @parameters
+            body: (block) @body
+            return_type: (_)? @return_type)
+    """,
+    "calls": """
+        (call
+            function: (identifier) @name)
+        (call
+            function: (attribute attribute: (identifier) @name) @full_call)
+    """,
+    "variables": """
+        (assignment
+            left: (identifier) @name
+            right: _ @value)
+    """,
+    "lambda_assignments": """
+        (assignment
+            left: (identifier) @name
+            right: (lambda) @lambda_node)
+    """, # <<< MY NEW QUERY
+    "docstrings": """
+        (expression_statement (string) @docstring)
+    """,
+}
 
-    def visit_If(self, node):
-        self.complexity += 1
-        self.generic_visit(node)
+class TreeSitterParser:
+    """A parser for a specific language using tree-sitter."""
 
-    def visit_For(self, node):
-        self.complexity += 1
-        self.generic_visit(node)
+    def __init__(self, language_name: str):
+        self.language: Language = get_language(language_name)
+        self.parser = Parser()
+        self.parser.set_language(self.language)
 
-    def visit_While(self, node):
-        self.complexity += 1
-        self.generic_visit(node)
+        if language_name == 'python':
+            self.queries = {
+                name: self.language.query(query_str)
+                for name, query_str in PY_QUERIES.items()
+            }
 
-    def visit_With(self, node):
-        self.complexity += len(node.items)
-        self.generic_visit(node)
+    def _get_node_text(self, node) -> str:
+        return node.text.decode('utf-8')
 
-    def visit_AsyncFor(self, node):
-        self.complexity += 1
-        self.generic_visit(node)
+    def _get_parent_context(self, node, types=('function_definition', 'class_definition')):
+        curr = node.parent
+        while curr:
+            if curr.type in types:
+                name_node = curr.child_by_field_name('name')
+                return self._get_node_text(name_node) if name_node else None, curr.type, curr.start_point[0] + 1
+            curr = curr.parent
+        return None, None, None
 
-    def visit_AsyncWith(self, node):
-        self.complexity += len(node.items)
-        self.generic_visit(node)
-
-    def visit_ExceptHandler(self, node):
-        self.complexity += 1
-        self.generic_visit(node)
-
-    def visit_BoolOp(self, node):
-        self.complexity += len(node.values) - 1
-        self.generic_visit(node)
-
-    def visit_ListComp(self, node):
-        self.complexity += len(node.generators)
-        self.generic_visit(node)
-
-    def visit_SetComp(self, node):
-        self.complexity += len(node.generators)
-        self.generic_visit(node)
-
-    def visit_DictComp(self, node):
-        self.complexity += len(node.generators)
-        self.generic_visit(node)
-
-    def visit_GeneratorExp(self, node):
-        self.complexity += len(node.generators)
-        self.generic_visit(node)
-
-    def visit_IfExp(self, node):
-        self.complexity += 1
-        self.generic_visit(node)
-
-    def visit_match_case(self, node):
-        self.complexity += 1
-        self.generic_visit(node)
-
-
-class CodeVisitor(ast.NodeVisitor):
-    """
-    The final, definitive, stateful AST visitor. It correctly maintains
-    class-level, local-level, and module-level symbol tables to resolve complex calls.
-    """
-
-    def __init__(self, file_path: str, imports_map: dict, is_dependency: bool = False):
-        self.file_path = file_path
-        self.is_dependency = is_dependency
-        self.imports_map = imports_map
-        self.functions, self.classes, self.variables, self.imports, self.function_calls = [], [], [], [], []
-        self.context_stack, self.current_context, self.current_class = [], None, None
+    def _calculate_complexity(self, node):
+        complexity_nodes = {
+            "if_statement", "for_statement", "while_statement", "except_clause",
+            "with_statement", "boolean_operator", "list_comprehension", 
+            "generator_expression", "case_clause"
+        }
+        count = 1
         
-        # Stateful Symbol Tables
-        self.local_symbol_table = {}
-        self.class_symbol_table = {}
-        self.module_symbol_table = {}
-
-    def _push_context(self, name, node_type, line_number):
-        self.context_stack.append({"name": name, "type": node_type, "line_number": line_number, "previous_context": self.current_context, "previous_class": self.current_class})
-        self.current_context = name
-        if node_type == "class": self.current_class = name
-
-    def _pop_context(self):
-        if self.context_stack:
-            prev = self.context_stack.pop()
-            self.current_context, self.current_class = prev["previous_context"], prev["previous_class"]
-
-    def get_return_type_from_ast(self, file_path, class_name, method_name):
-        if not file_path or not Path(file_path).exists():
-            return None
-        with open(file_path, 'r', encoding='utf-8') as source_file:
-            try:
-                tree = ast.parse(source_file.read())
-            except (SyntaxError, ValueError):
-                return None
+        def traverse(n):
+            nonlocal count
+            if n.type in complexity_nodes:
+                count += 1
+            for child in n.children:
+                traverse(child)
         
-        for node in ast.walk(tree):
-            if isinstance(node, ast.ClassDef) and node.name == class_name:
-                for method_node in node.body:
-                    if isinstance(method_node, (ast.FunctionDef, ast.AsyncFunctionDef)) and method_node.name == method_name:
-                        # Case 1: The method has an explicit return type hint
-                        if method_node.returns:
-                            # Unparse and strip quotes to handle forward references like "'PublicKey'"
-                            return ast.unparse(method_node.returns).strip("'\"")
+        traverse(node)
+        return count
 
-                        # Create a mini symbol table for the scope of this method
-                        local_assignments = {}
-                        for body_item in method_node.body:
-                            if (isinstance(body_item, ast.Assign) and 
-                                isinstance(body_item.value, ast.Call) and
-                                isinstance(body_item.value.func, ast.Name) and
-                                isinstance(body_item.targets[0], ast.Name)):
-                                    variable_name = body_item.targets[0].id
-                                    class_name_assigned = body_item.value.func.id
-                                    local_assignments[variable_name] = class_name_assigned
-
-                        # Now, check the return statements from the bottom up
-                        for body_item in reversed(method_node.body):
-                            if isinstance(body_item, ast.Return):
-                                # Case 2: It returns a direct instantiation (e.g., return MyClass())
-                                if (isinstance(body_item.value, ast.Call) and
-                                    isinstance(body_item.value.func, ast.Name)):
-                                    return body_item.value.func.id
-                                
-                                # Case 3: It returns a variable that was assigned earlier (e.g., return my_var)
-                                if (isinstance(body_item.value, ast.Name) and
-                                    body_item.value.id in local_assignments):
-                                    return local_assignments[body_item.value.id]
-        return None
-    def _resolve_type_from_call(self, node: ast.Call):
-        if not isinstance(node.func, ast.Attribute): return None
-        
-        # Case 1: Base of the call is a simple name, e.g., `var.method()`
-        if isinstance(node.func.value, ast.Name):
-            obj_name = node.func.value.id
-            method_name = node.func.attr
-            # Check local, then class, then module scopes
-            obj_type = (self.local_symbol_table.get(obj_name) or 
-                        self.class_symbol_table.get(obj_name) or
-                        self.module_symbol_table.get(obj_name))
-            if obj_type:
-                paths = self.imports_map.get(obj_type, [])
-                if paths: return self.get_return_type_from_ast(paths[0], obj_type, method_name)
-        
-        # Case 2: Base of the call is another call (a chain), e.g., `var.method1().method2()`
-        elif isinstance(node.func.value, ast.Call):
-            intermediate_type = self._resolve_type_from_call(node.func.value)
-            if intermediate_type:
-                method_name = node.func.attr
-                paths = self.imports_map.get(intermediate_type, [])
-                if paths: return self.get_return_type_from_ast(paths[0], intermediate_type, method_name)
+    def _get_docstring(self, body_node):
+        if body_node and body_node.child_count > 0:
+            first_child = body_node.children[0]
+            if first_child.type == 'expression_statement' and first_child.children[0].type == 'string':
+                try:
+                    return ast.literal_eval(self._get_node_text(first_child.children[0]))
+                except (ValueError, SyntaxError):
+                    return self._get_node_text(first_child.children[0])
         return None
 
-    def visit_ClassDef(self, node):
-        self.class_symbol_table = {}
+    def parse(self, file_path: Path, is_dependency: bool = False) -> Dict:
+        """Parses a file and returns its structure in a standardized dictionary format."""
+        with open(file_path, "r", encoding="utf-8") as f:
+            source_code = f.read()
         
-        class_data = {"name": node.name, "line_number": node.lineno,
-                      "end_line": getattr(node, 'end_lineno', None),
-                      "bases": [ast.unparse(b) for b in node.bases],
-                      "source": ast.unparse(node), "context": self.current_context,
-                      "is_dependency": self.is_dependency, "docstring": ast.get_docstring(node),
-                      "decorators": [ast.unparse(d) for d in node.decorator_list]}
-        self.classes.append(class_data)
+        tree = self.parser.parse(bytes(source_code, "utf8"))
+        root_node = tree.root_node
 
-        self._push_context(node.name, "class", node.lineno)
+        functions = self._find_functions(root_node)
+        functions.extend(self._find_lambda_assignments(root_node)) # <<< MY CHANGE
+        classes = self._find_classes(root_node)
+        imports = self._find_imports(root_node)
+        function_calls = self._find_calls(root_node)
+        variables = self._find_variables(root_node)
 
-        # Pre-pass to populate class symbol table from __init__ or setUp
-        for method_node in node.body:
-            if isinstance(method_node, ast.FunctionDef) and method_node.name in ('__init__', 'setUp'):
-                self._handle_constructor_assignments(method_node)
-        
-        # Visit all children of the class now
-        self.generic_visit(node)
-        self._pop_context()
-        self.class_symbol_table = {}
-
-    def _handle_constructor_assignments(self, constructor_node: ast.FunctionDef):
-        """
-        Infers types for class attributes assigned from constructor arguments.
-        This fixes the `self.job_manager = job_manager` case.
-        """
-        # Get a map of argument names to their type hints (as strings)
-        arg_types = {
-            arg.arg: ast.unparse(arg.annotation)
-            for arg in constructor_node.args.args
-            if arg.annotation
+        return {
+            "file_path": str(file_path),
+            "functions": functions,
+            "classes": classes,
+            "variables": variables,
+            "imports": imports,
+            "function_calls": function_calls,
+            "is_dependency": is_dependency,
         }
 
-        # Scan the body of the constructor for assignments
-        for body_node in ast.walk(constructor_node):
-            if isinstance(body_node, ast.Assign):
-                # Check for assignments like `self.attr = arg`
-                if (
-                    isinstance(body_node.targets[0], ast.Attribute)
-                    and isinstance(body_node.targets[0].value, ast.Name)
-                    and body_node.targets[0].value.id == "self"
-                    and isinstance(body_node.value, ast.Name)
-                ):
-                    attr_name = body_node.targets[0].attr
-                    arg_name = body_node.value.id
-                    
-                    if arg_name in arg_types:
-                        # We found a match! Infer the type and add it to the symbol table.
-                        self.class_symbol_table[attr_name] = arg_types[arg_name]
-                        debug_log(f"Inferred type for self.{attr_name}: {arg_types[arg_name]}")
+    # <<< MY NEW METHOD
+    def _find_lambda_assignments(self, root_node):
+        functions = []
+        query = self.queries.get('lambda_assignments')
+        if not query: return []
 
+        for match in query.captures(root_node):
+            capture_name = match[1]
+            node = match[0]
 
-    def visit_FunctionDef(self, node):
-        # The class pre-pass will handle setUp/__init__, so we reset the local table here
-        if node.name not in ('__init__', 'setUp'):
-            self.local_symbol_table = {}
-        func_data = {"name": node.name, "line_number": node.lineno,
-                     "end_line": getattr(node, 'end_lineno', None),
-                     "args": [arg.arg for arg in node.args.args], "source": ast.unparse(node),
-                     "context": self.current_context, "class_context": self.current_class,
-                     "is_dependency": self.is_dependency, "docstring": ast.get_docstring(node),
-                     "decorators": [ast.unparse(d) for d in node.decorator_list],
-                     "source_code": ast.unparse(node)} # Add source_code here
-        self.functions.append(func_data)
-        self.functions.append(func_data)
-        self._push_context(node.name, "function", node.lineno)
-        # This will trigger visit_Assign and visit_Call for nodes inside the function
-        self.generic_visit(node)
-        self._pop_context()
+            if capture_name == 'name':
+                assignment_node = node.parent
+                lambda_node = assignment_node.child_by_field_name('right')
+                name = self._get_node_text(node)
+                params_node = lambda_node.child_by_field_name('parameters')
+                
+                context, context_type, _ = self._get_parent_context(assignment_node)
+                class_context, _, _ = self._get_parent_context(assignment_node, types=('class_definition',))
 
-    def visit_Assign(self, node):
-        assigned_type = None
-        # Manual check for nested calls to ensure they are processed
-        if isinstance(node.value, ast.Call):
-            # Now determine the type for the assignment target
-            if isinstance(node.value.func, ast.Name):
-                assigned_type = node.value.func.id
-            elif isinstance(node.value.func, ast.Attribute):
-                assigned_type = self._resolve_type_from_call(node.value)
+                func_data = {
+                    "name": name,
+                    "line_number": node.start_point[0] + 1,
+                    "end_line": assignment_node.end_point[0] + 1,
+                    "args": [p for p in [self._get_node_text(p) for p in params_node.children if p.type == 'identifier'] if p] if params_node else [],
+                    "source": self._get_node_text(assignment_node),
+                    "source_code": self._get_node_text(assignment_node),
+                    "docstring": None,
+                    "cyclomatic_complexity": 1,
+                    "context": context,
+                    "context_type": context_type,
+                    "class_context": class_context,
+                    "decorators": [],
+                    "is_dependency": False,
+                }
+                functions.append(func_data)
+        return functions
+    # >>> END OF NEW METHOD
 
-                # If the main resolver fails, it's likely a class/static method call
-                # like `addr = P2shAddress.from_script(...)`. We apply a heuristic:
-                # assume the method returns an instance of its own class.
-                if not assigned_type and isinstance(node.value.func.value, ast.Name):
-                    # `node.value.func.value.id` will be 'P2shAddress' in this case
-                    class_name = node.value.func.value.id
-                    
-                    # We can add a check to be safer: does this name correspond to an import?
-                    # This check makes the heuristic much more reliable.
-                    if class_name in self.imports_map:
-                         assigned_type = class_name
-        # Handle assignments from a different variable `var = another_var`
-        elif isinstance(node.value, ast.Name):
-            assigned_type = (self.local_symbol_table.get(node.value.id) or
-                            self.class_symbol_table.get(node.value.id) or
-                            self.module_symbol_table.get(node.value.id))
-        
-        if assigned_type and isinstance(assigned_type, str):
-            assigned_type = assigned_type.strip("'\"")
+    def _find_functions(self, root_node):
+        functions = []
+        query = self.queries['functions']
+        for match in query.captures(root_node):
+            capture_name = match[1]
+            node = match[0]
 
-        # Part 1: Populate symbol tables correctly
-        if assigned_type:
-            for target in node.targets:
-                if isinstance(target, ast.Attribute) and hasattr(target.value, 'id') and target.value.id == 'self':
-                    self.class_symbol_table[target.attr] = assigned_type
-                elif isinstance(target, ast.Name):
-                    if self.current_context is None and self.current_class is None:
-                        # This is a top-level assignment
-                        self.module_symbol_table[target.id] = assigned_type
-                    else:
-                        # This is a local assignment
-                        self.local_symbol_table[target.id] = assigned_type
-        
-        # Part 2: Collect variable data for the graph
-        for target in node.targets:
-            # The key change is here: check for both simple names AND 'self.attribute'
-            if isinstance(target, ast.Name):
-                var_name = target.id
-            elif isinstance(target, ast.Attribute) and isinstance(target.value, ast.Name) and target.value.id == 'self':
-                var_name = f"self.{target.attr}"
-            else:
-                continue # Currently skips other types of assignments like tuple unpacking
+            if capture_name == 'name':
+                func_node = node.parent
+                name = self._get_node_text(node)
+                params_node = func_node.child_by_field_name('parameters')
+                body_node = func_node.child_by_field_name('body')
+                
+                decorators = [self._get_node_text(child) for child in func_node.children if child.type == 'decorator']
 
-            var_data = {
-                "name": var_name,
-                "line_number": node.lineno,
-                "value": ast.unparse(node.value) if hasattr(ast, "unparse") else "",
-                "context": self.current_context,
-                "class_context": self.current_class,
-                "is_dependency": self.is_dependency,
-            }
-            self.variables.append(var_data)
-        
-        # Now call generic_visit to ensure nested nodes (like calls) are processed
-        self.generic_visit(node)
+                context, context_type, _ = self._get_parent_context(func_node)
+                class_context, _, _ = self._get_parent_context(func_node, types=('class_definition',))
 
-    def visit_AsyncFunctionDef(self, node):
-        """Visit async function definitions"""
-        self.visit_FunctionDef(node)
+                args = []
+                if params_node:
+                    for p in params_node.children:
+                        arg_text = None
+                        if p.type == 'identifier':
+                            arg_text = self._get_node_text(p)
+                        elif p.type == 'default_parameter':
+                            name_node = p.child_by_field_name('name')
+                            if name_node:
+                                arg_text = self._get_node_text(name_node)
+                        if arg_text:
+                            args.append(arg_text)
 
-    def visit_AnnAssign(self, node):
-        """Visit annotated assignments (type hints)"""
-        if isinstance(node.target, ast.Name):
-            var_data = {
-                "name": node.target.id,
-                "line_number": node.lineno,
-                "value": (
-                    ast.unparse(node.value)
-                    if node.value and hasattr(ast, "unparse")
-                    else ""
-                ),
-                "context": self.current_context,
-                "class_context": self.current_class,
-                "is_dependency": self.is_dependency,
-            }
-            self.variables.append(var_data)
-        self.generic_visit(node)
+                func_data = {
+                    "name": name,
+                    "line_number": node.start_point[0] + 1,
+                    "end_line": func_node.end_point[0] + 1,
+                    "args": args,
+                    "source": self._get_node_text(func_node),
+                    "source_code": self._get_node_text(func_node),
+                    "docstring": self._get_docstring(body_node),
+                    "cyclomatic_complexity": self._calculate_complexity(func_node),
+                    "context": context,
+                    "context_type": context_type,
+                    "class_context": class_context,
+                    "decorators": [d for d in decorators if d],
+                    "is_dependency": False,
+                }
+                functions.append(func_data)
+        return functions
 
-    def visit_Import(self, node):
-        """Visit import statements"""
-        for name in node.names:
-            import_data = {
-                "name": name.name.split('.')[0], # Store the top-level package name
-                "full_import_name": name.name, # Store the full import name
-                "line_number": node.lineno,
-                "alias": name.asname,
-                "context": self.current_context,
-                "is_dependency": self.is_dependency,
-            }
-            self.imports.append(import_data)
-        self.generic_visit(node)
+    def _find_classes(self, root_node):
+        classes = []
+        query = self.queries['classes']
+        for match in query.captures(root_node):
+            capture_name = match[1]
+            node = match[0]
 
-    def visit_ImportFrom(self, node):
-        """
-        Visit from-import statements, now correctly capturing the relative path.
-        """
-        # Create the relative path prefix (e.g., '.', '..') based on the level.
-        prefix = '.' * node.level
+            if capture_name == 'name':
+                class_node = node.parent
+                name = self._get_node_text(node)
+                body_node = class_node.child_by_field_name('body')
+                superclasses_node = class_node.child_by_field_name('superclasses')
+                
+                bases = []
+                if superclasses_node:
+                    bases = [self._get_node_text(child) for child in superclasses_node.children if child.type in ('identifier', 'attribute')]
 
-        for alias in node.names:
-            # If node.module is None, it's an import like `from . import name`
-            # Determine the base module name for the 'name' property
-            if node.module:
-                # For 'from .module import name', base_module is 'module'
-                # For 'from package.module import name', base_module is 'package'
-                base_module = node.module.split('.')[0]
-                full_import_name = f"{prefix}{node.module}.{alias.name}"
-            else:
-                # For 'from . import name', base_module is 'name'
-                base_module = alias.name
-                full_import_name = f"{prefix}{alias.name}"
+                decorators = [self._get_node_text(child) for child in class_node.children if child.type == 'decorator']
 
-            import_data = {
-                "name": base_module,  # Store the top-level module name
-                "full_import_name": full_import_name, # Store the full import path
-                "line_number": node.lineno,
-                "alias": alias.asname,
-                "context": self.current_context,
-                "is_dependency": self.is_dependency,
-            }
-            self.imports.append(import_data)
+                context, _, _ = self._get_parent_context(class_node)
 
-    def _resolve_attribute_base_type(self, node: ast.Attribute) -> Optional[str]:
-        """
-        Recursively traverses an attribute chain (e.g., self.manager.db)
-        to find the type of the final attribute.
-        """
-        base_node = node.value
-        current_type = None
+                class_data = {
+                    "name": name,
+                    "line_number": node.start_point[0] + 1,
+                    "end_line": class_node.end_point[0] + 1,
+                    "bases": [b for b in bases if b],
+                    "source": self._get_node_text(class_node),
+                    "docstring": self._get_docstring(body_node),
+                    "context": context,
+                    "decorators": [d for d in decorators if d],
+                    "is_dependency": False,
+                }
+                classes.append(class_data)
+        return classes
 
-        # Step 1: Find the type of the initial object in the chain
-        if isinstance(base_node, ast.Name):
-            obj_name = base_node.id
-            if obj_name == 'self':
-                current_type = self.current_class
-            else:
-                # Check local, then class, then module scopes
-                current_type = (self.local_symbol_table.get(obj_name) or
-                                self.class_symbol_table.get(obj_name) or
-                                self.module_symbol_table.get(obj_name))
-        
-        elif isinstance(base_node, ast.Call):
-            current_type = self._resolve_type_from_call(base_node) # You can keep your existing call resolver
-        
-        elif isinstance(base_node, ast.Attribute):
-             # It's a nested attribute, recurse! e.g., self.a.b
-            current_type = self._resolve_attribute_base_type(base_node)
+    def _find_imports(self, root_node):
+        imports = []
+        seen_modules = set()
+        query = self.queries['imports']
+        for node, capture_name in query.captures(root_node):
+            if capture_name in ('import', 'from_import'):
+                full_name = self._get_node_text(node)
 
+                if full_name in seen_modules:
+                    continue
+                seen_modules.add(full_name)
 
-        # Step 2: If we found the base type, now find the type of the final attribute
-        if current_type:
-            paths = self.imports_map.get(current_type, [])
-            if paths:
-                # This is a simplification; a better implementation would need to
-                # parse the class file to find the type of the 'attr'
-                # For now, I assume a direct method call on the found type
-                return_type = self.get_return_type_from_ast(paths[0], current_type, node.attr)
-                # If get_return_type_from_ast finds a return type, that's our new type.
-                # If not, we can assume the attribute itself is of a certain type
-                # This part is complex and may require parsing the class file for assignments.
-                # For the current problem, just knowing the `current_type` is enough.
-                # Let's modify the goal to return the type of the object *containing* the method.
-                return current_type # Return the type of the object, e.g., 'JobManager'
+                import_data = {
+                    "name": full_name,
+                    "full_import_name": full_name,
+                    "line_number": node.start_point[0] + 1,
+                    "alias": None,
+                    "context": self._get_parent_context(node)[:2],
+                    "is_dependency": False,
+                }
+                imports.append(import_data)
+        return imports
 
-        return None
+    def _find_calls(self, root_node):
+        calls = []
+        query = self.queries['calls']
+        for node, capture_name in query.captures(root_node):
+            if capture_name == 'name':
+                call_node = node.parent if node.parent.type == 'call' else node.parent.parent
+                full_call_node = call_node.child_by_field_name('function')
+                
+                args = []
+                arguments_node = call_node.child_by_field_name('arguments')
+                if arguments_node:
+                    for arg in arguments_node.children:
+                        arg_text = self._get_node_text(arg)
+                        if arg_text is not None:
+                            args.append(arg_text)
 
-    def visit_Call(self, node):
-        """Visit function calls with enhanced detection"""
-        call_name = None
-        full_call_name = None
+                call_data = {
+                    "name": self._get_node_text(node),
+                    "full_name": self._get_node_text(full_call_node),
+                    "line_number": node.start_point[0] + 1,
+                    "args": args,
+                    "inferred_obj_type": None, # Type inference is a complex topic to be added
+                    "context": self._get_parent_context(node),
+                    "class_context": self._get_parent_context(node, types=('class_definition',))[:2],
+                    "is_dependency": False,
+                }
+                calls.append(call_data)
+        return calls
 
-        try:
-            full_call_name = ast.unparse(node.func)
-            if isinstance(node.func, ast.Name):
-                call_name = node.func.id
-            elif isinstance(node.func, ast.Attribute):
-                call_name = node.func.attr
-            else:
-                call_name = full_call_name
-        except Exception:
-            self.generic_visit(node)
-            return
-        
-        try:
-            call_args = [ast.unparse(arg) for arg in node.args]
-        except Exception:
-            call_args = []
+    def _find_variables(self, root_node):
+        variables = []
+        query = self.queries['variables']
+        for match in query.captures(root_node):
+            capture_name = match[1]
+            node = match[0]
 
-        inferred_obj_type = None
-        if isinstance(node.func, ast.Attribute):
-            base_obj_node = node.func.value
+            if capture_name == 'name':
+                assignment_node = node.parent
+                name = self._get_node_text(node)
+                value_node = assignment_node.child_by_field_name('right')
+                value = self._get_node_text(value_node) if value_node else None
+                
+                context, _, _ = self._get_parent_context(node)
+                class_context, _, _ = self._get_parent_context(node, types=('class_definition',))
 
-            if isinstance(base_obj_node, ast.Name):
-                obj_name = base_obj_node.id
-                if obj_name == 'self':
-                    # If the base is 'self', find the type of the attribute on the current class
-                    inferred_obj_type = self.class_symbol_table.get(node.func.attr)
-                    if not inferred_obj_type: # Fallback for method calls directly on self
-                        inferred_obj_type = self.current_class
-                else:
-                    inferred_obj_type = (self.local_symbol_table.get(obj_name) or
-                                        self.class_symbol_table.get(obj_name) or
-                                        self.module_symbol_table.get(obj_name))
-                    # If it's not a variable, it might be a direct call on a Class name.
-                    if not inferred_obj_type and obj_name in self.imports_map:
-                        inferred_obj_type = obj_name
-
-            elif isinstance(base_obj_node, ast.Call):
-                inferred_obj_type = self._resolve_type_from_call(base_obj_node)
-
-            elif isinstance(base_obj_node, ast.Attribute): # e.g., self.job_manager
-                # This handles nested attributes
-                # The goal is to find the type of `self.job_manager`, which is 'JobManager'
-
-                # Resolve the base of the chain, e.g., get 'self' from 'self.job_manager'
-                base = base_obj_node
-                while isinstance(base, ast.Attribute):
-                    base = base.value
-
-                if isinstance(base, ast.Name) and base.id == 'self':
-                    # In self.X.Y... The attribute we care about is the first one, X
-                    attr_name = base_obj_node.attr
-                    inferred_obj_type = self.class_symbol_table.get(attr_name)
-
-        elif isinstance(node.func, ast.Name):
-            inferred_obj_type = (self.local_symbol_table.get(call_name) or
-                                self.class_symbol_table.get(call_name) or
-                                self.module_symbol_table.get(call_name))
-    
-        #   there are no CALLS relationships originating from P2pkhAddress.to_address in the graph. This is the root cause of the find_all_callees tool reporting 0
-        #   results.
-
-        #   The problem is not with the find_all_callees query itself, but with the GraphBuilder's ability to correctly identify and create CALLS relationships for methods like
-        #   P2pkhAddress.to_address.
-
-        #   Specifically, the GraphBuilder._create_function_calls method is likely not correctly processing calls made within methods of a class, especially when those calls are to:
-        #    1. self.method(): Internal method calls.
-        #    2. Functions imported from other modules (e.g., h_to_b, get_network).
-        #    3. Functions from external libraries (e.g., hashlib.sha256, b58encode).
-
-        #   The GraphBuilder.CodeVisitor.visit_Call method is responsible for identifying function calls. It needs to be improved to handle these cases.
-
-        #   Plan:
-
-        #    1. Enhance `CodeVisitor.visit_Call` in `src/codegraphcontext/tools/graph_builder.py`:
-        #        * Internal Method Calls (`self.method()`): When node.func is an ast.Attribute and node.func.value.id is self, the call_name should be node.func.attr, and the resolved_path should
-        #          be the file_path of the current class.
-        #        * Imported Functions: The _create_function_calls method already has some logic for resolving imported functions using imports_map. I need to ensure this logic is robust and
-        #          correctly applied within visit_Call to set inferred_obj_type or resolved_path accurately.
-        #        * External Library Functions: For now, we might not be able to fully resolve calls to external library functions unless those libraries are also indexed. However, we should at
-        #          least capture the full_call_name and call_name for these.
-        # inferred_obj_type = None
-        # if isinstance(node.func, ast.Attribute):
-        #     base_obj_node = node.func.value
-            
-        #     if isinstance(base_obj_node, ast.Name):
-        #         obj_name = base_obj_node.id
-        #         if obj_name == 'self':
-        #             # If the base is 'self', the call is to a method of the current class
-        #             inferred_obj_type = self.current_class
-        #         else:
-        #             # Try to resolve the type of the object from symbol tables
-        #             inferred_obj_type = (self.local_symbol_table.get(obj_name) or
-        #                                  self.class_symbol_table.get(obj_name) or
-        #                                  self.module_symbol_table.get(obj_name))
-        #             # If not found in symbol tables, check if it's a class name from imports
-        #             if not inferred_obj_type and obj_name in self.imports_map:
-        #                 inferred_obj_type = obj_name
-
-        #     elif isinstance(base_obj_node, ast.Call):
-        #         inferred_obj_type = self._resolve_type_from_call(base_obj_node)
-            
-        #     elif isinstance(base_obj_node, ast.Attribute): # e.g., self.job_manager.method()
-        #         # Recursively resolve the type of the base attribute
-        #         inferred_obj_type = self._resolve_attribute_base_type(base_obj_node)
-            
-        # elif isinstance(node.func, ast.Name):
-        #     # If it's a direct function call, try to infer its type from symbol tables or imports
-        #     inferred_obj_type = (self.local_symbol_table.get(call_name) or
-        #                          self.class_symbol_table.get(call_name) or
-        #                          self.module_symbol_table.get(call_name))
-        #     if not inferred_obj_type and call_name in self.imports_map:
-        #         inferred_obj_type = call_name
-
-        if call_name and call_name not in __builtins__:
-            call_data = {
-                "name": call_name,
-                "full_name": full_call_name,
-                "line_number": node.lineno,
-                "args": call_args,
-                "inferred_obj_type": inferred_obj_type,
-                "context": self.current_context,
-                "class_context": self.current_class,
-                "is_dependency": self.is_dependency,
-            }
-            self.function_calls.append(call_data)
-        
-        self.generic_visit(node)  
+                variable_data = {
+                    "name": name,
+                    "line_number": node.start_point[0] + 1,
+                    "value": value,
+                    "context": context,
+                    "class_context": class_context,
+                    "is_dependency": False,
+                }
+                variables.append(variable_data)
+        return variables
 
 class GraphBuilder:
     """Module for building and managing the Neo4j code graph."""
@@ -560,8 +348,10 @@ class GraphBuilder:
     def __init__(self, db_manager: DatabaseManager, job_manager: JobManager, loop: asyncio.AbstractEventLoop):
         self.db_manager = db_manager
         self.job_manager = job_manager
-        self.loop = loop  # Store the main event loop
+        self.loop = loop
         self.driver = self.db_manager.get_driver()
+        # --- NEW: Instantiate the parser for Python ---
+        self.py_parser = TreeSitterParser('python')
         self.create_schema()
 
     def create_schema(self):
@@ -576,7 +366,6 @@ class GraphBuilder:
                 session.run("CREATE CONSTRAINT variable_unique IF NOT EXISTS FOR (v:Variable) REQUIRE (v.name, v.file_path, v.line_number) IS UNIQUE")
                 session.run("CREATE CONSTRAINT module_name IF NOT EXISTS FOR (m:Module) REQUIRE m.name IS UNIQUE")
                 
-                # Create a full-text search index for code search
                 session.run("""
                     CREATE FULLTEXT INDEX code_search_index IF NOT EXISTS 
                     FOR (n:Function|Class|Variable) 
@@ -588,19 +377,27 @@ class GraphBuilder:
                 logger.warning(f"Schema creation warning: {e}")
 
     def _pre_scan_for_imports(self, files: list[Path]) -> dict:
-        """Scans all files to create a map of class/function names to a LIST of their file paths."""
+        """--- REWRITTEN with tree-sitter ---
+        Scans all files to create a map of class/function names to their file paths."""
         imports_map = {}
+        query_str = """
+            (class_definition name: (identifier) @name)
+            (function_definition name: (identifier) @name)
+        """
+        query = self.py_parser.language.query(query_str)
+
         for file_path in files:
             try:
                 with open(file_path, "r", encoding="utf-8") as f:
-                    tree = ast.parse(f.read())
-                    for node in ast.walk(tree):
-                        if isinstance(node, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
-                            if node.name not in imports_map:
-                                imports_map[node.name] = []
-                            imports_map[node.name].append(str(file_path.resolve()))
+                    tree = self.py_parser.parser.parse(bytes(f.read(), "utf8"))
+                
+                for capture, _ in query.captures(tree.root_node):
+                    name = capture.text.decode('utf-8')
+                    if name not in imports_map:
+                        imports_map[name] = []
+                    imports_map[name].append(str(file_path.resolve()))
             except Exception as e:
-                logger.warning(f"Pre-scan failed for {file_path}: {e}")
+                logger.warning(f"Tree-sitter pre-scan failed for {file_path}: {e}")
         return imports_map
 
     def add_repository_to_graph(self, repo_path: Path, is_dependency: bool = False):
@@ -619,6 +416,7 @@ class GraphBuilder:
             )
 
     def add_file_to_graph(self, file_data: Dict, repo_name: str, imports_map: dict):
+        logger.info("Executing add_file_to_graph with my change!")
         """Adds a file and its contents within a single, unified session."""
         file_path_str = str(Path(file_data['file_path']).resolve())
         file_name = Path(file_path_str).name
@@ -631,13 +429,11 @@ class GraphBuilder:
             except ValueError:
                 relative_path = file_name
 
-            # Create/Merge the file node
             session.run("""
                 MERGE (f:File {path: $path})
                 SET f.name = $name, f.relative_path = $relative_path, f.is_dependency = $is_dependency
             """, path=file_path_str, name=file_name, relative_path=relative_path, is_dependency=is_dependency)
 
-            # Create directory structure and link it
             file_path_obj = Path(file_path_str)
             repo_path_obj = Path(repo_result['path'])
             
@@ -646,8 +442,7 @@ class GraphBuilder:
             parent_path = str(repo_path_obj)
             parent_label = 'Repository'
 
-            # Create nodes for each directory part of the path
-            for part in relative_path_to_file.parts[:-1]: # For each directory in the path
+            for part in relative_path_to_file.parts[:-1]:
                 current_path = Path(parent_path) / part
                 current_path_str = str(current_path)
                 
@@ -661,7 +456,6 @@ class GraphBuilder:
                 parent_path = current_path_str
                 parent_label = 'Directory'
 
-            # Link the last directory/repository to the file
             session.run(f"""
                 MATCH (p:{parent_label} {{path: $parent_path}})
                 MATCH (f:File {{path: $file_path}})
@@ -670,6 +464,10 @@ class GraphBuilder:
 
             for item_data, label in [(file_data['functions'], 'Function'), (file_data['classes'], 'Class'), (file_data['variables'], 'Variable')]:
                 for item in item_data:
+                    # Ensure cyclomatic_complexity is set for functions
+                    if label == 'Function' and 'cyclomatic_complexity' not in item:
+                        item['cyclomatic_complexity'] = 1 # Default value
+
                     query = f"""
                         MATCH (f:File {{path: $file_path}})
                         MERGE (n:{label} {{name: $name, file_path: $file_path, line_number: $line_number}})
@@ -678,24 +476,21 @@ class GraphBuilder:
                     """
                     session.run(query, file_path=file_path_str, name=item['name'], line_number=item['line_number'], props=item)
                     
-                    # If it's a function, create parameter nodes and relationships and calculate complexity
                     if label == 'Function':
-                        # Calculate cyclomatic complexity
-                        try:
-                            func_tree = ast.parse(item['source_code'])
-                            complexity_visitor = CyclomaticComplexityVisitor()
-                            complexity_visitor.visit(func_tree)
-                            item['cyclomatic_complexity'] = complexity_visitor.complexity
-                        except Exception as e:
-                            logger.warning(f"Could not calculate cyclomatic complexity for {item['name']} in {file_path_str}: {e}")
-                            item['cyclomatic_complexity'] = 1 # Default to 1 on error
-
                         for arg_name in item.get('args', []):
                             session.run("""
                                 MATCH (fn:Function {name: $func_name, file_path: $file_path, line_number: $line_number})
                                 MERGE (p:Parameter {name: $arg_name, file_path: $file_path, function_line_number: $line_number})
                                 MERGE (fn)-[:HAS_PARAMETER]->(p)
                             """, func_name=item['name'], file_path=file_path_str, line_number=item['line_number'], arg_name=arg_name)
+
+            for item in file_data.get('functions', []):
+                if item.get("context_type") == "function_definition":
+                    session.run("""
+                        MATCH (outer:Function {name: $context, file_path: $file_path})
+                        MATCH (inner:Function {name: $name, file_path: $file_path, line_number: $line_number})
+                        MERGE (outer)-[:CONTAINS]->(inner)
+                    """, context=item["context"], file_path=file_path_str, name=item["name"], line_number=item["line_number"])
 
             for imp in file_data['imports']:
                 set_clauses = ["m.alias = $alias"]
@@ -710,12 +505,14 @@ class GraphBuilder:
                     MERGE (f)-[:IMPORTS]->(m)
                 """, file_path=file_path_str, **imp)
 
+            local_class_names = {c['name'] for c in file_data.get('classes', [])}
             for class_item in file_data.get('classes', []):
                 if class_item.get('bases'):
                     for base_class_name in class_item['bases']:
                         resolved_parent_file_path = self._resolve_class_path(
                             base_class_name,
                             file_path_str,
+                            local_class_names,
                             file_data['imports'],
                             imports_map
                         )
@@ -723,7 +520,7 @@ class GraphBuilder:
                             session.run("""
                                 MATCH (child:Class {name: $child_name, file_path: $file_path})
                                 MATCH (parent:Class {name: $parent_name, file_path: $resolved_parent_file_path})
-                                MERGE (child)-[:INHERITS_FROM]->(parent)
+                                MERGE (child)-[:INHERITS]->(parent)
                             """, 
                             child_name=class_item['name'], 
                             file_path=file_path_str, 
@@ -749,66 +546,11 @@ class GraphBuilder:
                 func_name=func['name'],
                 func_line=func['line_number'])
 
-        for var in file_data.get('variables', []):
-            context = var.get('context')
-            class_context = var.get('class_context')
-            parent_line = var.get('parent_line')
-            
-            if class_context:
-                session.run("""
-                    MATCH (c:Class {name: $class_name, file_path: $file_path})
-                    MATCH (v:Variable {name: $var_name, file_path: $file_path, line_number: $var_line})
-                    MERGE (c)-[:CONTAINS]->(v)
-                """,
-                class_name=class_context,
-                file_path=file_path,
-                var_name=var['name'],
-                var_line=var['line_number'])
-            elif context and parent_line:
-                parent_label = "Function"
-                parent_node_data = None
-                
-                for class_data in file_data.get('classes', []):
-                    if class_data['name'] == context and class_data['line_number'] == parent_line:
-                        parent_label = "Class"
-                        parent_node_data = class_data
-                        break
-                
-                if not parent_node_data:
-                    for func_data in file_data.get('functions', []):
-                        if func_data['name'] == context and func_data['line_number'] == parent_line:
-                            parent_label = "Function"
-                            parent_node_data = func_data
-                            break
-                
-                if parent_node_data:
-                    session.run(f"""
-                        MATCH (p:{parent_label} {{name: $parent_name, file_path: $file_path, line_number: $parent_line}})
-                        MATCH (v:Variable {{name: $var_name, file_path: $file_path, line_number: $var_line}})
-                        MERGE (p)-[:CONTAINS]->(v)
-                    """,
-                    parent_name=context,
-                    file_path=file_path,
-                    parent_line=parent_line,
-                    var_name=var['name'],
-                    var_line=var['line_number'])
-            else:
-                session.run("""
-                    MATCH (f:File {path: $file_path})
-                    MATCH (v:Variable {name: $var_name, file_path: $file_path, line_number: $var_line})
-                    MERGE (f)-[:CONTAINS]->(v)
-                """,
-                file_path=file_path,
-                var_name=var['name'],
-                var_line=var['line_number'])
-    
     def _create_function_calls(self, session, file_data: Dict, imports_map: dict):
-        """
-        Create CALLS relationships with a unified, prioritized logic flow for all call types.
-        """
+        """Create CALLS relationships with a unified, prioritized logic flow for all call types."""
         caller_file_path = str(Path(file_data['file_path']).resolve())
         local_function_names = {func['name'] for func in file_data.get('functions', [])}
-        local_imports = {imp['alias'] or imp['name'].split('.')[-1]: imp['name'] 
+        local_imports = {imp.get('alias') or imp['name'].split('.')[-1]: imp['name'] 
                         for imp in file_data.get('imports', [])}
         
         for call in file_data.get('function_calls', []):
@@ -817,28 +559,20 @@ class GraphBuilder:
 
             resolved_path = None
             
-            # Priority 1: Handle method calls (var.method(), self.attr.method(), etc.)
-            # This is the most specific and reliable information we have.
             if call.get('inferred_obj_type'):
                 obj_type = call['inferred_obj_type']
                 possible_paths = imports_map.get(obj_type, [])
                 if len(possible_paths) > 0:
-                    # Simplistic choice for now; assumes the first found definition is correct.
                     resolved_path = possible_paths[0]
             
-            # Priority 2: Handle direct calls (func()) and class methods (Class.method())
             else:
-                # For class methods, the `called_name` will be the class itself
                 lookup_name = call['full_name'].split('.')[0] if '.' in call['full_name'] else called_name
                 possible_paths = imports_map.get(lookup_name, [])
 
-                # A) Is it a local function?
                 if lookup_name in local_function_names:
                     resolved_path = caller_file_path
-                # B) Is it an unambiguous global function/class?
                 elif len(possible_paths) == 1:
                     resolved_path = possible_paths[0]
-                # C) Is it an ambiguous call we can resolve via this file's imports?
                 elif len(possible_paths) > 1 and lookup_name in local_imports:
                     full_import_name = local_imports[lookup_name]
                     for path in possible_paths:
@@ -846,34 +580,29 @@ class GraphBuilder:
                             resolved_path = path
                             break
             
-            # Fallback if no path could be resolved by any of the above rules
             if not resolved_path:
-                # If the called name is in the imports map, use its path
                 if called_name in imports_map and imports_map[called_name]:
-                    resolved_path = imports_map[called_name][0] # Take the first path for now
+                    resolved_path = imports_map[called_name][0]
                 else:
                     resolved_path = caller_file_path
 
             caller_context = call.get('context')
-            inferred_type = call.get('inferred_obj_type')
-            if debug_mode:
-                log_inferred_str = f" (via inferred type {inferred_type})" if inferred_type else ""
-                debug_log(f"Resolved call: {caller_context} @ {caller_file_path} calls {called_name} @ {resolved_path}{log_inferred_str}")
-            if caller_context:
+            if caller_context and len(caller_context) == 3 and caller_context[0] is not None:
+                caller_name, _, caller_line_number = caller_context
                 session.run("""
-                    MATCH (caller:Function {name: $caller_name, file_path: $caller_file_path})
+                    MATCH (caller:Function {name: $caller_name, file_path: $caller_file_path, line_number: $caller_line_number})
                     MATCH (called:Function {name: $called_name, file_path: $called_file_path})
                     MERGE (caller)-[:CALLS {line_number: $line_number, args: $args, full_call_name: $full_call_name}]->(called)
                 """,
-                caller_name=caller_context,
+                caller_name=caller_name,
                 caller_file_path=caller_file_path,
+                caller_line_number=caller_line_number,
                 called_name=called_name,
                 called_file_path=resolved_path,
                 line_number=call['line_number'],
                 args=call.get('args', []),
                 full_call_name=call.get('full_name', called_name))
             else:
-                # Handle calls from the top-level of a file
                 session.run("""
                     MATCH (caller:File {path: $caller_file_path})
                     MATCH (called:Function {name: $called_name, file_path: $called_file_path})
@@ -909,55 +638,29 @@ class GraphBuilder:
                 func_name=func['name'],
                 func_line=func['line_number'])
                 
-    def _resolve_class_path(self, class_name: str, current_file_path: str, current_file_imports: list, global_imports_map: dict) -> Optional[str]:
-        debug_log(f"_resolve_class_path: Resolving '{class_name}' from '{current_file_path}'")
-        """
-        Resolves the file path of a class based on import resolution priority.
-        1. Same file definition
-        2. Imports within the current file (direct or aliased)
-        3. Global imports map (anywhere in the indexed project)
-        """
-        # Priority 1: Same file definition
-        with self.driver.session() as session:
-            result = session.run("""
-                MATCH (c:Class {name: $class_name, file_path: $current_file_path})
-                RETURN c.file_path AS file_path
-            """, class_name=class_name, current_file_path=current_file_path).single()
-            if result:
-                debug_log(f"_resolve_class_path: Priority 1 match: {result['file_path']}")
-                return result['file_path']
+    def _resolve_class_path(self, class_name: str, current_file_path: str, local_class_names: set, current_file_imports: list, global_imports_map: dict) -> Optional[str]:
+        """Resolves the file path of a class based on import resolution priority."""
+        # Priority 1: Class is defined in the current file.
+        if class_name in local_class_names:
+            return current_file_path
 
-        # Priority 2: Imports within the current file
-        with self.driver.session() as session:
-            result = session.run("""
-                MATCH (f:File {path: $current_file_path})-[:IMPORTS]->(m:Module)
-                OPTIONAL MATCH (m)-[:CONTAINS]->(c:Class {name: $class_name})
-                RETURN c.file_path AS file_path
-            """, current_file_path=current_file_path, class_name=class_name).single()
-            if result and result["file_path"]:
-                debug_log(f"_resolve_class_path: Priority 2 match: {result['file_path']}")
-                return result['file_path']
-
-        # Priority 3: Global imports map (anywhere in the indexed project) - Fallback
+        # This method now relies more heavily on the global_imports_map provided by the pre-scan
         if class_name in global_imports_map:
-            debug_log(f"_resolve_class_path: Priority 3 match: {global_imports_map[class_name][0]}")
+            # In a multi-file project, there could be multiple definitions.
+            # A more robust solution would use local import context to disambiguate.
             return global_imports_map[class_name][0]
-
-        debug_log(f"_resolve_class_path: No path resolved for '{class_name}'")
         return None
                 
     def delete_file_from_graph(self, file_path: str):
         """Deletes a file and all its contained elements and relationships."""
         file_path_str = str(Path(file_path).resolve())
         with self.driver.session() as session:
-            # Get parent directories
             parents_res = session.run("""
                 MATCH (f:File {path: $path})<-[:CONTAINS*]-(d:Directory)
                 RETURN d.path as path ORDER BY d.path DESC
             """, path=file_path_str)
             parent_paths = [record["path"] for record in parents_res]
 
-            # Delete the file and its contents
             session.run(
                 """
                 MATCH (f:File {path: $path})
@@ -968,7 +671,6 @@ class GraphBuilder:
             )
             logger.info(f"Deleted file and its elements from graph: {file_path_str}")
 
-            # Clean up empty parent directories, starting from the deepest
             for path in parent_paths:
                 session.run("""
                     MATCH (d:Directory {path: $path})
@@ -977,90 +679,46 @@ class GraphBuilder:
                 """, path=path)
 
     def delete_repository_from_graph(self, repo_path: str):
-        """
-        Deletes a repository and all its contents from the graph, then cleans up
-        any orphaned Module nodes that are no longer referenced.
-        """
+        """Deletes a repository and all its contents from the graph."""
         repo_path_str = str(Path(repo_path).resolve())
         with self.driver.session() as session:
-            # Delete the repository and all its contained elements, including parameters
-            session.run("""
-                MATCH (r:Repository {path: $path})
-                OPTIONAL MATCH (r)-[:CONTAINS*]->(e)
-                OPTIONAL MATCH (e)-[:HAS_PARAMETER]->(p)
-                DETACH DELETE r, e, p
-            """, path=repo_path_str)
+            session.run("""MATCH (r:Repository {path: $path})
+                          OPTIONAL MATCH (r)-[:CONTAINS*]->(e)
+                          DETACH DELETE r, e""", path=repo_path_str)
             logger.info(f"Deleted repository and its contents from graph: {repo_path_str}")
 
-            # Clean up orphaned Module nodes that are no longer imported by any file
-            session.run("""
-                MATCH (m:Module)
-                WHERE NOT ()-[:IMPORTS]->(m)
-                DETACH DELETE m
-            """)
-            logger.info("Cleaned up orphaned Module nodes.")
-
     def update_file_in_graph(self, file_path: Path, repo_path: Path, imports_map: dict):
-        """
-        Updates a single file's nodes in the graph and returns its new parsed data.
-        This function does NOT handle re-linking the call graph.
-        """
+        """Updates a single file's nodes in the graph."""
         file_path_str = str(file_path.resolve())
         repo_name = repo_path.name
         
-        # --- STEP 1: Delete the old file from the graph ---
-        debug_log(f"[update_file_in_graph] Deleting old file data for: {file_path_str}")
-        try:
-            self.delete_file_from_graph(file_path_str)
-            debug_log(f"[update_file_in_graph] Old file data deleted for: {file_path_str}")
-        except Exception as e:
-            logger.error(f"Error deleting old file data for {file_path_str}: {e}")
-            return None # Return None on failure
+        self.delete_file_from_graph(file_path_str)
 
-        # --- STEP 2: Re-parse and re-add the new file ---
         if file_path.exists():
-            debug_log(f"[update_file_in_graph] Parsing new file data for: {file_path_str}")
-            # Pass imports_map to the parser
             file_data = self.parse_python_file(repo_path, file_path, imports_map)
             
             if "error" not in file_data:
-                debug_log(f"[update_file_in_graph] Adding new file data to graph for: {file_path_str}")
                 self.add_file_to_graph(file_data, repo_name, imports_map)
-                debug_log(f"[update_file_in_graph] New file data added for: {file_path_str}")
-                # --- CRITICAL: Return the new data ---
                 return file_data
             else:
                 logger.error(f"Skipping graph add for {file_path_str} due to parsing error: {file_data['error']}")
-                return None # Return None on failure
+                return None
         else:
-            debug_log(f"[update_file_in_graph] File no longer exists: {file_path_str}")
-            # Return a special marker for deleted files
             return {"deleted": True, "path": file_path_str}
 
     def parse_python_file(self, repo_path: Path, file_path: Path, imports_map: dict, is_dependency: bool = False) -> Dict:
-        """Parse a Python file and extract code elements"""
-        debug_log(f"[parse_python_file] Starting parsing for: {file_path}")
+        """--- REWRITTEN with tree-sitter ---
+        Parse a Python file and extract code elements using TreeSitterParser."""
+        debug_log(f"[parse_python_file] Starting tree-sitter parsing for: {file_path}")
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
-                source_code = f.read()
-            tree = ast.parse(source_code)
-            visitor = CodeVisitor(str(file_path), imports_map, is_dependency)
-            visitor.visit(tree)
+            file_data = self.py_parser.parse(file_path, is_dependency)
+            file_data['repo_path'] = str(repo_path)
             if debug_mode:
-                debug_log(f"[parse_python_file] Successfully parsed: {file_path}")
-            return {
-                "repo_path": str(repo_path),
-                "file_path": str(file_path),
-                "functions": visitor.functions,
-                "classes": visitor.classes,
-                "variables": visitor.variables,
-                "imports": visitor.imports,
-                "function_calls": visitor.function_calls,
-                "is_dependency": is_dependency,
-            }
+                debug_log(f"[parse_python_file] Successfully parsed with tree-sitter: {file_path}")
+            return file_data
         except Exception as e:
-            logger.error(f"Error parsing {file_path}: {e}")
-            debug_log(f"[parse_python_file] Error parsing {file_path}: {e}")
+            logger.error(f"Error parsing {file_path} with tree-sitter: {e}")
+            debug_log(f"[parse_python_file] Error parsing {file_path} with tree-sitter: {e}")
             return {"file_path": str(file_path), "error": str(e)}
 
     def estimate_processing_time(self, path: Path) -> Optional[Tuple[int, float]]:
@@ -1072,8 +730,7 @@ class GraphBuilder:
                 files = list(path.rglob("*.py"))
             
             total_files = len(files)
-            # Simple heuristic: 0.1 seconds per file
-            estimated_time = total_files * 0.1
+            estimated_time = total_files * 0.05 # tree-sitter is faster
             return total_files, estimated_time
         except Exception as e:
             logger.error(f"Could not estimate processing time for {path}: {e}")
@@ -1098,7 +755,7 @@ class GraphBuilder:
             imports_map = self._pre_scan_for_imports(files)
             debug_log(f"Pre-scan complete. Found {len(imports_map)} definitions.")
 
-            all_function_calls_data = [] # Initialize list to collect all function call data
+            all_file_data = []
 
             processed_count = 0
             for file in files:
@@ -1109,18 +766,14 @@ class GraphBuilder:
                     file_data = self.parse_python_file(repo_path, file, imports_map, is_dependency)
                     if "error" not in file_data:
                         self.add_file_to_graph(file_data, repo_name, imports_map)
-                        all_function_calls_data.append(file_data) # Collect for later processing
+                        all_file_data.append(file_data)
                     processed_count += 1
                     if job_id:
                         self.job_manager.update_job(job_id, processed_files=processed_count)
                     await asyncio.sleep(0.01)
 
-            # After all files are processed, create function call relationships
-            self._create_all_function_calls(all_function_calls_data, imports_map)
-            if debug_mode:
-                with open("all_function_calls_data.json", "w") as f:
-                    import json
-                    json.dump(all_function_calls_data, f, indent=4)
+            self._create_all_function_calls(all_file_data, imports_map)
+            
             if job_id:
                 self.job_manager.update_job(job_id, status=JobStatus.COMPLETED, end_time=datetime.now())
         except Exception as e:
@@ -1149,10 +802,7 @@ class GraphBuilder:
                 job_id, total_files=total_files, estimated_duration=estimated_time
             )
 
-            # Create the coroutine for the background task
             coro = self.build_graph_from_path_async(path_obj, is_dependency, job_id)
-            
-            # Safely schedule the coroutine to run on the main event loop from this thread
             asyncio.run_coroutine_threadsafe(coro, self.loop)
 
             debug_log(f"Started background job {job_id} for path: {str(path_obj)}")
