@@ -46,6 +46,25 @@ EXPECTED_STRUCTURE = [
     ("class_instantiation.py", "A", "Class"),
     ("class_instantiation.py", "B", "Class"),
     ("class_instantiation.py", "Fluent", "Class"),
+    ("function_chains.py", "f1", "Function"),
+    ("function_chains.py", "f2", "Function"),
+    ("function_chains.py", "f3", "Function"),
+    ("function_chains.py", "make_adder", "Function"),
+    ("generators.py", "gen_numbers", "Function"),
+    ("generators.py", "agen_numbers", "Function"),
+    ("generators.py", "async_with_example", "Function"),
+    ("generators.py", "AsyncCM", "Class"),
+    ("datatypes.py", "Point", "Class"),
+    ("datatypes.py", "Color", "Class"),
+    ("complex_classes.py", "Base", "Class"),
+    ("complex_classes.py", "Child", "Class"),
+    ("complex_classes.py", "decorator", "Function"),
+    ("complex_classes.py", "decorated_function", "Function"),
+    ("control_flow.py", "choose_path", "Function"),
+    ("control_flow.py", "ternary", "Function"),
+    ("control_flow.py", "try_except_finally", "Function"),
+    ("control_flow.py", "conditional_inner_import", "Function"),
+    ("control_flow.py", "env_based_import", "Function"),
 ]
 
 EXPECTED_INHERITANCE = [
@@ -58,7 +77,7 @@ EXPECTED_INHERITANCE = [
     pytest.param("Combined", "advanced_classes2.py", "Mixin2", "advanced_classes2.py", id="Combined inherits from Mixin2"),
     pytest.param("B", "class_instantiation.py", "A", "class_instantiation.py", id="B inherits from A"),
     pytest.param("B", "class_instantiation.py", "A", "class_instantiation.py", marks=pytest.mark.skip(reason="Indexer does not support inheritance via super() calls"), id="B inherits from A via super()"),
-    pytest.param("Child", "complex_classes.py", "Base", "complex_classes.py", marks=pytest.mark.skip(reason="Indexer does not support inheritance via super() calls"), id="Child inherits from Base via super()"),
+    pytest.param("Child", "complex_classes.py", "Base", "complex_classes.py", id="Child inherits from Base"),
 ]
 
 EXPECTED_CALLS = [
@@ -133,11 +152,18 @@ EXPECTED_CLASS_METHODS = [
     pytest.param("Fluent", "class_instantiation.py", "step1", id="Fluent contains step1"),
     pytest.param("Fluent", "class_instantiation.py", "step2", id="Fluent contains step2"),
     pytest.param("Fluent", "class_instantiation.py", "step3", id="Fluent contains step3"),
+    pytest.param("AsyncCM", "generators.py", "__aenter__", id="AsyncCM contains __aenter__"),
+    pytest.param("AsyncCM", "generators.py", "__aexit__", id="AsyncCM contains __aexit__"),
+    pytest.param("Base", "complex_classes.py", "greet", id="Base contains greet"),
+    pytest.param("Child", "complex_classes.py", "greet", id="Child contains greet"),
+    pytest.param("Child", "complex_classes.py", "static_method", id="Child contains static_method"),
+    pytest.param("Child", "complex_classes.py", "class_method", id="Child contains class_method"),
 ]
 
 EXPECTED_FUNCTION_CONTAINS = [
     pytest.param("return_function", "advanced_functions.py", "inner", id="return_function contains inner"),
     pytest.param("log_decorator", "callbacks_decorators.py", "wrapper", id="log_decorator contains wrapper"),
+    pytest.param("make_adder", "function_chains.py", "adder", id="make_adder contains adder"),
 ]
 
 
