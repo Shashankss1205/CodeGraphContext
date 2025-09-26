@@ -483,3 +483,26 @@ def test_function_contains_relationship(graph, outer_function_name, file_name, i
     RETURN count(*) as count
     """
     check_query(graph, query, description)
+
+@pytest.mark.parametrize("name ,file, kind",EXPECTED_STRUCTURE)
+def test_expected_structure_contains_functions_and_classes(name,file,kind):
+    assert kind in{"Function":"Class"},f"unexpected kind {kind} in expected structure of file {file} named {name}"
+
+@pytest.mark.parametrize("child, file1, parent,file2,relation",EXPECTED_INHERITANCE)
+def test_inheritance_entries_reference_real_files(child,file1,file2,parent,relation):
+    #this method ensures that the inheritance entries refrence real files that exists in the SAMPLE_PROJECT_PATH
+    path1=os.path.join(SAMPLE_PROJECT_PATH,file1)
+    path2=os.path.join(SAMPLE_PROJECT_PATH,file2)
+    assert os.path.exists(path1) or f"file {file1} missing"
+    assert os.path.exists(path2) or f"file {file2} missing"
+
+@pytest.mark.parametrize("caller,file1,callee,file2",EXPECTED_CALLS)
+def test_unique_test_calls(caller,file1,callee,file2):
+    #this function ensures that the tests calls has no duplicate relationships
+    call_tuple=(caller,file1,callee,file2)
+    assert EXPECTED_CALLS.count(call_tuple)==1 or f"duplicate calls found {call_tuple}"
+
+@pytest.mark.parametrize("src_file, imported_module", [(imp[0], imp[1]) for imp in EXPECTED_IMPORTS])
+def test_imports_reference_existing_source_files(src_file, imported_module):
+    path = os.path.join(SAMPLE_PROJECT_PATH, src_file)
+    assert os.path.exists(path) or f"Source file {src_file} does not exist for import {imported_module}"

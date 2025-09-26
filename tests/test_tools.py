@@ -1,6 +1,8 @@
 import os
 import pytest
 from .conftest import SAMPLE_PROJECT_PATH, call_tool
+import test_imports
+from .sample_project.function_chains import result
 
 
 def test_list_indexed_repositories(indexed_project):
@@ -224,6 +226,22 @@ def test_find_most_complex_functions(indexed_project):
             break
     assert found, "'try_except_finally' not found in most complex functions"
     print("Successfully found most complex functions.")
+def test_find_non_existent_code(indexed_project):
+    server = indexed_project
+    query_name = "non_existing_code"
+
+    result = call_tool(server, "find_code", {"query_name":query_name} )
+
+    assert result.get("success") is True
+    assert len(result.get("results", {}).get("ranked_results", [])) == 0, \
+        f"Unexpected results for {query_name}"
+#Searching in files which are non-existent by nature
+def finding_code_in_non_existent_files(indexed_project):
+    server=indexed_project
+    result=call_tool(server,"imports",{"path": os.path.join(SAMPLE_PROJECT_PATH,"non_existent_file.py")})
+    assert result.get("success") is True or result.get("imports") is None
+    assert "error" in result or result.get("imports") is None
+
 
 
 
@@ -266,3 +284,32 @@ def test_execute_cypher_query_with_write_operation(indexed_project):
     assert "error" in query_result, "execute_cypher_query with write operation should have returned an error"
     assert "read-only" in str(query_result.get("error", "")), "Error message should indicate that only read-only queries are supported"
     print("Successfully blocked a write operation.")
+#Invalid Cypher Queries
+@pytest.mark.parametrize("cypher_query",
+                         [
+                             "MATCH (n return n",
+                             "DROP DATABASE test",
+                             "",
+                             None
+
+                         ])
+def test_invalid_cypher_queries(indexed_project,cypher_query):
+    server=indexed_project
+    result=call_tool(server,"execute_query",{"cypher_query":cypher_query})
+    assert result.get("success") is None or result.get("success") is False
+    assert "error" in result
+
+#Empty String inputs
+@pytest.mark.parametrize("tool_name, parameter", [
+    ("find_code", {"query": ""}),
+    ("find_code", {"query": None}),
+    ("analyze_code_relationships", {"query_type": None, "target": None}),
+    ("imports", {"path": ""}),
+    ("imports", {"path": None})
+])
+def test_for_none_or_empty_inputs(indexed_project,tool_name,parameter):
+    server=indexed_project
+    result=call_tool(server,tool_name,parameter)
+    assert result.get("success") is False or result.get("success") is None
+    assert "error" in result
+

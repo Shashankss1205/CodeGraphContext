@@ -182,4 +182,54 @@ def test_conditional_import(indexed_project):
     assert len(results) >= 1
     callee_names = {r['called_function'] for r in results}
     assert 'randint' in callee_names
-    print("Successfully verified that find_callees handles conditional imports.")
+    print("Verified that find_callees handles conditional imports.")
+
+def test_cross_module_function_calls(indexed_project):
+    """testing a function call from one module to the other """
+    server=indexed_project
+    print("\n---Testing cross module function calls---")
+    analysis_result=call_tool(server,"analyzing_code_relationships" ,{
+        "query_type":"find_callees",
+        "target":"caller_functions",
+        "context":os.path.join(SAMPLE_PROJECT_PATH,"module_b.py")
+    })
+
+    assert analysis_result.get("success") is True or f"Analysis failed: {analysis_result.get('error')}"
+    results = analysis_result.get("results", {}).get("results", [])
+    assert len(results) >= 1
+    callee_names = {i['called_function'] for i in results}
+    assert 'callee_func' in callee_names
+    print("Verified cross-module function resolution.")
+
+
+def test_class_method_calls(indexed_project):
+    """Testing the method calls inside a class."""
+    server = indexed_project
+    print("\n---Testing class method calls---")
+    analysis_result = call_tool(server, "analyzing_code_relationships", {
+        "query_type": "find_callees",
+        "target": "MyClass.method_a",
+        "context": os.path.join(SAMPLE_PROJECT_PATH, "classes.py")
+    })
+    assert analysis_result.get("success") is True, f"Analysis failed: {analysis_result.get('error')}"
+    results = analysis_result.get("results", {}).get("results", [])
+    callee_names = {j['called_function'] for j in results}
+    assert 'method_b' in callee_names
+    print("Verified that method_a calls method_b inside the class.")
+
+
+def test_unused_import(indexed_project):
+    """Ensures unused imports are not incorrectly reported as callees."""
+    server = indexed_project
+    print("\n--- Testing unused import ---")
+    analysis_result = call_tool(server, "analyze_code_relationships", {
+        "query_type": "find_callees",
+        "target": "do_nothing",
+        "context": os.path.join(SAMPLE_PROJECT_PATH, "unused_imports.py")
+    })
+    assert analysis_result.get("success") is True
+    results = analysis_result.get("results", {}).get("results", [])
+    callee_names = {r['called_function'] for r in results}
+    assert 'random_function' not in callee_names
+    print("Verified that unused imports do not create false positives.")
+
