@@ -76,7 +76,7 @@ def _configure_ide(mcp_config):
     questions = [
         {
             "type": "confirm",
-            "message": "Automatically configure your IDE/CLI (VS Code, Cursor, Claude, Gemini)?",
+            "message": "Automatically configure your IDE/CLI (VS Code, Cursor, Claude, Gemini , Cline)?",
             "name": "configure_ide",
             "default": True,
         }
@@ -90,7 +90,7 @@ def _configure_ide(mcp_config):
         {
             "type": "list",
             "message": "Choose your IDE/CLI to configure:",
-            "choices": ["VS Code", "Cursor", "Claude code", "Gemini CLI", "None of the above"],
+            "choices": ["VS Code", "Cursor", "Claude code", "Gemini CLI", "Cline", "None of the above"],
             "name": "ide_choice",
         }
     ]
@@ -101,7 +101,7 @@ def _configure_ide(mcp_config):
         console.print("\n[cyan]You can add the MCP server manually to your IDE/CLI.[/cyan]")
         return
 
-    if ide_choice in ["VS Code", "Cursor", "Claude code", "Gemini CLI"]:
+    if ide_choice in ["VS Code", "Cursor", "Claude code", "Gemini CLI" , "Cline"]:
         console.print(f"\n[bold cyan]Configuring for {ide_choice}...[/bold cyan]")
         
         config_paths = {
@@ -122,7 +122,13 @@ def _configure_ide(mcp_config):
             ],
             "Gemini CLI": [
                 Path.home() / ".gemini" / "settings.json"
-            ]
+            ],
+            "Cline": [
+                Path.home() / ".config" / "Code" / "User" / "globalStorage" / "saoudrizwan.claude-dev" / "settings" / "cline_mcp_settings.json",
+                Path.home() / ".config" / "Code - OSS" / "User" / "globalStorage" / "saoudrizwan.claude-dev" / "settings" / "cline_mcp_settings.json",
+                Path.home() / "Library" / "Application Support" / "Code" / "User" / "globalStorage" / "saoudrizwan.claude-dev" / "settings" / "cline_mcp_settings.json",
+                Path.home() / "AppData" / "Roaming" / "Code" / "User" / "globalStorage" / "saoudrizwan.claude-dev" / "settings" / "cline_mcp_settings.json"
+            ],
         }
 
         target_path = None
