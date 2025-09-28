@@ -1,2 +1,2 @@
-def broken_func():
+def broken_func(
     return 1
