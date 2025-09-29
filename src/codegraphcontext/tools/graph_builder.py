@@ -269,7 +269,15 @@ class TreeSitterParser:
         query = self.queries['imports']
         for node, capture_name in query.captures(root_node):
             if capture_name in ('import', 'from_import'):
-                full_name = self._get_node_text(node)
+                node_text = self._get_node_text(node)
+                
+                alias = None
+                if ' as ' in node_text:
+                    parts = node_text.split(' as ')
+                    full_name = parts[0].strip()
+                    alias = parts[1].strip()
+                else:
+                    full_name = node_text.strip()
 
                 if full_name in seen_modules:
                     continue
@@ -279,7 +287,7 @@ class TreeSitterParser:
                     "name": full_name,
                     "full_import_name": full_name,
                     "line_number": node.start_point[0] + 1,
-                    "alias": None,
+                    "alias": alias,
                     "context": self._get_parent_context(node)[:2],
                     "is_dependency": False,
                 }
