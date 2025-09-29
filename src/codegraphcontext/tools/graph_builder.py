@@ -49,8 +49,7 @@ PY_QUERIES = {
     """,
     "variables": """
         (assignment
-            left: (identifier) @name
-            right: _ @value)
+            left: (identifier) @name)
     """,
     "lambda_assignments": """
         (assignment
@@ -332,10 +331,18 @@ class TreeSitterParser:
 
             if capture_name == 'name':
                 assignment_node = node.parent
+
+                # Skip lambda assignments, they are handled by _find_lambda_assignments
+                right_node = assignment_node.child_by_field_name('right')
+                if right_node and right_node.type == 'lambda':
+                    continue
+
                 name = self._get_node_text(node)
-                value_node = assignment_node.child_by_field_name('right')
-                value = self._get_node_text(value_node) if value_node else None
+                value = self._get_node_text(right_node) if right_node else None
                 
+                type_node = assignment_node.child_by_field_name('type')
+                type_text = self._get_node_text(type_node) if type_node else None
+
                 context, _, _ = self._get_parent_context(node)
                 class_context, _, _ = self._get_parent_context(node, types=('class_definition',))
 
@@ -343,6 +350,7 @@ class TreeSitterParser:
                     "name": name,
                     "line_number": node.start_point[0] + 1,
                     "value": value,
+                    "type": type_text,
                     "context": context,
                     "class_context": class_context,
                     "is_dependency": False,
