@@ -370,6 +370,7 @@ class GraphBuilder:
         self.py_parser = TreeSitterParser('python')
         self.create_schema()
 
+    # A general schema creation based on common features across languages
     def create_schema(self):
         """Create constraints and indexes in Neo4j."""
         with self.driver.session() as session:
@@ -392,6 +393,7 @@ class GraphBuilder:
             except Exception as e:
                 logger.warning(f"Schema creation warning: {e}")
 
+    # Always needed for all languages, but need to be rewritten for tree-sitter of different languages
     def _pre_scan_for_imports(self, files: list[Path]) -> dict:
         """--- REWRITTEN with tree-sitter ---
         Scans all files to create a map of class/function names to their file paths."""
@@ -416,6 +418,7 @@ class GraphBuilder:
                 logger.warning(f"Tree-sitter pre-scan failed for {file_path}: {e}")
         return imports_map
 
+    # Language-agnostic method
     def add_repository_to_graph(self, repo_path: Path, is_dependency: bool = False):
         """Adds a repository node using its absolute path as the unique key."""
         repo_name = repo_path.name
@@ -478,6 +481,7 @@ class GraphBuilder:
                 MERGE (p)-[:CONTAINS]->(f)
             """, parent_path=parent_path, file_path=file_path_str)
 
+            # CONTAINS relationships for functions, classes, and variables
             for item_data, label in [(file_data['functions'], 'Function'), (file_data['classes'], 'Class'), (file_data['variables'], 'Variable')]:
                 for item in item_data:
                     # Ensure cyclomatic_complexity is set for functions
@@ -500,6 +504,7 @@ class GraphBuilder:
                                 MERGE (fn)-[:HAS_PARAMETER]->(p)
                             """, func_name=item['name'], file_path=file_path_str, line_number=item['line_number'], arg_name=arg_name)
 
+            # Create CONTAINS relationships for nested functions
             for item in file_data.get('functions', []):
                 if item.get("context_type") == "function_definition":
                     session.run("""
@@ -508,6 +513,7 @@ class GraphBuilder:
                         MERGE (outer)-[:CONTAINS]->(inner)
                     """, context=item["context"], file_path=file_path_str, name=item["name"], line_number=item["line_number"])
 
+            # Handle imports and create IMPORTS relationships
             for imp in file_data['imports']:
                 set_clauses = ["m.alias = $alias"]
                 if 'full_import_name' in imp:
@@ -521,6 +527,7 @@ class GraphBuilder:
                     MERGE (f)-[:IMPORTS]->(m)
                 """, file_path=file_path_str, **imp)
 
+            # Handle class inheritance
             local_class_names = {c['name'] for c in file_data.get('classes', [])}
             for class_item in file_data.get('classes', []):
                 if class_item.get('bases'):
@@ -543,24 +550,18 @@ class GraphBuilder:
                             parent_name=base_class_name,
                             resolved_parent_file_path=resolved_parent_file_path)
 
-            self._create_class_method_relationships(session, file_data)
-            self._create_contextual_relationships(session, file_data)
-    
-    def _create_contextual_relationships(self, session, file_data: Dict):
-        """Create CONTAINS relationships from functions/classes to their children."""
-        file_path = str(Path(file_data['file_path']).resolve())
-        
-        for func in file_data.get('functions', []):
-            if func.get('class_context'):
-                session.run("""
-                    MATCH (c:Class {name: $class_name, file_path: $file_path})
-                    MATCH (fn:Function {name: $func_name, file_path: $file_path, line_number: $func_line})
-                    MERGE (c)-[:CONTAINS]->(fn)
-                """, 
-                class_name=func['class_context'],
-                file_path=file_path,
-                func_name=func['name'],
-                func_line=func['line_number'])
+            # Handle CONTAINS relationship between class to their children like variables
+            for func in file_data.get('functions', []):
+                if func.get('class_context'):
+                    session.run("""
+                        MATCH (c:Class {name: $class_name, file_path: $file_path})
+                        MATCH (fn:Function {name: $func_name, file_path: $file_path, line_number: $func_line})
+                        MERGE (c)-[:CONTAINS]->(fn)
+                    """, 
+                    class_name=func['class_context'],
+                    file_path=file_path_str,
+                    func_name=func['name'],
+                    func_line=func['line_number'])
 
     def _create_function_calls(self, session, file_data: Dict, imports_map: dict):
         """Create CALLS relationships with a unified, prioritized logic flow for all call types."""
@@ -636,24 +637,7 @@ class GraphBuilder:
         with self.driver.session() as session:
             for file_data in all_file_data:
                 self._create_function_calls(session, file_data, imports_map)
-    
-    def _create_class_method_relationships(self, session, file_data: Dict):
-        """Create CONTAINS relationships from classes to their methods"""
-        file_path = str(Path(file_data['file_path']).resolve())
-        
-        for func in file_data.get('functions', []):
-            class_context = func.get('class_context')
-            if class_context:
-                session.run("""
-                    MATCH (c:Class {name: $class_name, file_path: $file_path})
-                    MATCH (fn:Function {name: $func_name, file_path: $file_path, line_number: $func_line})
-                    MERGE (c)-[:CONTAINS]->(fn)
-                """, 
-                class_name=class_context,
-                file_path=file_path,
-                func_name=func['name'],
-                func_line=func['line_number'])
-                
+ 
     def _resolve_class_path(self, class_name: str, current_file_path: str, local_class_names: set, current_file_imports: list, global_imports_map: dict) -> Optional[str]:
         """Resolves the file path of a class based on import resolution priority."""
         # Priority 1: Class is defined in the current file.
@@ -798,40 +782,3 @@ class GraphBuilder:
                 self.job_manager.update_job(
                     job_id, status=JobStatus.FAILED, end_time=datetime.now(), errors=[str(e)]
                 )
-
-    def add_code_to_graph_tool(
-        self, path: str, is_dependency: bool = False
-    ) -> Dict[str, Any]:
-        """Tool to add code to Neo4j graph with background processing"""
-        try:
-            path_obj = Path(path).resolve()
-            if not path_obj.exists():
-                return {"error": f"Path {path} does not exist"}
-
-            estimation = self.estimate_processing_time(path_obj)
-            if estimation is None:
-                return {"error": f"Could not analyze path {path}."}
-            total_files, estimated_time = estimation
-
-            job_id = self.job_manager.create_job(str(path_obj), is_dependency)
-            self.job_manager.update_job(
-                job_id, total_files=total_files, estimated_duration=estimated_time
-            )
-
-            coro = self.build_graph_from_path_async(path_obj, is_dependency, job_id)
-            asyncio.run_coroutine_threadsafe(coro, self.loop)
-
-            debug_log(f"Started background job {job_id} for path: {str(path_obj)}")
-
-            return {
-                "success": True,
-                "job_id": job_id,
-                "message": f"Background processing started for {path_obj}",
-                "estimated_files": total_files,
-                "estimated_duration_seconds": round(estimated_time, 2),
-            }
-        except Exception as e:
-            debug_log(f"Error creating background job: {str(e)}")
-            return {
-                "error": f"Failed to start background processing: {e.__class__.__name__}: {e}"
-            }
