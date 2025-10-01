@@ -474,4 +474,66 @@ These examples use the `execute_cypher_query` tool for more specific and complex
   {
     "cypher_query": "MATCH (f:File {name: 'module_a.py'})-[:IMPORTS]->(m:Module) RETURN m.name AS imported_module_name"
   }
-```
+  ```
+
+![Query 40](images/40.png)
+
+### 41. Find large functions that should be refactored
+- **Natural Language:** "Find functions with more than 20 lines of code that might need refactoring."
+- **Tool:** `execute_cypher_query`
+- **JSON Arguments:**
+  ```json
+  {
+    "cypher_query": "MATCH (f:Function)
+    WHERE f.end_line - f.line_number > 20
+    RETURN f"
+  }
+  ```
+
+![Query 41](images/41.png)
+
+### 42. Find recursive functions
+- **Natural Language:** "Find all functions that call themselves (recursive functions)."
+- **Tool:** `execute_cypher_query`
+- **JSON Arguments:**
+  ```json
+  {
+    "cypher_query": "MATCH p=(f:Function)-[:CALLS]->(f2:Function)
+    WHERE f.name = f2.name AND f.file_path = f2.file_path
+    RETURN p"
+  }
+  ```
+![Query 42](images/42.png)
+
+### 42. Find most connected functions (hub functions)
+- **Natural Language:** "Find the functions that are most central to the codebase (called by many and call many others)."
+- **Tool:** `execute_cypher_query`
+- **JSON Arguments:**
+  ```json
+  {
+    "cypher_query": "MATCH (f:Function)
+    OPTIONAL MATCH (f)-[:CALLS]->(callee:Function)
+    OPTIONAL MATCH (caller:Function)-[:CALLS]->(f)
+    WITH f, count(DISTINCT callee) AS calls_out, count(DISTINCT caller) AS calls_in
+    ORDER BY (calls_out + calls_in) DESC
+    LIMIT 5
+    MATCH p=(f)-[*0..2]-()
+    RETURN p"
+  }
+  ```
+![Query 43](images/43.png)
+
+## Security & Sensitive Data Analysis
+
+### 42. Find potential security vulnerabilities (hardcoded secrets)
+- **Natural Language:** "Find potential hardcoded passwords, API keys, or secrets in the codebase."
+- **Tool:** `execute_cypher_query`
+- **JSON Arguments:**
+  ```json
+  {
+    "cypher_query": "WITH ["password",  "api_key", "apikey",    "secret_token", "token", "auth", "access_key", "private_key", "client_secret", "sessionid", "jwt"] AS keywords
+    MATCH (f:Function)
+    WHERE ANY(word IN keywords WHERE toLower(f.source_code) CONTAINS word)
+    RETURN f"
+  }
+  ```
