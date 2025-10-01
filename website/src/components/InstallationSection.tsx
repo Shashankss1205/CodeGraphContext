@@ -7,21 +7,21 @@ import { toast } from "sonner";
 const installSteps = [
   {
     step: "1",
-    title: "Install",
+    title: "Install Instantly",
     command: "pip install codegraphcontext",
-    description: "Install CodeGraphContext using pip"
+    description: "Get CodeGraphContext with a single pip command."
   },
   {
     step: "2", 
-    title: "Setup",
+    title: "Guided Setup",
     command: "cgc setup",
-    description: "Interactive wizard to configure Neo4j database"
+    description: "Let the interactive wizard configure your Neo4j database and IDE for you."
   },
   {
     step: "3",
-    title: "Start",
+    title: "Start Exploring",
     command: "cgc start",
-    description: "Launch the MCP server and start indexing"
+    description: "Launch the MCP server and begin indexing your codebase."
   }
 ];
 
@@ -32,38 +32,37 @@ const copyToClipboard = (text: string) => {
 
 const InstallationSection = () => {
   return (
-    <section className="py-24 px-4 bg-muted/20">
+    <section className="py-24 px-4 bg-gradient-to-br from-primary/5 via-background to-primary/10">
       <div className="container mx-auto max-w-5xl">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+          <h2 className="text-4xl md:text-5xl font-extrabold mb-6 bg-gradient-to-r from-primary to-graph-node-2 bg-clip-text text-transparent drop-shadow-lg animate-gradient-x">
             Get Started in Minutes
           </h2>
-          <p className="text-xl text-muted-foreground">
-            Simple installation with automated setup for Neo4j database configuration
+          <p className="text-xl text-muted-foreground animate-fade-in">
+            Install, set up, and launch your code graph in just three steps. No manual config—just code.
           </p>
         </div>
-        
         <div className="grid gap-6 mb-12">
           {installSteps.map((step, index) => (
             <Card 
               key={index}
-              className="bg-gradient-card border-border/50 hover:border-primary/30 transition-smooth animate-float-up"
-              style={{ animationDelay: `${index * 0.2}s` }}
+              className="bg-gradient-to-tr from-background via-white/60 to-primary/5 border border-border/30 hover:border-primary/40 transition-all duration-300 group hover:shadow-2xl animate-float-up"
+              style={{ animationDelay: `${index * 0.18}s` }}
             >
               <CardHeader className="pb-4">
                 <div className="flex items-center gap-4">
-                  <Badge variant="secondary" className="text-lg font-bold w-8 h-8 rounded-full flex items-center justify-center bg-primary/10">
+                  <Badge variant="secondary" className="text-lg font-bold w-8 h-8 rounded-full flex items-center justify-center bg-gradient-to-br from-primary/20 to-graph-node-2/20 shadow-md">
                     {step.step}
                   </Badge>
-                  <CardTitle className="text-xl">{step.title}</CardTitle>
+                  <CardTitle className="text-xl font-bold text-primary/90 group-hover:text-graph-node-2 transition-all duration-200">{step.title}</CardTitle>
                 </div>
-                <CardDescription className="text-base">
+                <CardDescription className="text-base animate-fade-in">
                   {step.description}
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="code-block flex items-center justify-between group">
-                  <code className="text-accent font-mono animate-code-highlight">
+                  <code className="text-accent font-mono animate-code-highlight text-lg">
                     $ {step.command}
                   </code>
                   <Button
@@ -79,11 +78,10 @@ const InstallationSection = () => {
             </Card>
           ))}
         </div>
-        
         {/* Setup Options */}
-        <Card className="bg-gradient-card border-border/50">
+        <Card className="bg-gradient-to-tr from-background via-white/60 to-primary/5 border border-border/30 shadow-md">
           <CardHeader>
-            <CardTitle className="flex items-center gap-3">
+            <CardTitle className="flex items-center gap-3 font-bold">
               <Settings className="h-6 w-6 text-primary" />
               Setup Options
             </CardTitle>
@@ -94,7 +92,7 @@ const InstallationSection = () => {
           <CardContent>
             <div className="grid md:grid-cols-3 gap-6">
               <div className="text-center">
-                <div className="w-12 h-12 bg-graph-node-1/10 rounded-lg flex items-center justify-center mx-auto mb-3">
+                <div className="w-12 h-12 bg-graph-node-1/10 rounded-lg flex items-center justify-center mx-auto mb-3 shadow-md">
                   <Terminal className="h-6 w-6 text-graph-node-1" />
                 </div>
                 <h4 className="font-semibold mb-2">Docker (Recommended)</h4>
@@ -102,9 +100,8 @@ const InstallationSection = () => {
                   Automated Neo4j setup using Docker containers
                 </p>
               </div>
-              
               <div className="text-center">
-                <div className="w-12 h-12 bg-graph-node-2/10 rounded-lg flex items-center justify-center mx-auto mb-3">
+                <div className="w-12 h-12 bg-graph-node-2/10 rounded-lg flex items-center justify-center mx-auto mb-3 shadow-md">
                   <Play className="h-6 w-6 text-graph-node-2" />
                 </div>
                 <h4 className="font-semibold mb-2">Linux Binary</h4>
@@ -112,9 +109,8 @@ const InstallationSection = () => {
                   Direct installation on Debian-based systems
                 </p>
               </div>
-              
               <div className="text-center">
-                <div className="w-12 h-12 bg-graph-node-3/10 rounded-lg flex items-center justify-center mx-auto mb-3">
+                <div className="w-12 h-12 bg-graph-node-3/10 rounded-lg flex items-center justify-center mx-auto mb-3 shadow-md">
                   <Settings className="h-6 w-6 text-graph-node-3" />
                 </div>
                 <h4 className="font-semibold mb-2">Hosted Database</h4>
