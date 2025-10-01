@@ -1,50 +1,36 @@
-<!-- Hacktoberfest banner and project insights -->
-<h1 align="center">
-  CodeGraphContext
-</h1>
+# CodeGraphContext
 
+<!-- ====== Project stats ====== -->
 <p align="center">
-  <b>This project is now OFFICIALLY accepted for:</b>
+
+<!-- Row 1: repo stats -->
+<img alt="Stars" src="https://img.shields.io/github/stars/Shashankss1205/CodeGraphContext?style=flat-square&logo=github"/> 
+<img alt="Forks" src="https://img.shields.io/github/forks/Shashankss1205/CodeGraphContext?style=flat-square&logo=github"/> 
+<img alt="Issues" src="https://img.shields.io/github/issues/Shashankss1205/CodeGraphContext?style=flat-square&logo=github"/> 
+<img alt="Open PRs" src="https://img.shields.io/github/issues-pr/Shashankss1205/CodeGraphContext?style=flat-square&logo=github"/> 
+<img alt="Closed PRs" src="https://img.shields.io/github/issues-pr-closed/Shashankss1205/CodeGraphContext?style=flat-square&logo=github"/> 
+<img alt="Contributors" src="https://img.shields.io/github/contributors/Shashankss1205/CodeGraphContext?style=flat-square&logo=github"/> 
+<img alt="Languages" src="https://img.shields.io/github/languages/count/Shashankss1205/CodeGraphContext?style=flat-square&logo=github"/>
+
+<br/>
+
+<!-- Row 2: CI, PyPI, license, links -->
+<a href="https://github.com/Shashankss1205/CodeGraphContext/actions/workflows/test.yml">
+  <img alt="Build Status" src="https://github.com/Shashankss1205/CodeGraphContext/actions/workflows/test.yml/badge.svg" />
+</a>
+<a href="https://pypi.org/project/codegraphcontext/">
+  <img alt="PyPI version" src="https://img.shields.io/pypi/v/codegraphcontext?style=flat-square"/>
+</a>
+<a href="https://pypi.org/project/codegraphcontext/">
+  <img alt="PyPI downloads" src="https://img.shields.io/pypi/dm/codegraphcontext?style=flat-square"/>
+</a>
+<img alt="License" src="https://img.shields.io/github/license/Shashankss1205/CodeGraphContext?style=flat-square"/>
+<a href="http://codegraphcontext.vercel.app/"><img alt="Website" src="https://img.shields.io/badge/website-up-brightgreen?style=flat-square"/></a>
+<a href="https://youtu.be/KYYSdxhg1xU"><img alt="YouTube" src="https://img.shields.io/badge/YouTube-Watch%20Demo-red?style=flat-square&logo=youtube"/></a>
+<a href="https://discord.gg/dR4QY32uYQ"><img alt="Discord" src="https://img.shields.io/badge/Discord-Join%20Chat-7289da?style=flat-square&logo=discord&logoColor=white"/></a>
+
 </p>
 
-<div align="center">
-  <img src="images/hackto.png" alt="Hacktoberfest" width="75%">
-</div>
-
-<table align="center">
-    <thead align="center">
-        <tr>
-            <td><b>🌟 Stars</b></td>
-            <td><b>🍴 Forks</b></td>
-            <td><b>🐛 Issues</b></td>
-            <td><b>🔔 Open PRs</b></td>
-            <td><b>🔕 Closed PRs</b></td>
-            <td><b>🛠️ Languages</b></td>
-            <td><b>👥 Contributors</b></td>
-        </tr>
-     </thead>
-    <tbody>
-         <tr>
-            <td><img alt="Stars" src="https://img.shields.io/github/stars/Shashankss1205/CodeGraphContext?style=flat&logo=github"/></td>
-            <td><img alt="Forks" src="https://img.shields.io/github/forks/Shashankss1205/CodeGraphContext?style=flat&logo=github"/></td>
-            <td><img alt="Issues" src="https://img.shields.io/github/issues/Shashankss1205/CodeGraphContext?style=flat&logo=github"/></td>
-            <td><img alt="Open PRs" src="https://img.shields.io/github/issues-pr/Shashankss1205/CodeGraphContext?style=flat&logo=github"/></td>
-            <td><img alt="Closed PRs" src="https://img.shields.io/github/issues-pr-closed/Shashankss1205/CodeGraphContext?style=flat&color=critical&logo=github"/></td>
-            <td><img alt="Languages Count" src="https://img.shields.io/github/languages/count/Shashankss1205/CodeGraphContext?style=flat&color=green&logo=github"></td>
-            <td><img alt="Contributors Count" src="https://img.shields.io/github/contributors/Shashankss1205/CodeGraphContext?style=flat&color=blue&logo=github"/></td>
-        </tr>
-    </tbody>
-</table>
-
-# CodeGraphContext
-[![Build Status](https://github.com/Shashankss1205/CodeGraphContext/actions/workflows/test.yml/badge.svg)](https://github.com/Shashankss1205/CodeGraphContext/actions/workflows/test.yml)
-[![PyPI version](https://img.shields.io/pypi/v/codegraphcontext)](https://pypi.org/project/codegraphcontext/)
-[![PyPI downloads](https://img.shields.io/pypi/dm/codegraphcontext)](https://pypi.org/project/codegraphcontext/)
-[![GitHub stars](https://img.shields.io/github/stars/Shashankss1205/CodeGraphContext?style=social)](https://github.com/Shashankss1205/CodeGraphContext/stargazers)
-[![License](https://img.shields.io/github/license/Shashankss1205/CodeGraphContext)](LICENSE)
-[![Website](https://img.shields.io/badge/website-up-brightgreen)](http://codegraphcontext.vercel.app/)
-[![Watch on YouTube](https://img.shields.io/badge/YouTube-Watch%20Demo-red?logo=youtube)](https://youtu.be/KYYSdxhg1xU)
-[![Join Discord](https://img.shields.io/badge/Discord-Join%20Chat-7289da?logo=discord&logoColor=white)](https://discord.gg/dR4QY32uYQ)
 
 An MCP server that indexes local code into a graph database to provide context to AI assistants.
 
