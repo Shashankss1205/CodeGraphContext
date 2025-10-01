@@ -1,13 +1,15 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { useState } from "react";
+import ExportButton from "@/components/ExportButton";
+import { useState, useRef } from "react";
 import graphTotalImage from "@/assets/graph-total.png";
 import functionCallsImage from "@/assets/function-calls.png";
 import hierarchyImage from "@/assets/hierarchy.png";
 
 const DemoSection = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const imageDialogRef = useRef<HTMLDivElement>(null);
   const visualizations = [
     {
       title: "Complete Code Graph",
@@ -92,16 +94,22 @@ const DemoSection = () => {
                     </div>
                   </DialogTrigger>
                   <DialogContent className="max-w-5xl w-full">
-                    <div className="relative">
+                    <div ref={imageDialogRef} className="relative">
+                      <div className="flex justify-between items-center mb-4">
+                        <div>
+                          <h4 className="text-xl font-semibold">{viz.title}</h4>
+                          <p className="text-muted-foreground">{viz.description}</p>
+                        </div>
+                        <ExportButton 
+                          targetElementRef={imageDialogRef}
+                          filename={`codegraph-${viz.title.toLowerCase().replace(/\s+/g, '-')}`}
+                        />
+                      </div>
                       <img
                         src={viz.image}
                         alt={viz.title}
-                        className="w-full h-auto max-h-[80vh] object-contain"
+                        className="w-full h-auto max-h-[70vh] object-contain rounded-lg"
                       />
-                      <div className="mt-4 text-center">
-                        <h4 className="text-xl font-semibold mb-2">{viz.title}</h4>
-                        <p className="text-muted-foreground">{viz.description}</p>
-                      </div>
                     </div>
                   </DialogContent>
                 </Dialog>
