@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/pypi/:path*",
+      "destination": "/api/pypi"
+    }
+  ]
+}

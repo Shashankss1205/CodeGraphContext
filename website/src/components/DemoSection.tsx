@@ -43,13 +43,14 @@ const DemoSection = () => {
           {/* YouTube Video */}
           <div className="max-w-4xl mx-auto mb-16">
             <div className="relative aspect-video rounded-lg overflow-hidden shadow-2xl border border-border/50">
-              <iframe
-                src="https://www.youtube.com/embed/KYYSdxhg1xU?autoplay=1&mute=1"
-                title="CodeGraphContext Demo"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="w-full h-full"
-              />
+                          <iframe
+                              src="https://www.youtube.com/embed/KYYSdxhg1xU?autoplay=1&mute=1&loop=1&playlist=KYYSdxhg1xU"
+                              title="CodeGraphContext Demo"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen
+                              className="w-full h-full"
+                          />
+
             </div>
           </div>
         </div>
