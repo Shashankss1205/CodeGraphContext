@@ -1,13 +1,34 @@
 import { Button } from "@/components/ui/button";
 import { Github, ExternalLink, Mail, MapPin, Phone } from "lucide-react";
 import { FaDiscord } from "react-icons/fa";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 const Footer = () => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+   const [version, setVersion] = useState("");
+  useEffect(() => {
+    async function fetchVersion() {
+      try {
+        const res = await fetch(
+          "https://raw.githubusercontent.com/Shashankss1205/CodeGraphContext/main/README.md"
+        );
+        if (!res.ok) throw new Error("Failed to fetch README");
 
+        const text = await res.text();
+        const match = text.match(
+          /\*\*Version:\*\*\s*([0-9]+\.[0-9]+\.[0-9]+)/i
+        );
+        setVersion(match ? match[1] : "N/A");
+      } catch (err) {
+        console.error(err);
+        setVersion("N/A");
+      }
+    }
+
+    fetchVersion();
+  }, []);
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -204,7 +225,7 @@ const Footer = () => {
             © 2025 CodeGraphContext. Released under the MIT License.
           </p>
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            <span>Version 0.1.10</span>
+            <span>Version {version}</span>
             <div className="w-1 h-1 bg-muted-foreground rounded-full" />
             <span>Python 3.8+</span>
             <div className="w-1 h-1 bg-muted-foreground rounded-full" />

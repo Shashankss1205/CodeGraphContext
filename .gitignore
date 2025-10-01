@@ -38,3 +38,6 @@ mcp.json
 
 # Docker
 docker-compose.yml 
+
+# yaml file for amazon Q developer
+devfile.yaml 
