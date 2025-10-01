@@ -8,6 +8,9 @@ env/
 venv/
 .venv/
 ./.env
+.venv311/
+venv311/
+docker-compose.yml
 
 # PyPI
 dist/
@@ -32,3 +35,9 @@ htmlcov/
 
 # MCP
 mcp.json
+
+# Docker
+docker-compose.yml 
+
+# yaml file for amazon Q developer
+devfile.yaml 

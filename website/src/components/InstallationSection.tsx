@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Copy, Terminal, Play, Settings } from "lucide-react";
 import { toast } from "sonner";
+import ShowStarGraph from "./ShowStarGraph";
 
 const installSteps = [
   {
@@ -32,7 +33,13 @@ const copyToClipboard = (text: string) => {
 
 const InstallationSection = () => {
   return (
+
     <section className="py-24 px-4 bg-gradient-to-br from-primary/5 via-background to-primary/10">
+
+    <>
+    <ShowStarGraph />
+    <section className="py-24 px-4 bg-muted/20">
+
       <div className="container mx-auto max-w-5xl">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-extrabold mb-6 bg-gradient-to-r from-primary to-graph-node-2 bg-clip-text text-transparent drop-shadow-lg animate-gradient-x">
@@ -123,6 +130,7 @@ const InstallationSection = () => {
         </Card>
       </div>
     </section>
+    </>
   );
 };
 

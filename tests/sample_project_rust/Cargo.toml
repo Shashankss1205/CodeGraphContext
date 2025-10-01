@@ -1,0 +1,13 @@
+[package]
+name = "sample_project_rust"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+
+[dev-dependencies]
+
+[lib]
+name = "sample_project_rust"
+path = "src/lib.rs"
+

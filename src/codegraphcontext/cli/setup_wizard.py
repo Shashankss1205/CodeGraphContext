@@ -8,6 +8,7 @@ import time
 import json
 import sys
 import shutil
+import yaml 
 
 console = Console()
 
@@ -71,12 +72,22 @@ def _generate_mcp_json(creds):
     console.print(f"[cyan]Neo4j credentials also saved to: {env_file}[/cyan]")
     _configure_ide(mcp_config)
 
+def convert_mcp_json_to_yaml():
+    json_path = Path.cwd() / "mcp.json"
+    yaml_path = Path.cwd() / "devfile.yaml"
+    if json_path.exists():
+        with open(json_path, "r") as json_file:
+            mcp_config = json.load(json_file)
+        with open(yaml_path, "w") as yaml_file:
+            yaml.dump(mcp_config, yaml_file, default_flow_style=False)
+        console.print(f"[green]Generated devfile.yaml for Amazon Q Developer at {yaml_path}[/green]")
+
 def _configure_ide(mcp_config):
     """Asks user for their IDE and configures it automatically."""
     questions = [
         {
             "type": "confirm",
-            "message": "Automatically configure your IDE/CLI (VS Code, Cursor, Claude, Gemini)?",
+            "message": "Automatically configure your IDE/CLI (VS Code, Cursor, Windsurf, Claude, Gemini, Cline, RooCode, ChatGPT Codex, Amazon Q Developer)?",
             "name": "configure_ide",
             "default": True,
         }
@@ -90,7 +101,7 @@ def _configure_ide(mcp_config):
         {
             "type": "list",
             "message": "Choose your IDE/CLI to configure:",
-            "choices": ["VS Code", "Cursor", "Claude code", "Gemini CLI", "None of the above"],
+            "choices": ["VS Code", "Cursor", "Windsurf", "Claude code", "Gemini CLI", "ChatGPT Codex", "Cline", "RooCode", "Amazon Q Developer", "None of the above"],
             "name": "ide_choice",
         }
     ]
@@ -101,8 +112,12 @@ def _configure_ide(mcp_config):
         console.print("\n[cyan]You can add the MCP server manually to your IDE/CLI.[/cyan]")
         return
 
-    if ide_choice in ["VS Code", "Cursor", "Claude code", "Gemini CLI"]:
+    if ide_choice in ["VS Code", "Cursor", "Claude code", "Gemini CLI", "ChatGPT Codex", "Cline", "Windsurf", "RooCode", "Amazon Q Developer"]:
         console.print(f"\n[bold cyan]Configuring for {ide_choice}...[/bold cyan]")
+
+        if ide_choice == "Amazon Q Developer":
+            convert_mcp_json_to_yaml()
+            return  
         
         config_paths = {
             "VS Code": [
@@ -117,11 +132,34 @@ def _configure_ide(mcp_config):
                 Path.home() / "AppData" / "Roaming" / "cursor" / "settings.json",
                 Path.home() / ".config" / "Cursor" / "User" / "settings.json",
             ],
+            "Windsurf": [
+                Path.home() / ".windsurf" / "settings.json",
+                Path.home() / ".config" / "windsurf" / "settings.json",
+                Path.home() / "Library" / "Application Support" / "windsurf" / "settings.json",
+                Path.home() / "AppData" / "Roaming" / "windsurf" / "settings.json",
+                Path.home() / ".config" / "Windsurf" / "User" / "settings.json",
+            ],
             "Claude code": [
                 Path.home() / ".claude.json"
             ],
             "Gemini CLI": [
                 Path.home() / ".gemini" / "settings.json"
+            ],
+            "ChatGPT Codex": [
+                Path.home() / ".openai" / "mcp_settings.json",
+                Path.home() / ".config" / "openai" / "settings.json",
+                Path.home() / "AppData" / "Roaming" / "OpenAI" / "settings.json"
+            ],
+            "Cline": [
+                Path.home() / ".config" / "Code" / "User" / "globalStorage" / "saoudrizwan.claude-dev" / "settings" / "cline_mcp_settings.json",
+                Path.home() / ".config" / "Code - OSS" / "User" / "globalStorage" / "saoudrizwan.claude-dev" / "settings" / "cline_mcp_settings.json",
+                Path.home() / "Library" / "Application Support" / "Code" / "User" / "globalStorage" / "saoudrizwan.claude-dev" / "settings" / "cline_mcp_settings.json",
+                Path.home() / "AppData" / "Roaming" / "Code" / "User" / "globalStorage" / "saoudrizwan.claude-dev" / "settings" / "cline_mcp_settings.json"
+            ],
+            "RooCode": [
+                Path.home() / ".config" / "Code" / "User" / "settings.json",   # Linux 
+                Path.home() / "AppData" / "Roaming" / "Code" / "User" / "settings.json",  # Windows
+                Path.home() / "Library" / "Application Support" / "Code" / "User" / "settings.json"  # macOS
             ]
         }
 

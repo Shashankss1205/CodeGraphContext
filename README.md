@@ -68,8 +68,10 @@ If you’re using CodeGraphContext in your project, feel free to open a PR and a
     After setting up your database, the wizard will ask to configure your development environment. It can automatically detect and configure the following:
     *   VS Code
     *   Cursor
+    *   Windsurf
     *   Claude
     *   Gemini CLI
+    *   ChatGPT Codex
 
     Upon successful configuration, `cgc setup` will generate and place the necessary configuration files:
     *   It creates an `mcp.json` file in your current directory for reference.
@@ -188,6 +190,6 @@ Once the server is running, you can interact with it through your AI assistant u
 
 Contributions are welcome! 🎉  
 Please see our [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
-If you have ideas for new features, integrations, or improvements, open an [issue](https://github.com/Shashankss1205/CodeGraphContext/issues) or submit a PR.
+If you have ideas for new features, integrations, or improvements, open an [issue](https://github.com/Shashankss1205/CodeGraphContext/issues) or submit a Pull Request.
 
 Join discussions and help shape the future of CodeGraphContext.

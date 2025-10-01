@@ -1,0 +1,3 @@
+// Demonstrates edge cases: empty, comments only, etc.
+// This file intentionally left mostly blank.
+// ...

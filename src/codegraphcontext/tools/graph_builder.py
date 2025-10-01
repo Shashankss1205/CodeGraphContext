@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 from typing import Any, Coroutine, Dict, Optional, Tuple
 from datetime import datetime
+import pathspec 
 
 from ..core.database import DatabaseManager
 from ..core.jobs import JobManager, JobStatus
@@ -1090,7 +1091,18 @@ class GraphBuilder:
             self.add_repository_to_graph(path, is_dependency)
             repo_name = path.name
 
+            cgcignore_path = path / ".cgcignore"
+            if cgcignore_path.exists():
+                with open(cgcignore_path) as f:
+                    ignore_patterns = f.read().splitlines()
+                spec = pathspec.PathSpec.from_lines('gitwildmatch', ignore_patterns)
+            else:
+                spec = None
+
             files = list(path.rglob("*.py")) if path.is_dir() else [path]
+            if spec:
+                files = [f for f in files if not spec.match_file(str(f.relative_to(path)))] 
+
             if job_id:
                 self.job_manager.update_job(job_id, total_files=len(files))
             
