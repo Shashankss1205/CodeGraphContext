@@ -1,3 +1,41 @@
+<!-- Hacktoberfest banner and project insights -->
+<h1 align="center">
+  CodeGraphContext
+</h1>
+
+<p align="center">
+  <b>This project is now OFFICIALLY accepted for:</b>
+</p>
+
+<div align="center">
+  <img src="images/hackto.png" alt="Hacktoberfest" width="75%">
+</div>
+
+<table align="center">
+    <thead align="center">
+        <tr>
+            <td><b>🌟 Stars</b></td>
+            <td><b>🍴 Forks</b></td>
+            <td><b>🐛 Issues</b></td>
+            <td><b>🔔 Open PRs</b></td>
+            <td><b>🔕 Closed PRs</b></td>
+            <td><b>🛠️ Languages</b></td>
+            <td><b>👥 Contributors</b></td>
+        </tr>
+     </thead>
+    <tbody>
+         <tr>
+            <td><img alt="Stars" src="https://img.shields.io/github/stars/Shashankss1205/CodeGraphContext?style=flat&logo=github"/></td>
+            <td><img alt="Forks" src="https://img.shields.io/github/forks/Shashankss1205/CodeGraphContext?style=flat&logo=github"/></td>
+            <td><img alt="Issues" src="https://img.shields.io/github/issues/Shashankss1205/CodeGraphContext?style=flat&logo=github"/></td>
+            <td><img alt="Open PRs" src="https://img.shields.io/github/issues-pr/Shashankss1205/CodeGraphContext?style=flat&logo=github"/></td>
+            <td><img alt="Closed PRs" src="https://img.shields.io/github/issues-pr-closed/Shashankss1205/CodeGraphContext?style=flat&color=critical&logo=github"/></td>
+            <td><img alt="Languages Count" src="https://img.shields.io/github/languages/count/Shashankss1205/CodeGraphContext?style=flat&color=green&logo=github"></td>
+            <td><img alt="Contributors Count" src="https://img.shields.io/github/contributors/Shashankss1205/CodeGraphContext?style=flat&color=blue&logo=github"/></td>
+        </tr>
+    </tbody>
+</table>
+
 # CodeGraphContext
 [![Build Status](https://github.com/Shashankss1205/CodeGraphContext/actions/workflows/test.yml/badge.svg)](https://github.com/Shashankss1205/CodeGraphContext/actions/workflows/test.yml)
 [![PyPI version](https://img.shields.io/pypi/v/codegraphcontext)](https://pypi.org/project/codegraphcontext/)
