@@ -3,21 +3,20 @@
 <!-- ====== Project stats ====== -->
 <!-- ====== Project stats ====== -->
 
-[![Stars](https://img.shields.io/github/stars/Shashankss1205/CodeGraphContext?style=flat-square&logo=github)](https://github.com/Shashankss1205/CodeGraphContext/stargazers)
-[![Forks](https://img.shields.io/github/forks/Shashankss1205/CodeGraphContext?style=flat-square&logo=github)](https://github.com/Shashankss1205/CodeGraphContext/network/members)
-[![Open Issues](https://img.shields.io/github/issues-raw/Shashankss1205/CodeGraphContext?style=flat-square&logo=github)](https://github.com/Shashankss1205/CodeGraphContext/issues)
-[![Open PRs](https://img.shields.io/github/issues-pr/Shashankss1205/CodeGraphContext?style=flat-square&logo=github)](https://github.com/Shashankss1205/CodeGraphContext/pulls)
-[![Closed PRs](https://img.shields.io/github/issues-pr-closed/Shashankss1205/CodeGraphContext?style=flat-square&logo=github&color=lightgrey)](https://github.com/Shashankss1205/CodeGraphContext/pulls?q=is%3Apr+is%3Aclosed)
-[![Contributors](https://img.shields.io/github/contributors/Shashankss1205/CodeGraphContext?style=flat-square&logo=github)](https://github.com/Shashankss1205/CodeGraphContext/graphs/contributors)
-[![Languages](https://img.shields.io/github/languages/count/Shashankss1205/CodeGraphContext?style=flat-square&logo=github)](https://github.com/Shashankss1205/CodeGraphContext)
-
+[![Stars](https://img.shields.io/github/stars/Shashankss1205/CodeGraphContext?logo=github)](https://github.com/Shashankss1205/CodeGraphContext/stargazers)
+[![Forks](https://img.shields.io/github/forks/Shashankss1205/CodeGraphContext?logo=github)](https://github.com/Shashankss1205/CodeGraphContext/network/members)
+[![Open Issues](https://img.shields.io/github/issues-raw/Shashankss1205/CodeGraphContext?logo=github)](https://github.com/Shashankss1205/CodeGraphContext/issues)
+[![Open PRs](https://img.shields.io/github/issues-pr/Shashankss1205/CodeGraphContext?logo=github)](https://github.com/Shashankss1205/CodeGraphContext/pulls)
+[![Closed PRs](https://img.shields.io/github/issues-pr-closed/Shashankss1205/CodeGraphContext?logo=github&color=lightgrey)](https://github.com/Shashankss1205/CodeGraphContext/pulls?q=is%3Apr+is%3Aclosed)
+[![Contributors](https://img.shields.io/github/contributors/Shashankss1205/CodeGraphContext?logo=github)](https://github.com/Shashankss1205/CodeGraphContext/graphs/contributors)
+[![Languages](https://img.shields.io/github/languages/count/Shashankss1205/CodeGraphContext?logo=github)](https://github.com/Shashankss1205/CodeGraphContext)
 [![Build Status](https://github.com/Shashankss1205/CodeGraphContext/actions/workflows/test.yml/badge.svg)](https://github.com/Shashankss1205/CodeGraphContext/actions/workflows/test.yml)
-[![PyPI version](https://img.shields.io/pypi/v/codegraphcontext?style=flat-square)](https://pypi.org/project/codegraphcontext/)
-[![PyPI downloads](https://img.shields.io/pypi/dm/codegraphcontext?style=flat-square)](https://pypi.org/project/codegraphcontext/)
-[![License](https://img.shields.io/github/license/Shashankss1205/CodeGraphContext?style=flat-square)](LICENSE)
-[![Website](https://img.shields.io/badge/website-up-brightgreen?style=flat-square)](http://codegraphcontext.vercel.app/)
-[![YouTube](https://img.shields.io/badge/YouTube-Watch%20Demo-red?style=flat-square&logo=youtube)](https://youtu.be/KYYSdxhg1xU)
-[![Discord](https://img.shields.io/badge/Discord-Join%20Chat-7289da?style=flat-square&logo=discord&logoColor=white)](https://discord.gg/dR4QY32uYQ)
+[![PyPI version](https://img.shields.io/pypi/v/codegraphcontext?)](https://pypi.org/project/codegraphcontext/)
+[![PyPI downloads](https://img.shields.io/pypi/dm/codegraphcontext?)](https://pypi.org/project/codegraphcontext/)
+[![License](https://img.shields.io/github/license/Shashankss1205/CodeGraphContext?)](LICENSE)
+[![Website](https://img.shields.io/badge/website-up-brightgreen?)](http://codegraphcontext.vercel.app/)
+[![YouTube](https://img.shields.io/badge/YouTube-Watch%20Demo-red?logo=youtube)](https://youtu.be/KYYSdxhg1xU)
+[![Discord](https://img.shields.io/badge/Discord-Join%20Chat-7289da?logo=discord&logoColor=white)](https://discord.gg/dR4QY32uYQ)
 
 
 
