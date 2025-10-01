@@ -1,57 +1,24 @@
 # CodeGraphContext
 
 <!-- ====== Project stats ====== -->
-<p>
+<!-- ====== Project stats ====== -->
 
-<!-- Row 1: repo stats -->
-<a href="https://github.com/Shashankss1205/CodeGraphContext/stargazers">
-  <img alt="Stars" src="https://img.shields.io/github/stars/Shashankss1205/CodeGraphContext?style=flat-square&logo=github"/>
-</a>
-<a href="https://github.com/Shashankss1205/CodeGraphContext/network/members">
-  <img alt="Forks" src="https://img.shields.io/github/forks/Shashankss1205/CodeGraphContext?style=flat-square&logo=github"/>
-</a>
-<a href="https://github.com/Shashankss1205/CodeGraphContext/issues">
-  <img alt="Open Issues" src="https://img.shields.io/github/issues-raw/Shashankss1205/CodeGraphContext?style=flat-square&logo=github"/>
-</a>
-<a href="https://github.com/Shashankss1205/CodeGraphContext/pulls">
-  <img alt="Open PRs" src="https://img.shields.io/github/issues-pr/Shashankss1205/CodeGraphContext?style=flat-square&logo=github"/>
-</a>
-<a href="https://github.com/Shashankss1205/CodeGraphContext/pulls?q=is%3Apr+is%3Aclosed">
-  <img alt="Closed PRs" src="https://img.shields.io/github/issues-pr-closed/Shashankss1205/CodeGraphContext?style=flat-square&logo=github&color=lightgrey"/>
-</a>
-<a href="https://github.com/Shashankss1205/CodeGraphContext/graphs/contributors">
-  <img alt="Contributors" src="https://img.shields.io/github/contributors/Shashankss1205/CodeGraphContext?style=flat-square&logo=github"/>
-</a>
-<a href="https://github.com/Shashankss1205/CodeGraphContext">
-  <img alt="Languages" src="https://img.shields.io/github/languages/count/Shashankss1205/CodeGraphContext?style=flat-square&logo=github"/>
-</a>
+[![Stars](https://img.shields.io/github/stars/Shashankss1205/CodeGraphContext?style=flat-square&logo=github)](https://github.com/Shashankss1205/CodeGraphContext/stargazers)
+[![Forks](https://img.shields.io/github/forks/Shashankss1205/CodeGraphContext?style=flat-square&logo=github)](https://github.com/Shashankss1205/CodeGraphContext/network/members)
+[![Open Issues](https://img.shields.io/github/issues-raw/Shashankss1205/CodeGraphContext?style=flat-square&logo=github)](https://github.com/Shashankss1205/CodeGraphContext/issues)
+[![Open PRs](https://img.shields.io/github/issues-pr/Shashankss1205/CodeGraphContext?style=flat-square&logo=github)](https://github.com/Shashankss1205/CodeGraphContext/pulls)
+[![Closed PRs](https://img.shields.io/github/issues-pr-closed/Shashankss1205/CodeGraphContext?style=flat-square&logo=github&color=lightgrey)](https://github.com/Shashankss1205/CodeGraphContext/pulls?q=is%3Apr+is%3Aclosed)
+[![Contributors](https://img.shields.io/github/contributors/Shashankss1205/CodeGraphContext?style=flat-square&logo=github)](https://github.com/Shashankss1205/CodeGraphContext/graphs/contributors)
+[![Languages](https://img.shields.io/github/languages/count/Shashankss1205/CodeGraphContext?style=flat-square&logo=github)](https://github.com/Shashankss1205/CodeGraphContext)
 
-<br/>
+[![Build Status](https://github.com/Shashankss1205/CodeGraphContext/actions/workflows/test.yml/badge.svg)](https://github.com/Shashankss1205/CodeGraphContext/actions/workflows/test.yml)
+[![PyPI version](https://img.shields.io/pypi/v/codegraphcontext?style=flat-square)](https://pypi.org/project/codegraphcontext/)
+[![PyPI downloads](https://img.shields.io/pypi/dm/codegraphcontext?style=flat-square)](https://pypi.org/project/codegraphcontext/)
+[![License](https://img.shields.io/github/license/Shashankss1205/CodeGraphContext?style=flat-square)](LICENSE)
+[![Website](https://img.shields.io/badge/website-up-brightgreen?style=flat-square)](http://codegraphcontext.vercel.app/)
+[![YouTube](https://img.shields.io/badge/YouTube-Watch%20Demo-red?style=flat-square&logo=youtube)](https://youtu.be/KYYSdxhg1xU)
+[![Discord](https://img.shields.io/badge/Discord-Join%20Chat-7289da?style=flat-square&logo=discord&logoColor=white)](https://discord.gg/dR4QY32uYQ)
 
-<!-- Row 2: CI, PyPI, license, links -->
-<a href="https://github.com/Shashankss1205/CodeGraphContext/actions/workflows/test.yml">
-  <img alt="Build Status" src="https://github.com/Shashankss1205/CodeGraphContext/actions/workflows/test.yml/badge.svg"/>
-</a>
-<a href="https://pypi.org/project/codegraphcontext/">
-  <img alt="PyPI version" src="https://img.shields.io/pypi/v/codegraphcontext?style=flat-square"/>
-</a>
-<a href="https://pypi.org/project/codegraphcontext/">
-  <img alt="PyPI downloads" src="https://img.shields.io/pypi/dm/codegraphcontext?style=flat-square"/>
-</a>
-<a href="LICENSE">
-  <img alt="License" src="https://img.shields.io/github/license/Shashankss1205/CodeGraphContext?style=flat-square"/>
-</a>
-<a href="http://codegraphcontext.vercel.app/">
-  <img alt="Website" src="https://img.shields.io/badge/website-up-brightgreen?style=flat-square"/>
-</a>
-<a href="https://youtu.be/KYYSdxhg1xU">
-  <img alt="YouTube" src="https://img.shields.io/badge/YouTube-Watch%20Demo-red?style=flat-square&logo=youtube"/>
-</a>
-<a href="https://discord.gg/dR4QY32uYQ">
-  <img alt="Discord" src="https://img.shields.io/badge/Discord-Join%20Chat-7289da?style=flat-square&logo=discord&logoColor=white"/>
-</a>
-
-</p>
 
 
 
