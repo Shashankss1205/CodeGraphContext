@@ -67,8 +67,11 @@ const HeroSection = () => {
           <p className="text-xl md:text-2xl text-muted-foreground mb-4 leading-relaxed">
             An MCP server that indexes local code into a
           </p>
-          <p className="text-xl md:text-2xl text-accent font-semibold mb-8">
+          <p className="text-xl md:text-2xl text-accent font-semibold mb-2">
             knowledge graph for AI assistants
+          </p>
+          <p className="text-lg text-muted-foreground mb-8">
+            with beautiful visualization exports in PNG, SVG, PDF & HTML
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">

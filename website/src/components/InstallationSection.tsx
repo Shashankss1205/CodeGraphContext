@@ -26,6 +26,15 @@ const installSteps = [
   }
 ];
 
+const optionalSteps = [
+  {
+    step: "+",
+    title: "Export Tools",
+    command: "pip install 'codegraphcontext[visualization]'",
+    description: "Optional: Install visualization dependencies for graph export functionality"
+  }
+];
+
 const copyToClipboard = (text: string) => {
   navigator.clipboard.writeText(text);
   toast.success("Copied to clipboard!");
@@ -77,6 +86,48 @@ const InstallationSection = () => {
                   >
                     <Copy className="h-4 w-4" />
                   </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        
+        {/* Optional Export Installation */}
+        <div className="mb-12">
+          <h3 className="text-2xl font-semibold mb-6 text-center">Optional: Export Functionality</h3>
+          {optionalSteps.map((step, index) => (
+            <Card 
+              key={index}
+              className="bg-gradient-card border-dashed border-primary/30 hover:border-primary/50 transition-smooth animate-float-up"
+              style={{ animationDelay: `0.6s` }}
+            >
+              <CardHeader className="pb-4">
+                <div className="flex items-center gap-4">
+                  <Badge variant="outline" className="text-lg font-bold w-8 h-8 rounded-full flex items-center justify-center border-primary/30 text-primary">
+                    {step.step}
+                  </Badge>
+                  <CardTitle className="text-xl">{step.title}</CardTitle>
+                </div>
+                <CardDescription className="text-base">
+                  {step.description}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="code-block flex items-center justify-between group">
+                  <code className="text-accent font-mono animate-code-highlight">
+                    $ {step.command}
+                  </code>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => copyToClipboard(step.command)}
+                    className="opacity-0 group-hover:opacity-100 transition-all duration-200 hover:bg-primary/10"
+                  >
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </div>
+                <div className="mt-4 text-sm text-muted-foreground">
+                  <p><strong>Enables:</strong> PNG, SVG, PDF, HTML exports • Multiple layout algorithms • High-quality visualizations</p>
                 </div>
               </CardContent>
             </Card>

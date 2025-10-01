@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MessageCircle, Search, Eye, BarChart3 } from "lucide-react";
+import { MessageCircle, Search, Eye, BarChart3, FileImage } from "lucide-react";
 
 const examples = [
   {
@@ -19,6 +19,15 @@ const examples = [
     examples: [
       "Show me all functions that call `process_data()`",
       "Find the class hierarchy for `BaseProcessor`"
+    ]
+  },
+  {
+    icon: FileImage,
+    category: "Export",
+    title: "Graph Visualization",
+    examples: [
+      "Export a PNG visualization of my code graph",
+      "Create an interactive HTML graph for my documentation"
     ]
   },
   {
