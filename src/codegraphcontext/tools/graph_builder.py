@@ -140,7 +140,6 @@ class TreeSitterParser:
             "is_dependency": is_dependency,
         }
 
-    # <<< MY NEW METHOD
     def _find_lambda_assignments(self, root_node):
         functions = []
         query = self.queries.get('lambda_assignments')
@@ -176,7 +175,6 @@ class TreeSitterParser:
                 }
                 functions.append(func_data)
         return functions
-    # >>> END OF NEW METHOD
 
     def _find_functions(self, root_node):
         functions = []
@@ -527,28 +525,7 @@ class GraphBuilder:
                     MERGE (f)-[:IMPORTS]->(m)
                 """, file_path=file_path_str, **imp)
 
-            # Handle class inheritance
-            local_class_names = {c['name'] for c in file_data.get('classes', [])}
-            for class_item in file_data.get('classes', []):
-                if class_item.get('bases'):
-                    for base_class_name in class_item['bases']:
-                        resolved_parent_file_path = self._resolve_class_path(
-                            base_class_name,
-                            file_path_str,
-                            local_class_names,
-                            file_data['imports'],
-                            imports_map
-                        )
-                        if resolved_parent_file_path:
-                            session.run("""
-                                MATCH (child:Class {name: $child_name, file_path: $file_path})
-                                MATCH (parent:Class {name: $parent_name, file_path: $resolved_parent_file_path})
-                                MERGE (child)-[:INHERITS]->(parent)
-                            """, 
-                            child_name=class_item['name'], 
-                            file_path=file_path_str, 
-                            parent_name=base_class_name,
-                            resolved_parent_file_path=resolved_parent_file_path)
+            # Class inheritance is handled in a separate pass after all files are processed.
 
             # Handle CONTAINS relationship between class to their children like variables
             for func in file_data.get('functions', []):
@@ -637,6 +614,42 @@ class GraphBuilder:
         with self.driver.session() as session:
             for file_data in all_file_data:
                 self._create_function_calls(session, file_data, imports_map)
+
+    def _create_inheritance_links(self, session, file_data: Dict, imports_map: dict):
+        """Create INHERITS relationships for classes in a file."""
+        file_path_str = str(Path(file_data['file_path']).resolve())
+        local_class_names = {c['name'] for c in file_data.get('classes', [])}
+
+        for class_item in file_data.get('classes', []):
+            if class_item.get('bases'):
+                for base_class_name in class_item['bases']:
+                    # Skip object as it's a built-in
+                    if base_class_name == 'object':
+                        continue
+                        
+                    resolved_parent_file_path = self._resolve_class_path(
+                        base_class_name,
+                        file_path_str,
+                        local_class_names,
+                        file_data['imports'],
+                        imports_map
+                    )
+                    if resolved_parent_file_path:
+                        session.run("""
+                            MATCH (child:Class {name: $child_name, file_path: $file_path})
+                            MATCH (parent:Class {name: $parent_name, file_path: $resolved_parent_file_path})
+                            MERGE (child)-[:INHERITS]->(parent)
+                        """,
+                        child_name=class_item['name'],
+                        file_path=file_path_str,
+                        parent_name=base_class_name,
+                        resolved_parent_file_path=resolved_parent_file_path)
+
+    def _create_all_inheritance_links(self, all_file_data: list[Dict], imports_map: dict):
+        """Create INHERITS relationships for all classes after all files have been processed."""
+        with self.driver.session() as session:
+            for file_data in all_file_data:
+                self._create_inheritance_links(session, file_data, imports_map)
  
     def _resolve_class_path(self, class_name: str, current_file_path: str, local_class_names: set, current_file_imports: list, global_imports_map: dict) -> Optional[str]:
         """Resolves the file path of a class based on import resolution priority."""
@@ -772,6 +785,7 @@ class GraphBuilder:
                         self.job_manager.update_job(job_id, processed_files=processed_count)
                     await asyncio.sleep(0.01)
 
+            self._create_all_inheritance_links(all_file_data, imports_map)
             self._create_all_function_calls(all_file_data, imports_map)
             
             if job_id:
