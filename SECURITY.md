@@ -2,7 +2,7 @@
 
 ## 📌 Supported Versions
 
-We aim to keep `aitoolbox.software` up to date and secure. Please see below for the versions we currently support with security updates.
+We aim to keep `CodeGraphContext` up to date and secure. Please see below for the versions we currently support with security updates.
 
 | Version | Supported          |
 |---------|--------------------|
@@ -56,7 +56,7 @@ While using this project, we recommend you:
 
 ## 🙏 Acknowledgments
 
-We value the contributions from the community and encourage responsible disclosure to help keep `aitoolbox.software` safe and secure for all users.
+We value the contributions from the community and encourage responsible disclosure to help keep `CodeGraphContext` safe and secure for all users.
 
 ---
 
