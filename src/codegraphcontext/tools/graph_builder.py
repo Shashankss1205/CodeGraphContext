@@ -36,10 +36,9 @@ class TreeSitterParser:
         if self.language_name == 'python':
             from .languages.python import PythonTreeSitterParser
             self.language_specific_parser = PythonTreeSitterParser(self)
-        # In the future, you would add:
-        # elif self.language_name == 'javascript':
-        #     from .languages.javascript import JavascriptTreeSitterParser
-        #     self.language_specific_parser = JavascriptTreeSitterParser(self)
+        elif self.language_name == 'javascript':
+            from .languages.javascript import JavascriptTreeSitterParser
+            self.language_specific_parser = JavascriptTreeSitterParser(self)
 
     def parse(self, file_path: Path, is_dependency: bool = False) -> Dict:
         """Dispatches parsing to the language-specific parser."""
@@ -58,7 +57,7 @@ class GraphBuilder:
         self.driver = self.db_manager.get_driver()
         self.parsers = {
             '.py': TreeSitterParser('python'),
-            # '.js': TreeSitterParser('javascript'), # Example for future extension
+            '.js': TreeSitterParser('javascript'), # Added JavaScript parser
         }
         self.create_schema()
 
@@ -106,9 +105,9 @@ class GraphBuilder:
         if '.py' in files_by_lang:
             from .languages import python as python_lang_module
             imports_map.update(python_lang_module.pre_scan_python(files_by_lang['.py'], self.parsers['.py']))
-        # if '.js' in files_by_lang:
-        #     from .languages import javascript as js_lang_module
-        #     imports_map.update(js_lang_module.pre_scan_javascript(files_by_lang['.js'], self.parsers['.js']))
+        elif '.js' in files_by_lang:
+            from .languages import javascript as js_lang_module
+            imports_map.update(js_lang_module.pre_scan_javascript(files_by_lang['.js'], self.parsers['.js']))
             
         return imports_map
 
@@ -138,7 +137,8 @@ class GraphBuilder:
 
         with self.driver.session() as session:
             try:
-                repo_result = session.run("MATCH (r:Repository {name: $repo_name}) RETURN r.path as path", repo_name=repo_name).single()
+                # Match repository by path, not name, to avoid conflicts with same-named folders at different locations
+                repo_result = session.run("MATCH (r:Repository {path: $repo_path}) RETURN r.path as path", repo_path=str(Path(file_data['repo_path']).resolve())).single()
                 relative_path = str(Path(file_path_str).relative_to(Path(repo_result['path']))) if repo_result else file_name
             except ValueError:
                 relative_path = file_name
@@ -461,10 +461,15 @@ class GraphBuilder:
     def estimate_processing_time(self, path: Path) -> Optional[Tuple[int, float]]:
         """Estimate processing time and file count"""
         try:
+            supported_extensions = self.parsers.keys()
             if path.is_file():
-                files = [path]
+                if path.suffix in supported_extensions:
+                    files = [path]
+                else:
+                    return 0, 0.0 # Not a supported file type
             else:
-                files = list(path.rglob("*.py"))
+                all_files = path.rglob("*")
+                files = [f for f in all_files if f.is_file() and f.suffix in supported_extensions]
             
             total_files = len(files)
             estimated_time = total_files * 0.05 # tree-sitter is faster
