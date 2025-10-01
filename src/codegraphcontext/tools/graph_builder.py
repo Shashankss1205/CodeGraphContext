@@ -364,7 +364,6 @@ class GraphBuilder:
         self.job_manager = job_manager
         self.loop = loop
         self.driver = self.db_manager.get_driver()
-        # --- NEW: Instantiate the parser for Python ---
         self.py_parser = TreeSitterParser('python')
         self.create_schema()
 
@@ -432,6 +431,7 @@ class GraphBuilder:
                 is_dependency=is_dependency,
             )
 
+    # First pass to add file and its contents
     def add_file_to_graph(self, file_data: Dict, repo_name: str, imports_map: dict):
         logger.info("Executing add_file_to_graph with my change!")
         """Adds a file and its contents within a single, unified session."""
@@ -540,6 +540,7 @@ class GraphBuilder:
                     func_name=func['name'],
                     func_line=func['line_number'])
 
+    # Second pass to create relationships that depend on all files being present like call functions and class inheritance
     def _create_function_calls(self, session, file_data: Dict, imports_map: dict):
         """Create CALLS relationships with a unified, prioritized logic flow for all call types."""
         caller_file_path = str(Path(file_data['file_path']).resolve())
@@ -616,53 +617,74 @@ class GraphBuilder:
                 self._create_function_calls(session, file_data, imports_map)
 
     def _create_inheritance_links(self, session, file_data: Dict, imports_map: dict):
-        """Create INHERITS relationships for classes in a file."""
-        file_path_str = str(Path(file_data['file_path']).resolve())
+        """Create INHERITS relationships with a more robust resolution logic."""
+        caller_file_path = str(Path(file_data['file_path']).resolve())
         local_class_names = {c['name'] for c in file_data.get('classes', [])}
+        # Create a map of local import aliases/names to full import names
+        local_imports = {imp.get('alias') or imp['name'].split('.')[-1]: imp['name']
+                         for imp in file_data.get('imports', [])}
 
         for class_item in file_data.get('classes', []):
-            if class_item.get('bases'):
-                for base_class_name in class_item['bases']:
-                    # Skip object as it's a built-in
-                    if base_class_name == 'object':
-                        continue
-                        
-                    resolved_parent_file_path = self._resolve_class_path(
-                        base_class_name,
-                        file_path_str,
-                        local_class_names,
-                        file_data['imports'],
-                        imports_map
-                    )
-                    if resolved_parent_file_path:
-                        session.run("""
-                            MATCH (child:Class {name: $child_name, file_path: $file_path})
-                            MATCH (parent:Class {name: $parent_name, file_path: $resolved_parent_file_path})
-                            MERGE (child)-[:INHERITS]->(parent)
-                        """,
-                        child_name=class_item['name'],
-                        file_path=file_path_str,
-                        parent_name=base_class_name,
-                        resolved_parent_file_path=resolved_parent_file_path)
+            if not class_item.get('bases'):
+                continue
+
+            for base_class_str in class_item['bases']:
+                if base_class_str == 'object':
+                    continue
+
+                resolved_path = None
+                target_class_name = base_class_str.split('.')[-1]
+
+                # Handle qualified names like module.Class or alias.Class
+                if '.' in base_class_str:
+                    lookup_name = base_class_str.split('.')[0]
+                    
+                    # Case 1: The prefix is a known import
+                    if lookup_name in local_imports:
+                        full_import_name = local_imports[lookup_name]
+                        possible_paths = imports_map.get(target_class_name, [])
+                        # Find the path that corresponds to the imported module
+                        for path in possible_paths:
+                            if full_import_name.replace('.', '/') in path:
+                                resolved_path = path
+                                break
+                # Handle simple names
+                else:
+                    lookup_name = base_class_str
+                    # Case 2: The base class is in the same file
+                    if lookup_name in local_class_names:
+                        resolved_path = caller_file_path
+                    # Case 3: The base class was imported directly (e.g., from module import Parent)
+                    elif lookup_name in local_imports:
+                        full_import_name = local_imports[lookup_name]
+                        possible_paths = imports_map.get(target_class_name, [])
+                        for path in possible_paths:
+                            if full_import_name.replace('.', '/') in path:
+                                resolved_path = path
+                                break
+                    # Case 4: Fallback to global map (less reliable)
+                    elif lookup_name in imports_map:
+                        possible_paths = imports_map[lookup_name]
+                        if len(possible_paths) == 1:
+                            resolved_path = possible_paths[0]
+                
+                # If a path was found, create the relationship
+                if resolved_path:
+                    session.run("""
+                        MATCH (child:Class {name: $child_name, file_path: $file_path})
+                        MATCH (parent:Class {name: $parent_name, file_path: $resolved_parent_file_path})
+                        MERGE (child)-[:INHERITS]->(parent)
+                    """,
+                    child_name=class_item['name'],
+                    file_path=caller_file_path,
+                    parent_name=target_class_name,
+                    resolved_parent_file_path=resolved_path)
 
     def _create_all_inheritance_links(self, all_file_data: list[Dict], imports_map: dict):
         """Create INHERITS relationships for all classes after all files have been processed."""
         with self.driver.session() as session:
             for file_data in all_file_data:
                 self._create_inheritance_links(session, file_data, imports_map)
- 
-    def _resolve_class_path(self, class_name: str, current_file_path: str, local_class_names: set, current_file_imports: list, global_imports_map: dict) -> Optional[str]:
-        """Resolves the file path of a class based on import resolution priority."""
-        # Priority 1: Class is defined in the current file.
-        if class_name in local_class_names:
-            return current_file_path
-
-        # This method now relies more heavily on the global_imports_map provided by the pre-scan
-        if class_name in global_imports_map:
-            # In a multi-file project, there could be multiple definitions.
-            # A more robust solution would use local import context to disambiguate.
-            return global_imports_map[class_name][0]
-        return None
                 
     def delete_file_from_graph(self, file_path: str):
         """Deletes a file and all its contained elements and relationships."""
