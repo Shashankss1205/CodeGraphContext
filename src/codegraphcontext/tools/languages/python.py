@@ -300,10 +300,9 @@ class PythonTreeSitterParser:
                             
                             if imported_name:
                                 full_import_name = f"{module_name}.{imported_name}"
-                                if full_import_name in seen_modules:
-                                    continue
-                                seen_modules.add(full_import_name)
-
+                                if full_import_name in seen_modules:                                                                                                
+                                    continue                                                                                                                        
+                                seen_modules.add(full_import_name) 
                                 imports.append({
                                     "name": imported_name,
                                     "full_import_name": full_import_name,
@@ -313,18 +312,7 @@ class PythonTreeSitterParser:
                                     "lang": self.language_name,
                                     "is_dependency": False,
                                 })
-                    # Also add the module itself as an import if it's not already there
-                    if module_name not in seen_modules:
-                        seen_modules.add(module_name)
-                        imports.append({
-                            "name": module_name,
-                            "full_import_name": module_name,
-                            "line_number": node.start_point[0] + 1,
-                            "alias": None,
-                            "context": self._get_parent_context(node)[:2],
-                            "lang": self.language_name,
-                            "is_dependency": False,
-                        })
+
         return imports
 
     def _find_calls(self, root_node):
