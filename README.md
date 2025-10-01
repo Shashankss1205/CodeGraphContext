@@ -4,13 +4,27 @@
 <p>
 
 <!-- Row 1: repo stats -->
-<img alt="Stars" src="https://img.shields.io/github/stars/Shashankss1205/CodeGraphContext?style=flat-square&logo=github"/>
-<img alt="Forks" src="https://img.shields.io/github/forks/Shashankss1205/CodeGraphContext?style=flat-square&logo=github"/>
-<img alt="Open Issues" src="https://img.shields.io/github/issues-raw/Shashankss1205/CodeGraphContext?style=flat-square&logo=github"/>
-<img alt="Open PRs" src="https://img.shields.io/github/issues-pr/Shashankss1205/CodeGraphContext?style=flat-square&logo=github"/>
-<img alt="Closed PRs" src="https://img.shields.io/github/issues-pr-closed/Shashankss1205/CodeGraphContext?style=flat-square&logo=github&color=lightgrey"/>
-<img alt="Contributors" src="https://img.shields.io/github/contributors/Shashankss1205/CodeGraphContext?style=flat-square&logo=github"/>
-<img alt="Languages" src="https://img.shields.io/github/languages/count/Shashankss1205/CodeGraphContext?style=flat-square&logo=github"/>
+<a href="https://github.com/Shashankss1205/CodeGraphContext/stargazers">
+  <img alt="Stars" src="https://img.shields.io/github/stars/Shashankss1205/CodeGraphContext?style=flat-square&logo=github"/>
+</a>
+<a href="https://github.com/Shashankss1205/CodeGraphContext/network/members">
+  <img alt="Forks" src="https://img.shields.io/github/forks/Shashankss1205/CodeGraphContext?style=flat-square&logo=github"/>
+</a>
+<a href="https://github.com/Shashankss1205/CodeGraphContext/issues">
+  <img alt="Open Issues" src="https://img.shields.io/github/issues-raw/Shashankss1205/CodeGraphContext?style=flat-square&logo=github"/>
+</a>
+<a href="https://github.com/Shashankss1205/CodeGraphContext/pulls">
+  <img alt="Open PRs" src="https://img.shields.io/github/issues-pr/Shashankss1205/CodeGraphContext?style=flat-square&logo=github"/>
+</a>
+<a href="https://github.com/Shashankss1205/CodeGraphContext/pulls?q=is%3Apr+is%3Aclosed">
+  <img alt="Closed PRs" src="https://img.shields.io/github/issues-pr-closed/Shashankss1205/CodeGraphContext?style=flat-square&logo=github&color=lightgrey"/>
+</a>
+<a href="https://github.com/Shashankss1205/CodeGraphContext/graphs/contributors">
+  <img alt="Contributors" src="https://img.shields.io/github/contributors/Shashankss1205/CodeGraphContext?style=flat-square&logo=github"/>
+</a>
+<a href="https://github.com/Shashankss1205/CodeGraphContext">
+  <img alt="Languages" src="https://img.shields.io/github/languages/count/Shashankss1205/CodeGraphContext?style=flat-square&logo=github"/>
+</a>
 
 <br/>
 
@@ -38,6 +52,7 @@
 </a>
 
 </p>
+
 
 
 
