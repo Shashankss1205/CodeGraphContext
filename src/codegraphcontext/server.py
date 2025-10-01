@@ -22,6 +22,7 @@ from .core.watcher import CodeWatcher
 from .tools.graph_builder import GraphBuilder
 from .tools.code_finder import CodeFinder
 from .tools.import_extractor import ImportExtractor
+from .tools.graph_exporter import GraphExporter
 from .utils.debug_log import debug_log
 
 logger = logging.getLogger(__name__)
@@ -70,6 +71,7 @@ class MCPServer:
         self.graph_builder = GraphBuilder(self.db_manager, self.job_manager, loop)
         self.code_finder = CodeFinder(self.db_manager)
         self.import_extractor = ImportExtractor()
+        self.graph_exporter = GraphExporter(self.db_manager)
         self.code_watcher = CodeWatcher(self.graph_builder, self.job_manager)
         
         # Define the tool manifest that will be exposed to the AI assistant.
@@ -222,6 +224,26 @@ class MCPServer:
                         "repo_path": {"type": "string", "description": "The path of the repository to delete."} 
                     },
                     "required": ["repo_path"]
+                }
+            },
+            "export_graph_visualization": {
+                "name": "export_graph_visualization",
+                "description": "Export code graph visualization in various formats (PNG, SVG, PDF, HTML, JSON, GraphML). Supports multiple layout algorithms and filtering options.",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "output_path": {"type": "string", "description": "Path where the exported file will be saved."},
+                        "format": {"type": "string", "description": "Export format.", "enum": ["png", "svg", "pdf", "html", "json", "graphml"], "default": "png"},
+                        "repository_path": {"type": "string", "description": "Optional: Filter graph to specific repository path."},
+                        "layout": {"type": "string", "description": "Graph layout algorithm.", "enum": ["spring", "circular", "kamada_kawai", "planar", "random", "shell", "spectral"], "default": "spring"},
+                        "include_dependencies": {"type": "boolean", "description": "Include dependency nodes in the visualization.", "default": True},
+                        "max_nodes": {"type": "integer", "description": "Maximum number of nodes to include.", "default": 1000},
+                        "width": {"type": "integer", "description": "Image width in pixels.", "default": 1200},
+                        "height": {"type": "integer", "description": "Image height in pixels.", "default": 800},
+                        "show_labels": {"type": "boolean", "description": "Show node labels in the visualization.", "default": True},
+                        "dpi": {"type": "integer", "description": "DPI for high-quality image exports.", "default": 300}
+                    },
+                    "required": ["output_path"]
                 }
             }
         }    
@@ -719,6 +741,16 @@ class MCPServer:
         except Exception as e:
             debug_log(f"Error finding code: {str(e)}")
             return {"error": f"Failed to find code: {str(e)}"}
+
+    def export_graph_visualization_tool(self, **args) -> Dict[str, Any]:
+        """Tool to export graph visualizations in various formats"""
+        try:
+            debug_log(f"Exporting graph visualization with args: {args}")
+            return self.graph_exporter.export_graph_tool(**args)
+        
+        except Exception as e:
+            debug_log(f"Error exporting graph: {str(e)}")
+            return {"error": f"Failed to export graph: {str(e)}"}
     
 
     async def handle_tool_call(self, tool_name: str, args: Dict[str, Any]) -> Dict[str, Any]:
@@ -746,7 +778,8 @@ class MCPServer:
             "calculate_cyclomatic_complexity": self.calculate_cyclomatic_complexity_tool,
             "find_most_complex_functions": self.find_most_complex_functions_tool,
             "list_indexed_repositories": self.list_indexed_repositories_tool,
-            "delete_repository": self.delete_repository_tool
+            "delete_repository": self.delete_repository_tool,
+            "export_graph_visualization": self.export_graph_visualization_tool
         }
         handler = tool_map.get(tool_name)
         if handler:

@@ -23,6 +23,7 @@ dependencies = [
     "rich>=13.7.0",
     "inquirerpy>=0.3.4",
     "python-dotenv>=1.0.0",
+    "pathspec>=0.11.0",
 ]
 
 [project.urls]
@@ -38,6 +39,11 @@ dev = [
     "pytest>=7.4.0",
     "black>=23.11.0",
     "pytest-asyncio>=0.21.0",
+]
+visualization = [
+    "matplotlib>=3.5.0",
+    "networkx>=2.8.0",
+    "plotly>=5.15.0",
 ]
 
 [tool.setuptools]

@@ -155,6 +155,91 @@ def version_cmd():
     console.print(f"CodeGraphContext [bold cyan]{get_version()}[/bold cyan]")
 
 
+@app.command("export")
+def export_cmd(
+    output_path: str = typer.Argument(..., help="Path where the exported file will be saved"),
+    format: str = typer.Option("png", "--format", "-f", 
+                              help="Export format: png, svg, pdf, html, json, graphml"),
+    repository_path: str = typer.Option(None, "--repository", "-r", 
+                                       help="Filter graph to specific repository path"),
+    layout: str = typer.Option("spring", "--layout", "-l",
+                              help="Graph layout algorithm: spring, circular, kamada_kawai, planar, random, shell, spectral"),
+    include_dependencies: bool = typer.Option(True, "--include-deps/--exclude-deps",
+                                            help="Include dependency nodes in the visualization"),
+    max_nodes: int = typer.Option(1000, "--max-nodes", "-n",
+                                 help="Maximum number of nodes to include"),
+    width: int = typer.Option(1200, "--width", "-w",
+                             help="Image width in pixels"),
+    height: int = typer.Option(800, "--height", "-h",
+                              help="Image height in pixels"),
+    show_labels: bool = typer.Option(True, "--labels/--no-labels",
+                                    help="Show node labels in the visualization"),
+    dpi: int = typer.Option(300, "--dpi",
+                           help="DPI for high-quality image exports")
+):
+    """Export a code graph visualization in various formats."""
+    from codegraphcontext.core.database import DatabaseManager
+    from codegraphcontext.tools.graph_exporter import GraphExporter, check_dependencies
+    
+    # Check dependencies
+    deps = check_dependencies()
+    format_lower = format.lower()
+    
+    if format_lower in ["png", "svg", "pdf"] and not deps["matplotlib"]:
+        console.print("[bold red]Error:[/bold red] Matplotlib and NetworkX are required for static image exports.")
+        console.print("Install with: [cyan]pip install 'codegraphcontext[visualization]'[/cyan]")
+        raise typer.Exit(1)
+    
+    if format_lower == "html" and not deps["plotly"]:
+        console.print("[bold red]Error:[/bold red] Plotly is required for HTML exports.")
+        console.print("Install with: [cyan]pip install 'codegraphcontext[visualization]'[/cyan]")
+        raise typer.Exit(1)
+    
+    try:
+        # Initialize database connection
+        db_manager = DatabaseManager()
+        exporter = GraphExporter(db_manager)
+        
+        console.print(f"[green]Exporting graph visualization...[/green]")
+        console.print(f"Format: [cyan]{format}[/cyan]")
+        console.print(f"Output: [cyan]{output_path}[/cyan]")
+        if repository_path:
+            console.print(f"Repository: [cyan]{repository_path}[/cyan]")
+        
+        # Export the graph
+        result = exporter.export_graph_tool(
+            output_path=output_path,
+            format=format_lower,
+            repository_path=repository_path,
+            layout=layout,
+            include_dependencies=include_dependencies,
+            max_nodes=max_nodes,
+            width=width,
+            height=height,
+            show_labels=show_labels,
+            dpi=dpi
+        )
+        
+        if result["success"]:
+            console.print(f"[bold green]✅ Export successful![/bold green]")
+            console.print(f"File saved to: [cyan]{result['result']['output_path']}[/cyan]")
+            console.print(f"Nodes: [yellow]{result['result']['node_count']}[/yellow], "
+                         f"Edges: [yellow]{result['result']['edge_count']}[/yellow]")
+            if 'file_size' in result['result']:
+                file_size = result['result']['file_size']
+                if file_size > 1024 * 1024:
+                    console.print(f"File size: [yellow]{file_size / (1024 * 1024):.1f} MB[/yellow]")
+                else:
+                    console.print(f"File size: [yellow]{file_size / 1024:.1f} KB[/yellow]")
+        else:
+            console.print(f"[bold red]❌ Export failed:[/bold red] {result['error']}")
+            raise typer.Exit(1)
+            
+    except Exception as e:
+        console.print(f"[bold red]Error:[/bold red] {e}")
+        raise typer.Exit(1)
+
+
 @app.callback(invoke_without_command=True)
 def main(
     ctx: typer.Context,
