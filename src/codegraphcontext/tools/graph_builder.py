@@ -65,15 +65,20 @@ class TreeSitterParser:
     """A parser for a specific language using tree-sitter."""
 
     def __init__(self, language_name: str):
+        self.language_name = language_name
         self.language: Language = get_language(language_name)
         self.parser = Parser()
         self.parser.set_language(self.language)
 
-        if language_name == 'python':
+        self.queries = {}
+        if self.language_name == 'python':
             self.queries = {
                 name: self.language.query(query_str)
                 for name, query_str in PY_QUERIES.items()
             }
+        # In the future, you would add:
+        # elif self.language_name == 'javascript':
+        #     self.queries = { ... JS_QUERIES ... }
 
     def _get_node_text(self, node) -> str:
         return node.text.decode('utf-8')
@@ -171,6 +176,7 @@ class TreeSitterParser:
                     "context_type": context_type,
                     "class_context": class_context,
                     "decorators": [],
+                    "lang": self.language_name,
                     "is_dependency": False,
                 }
                 functions.append(func_data)
@@ -220,6 +226,7 @@ class TreeSitterParser:
                     "context_type": context_type,
                     "class_context": class_context,
                     "decorators": [d for d in decorators if d],
+                    "lang": self.language_name,
                     "is_dependency": False,
                 }
                 functions.append(func_data)
@@ -255,6 +262,7 @@ class TreeSitterParser:
                     "docstring": self._get_docstring(body_node),
                     "context": context,
                     "decorators": [d for d in decorators if d],
+                    "lang": self.language_name,
                     "is_dependency": False,
                 }
                 classes.append(class_data)
@@ -286,6 +294,7 @@ class TreeSitterParser:
                     "line_number": node.start_point[0] + 1,
                     "alias": alias,
                     "context": self._get_parent_context(node)[:2],
+                    "lang": self.language_name,
                     "is_dependency": False,
                 }
                 imports.append(import_data)
@@ -315,6 +324,7 @@ class TreeSitterParser:
                     "inferred_obj_type": None, # Type inference is a complex topic to be added
                     "context": self._get_parent_context(node),
                     "class_context": self._get_parent_context(node, types=('class_definition',))[:2],
+                    "lang": self.language_name,
                     "is_dependency": False,
                 }
                 calls.append(call_data)
@@ -351,6 +361,7 @@ class TreeSitterParser:
                     "type": type_text,
                     "context": context,
                     "class_context": class_context,
+                    "lang": self.language_name,
                     "is_dependency": False,
                 }
                 variables.append(variable_data)
@@ -364,7 +375,10 @@ class GraphBuilder:
         self.job_manager = job_manager
         self.loop = loop
         self.driver = self.db_manager.get_driver()
-        self.py_parser = TreeSitterParser('python')
+        self.parsers = {
+            '.py': TreeSitterParser('python'),
+            # '.js': TreeSitterParser('javascript'), # Example for future extension
+        }
         self.create_schema()
 
     # A general schema creation based on common features across languages
@@ -379,32 +393,36 @@ class GraphBuilder:
                 session.run("CREATE CONSTRAINT class_unique IF NOT EXISTS FOR (c:Class) REQUIRE (c.name, c.file_path, c.line_number) IS UNIQUE")
                 session.run("CREATE CONSTRAINT variable_unique IF NOT EXISTS FOR (v:Variable) REQUIRE (v.name, v.file_path, v.line_number) IS UNIQUE")
                 session.run("CREATE CONSTRAINT module_name IF NOT EXISTS FOR (m:Module) REQUIRE m.name IS UNIQUE")
+
+                # Indexes for language attribute
+                session.run("CREATE INDEX function_lang IF NOT EXISTS FOR (f:Function) ON (f.lang)")
+                session.run("CREATE INDEX class_lang IF NOT EXISTS FOR (c:Class) ON (c.lang)")
                 
                 session.run("""
                     CREATE FULLTEXT INDEX code_search_index IF NOT EXISTS 
                     FOR (n:Function|Class|Variable) 
                     ON EACH [n.name, n.source, n.docstring]
-                """)
+                """ )
                 
                 logger.info("Database schema verified/created successfully")
             except Exception as e:
                 logger.warning(f"Schema creation warning: {e}")
 
-    # Always needed for all languages, but need to be rewritten for tree-sitter of different languages
-    def _pre_scan_for_imports(self, files: list[Path]) -> dict:
-        """--- REWRITTEN with tree-sitter ---
-        Scans all files to create a map of class/function names to their file paths."""
+    def _pre_scan_for_imports_python(self, files: list[Path]) -> dict:
+        """Scans Python files to create a map of class/function names to their file paths."""
         imports_map = {}
         query_str = """
             (class_definition name: (identifier) @name)
             (function_definition name: (identifier) @name)
         """
-        query = self.py_parser.language.query(query_str)
-
+        # Get the wrapper class for the python parser
+        py_parser_wrapper = self.parsers['.py']
+        query = py_parser_wrapper.language.query(query_str)
+        
         for file_path in files:
             try:
                 with open(file_path, "r", encoding="utf-8") as f:
-                    tree = self.py_parser.parser.parse(bytes(f.read(), "utf8"))
+                    tree = py_parser_wrapper.parser.parse(bytes(f.read(), "utf8"))
                 
                 for capture, _ in query.captures(tree.root_node):
                     name = capture.text.decode('utf-8')
@@ -413,6 +431,26 @@ class GraphBuilder:
                     imports_map[name].append(str(file_path.resolve()))
             except Exception as e:
                 logger.warning(f"Tree-sitter pre-scan failed for {file_path}: {e}")
+        return imports_map
+
+    def _pre_scan_for_imports(self, files: list[Path]) -> dict:
+        """Dispatches pre-scan to the correct language-specific implementation."""
+        imports_map = {}
+        
+        # Group files by language/extension
+        files_by_lang = {}
+        for file in files:
+            if file.suffix in self.parsers:
+                lang_ext = file.suffix
+                if lang_ext not in files_by_lang:
+                    files_by_lang[lang_ext] = []
+                files_by_lang[lang_ext].append(file)
+
+        if '.py' in files_by_lang:
+            imports_map.update(self._pre_scan_for_imports_python(files_by_lang['.py']))
+        # if '.js' in files_by_lang:
+        #     imports_map.update(self._pre_scan_for_imports_javascript(files_by_lang['.js']))
+            
         return imports_map
 
     # Language-agnostic method
@@ -525,8 +563,6 @@ class GraphBuilder:
                     MERGE (f)-[:IMPORTS]->(m)
                 """, file_path=file_path_str, **imp)
 
-            # Class inheritance is handled in a separate pass after all files are processed.
-
             # Handle CONTAINS relationship between class to their children like variables
             for func in file_data.get('functions', []):
                 if func.get('class_context'):
@@ -539,6 +575,9 @@ class GraphBuilder:
                     file_path=file_path_str,
                     func_name=func['name'],
                     func_line=func['line_number'])
+
+            # Class inheritance is handled in a separate pass after all files are processed.
+            # Function calls are also handled in a separate pass after all files are processed.
 
     # Second pass to create relationships that depend on all files being present like call functions and class inheritance
     def _create_function_calls(self, session, file_data: Dict, imports_map: dict):
@@ -730,7 +769,7 @@ class GraphBuilder:
         self.delete_file_from_graph(file_path_str)
 
         if file_path.exists():
-            file_data = self.parse_python_file(repo_path, file_path, imports_map)
+            file_data = self.parse_file(repo_path, file_path)
             
             if "error" not in file_data:
                 self.add_file_to_graph(file_data, repo_name, imports_map)
@@ -741,19 +780,23 @@ class GraphBuilder:
         else:
             return {"deleted": True, "path": file_path_str}
 
-    def parse_python_file(self, repo_path: Path, file_path: Path, imports_map: dict, is_dependency: bool = False) -> Dict:
-        """--- REWRITTEN with tree-sitter ---
-        Parse a Python file and extract code elements using TreeSitterParser."""
-        debug_log(f"[parse_python_file] Starting tree-sitter parsing for: {file_path}")
+    def parse_file(self, repo_path: Path, file_path: Path, is_dependency: bool = False) -> Dict:
+        """Parses a file with the appropriate language parser and extracts code elements."""
+        parser = self.parsers.get(file_path.suffix)
+        if not parser:
+            logger.warning(f"No parser found for file extension {file_path.suffix}. Skipping {file_path}")
+            return {"file_path": str(file_path), "error": f"No parser for {file_path.suffix}"}
+
+        debug_log(f"[parse_file] Starting parsing for: {file_path} with {parser.language_name} parser")
         try:
-            file_data = self.py_parser.parse(file_path, is_dependency)
+            file_data = parser.parse(file_path, is_dependency)
             file_data['repo_path'] = str(repo_path)
             if debug_mode:
-                debug_log(f"[parse_python_file] Successfully parsed with tree-sitter: {file_path}")
+                debug_log(f"[parse_file] Successfully parsed: {file_path}")
             return file_data
         except Exception as e:
-            logger.error(f"Error parsing {file_path} with tree-sitter: {e}")
-            debug_log(f"[parse_python_file] Error parsing {file_path} with tree-sitter: {e}")
+            logger.error(f"Error parsing {file_path} with {parser.language_name} parser: {e}")
+            debug_log(f"[parse_file] Error parsing {file_path}: {e}")
             return {"file_path": str(file_path), "error": str(e)}
 
     def estimate_processing_time(self, path: Path) -> Optional[Tuple[int, float]]:
@@ -782,7 +825,9 @@ class GraphBuilder:
             self.add_repository_to_graph(path, is_dependency)
             repo_name = path.name
 
-            files = list(path.rglob("*.py")) if path.is_dir() else [path]
+            supported_extensions = self.parsers.keys()
+            all_files = path.rglob("*") if path.is_dir() else [path]
+            files = [f for f in all_files if f.is_file() and f.suffix in supported_extensions]
             if job_id:
                 self.job_manager.update_job(job_id, total_files=len(files))
             
@@ -798,7 +843,7 @@ class GraphBuilder:
                     if job_id:
                         self.job_manager.update_job(job_id, current_file=str(file))
                     repo_path = path.resolve() if path.is_dir() else file.parent.resolve()
-                    file_data = self.parse_python_file(repo_path, file, imports_map, is_dependency)
+                    file_data = self.parse_file(repo_path, file, is_dependency)
                     if "error" not in file_data:
                         self.add_file_to_graph(file_data, repo_name, imports_map)
                         all_file_data.append(file_data)
