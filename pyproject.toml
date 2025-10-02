@@ -1,6 +1,6 @@
 [project]
 name = "codegraphcontext"
-version = "0.1.12"
+version = "0.1.13"
 description = "An MCP server that indexes local code into a graph database to provide context to AI assistants."
 authors = [{ name = "Shashank Shekhar Singh", email = "shashankshekharsingh1205@gmail.com" }]
 readme = "README.md"
@@ -23,7 +23,8 @@ dependencies = [
     "rich>=13.7.0",
     "inquirerpy>=0.3.4",
     "python-dotenv>=1.0.0",
-    "pathspec>=0.11.0",
+    "tree-sitter==0.20.4",                   
+    "tree-sitter-languages==1.10.2"
 ]
 
 [project.urls]
@@ -39,11 +40,6 @@ dev = [
     "pytest>=7.4.0",
     "black>=23.11.0",
     "pytest-asyncio>=0.21.0",
-]
-visualization = [
-    "matplotlib>=3.5.0",
-    "networkx>=2.8.0",
-    "plotly>=5.15.0",
 ]
 
 [tool.setuptools]
