@@ -14,7 +14,7 @@ from ..utils.debug_log import debug_log
 
 # New imports for tree-sitter
 from tree_sitter import Language, Parser
-from tree_sitter_languages import get_language
+from tree_sitter_language_pack import get_language
 
 logger = logging.getLogger(__name__)
 
