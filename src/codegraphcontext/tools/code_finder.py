@@ -334,7 +334,7 @@ class CodeFinder:
             return [dict(record) for record in result]
     
     def find_class_hierarchy(self, class_name: str, file_path: str = None) -> Dict[str, Any]:
-        """Find class inheritance relationships using INHERITS_FROM relationships"""
+        """Find class inheritance relationships using INHERITS relationships"""
         with self.driver.session() as session:
             if file_path:
                 match_clause = "MATCH (child:Class {name: $class_name, file_path: $file_path})"
@@ -343,7 +343,7 @@ class CodeFinder:
 
             parents_query = f"""
                 {match_clause}
-                MATCH (child)-[:INHERITS_FROM]->(parent:Class)
+                MATCH (child)-[:INHERITS]->(parent:Class)
                 OPTIONAL MATCH (parent_file:File)-[:CONTAINS]->(parent)
                 RETURN DISTINCT
                     parent.name as parent_class,
@@ -357,7 +357,7 @@ class CodeFinder:
             
             children_query = f"""
                 {match_clause}
-                MATCH (grandchild:Class)-[:INHERITS_FROM]->(child)
+                MATCH (grandchild:Class)-[:INHERITS]->(child)
                 OPTIONAL MATCH (child_file:File)-[:CONTAINS]->(grandchild)
                 RETURN DISTINCT
                     grandchild.name as child_class,

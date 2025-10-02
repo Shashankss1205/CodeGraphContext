@@ -45,17 +45,17 @@ const FeaturesSection = () => {
           {features.map((feature, index) => (
             <Card 
               key={index} 
-              className="bg-gradient-card border-border/50 hover:border-primary/30 transition-smooth group hover:shadow-glow animate-float-up"
+              className="border-border/50 hover:border-primary/30 transition-smooth group hover:shadow-glow animate-float-up dark:bg-gradient-card dark:bg-card/50 dark:border-border/30 dark:hover:border-primary/40 bg-white/95 border-gray-200/50 hover:border-primary/50 shadow-sm"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <CardHeader>
                 <div className="flex items-center gap-4 mb-4">
-                  <div className={`p-3 rounded-xl bg-${feature.color}/10 border border-${feature.color}/20 group-hover:bg-${feature.color}/20 transition-smooth`}>
+                  <div className={`p-3 rounded-xl bg-${feature.color}/10 border border-${feature.color}/20 group-hover:bg-${feature.color}/20 transition-smooth dark:bg-${feature.color}/20 dark:border-${feature.color}/30 bg-${feature.color}/5 border-${feature.color}/15`}>
                     <feature.icon className={`h-6 w-6 text-${feature.color}`} />
                   </div>
-                  <CardTitle className="text-xl font-semibold">{feature.title}</CardTitle>
+                  <CardTitle className="text-xl font-semibold dark:text-foreground text-gray-900">{feature.title}</CardTitle>
                 </div>
-                <CardDescription className="text-base text-muted-foreground leading-relaxed">
+                <CardDescription className="text-base text-muted-foreground leading-relaxed dark:text-muted-foreground text-gray-600">
                   {feature.description}
                 </CardDescription>
               </CardHeader>

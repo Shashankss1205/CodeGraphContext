@@ -5,6 +5,7 @@ import heroGraph from "@/assets/hero-graph.jpg";
 import { useState, useEffect } from "react";
 import ShowDownloads from "./ShowDownloads";
 import ShowStarGraph from "./ShowStarGraph";
+import { ThemeToggle } from "./ThemeToggle";
 
 const HeroSection = () => {
   const [stars, setStars] = useState(null);
@@ -43,6 +44,13 @@ const HeroSection = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Header with Theme Toggle */}
+      <div className="absolute top-0 left-0 right-0 z-20 p-4">
+        <div className="container mx-auto flex justify-end">
+          <ThemeToggle />
+        </div>
+      </div>
+
       {/* Background Image */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30"
