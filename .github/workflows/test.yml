@@ -5,7 +5,7 @@ on:
     branches:
       - main
   pull_request:
-  schedule:
+  schedule:  # Runs at 18:30 each day
     - cron: "30 18 * * *"
   workflow_dispatch:  
 
@@ -15,11 +15,11 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
+        uses: actions/setup-python@v6
+        with:  # Python > 3.11 blocked by grantjenks/py-tree-sitter-languages#85
           python-version: "3.11"
 
       - name: Install dependencies
@@ -28,5 +28,8 @@ jobs:
           pip install build
           pip install .[dev]
 
+      - name: Run tests
+        run: pytest
+ 
       - name: Build package
         run: python -m build
