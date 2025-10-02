@@ -175,6 +175,19 @@
     animation: dash 20s linear infinite;
   }
 
+  .graph-container {
+    width: attr(data-width px);
+    height: attr(data-height px);
+  }
+
+  .graph-container[data-width="800"] {
+    width: 800px;
+  }
+
+  .graph-container[data-height="600"] {
+    height: 600px;
+  }
+
   @keyframes dash {
     to {
       stroke-dashoffset: -100;
