@@ -7,17 +7,19 @@ import InteractiveGraphSection from "@/components/InteractiveGraphSection";
 import ExamplesSection from "@/components/ExamplesSection";
 import CookbookSection from "@/components/CookbookSection";
 import Footer from "@/components/Footer";
+import ComparisonTable from "@/components/ComparisonTable";
 
 const Index = () => {
   return (
     <>
       <main className="min-h-screen">
         <HeroSection />
-        <DemoSection />
-        <InteractiveGraphSection />
         <FeaturesSection />
         <ExportShowcaseSection />
+        <ComparisonTable />
         <InstallationSection />
+        <DemoSection />
+        <InteractiveGraphSection />
         <ExamplesSection />
         <CookbookSection />
       </main>
