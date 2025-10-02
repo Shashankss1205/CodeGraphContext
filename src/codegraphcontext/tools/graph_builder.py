@@ -14,7 +14,6 @@ from ..utils.debug_log import debug_log
 
 # New imports for tree-sitter
 from tree_sitter import Language, Parser
-from tree_sitter_languages import get_language
 
 logger = logging.getLogger(__name__)
 
@@ -28,9 +27,18 @@ class TreeSitterParser:
 
     def __init__(self, language_name: str):
         self.language_name = language_name
-        self.language: Language = get_language(language_name)
-        self.parser = Parser()
-        self.parser.set_language(self.language)
+
+        # Load language based on name
+        if language_name == 'python':
+            from tree_sitter_python import language as python_language
+            self.language = Language(python_language())
+        elif language_name == 'javascript':
+            from tree_sitter_javascript import language as js_language
+            self.language = Language(js_language())
+        else:
+            raise ValueError(f"Unsupported language: {language_name}")
+
+        self.parser = Parser(self.language)
 
         self.language_specific_parser = None
         if self.language_name == 'python':

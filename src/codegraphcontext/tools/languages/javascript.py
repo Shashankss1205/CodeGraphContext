@@ -2,13 +2,14 @@ from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 import logging
 import ast # Not strictly needed for JS, but kept for consistency if AST manipulation is added
+from tree_sitter import QueryCursor
 
 logger = logging.getLogger(__name__)
 
 JS_QUERIES = {
     "functions": """
         (function_declaration name: (identifier) @name)
-        (variable_declarator name: (identifier) @name value: (function) @function_node)
+        (variable_declarator name: (identifier) @name value: (function_expression) @function_node)
         (variable_declarator name: (identifier) @name value: (arrow_function) @function_node)
         (method_definition name: (property_identifier) @name)
     """,
@@ -137,37 +138,78 @@ class JavascriptTreeSitterParser:
     def _find_functions(self, root_node):
         functions = []
         query = self.queries['functions']
-        for match in query.captures(root_node):
-            capture_name = match[1]
-            node = match[0]
+        cursor = QueryCursor()
+        cursor.exec(query, root_node)
+        for match in cursor:
+            for capture in match.captures:
+                capture_name = query.capture_name(capture.index)
+                node = capture.node
 
-            # Placeholder for JS function extraction logic
-            # This will need to be fleshed out based on JS AST structure
-            if capture_name == 'name':
-                func_node = node.parent
-                name = self._get_node_text(node)
-                
-                # Simplified args extraction for now
-                args = [] 
-                # Need to find parameters node for JS functions
+                if capture_name == 'name':
+                    parent = node.parent
+                    name = self._get_node_text(node)
+                    func_node = None
+                    params_node = None
+                    body_node = None
 
-                func_data = {
-                    "name": name,
-                    "line_number": node.start_point[0] + 1,
-                    "end_line": func_node.end_point[0] + 1,
-                    "args": args,
-                    "source": self._get_node_text(func_node),
-                    "source_code": self._get_node_text(func_node),
-                    "docstring": self._get_docstring(func_node), # Placeholder
-                    "cyclomatic_complexity": self._calculate_complexity(func_node),
-                    "context": None, # Placeholder
-                    "context_type": None, # Placeholder
-                    "class_context": None, # Placeholder
-                    "decorators": [], # JS doesn't have decorators in the same way as Python
-                    "lang": self.language_name,
-                    "is_dependency": False,
-                }
-                functions.append(func_data)
+                    if parent.type == 'function_declaration':
+                        func_node = parent
+                        params_node = func_node.child_by_field_name('parameters')
+                        body_node = func_node.child_by_field_name('body')
+                    elif parent.type == 'method_definition':
+                        func_node = parent
+                        params_node = func_node.child_by_field_name('parameters')
+                        body_node = func_node.child_by_field_name('body')
+                    elif parent.type == 'variable_declarator':
+                        value_node = parent.child_by_field_name('value')
+                        if value_node:
+                            if value_node.type == 'function_expression':
+                                func_node = value_node
+                                params_node = func_node.child_by_field_name('parameters')
+                                body_node = func_node.child_by_field_name('body')
+                            elif value_node.type == 'arrow_function':
+                                func_node = value_node
+                                params_node = func_node.child_by_field_name('parameters')
+                                body_node = func_node.child_by_field_name('body')
+
+                    if func_node:
+                        # Extract arguments
+                        args = []
+                        if params_node:
+                            for param in params_node.children:
+                                if param.type in ('identifier', 'rest_parameter', 'assignment_pattern'):
+                                    if param.type == 'identifier':
+                                        args.append(self._get_node_text(param))
+                                    elif param.type == 'rest_parameter':
+                                        rest_name = param.child_by_field_name('name')
+                                        if rest_name:
+                                            args.append(f"...{self._get_node_text(rest_name)}")
+                                    elif param.type == 'assignment_pattern':
+                                        left = param.child_by_field_name('left')
+                                        if left and left.type == 'identifier':
+                                            args.append(self._get_node_text(left))
+
+                        # Get context
+                        context, context_type, _ = self._get_parent_context(func_node)
+                        class_context, _, _ = self._get_parent_context(func_node, types=('class_declaration', 'class'))
+
+                        func_data = {
+                            "name": name,
+                            "line_number": node.start_point[0] + 1,
+                            "end_line": func_node.end_point[0] + 1,
+                            "args": args,
+                            "source": self._get_node_text(func_node),
+                            "source_code": self._get_node_text(func_node),
+                            "docstring": self._get_docstring(body_node),
+                            "cyclomatic_complexity": self._calculate_complexity(func_node),
+                            "context": context,
+                            "context_type": context_type,
+                            "class_context": class_context,
+                            "decorators": [],  # JS doesn't have decorators like Python
+                            "lang": self.language_name,
+                            "is_dependency": False,
+                        }
+                        functions.append(func_data)
         return functions
 
     def _find_classes(self, root_node):
@@ -282,8 +324,9 @@ def pre_scan_javascript(files: list[Path], parser_wrapper) -> dict:
     query_str = """
         (class_declaration name: (identifier) @name)
         (function_declaration name: (identifier) @name)
-        (variable_declarator name: (identifier) @name value: (function))
+        (variable_declarator name: (identifier) @name value: (function_expression))
         (variable_declarator name: (identifier) @name value: (arrow_function))
+        (method_definition name: (property_identifier) @name)
     """
     query = parser_wrapper.language.query(query_str)
     
