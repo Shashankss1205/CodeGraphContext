@@ -1,0 +1,10 @@
+[
+  {
+    "name": "greet",
+    "full_name": "super().greet"
+  },
+  {
+    "name": null,
+    "full_name": "super"
+  }
+]

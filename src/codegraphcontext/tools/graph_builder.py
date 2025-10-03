@@ -3,9 +3,14 @@ import asyncio
 import ast
 import logging
 import os
+import sys
+import json
 from pathlib import Path
 from typing import Any, Coroutine, Dict, Optional, Tuple
 from datetime import datetime
+from codegraphcontext.tools.mro_resolver import get_mro, resolve_super_call
+
+
 
 from ..core.database import DatabaseManager
 from ..core.jobs import JobManager, JobStatus
@@ -421,138 +426,10 @@ class CodeVisitor(ast.NodeVisitor):
 
         return None
 
-    def visit_Call(self, node):
-        """Visit function calls with enhanced detection"""
-        call_name = None
-        full_call_name = None
 
-        try:
-            full_call_name = ast.unparse(node.func)
-            if isinstance(node.func, ast.Name):
-                call_name = node.func.id
-            elif isinstance(node.func, ast.Attribute):
-                call_name = node.func.attr
-            else:
-                call_name = full_call_name
-        except Exception:
-            self.generic_visit(node)
-            return
-        
-        try:
-            call_args = [ast.unparse(arg) for arg in node.args]
-        except Exception:
-            call_args = []
 
-        inferred_obj_type = None
-        if isinstance(node.func, ast.Attribute):
-            base_obj_node = node.func.value
+ 
 
-            if isinstance(base_obj_node, ast.Name):
-                obj_name = base_obj_node.id
-                if obj_name == 'self':
-                    # If the base is 'self', find the type of the attribute on the current class
-                    inferred_obj_type = self.class_symbol_table.get(node.func.attr)
-                    if not inferred_obj_type: # Fallback for method calls directly on self
-                        inferred_obj_type = self.current_class
-                else:
-                    inferred_obj_type = (self.local_symbol_table.get(obj_name) or
-                                        self.class_symbol_table.get(obj_name) or
-                                        self.module_symbol_table.get(obj_name))
-                    # If it's not a variable, it might be a direct call on a Class name.
-                    if not inferred_obj_type and obj_name in self.imports_map:
-                        inferred_obj_type = obj_name
-
-            elif isinstance(base_obj_node, ast.Call):
-                inferred_obj_type = self._resolve_type_from_call(base_obj_node)
-
-            elif isinstance(base_obj_node, ast.Attribute): # e.g., self.job_manager
-                # This handles nested attributes
-                # The goal is to find the type of `self.job_manager`, which is 'JobManager'
-
-                # Resolve the base of the chain, e.g., get 'self' from 'self.job_manager'
-                base = base_obj_node
-                while isinstance(base, ast.Attribute):
-                    base = base.value
-
-                if isinstance(base, ast.Name) and base.id == 'self':
-                    # In self.X.Y... The attribute we care about is the first one, X
-                    attr_name = base_obj_node.attr
-                    inferred_obj_type = self.class_symbol_table.get(attr_name)
-
-        elif isinstance(node.func, ast.Name):
-            inferred_obj_type = (self.local_symbol_table.get(call_name) or
-                                self.class_symbol_table.get(call_name) or
-                                self.module_symbol_table.get(call_name))
-    
-        #   there are no CALLS relationships originating from P2pkhAddress.to_address in the graph. This is the root cause of the find_all_callees tool reporting 0
-        #   results.
-
-        #   The problem is not with the find_all_callees query itself, but with the GraphBuilder's ability to correctly identify and create CALLS relationships for methods like
-        #   P2pkhAddress.to_address.
-
-        #   Specifically, the GraphBuilder._create_function_calls method is likely not correctly processing calls made within methods of a class, especially when those calls are to:
-        #    1. self.method(): Internal method calls.
-        #    2. Functions imported from other modules (e.g., h_to_b, get_network).
-        #    3. Functions from external libraries (e.g., hashlib.sha256, b58encode).
-
-        #   The GraphBuilder.CodeVisitor.visit_Call method is responsible for identifying function calls. It needs to be improved to handle these cases.
-
-        #   Plan:
-
-        #    1. Enhance `CodeVisitor.visit_Call` in `src/codegraphcontext/tools/graph_builder.py`:
-        #        * Internal Method Calls (`self.method()`): When node.func is an ast.Attribute and node.func.value.id is self, the call_name should be node.func.attr, and the resolved_path should
-        #          be the file_path of the current class.
-        #        * Imported Functions: The _create_function_calls method already has some logic for resolving imported functions using imports_map. I need to ensure this logic is robust and
-        #          correctly applied within visit_Call to set inferred_obj_type or resolved_path accurately.
-        #        * External Library Functions: For now, we might not be able to fully resolve calls to external library functions unless those libraries are also indexed. However, we should at
-        #          least capture the full_call_name and call_name for these.
-        # inferred_obj_type = None
-        # if isinstance(node.func, ast.Attribute):
-        #     base_obj_node = node.func.value
-            
-        #     if isinstance(base_obj_node, ast.Name):
-        #         obj_name = base_obj_node.id
-        #         if obj_name == 'self':
-        #             # If the base is 'self', the call is to a method of the current class
-        #             inferred_obj_type = self.current_class
-        #         else:
-        #             # Try to resolve the type of the object from symbol tables
-        #             inferred_obj_type = (self.local_symbol_table.get(obj_name) or
-        #                                  self.class_symbol_table.get(obj_name) or
-        #                                  self.module_symbol_table.get(obj_name))
-        #             # If not found in symbol tables, check if it's a class name from imports
-        #             if not inferred_obj_type and obj_name in self.imports_map:
-        #                 inferred_obj_type = obj_name
-
-        #     elif isinstance(base_obj_node, ast.Call):
-        #         inferred_obj_type = self._resolve_type_from_call(base_obj_node)
-            
-        #     elif isinstance(base_obj_node, ast.Attribute): # e.g., self.job_manager.method()
-        #         # Recursively resolve the type of the base attribute
-        #         inferred_obj_type = self._resolve_attribute_base_type(base_obj_node)
-            
-        # elif isinstance(node.func, ast.Name):
-        #     # If it's a direct function call, try to infer its type from symbol tables or imports
-        #     inferred_obj_type = (self.local_symbol_table.get(call_name) or
-        #                          self.class_symbol_table.get(call_name) or
-        #                          self.module_symbol_table.get(call_name))
-        #     if not inferred_obj_type and call_name in self.imports_map:
-        #         inferred_obj_type = call_name
-
-        if call_name and call_name not in __builtins__:
-            call_data = {
-                "name": call_name,
-                "full_name": full_call_name,
-                "line_number": node.lineno,
-                "args": call_args,
-                "inferred_obj_type": inferred_obj_type,
-                "context": self.current_context,
-                "class_context": self.current_class,
-                "is_dependency": self.is_dependency,
-            }
-            self.function_calls.append(call_data)
-        
-        self.generic_visit(node)  
 
 class GraphBuilder:
     """Module for building and managing the Neo4j code graph."""
@@ -1178,3 +1055,123 @@ class GraphBuilder:
             return {
                 "error": f"Failed to start background processing: {e.__class__.__name__}: {e}"
             }
+def visit_Call(self, node):
+    """Visit function calls with enhanced resolution logic."""
+    try:
+        full_call_name = ast.unparse(node.func)
+    except Exception:
+        self.generic_visit(node)
+        return
+
+    call_name = None
+    inferred_obj_type = None
+    resolved_target = None
+    call_type = "unknown"
+
+    # Detect super().method() calls
+    if (
+        isinstance(node.func, ast.Attribute) and
+        isinstance(node.func.value, ast.Call) and
+        isinstance(node.func.value.func, ast.Name) and
+        node.func.value.func.id == "super"
+    ):
+        current_class = self.current_class
+        method_name = node.func.attr
+        method_registry = self.build_method_registry()
+        hierarchy_lookup = lambda cls: [
+            p["parent_class"] for p in self.find_class_hierarchy(cls)["parent_classes"]
+        ]
+        resolved_target = resolve_super_call(current_class, method_name, method_registry, hierarchy_lookup)
+        inferred_obj_type = self.find_class_hierarchy(current_class)["parent_classes"][0]["parent_class"]
+        call_name = method_name
+        call_type = "super"
+
+    # Detect self.method() and other attribute calls
+    elif isinstance(node.func, ast.Attribute):
+        base_obj_node = node.func.value
+        call_name = node.func.attr
+
+        if isinstance(base_obj_node, ast.Name):
+            obj_name = base_obj_node.id
+            if obj_name == "self":
+                inferred_obj_type = self.class_symbol_table.get(call_name) or self.current_class
+                call_type = "internal"
+            else:
+                inferred_obj_type = (
+                    self.local_symbol_table.get(obj_name) or
+                    self.class_symbol_table.get(obj_name) or
+                    self.module_symbol_table.get(obj_name) or
+                    self.imports_map.get(obj_name)
+                )
+                call_type = "imported" if obj_name in self.imports_map else "external"
+
+        elif isinstance(base_obj_node, ast.Call):
+            inferred_obj_type = self._resolve_type_from_call(base_obj_node)
+            call_type = "external"
+
+        elif isinstance(base_obj_node, ast.Attribute):
+            base = base_obj_node
+            while isinstance(base, ast.Attribute):
+                base = base.value
+            if isinstance(base, ast.Name) and base.id == "self":
+                attr_name = base_obj_node.attr
+                inferred_obj_type = self.class_symbol_table.get(attr_name)
+                call_type = "internal"
+
+    # Direct function calls (e.g., greet())
+    elif isinstance(node.func, ast.Name):
+        call_name = node.func.id
+        inferred_obj_type = (
+            self.local_symbol_table.get(call_name) or
+            self.class_symbol_table.get(call_name) or
+            self.module_symbol_table.get(call_name) or
+            self.imports_map.get(call_name)
+        )
+        call_type = "direct"
+
+    # Prepare call arguments
+    try:
+        call_args = [ast.unparse(arg) for arg in node.args]
+    except Exception:
+        call_args = []
+
+    # Skip built-ins
+    if call_name and call_name not in __builtins__:
+        call_data = {
+            "name": call_name,
+            "full_name": full_call_name,
+            "line_number": node.lineno,
+            "args": call_args,
+            "inferred_obj_type": inferred_obj_type,
+            "resolved_target": resolved_target,
+            "context": self.current_context,
+            "class_context": self.current_class,
+            "is_dependency": self.is_dependency,
+            "call_type": call_type,
+        }
+        self.function_calls.append(call_data)
+
+    self.generic_visit(node)
+    print("Captured call:", call_data)
+if __name__ == "__main__":
+    import sys
+    import json
+
+    # Ensure a file path is passed
+    if len(sys.argv) != 2:
+        print("Usage: python -m src.codegraphcontext.tools.graph_builder <path_to_python_file>")
+        sys.exit(1)
+
+    filepath = sys.argv[1]
+
+    # Run the graph builder
+    builder = GraphBuilder()
+    with open(filepath, "r") as f:
+        tree = ast.parse(f.read())
+    builder.visit(tree)
+
+    # ✅ Write captured calls to JSON
+    with open("function_calls.json", "w") as f:
+        json.dump(builder.function_calls, f, indent=2)
+
+    print(f"Captured {len(builder.function_calls)} calls and saved to function_calls.json")
