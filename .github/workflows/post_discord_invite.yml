@@ -7,7 +7,7 @@ permissions:
 on:
   issues:
     types: [opened]
-  pull_request:
+  pull_request_target:   # ✅ run in base repo context
     types: [opened]
 
 jobs:
