@@ -1,143 +1,127 @@
+<div align="center">
+
 # CodeGraphContext
 
-<!-- ====== Project stats ====== -->
-<!-- ====== Project stats ====== -->
+Intelligent code graph context for AI assistants – index, relate, and query your codebase with natural language.
 
 [![Stars](https://img.shields.io/github/stars/Shashankss1205/CodeGraphContext?logo=github)](https://github.com/Shashankss1205/CodeGraphContext/stargazers)
 [![Forks](https://img.shields.io/github/forks/Shashankss1205/CodeGraphContext?logo=github)](https://github.com/Shashankss1205/CodeGraphContext/network/members)
 [![Open Issues](https://img.shields.io/github/issues-raw/Shashankss1205/CodeGraphContext?logo=github)](https://github.com/Shashankss1205/CodeGraphContext/issues)
-[![Open PRs](https://img.shields.io/github/issues-pr/Shashankss1205/CodeGraphContext?logo=github)](https://github.com/Shashankss1205/CodeGraphContext/pulls)
-[![Closed PRs](https://img.shields.io/github/issues-pr-closed/Shashankss1205/CodeGraphContext?logo=github&color=lightgrey)](https://github.com/Shashankss1205/CodeGraphContext/pulls?q=is%3Apr+is%3Aclosed)
-[![Contributors](https://img.shields.io/github/contributors/Shashankss1205/CodeGraphContext?logo=github)](https://github.com/Shashankss1205/CodeGraphContext/graphs/contributors)
-[![Languages](https://img.shields.io/github/languages/count/Shashankss1205/CodeGraphContext?logo=github)](https://github.com/Shashankss1205/CodeGraphContext)
 [![Build Status](https://github.com/Shashankss1205/CodeGraphContext/actions/workflows/test.yml/badge.svg)](https://github.com/Shashankss1205/CodeGraphContext/actions/workflows/test.yml)
 [![PyPI version](https://img.shields.io/pypi/v/codegraphcontext?)](https://pypi.org/project/codegraphcontext/)
-[![PyPI downloads](https://img.shields.io/pypi/dm/codegraphcontext?)](https://pypi.org/project/codegraphcontext/)
+[![Downloads](https://img.shields.io/pypi/dm/codegraphcontext?)](https://pypi.org/project/codegraphcontext/)
 [![License](https://img.shields.io/github/license/Shashankss1205/CodeGraphContext?)](LICENSE)
 [![Website](https://img.shields.io/badge/website-up-brightgreen?)](http://codegraphcontext.vercel.app/)
-[![YouTube](https://img.shields.io/badge/YouTube-Watch%20Demo-red?logo=youtube)](https://youtu.be/KYYSdxhg1xU)
-[![Discord](https://img.shields.io/badge/Discord-Join%20Chat-7289da?logo=discord&logoColor=white)](https://discord.gg/dR4QY32uYQ)
+[![YouTube](https://img.shields.io/badge/Demo-Video-red?logo=youtube)](https://youtu.be/KYYSdxhg1xU)
+[![Discord](https://img.shields.io/badge/Discord-Join-7289da?logo=discord&logoColor=white)](https://discord.gg/dR4QY32uYQ)
 
+</div>
 
+CodeGraphContext is an **MCP (Model Context Protocol) server** that indexes your local code into a Neo4j **knowledge graph** so AI assistants can answer deep structural questions: *Who calls this function? What imports are unused? Which modules form dependency cycles? What changes ripple if I modify X?*
 
-An MCP server that indexes local code into a graph database to provide context to AI assistants.
+---
 
-### Indexing a codebase
-![Indexing using an MCP client](images/Indexing.gif)
+## Table of Contents
+1. [Features](#features)
+2. [Screenshots / Demo](#screenshots--demo)
+3. [Supported Languages](#supported-languages)
+4. [Quick Start](#quick-start)
+5. [How It Works](#how-it-works)
+6. [Typical Workflow](#typical-workflow)
+7. [Natural Language Examples](#natural-language-examples)
+8. [Tool Guides](#tool-guides)
+9. [MCP Client Configuration](#mcp-client-configuration)
+10. [Use Cases](#use-cases)
+11. [Roadmap](#roadmap)
+12. [Architecture Overview](#architecture-overview)
+13. [Dependencies](#dependencies)
+14. [Contributing](#contributing)
+15. [Security & Privacy](#security--privacy)
+16. [License](#license)
 
-### Using the MCP server
-![Using the MCP server](images/Usecase.gif)
-
-## Project Details
-- **Version:** 0.1.13
-- **Authors:** Shashank Shekhar Singh <shashankshekharsingh1205@gmail.com>
-- **License:** MIT License (See [LICENSE](LICENSE) for details)
-- **Website:** [CodeGraphContext](http://codegraphcontext.vercel.app/)
-
-## Star History
-[![Star History Chart](https://api.star-history.com/svg?repos=Shashankss1205/CodeGraphContext&type=Date)](https://www.star-history.com/#Shashankss1205/CodeGraphContext&Date)
+---
 
 ## Features
+- **Graph-Based Code Intelligence**: Functions, classes, files, imports, relationships (CALLS, CONTAINS, INHERITS, IMPORTS, ARGUMENTS) stored in Neo4j.
+- **Natural Language Querying**: Ask questions via any MCP-enabled AI client; the server selects tools and returns structured results.
+- **Live File Watching**: Continuous incremental updates using `watchdog`—no need to re-index manually.
+- **Complexity & Dead Code Detection**: Cyclomatic complexity, most complex functions, unused functions.
+- **Import & Dependency Introspection**: Enumerate imported packages across Python/JS/TS/Java (`list_imports`).
+- **Background Job Management**: Long-running indexing jobs tracked with IDs & status checks.
+- **Interactive Setup Wizard**: Automatic environment + MCP client configuration.
+- **Extensible Tooling Layer**: Add new analysis tools with minimal friction.
 
--   **Code Indexing:** Analyzes Python code and builds a knowledge graph of its components.
--   **Relationship Analysis:** Query for callers, callees, class hierarchies, and more.
--   **Live Updates:** Watches local files for changes and automatically updates the graph.
--   **Interactive Setup:** A user-friendly command-line wizard for easy setup.
+## Screenshots / Demo
+### Indexing a Codebase
+![Indexing using an MCP client](images/Indexing.gif)
+
+### Using the MCP Server
+![Using the MCP server](images/Usecase.gif)
+
+## Supported Languages
+| Purpose | Languages |
+|---------|-----------|
+| Full AST / graph extraction | Python (primary) |
+| Import enumeration | Python, JavaScript, TypeScript, Java |
+
+Additional language parsers (e.g. CSS, C++, Rust) are planned / in progress. See open issues.
+
+## Quick Start
+```bash
+pip install codegraphcontext
+cgc setup   # guide through Neo4j + client configuration
+cgc start   # launch MCP server
+```
+Then connect from a supported MCP client (VS Code, Cursor, Claude, Windsurf, etc.) and ask: *"Find the 5 most complex functions"*.
+
+## How It Works
+1. **Index**: Parses source files → builds nodes/relationships → stores them in Neo4j.
+2. **Serve**: Exposes a catalog of tools (find_code, analyze_code_relationships, list_imports, etc.).
+3. **Query**: AI assistant calls tools based on your natural language request.
+4. **Update**: File watcher applies minimal diffs to the graph on change.
+
+## Typical Workflow
+1. `cgc setup` → configure Neo4j + client.
+2. `cgc start` → run the server.
+3. "Index the project at ~/dev/app" → background job starts.
+4. "Show me all functions that call update_cache" → relationship traversal.
+5. "Watch ~/dev/app" → continuous updates.
+6. "Find unused code" → dead code scan.
+
+## Natural Language Examples
+| Question | What Happens Internally |
+|----------|-------------------------|
+| "Where is process_payment defined?" | `find_code` scans graph for matching symbol nodes |
+| "Call chain from wrapper to helper" | `analyze_code_relationships` (call_chain) traversal |
+| "Most complex 5 functions" | `find_most_complex_functions` ranked query |
+| "List python imports in tests/sample_project" | `list_imports` collects & normalizes imports |
+| "Show unused functions (ignore @app.route)" | `find_dead_code` filtering decorated items |
+
+See the full [Cookbook](docs/cookbook.md) for many more.
 
 ## Tool Guides
-Focused deep dives on individual tools:
-
-- [list_imports](docs/list_imports.md) – enumerate imports/dependencies across a path (Python / JS / TS / Java)
-
-## Used By
-
-CodeGraphContext is already being explored by developers and projects for:
-
-- **Static code analysis in AI assistants**
-- **Graph-based visualization of Python projects**
-- **Dead code and complexity detection**
-
-If you’re using CodeGraphContext in your project, feel free to open a PR and add it here! 🚀
-
-## Dependencies
-
-- `neo4j>=5.15.0`
-- `watchdog>=3.0.0`
-- `requests>=2.31.0`
-- `stdlibs>=2023.11.18`
-- `typer[all]>=0.9.0`
-- `rich>=13.7.0`
-- `inquirerpy>=0.3.4`
-- `python-dotenv>=1.0.0`
-- `tree-sitter==0.20.4`
-- `tree-sitter-languages==1.10.2`
-
-## Getting Started
-
-1.  **Install:** `pip install codegraphcontext`
-2.  **Setup:** `cgc setup`
-    This interactive command guides you through configuring your Neo4j database connection and automatically setting up your IDE.
-    
-      **Database Configuration:**
-    *   **Local Setup (Docker Recommended):** Helps you set up a local Neo4j instance using Docker. Requires Docker and Docker Compose to be installed.
-    *   **Local Setup (Linux Binary):** For Debian-based Linux systems (like Ubuntu), `cgc setup` can automate the installation of Neo4j. Requires `sudo` privileges.
-    *   **Hosted Setup:** Allows you to connect to an existing remote Neo4j database (e.g., Neo4j AuraDB).
-
-    **IDE/CLI Configuration:**
-    After setting up your database, the wizard will ask to configure your development environment. It can automatically detect and configure the following:
-    *   VS Code
-    *   Cursor
-    *   Windsurf
-    *   Claude
-    *   Gemini CLI
-    *   ChatGPT Codex
-
-    Upon successful configuration, `cgc setup` will generate and place the necessary configuration files:
-    *   It creates an `mcp.json` file in your current directory for reference.
-    *   It stores your Neo4j credentials securely in `~/.codegraphcontext/.env`.
-    *   It updates the settings file of your chosen IDE/CLI (e.g., `.claude.json` or VS Code's `settings.json`).
-
-3.  **Start:** `cgc start`
-
+Focused deep dives:
+- [list_imports](docs/list_imports.md)
+More guides will be added as tools expand.
 
 ## MCP Client Configuration
-
-The `cgc setup` command attempts to automatically configure your IDE/CLI. If you choose not to use the automatic setup, or if your tool is not supported, you can configure it manually.
-
-Add the following server configuration to your client's settings file (e.g., VS Code's `settings.json` or `.claude.json`):
-
+If auto-setup is skipped, add this to (for example) VS Code `settings.json`:
 ```json
 {
   "mcpServers": {
     "CodeGraphContext": {
       "command": "cgc",
-      "args": [
-        "start"
-      ],
+      "args": ["start"],
       "env": {
         "NEO4J_URI": "YOUR_NEO4J_URI",
         "NEO4J_USERNAME": "YOUR_NEO4J_USERNAME",
         "NEO4J_PASSWORD": "YOUR_NEO4J_PASSWORD"
       },
-      "tools": {
-        "alwaysAllow": [
-          "list_imports",
-          "add_code_to_graph",
-          "add_package_to_graph",
-          "check_job_status",
-          "list_jobs",
-          "find_code",
-          "analyze_code_relationships",
-          "watch_directory",
-          "find_dead_code",
-          "execute_cypher_query",
-          "calculate_cyclomatic_complexity",
-          "find_most_complex_functions",
-          "list_indexed_repositories",
-          "delete_repository"
-        ],
-        "disabled": false
-      },
+      "tools": {"alwaysAllow": [
+        "list_imports","add_code_to_graph","add_package_to_graph","check_job_status","list_jobs",
+        "find_code","analyze_code_relationships","watch_directory","find_dead_code","execute_cypher_query",
+        "calculate_cyclomatic_complexity","find_most_complex_functions","list_indexed_repositories","delete_repository"
+      ],"disabled": false},
       "disabled": false,
       "alwaysAllow": []
     }
@@ -145,70 +129,62 @@ Add the following server configuration to your client's settings file (e.g., VS 
 }
 ```
 
-## Natural Language Interaction Examples
+## Use Cases
+- **AI Pairing / Context Expansion** – Provide the assistant with structural awareness.
+- **Impact Analysis** – Before refactoring a core function.
+- **Architecture Review** – Explore coupling, hubs, inheritance depth.
+- **Onboarding** – New engineers query relationships instead of grepping.
+- **Quality Audits** – Detect dead code & complexity hot-spots.
 
-Once the server is running, you can interact with it through your AI assistant using plain English. Here are some examples of what you can say:
+## Roadmap
+Planned / potential enhancements (see issues for status):
+- Additional language parsers (C++, Rust, CSS, TypeScript deeper semantics).
+- Optional `exclude_stdlib` flag for `list_imports`.
+- Performance / scaling benchmarks & caching layers.
+- Graph visualization export (e.g. Graphviz / Mermaid / web viewer).
+- SBOM / dependency risk overlays.
+- IDE inline hints via LSP integration.
 
-### Indexing and Watching Files
+## Architecture Overview
+| Component | Responsibility |
+|-----------|----------------|
+| CLI (`cgc`) | Setup, launching server, user ergonomics |
+| Import / AST Parsers | Extract symbols, imports, relationships |
+| Graph Builder | Persists nodes + edges to Neo4j |
+| Job Manager | Tracks long-running indexing tasks |
+| File Watcher | Incremental updates on save/change |
+| Tool Layer | Implements callable MCP tools |
+| MCP Server | JSON-RPC interface for AI clients |
 
--   **To index a new project:**
-    -   "Please index the code in the `/path/to/my-project` directory."
-    OR
-    -   "Add the project at `~/dev/my-other-project` to the code graph."
+Why Neo4j? Efficient relationship traversal, flexible schema evolution, expressive Cypher queries.
 
-
--   **To start watching a directory for live changes:**
-    -   "Watch the `/path/to/my-active-project` directory for changes."
-    OR
-    -   "Keep the code graph updated for the project I'm working on at `~/dev/main-app`."
-
-    When you ask to watch a directory, the system performs two actions at once:
-    1.  It kicks off a full scan to index all the code in that directory. This process runs in the background, and you'll receive a `job_id` to track its progress.
-    2.  It begins watching the directory for any file changes to keep the graph updated in real-time.
-
-    This means you can start by simply telling the system to watch a directory, and it will handle both the initial indexing and the continuous updates automatically.
-
-### Querying and Understanding Code
-
--   **Finding where code is defined:**
-    -   "Where is the `process_payment` function?"
-    -   "Find the `User` class for me."
-    -   "Show me any code related to 'database connection'."
-
--   **Analyzing relationships and impact:**
-    -   "What other functions call the `get_user_by_id` function?"
-    -   "If I change the `calculate_tax` function, what other parts of the code will be affected?"
-    -   "Show me the inheritance hierarchy for the `BaseController` class."
-    -   "What methods does the `Order` class have?"
-
--   **Exploring dependencies:**
-    -   "Which files import the `requests` library?"
-    -   "Find all implementations of the `render` method."
-
--   **Advanced Call Chain and Dependency Tracking (Spanning Hundreds of Files):**
-    The CodeGraphContext excels at tracing complex execution flows and dependencies across vast codebases. Leveraging the power of graph databases, it can identify direct and indirect callers and callees, even when a function is called through multiple layers of abstraction or across numerous files. This is invaluable for:
-    -   **Impact Analysis:** Understand the full ripple effect of a change to a core function.
-    -   **Debugging:** Trace the path of execution from an entry point to a specific bug.
-    -   **Code Comprehension:** Grasp how different parts of a large system interact.
-
-    -   "Show me the full call chain from the `main` function to `process_data`."
-    -   "Find all functions that directly or indirectly call `validate_input`."
-    -   "What are all the functions that `initialize_system` eventually calls?"
-    -   "Trace the dependencies of the `DatabaseManager` module."
-
--   **Code Quality and Maintenance:**
-    -   "Is there any dead or unused code in this project?"
-    -   "Calculate the cyclomatic complexity of the `process_data` function in `src/utils.py`."
-    -   "Find the 5 most complex functions in the codebase."
-
--   **Repository Management:**
-    -   "List all currently indexed repositories."
-    -   "Delete the indexed repository at `/path/to/old-project`."
+## Dependencies
+Core runtime libraries (subset):
+```
+neo4j, watchdog, requests, stdlibs, typer, rich, inquirerpy, python-dotenv, tree-sitter, tree-sitter-languages
+```
+See `pyproject.toml` for full, pinned details.
 
 ## Contributing
+Contributions welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md). Ways to help:
+- Add a new language parser or complexity metric.
+- Improve docs (examples, screenshots, demos).
+- Optimize query performance.
+- Extend tooling (e.g. security scans, architectural smells).
 
-Contributions are welcome! 🎉  
-Please see our [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
-If you have ideas for new features, integrations, or improvements, open an [issue](https://github.com/Shashankss1205/CodeGraphContext/issues) or submit a Pull Request.
+Join the community on [Discord](https://discord.gg/dR4QY32uYQ) and open an [issue](https://github.com/Shashankss1205/CodeGraphContext/issues) to discuss ideas first for larger changes.
 
-Join discussions and help shape the future of CodeGraphContext.
+## Security & Privacy
+- Credentials stored locally at `~/.codegraphcontext/.env`.
+- Source code is processed locally; only your Neo4j instance receives data.
+- Do not index proprietary code into a remote database you do not control.
+- Report concerns via [SECURITY.md](SECURITY.md).
+
+## License
+MIT – see [LICENSE](LICENSE).
+
+## Attribution & Inspiration
+Built to make AI-assisted code comprehension structurally accurate and explainable.
+
+---
+If this project helps you, consider starring the repo ⭐ and sharing feedback.
