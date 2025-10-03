@@ -6,7 +6,6 @@ import os
 from pathlib import Path
 from typing import Any, Coroutine, Dict, Optional, Tuple
 from datetime import datetime
-import ast
 
 from ..core.database import DatabaseManager
 from ..core.jobs import JobManager, JobStatus
@@ -33,12 +32,9 @@ class TreeSitterParser:
         self.parser.set_language(self.language)
 
         self.language_specific_parser = None
-        if self.language_name == 'python':
-            from .languages.python import PythonTreeSitterParser
-            self.language_specific_parser = PythonTreeSitterParser(self)
-        elif self.language_name == 'javascript':
-            from .languages.javascript import JavascriptTreeSitterParser
-            self.language_specific_parser = JavascriptTreeSitterParser(self)
+        if self.language_name == 'css':
+            from .languages.css import CSSTreeSitterParser
+            self.language_specific_parser = CSSTreeSitterParser(self)
 
     def parse(self, file_path: Path, is_dependency: bool = False) -> Dict:
         """Dispatches parsing to the language-specific parser."""
@@ -56,8 +52,7 @@ class GraphBuilder:
         self.loop = loop
         self.driver = self.db_manager.get_driver()
         self.parsers = {
-            '.py': TreeSitterParser('python'),
-            '.js': TreeSitterParser('javascript'), # Added JavaScript parser
+            '.css': TreeSitterParser('css'),
         }
         self.create_schema()
 
@@ -102,12 +97,9 @@ class GraphBuilder:
                     files_by_lang[lang_ext] = []
                 files_by_lang[lang_ext].append(file)
 
-        if '.py' in files_by_lang:
-            from .languages import python as python_lang_module
-            imports_map.update(python_lang_module.pre_scan_python(files_by_lang['.py'], self.parsers['.py']))
-        elif '.js' in files_by_lang:
-            from .languages import javascript as js_lang_module
-            imports_map.update(js_lang_module.pre_scan_javascript(files_by_lang['.js'], self.parsers['.js']))
+        if '.css' in files_by_lang:
+            from .languages import css as css_lang_module
+            imports_map.update(css_lang_module.pre_scan_css(files_by_lang['.css'], self.parsers['.css']))
             
         return imports_map
 
@@ -176,13 +168,9 @@ class GraphBuilder:
                 MERGE (p)-[:CONTAINS]->(f)
             """, parent_path=parent_path, file_path=file_path_str)
 
-            # CONTAINS relationships for functions, classes, and variables
-            for item_data, label in [(file_data['functions'], 'Function'), (file_data['classes'], 'Class'), (file_data['variables'], 'Variable')]:
+            # CONTAINS relationships for CSS rules, selectors, and properties
+            for item_data, label in [(file_data['rules'], 'Rule'), (file_data['selectors'], 'Selector'), (file_data['properties'], 'Property')]:
                 for item in item_data:
-                    # Ensure cyclomatic_complexity is set for functions
-                    if label == 'Function' and 'cyclomatic_complexity' not in item:
-                        item['cyclomatic_complexity'] = 1 # Default value
-
                     query = f"""
                         MATCH (f:File {{path: $file_path}})
                         MERGE (n:{label} {{name: $name, file_path: $file_path, line_number: $line_number}})
@@ -190,219 +178,104 @@ class GraphBuilder:
                         MERGE (f)-[:CONTAINS]->(n)
                     """
                     session.run(query, file_path=file_path_str, name=item['name'], line_number=item['line_number'], props=item)
-                    
-                    if label == 'Function':
-                        for arg_name in item.get('args', []):
-                            session.run("""
-                                MATCH (fn:Function {name: $func_name, file_path: $file_path, line_number: $line_number})
-                                MERGE (p:Parameter {name: $arg_name, file_path: $file_path, function_line_number: $line_number})
-                                MERGE (fn)-[:HAS_PARAMETER]->(p)
-                            """, func_name=item['name'], file_path=file_path_str, line_number=item['line_number'], arg_name=arg_name)
 
-            # Create CONTAINS relationships for nested functions
-            for item in file_data.get('functions', []):
-                if item.get("context_type") == "function_definition":
+            # Create CONTAINS relationships for nested CSS rules
+            for item in file_data.get('rules', []):
+                if item.get("parent_rule"):
                     session.run("""
-                        MATCH (outer:Function {name: $context, file_path: $file_path})
-                        MATCH (inner:Function {name: $name, file_path: $file_path, line_number: $line_number})
+                        MATCH (outer:Rule {name: $parent_rule, file_path: $file_path})
+                        MATCH (inner:Rule {name: $name, file_path: $file_path, line_number: $line_number})
                         MERGE (outer)-[:CONTAINS]->(inner)
-                    """, context=item["context"], file_path=file_path_str, name=item["name"], line_number=item["line_number"])
+                    """, parent_rule=item["parent_rule"], file_path=file_path_str, name=item["name"], line_number=item["line_number"])
 
-            # Handle imports and create IMPORTS relationships
+            # Handle CSS imports and create IMPORTS relationships
             for imp in file_data.get('imports', []):
-                logger.info(f"Processing import: {imp}")
-                lang = file_data.get('lang')
-                if lang == 'javascript':
-                    # New, correct logic for JS
-                    module_name = imp.get('source')
-                    if not module_name: continue
-
-                    # Use a map for relationship properties to handle optional alias
-                    rel_props = {'imported_name': imp.get('name', '*')}
-                    if imp.get('alias'):
-                        rel_props['alias'] = imp.get('alias')
-
-                    session.run("""
-                        MATCH (f:File {path: $file_path})
-                        MERGE (m:Module {name: $module_name})
-                        MERGE (f)-[r:IMPORTS]->(m)
-                        SET r += $props
-                    """, file_path=file_path_str, module_name=module_name, props=rel_props)
-                else:
-                    # Existing logic for Python (and other languages)
-                    set_clauses = ["m.alias = $alias"]
-                    if 'full_import_name' in imp:
-                        set_clauses.append("m.full_import_name = $full_import_name")
-                    set_clause_str = ", ".join(set_clauses)
-
-                    session.run(f"""
-                        MATCH (f:File {{path: $file_path}})
-                        MERGE (m:Module {{name: $name}})
-                        SET {set_clause_str}
-                        MERGE (f)-[:IMPORTS]->(m)
-                    """, file_path=file_path_str, **imp)
-
-            # Handle CONTAINS relationship between class to their children like variables
-            for func in file_data.get('functions', []):
-                if func.get('class_context'):
-                    session.run("""
-                        MATCH (c:Class {name: $class_name, file_path: $file_path})
-                        MATCH (fn:Function {name: $func_name, file_path: $file_path, line_number: $func_line})
-                        MERGE (c)-[:CONTAINS]->(fn)
-                    """, 
-                    class_name=func['class_context'],
-                    file_path=file_path_str,
-                    func_name=func['name'],
-                    func_line=func['line_number'])
-
-            # Class inheritance is handled in a separate pass after all files are processed.
-            # Function calls are also handled in a separate pass after all files are processed.
-
-    # Second pass to create relationships that depend on all files being present like call functions and class inheritance
-    def _create_function_calls(self, session, file_data: Dict, imports_map: dict):
-        """Create CALLS relationships with a unified, prioritized logic flow for all call types."""
-        caller_file_path = str(Path(file_data['file_path']).resolve())
-        local_function_names = {func['name'] for func in file_data.get('functions', [])}
-        local_imports = {imp.get('alias') or imp['name'].split('.')[-1]: imp['name'] 
-                        for imp in file_data.get('imports', [])}
-        
-        for call in file_data.get('function_calls', []):
-            called_name = call['name']
-            if called_name in __builtins__: continue
-
-            resolved_path = None
-            
-            if call.get('inferred_obj_type'):
-                obj_type = call['inferred_obj_type']
-                possible_paths = imports_map.get(obj_type, [])
-                if len(possible_paths) > 0:
-                    resolved_path = possible_paths[0]
-            
-            else:
-                lookup_name = call['full_name'].split('.')[0] if '.' in call['full_name'] else called_name
-                possible_paths = imports_map.get(lookup_name, [])
-
-                if lookup_name in local_function_names:
-                    resolved_path = caller_file_path
-                elif len(possible_paths) == 1:
-                    resolved_path = possible_paths[0]
-                elif len(possible_paths) > 1 and lookup_name in local_imports:
-                    full_import_name = local_imports[lookup_name]
-                    for path in possible_paths:
-                        if full_import_name.replace('.', '/') in path:
-                            resolved_path = path
-                            break
-            
-            if not resolved_path:
-                if called_name in imports_map and imports_map[called_name]:
-                    resolved_path = imports_map[called_name][0]
-                else:
-                    resolved_path = caller_file_path
-
-            caller_context = call.get('context')
-            if caller_context and len(caller_context) == 3 and caller_context[0] is not None:
-                caller_name, _, caller_line_number = caller_context
+                logger.info(f"Processing CSS import: {imp}")
                 session.run("""
-                    MATCH (caller:Function {name: $caller_name, file_path: $caller_file_path, line_number: $caller_line_number})
-                    MATCH (called:Function {name: $called_name, file_path: $called_file_path})
-                    MERGE (caller)-[:CALLS {line_number: $line_number, args: $args, full_call_name: $full_call_name}]->(called)
-                """,
-                caller_name=caller_name,
-                caller_file_path=caller_file_path,
-                caller_line_number=caller_line_number,
-                called_name=called_name,
-                called_file_path=resolved_path,
-                line_number=call['line_number'],
-                args=call.get('args', []),
-                full_call_name=call.get('full_name', called_name))
-            else:
-                session.run("""
-                    MATCH (caller:File {path: $caller_file_path})
-                    MATCH (called:Function {name: $called_name, file_path: $called_file_path})
-                    MERGE (caller)-[:CALLS {line_number: $line_number, args: $args, full_call_name: $full_call_name}]->(called)
-                """,
-                caller_file_path=caller_file_path,
-                called_name=called_name,
-                called_file_path=resolved_path,
-                line_number=call['line_number'],
-                args=call.get('args', []),
-                full_call_name=call.get('full_name', called_name))
+                    MATCH (f:File {path: $file_path})
+                    MERGE (m:Module {name: $name})
+                    SET m.url = $url, m.media = $media
+                    MERGE (f)-[:IMPORTS]->(m)
+                """, file_path=file_path_str, name=imp['name'], url=imp.get('url'), media=imp.get('media'))
 
-    def _create_all_function_calls(self, all_file_data: list[Dict], imports_map: dict):
-        """Create CALLS relationships for all functions after all files have been processed."""
-        with self.driver.session() as session:
-            for file_data in all_file_data:
-                self._create_function_calls(session, file_data, imports_map)
-
-    def _create_inheritance_links(self, session, file_data: Dict, imports_map: dict):
-        """Create INHERITS relationships with a more robust resolution logic."""
-        caller_file_path = str(Path(file_data['file_path']).resolve())
-        local_class_names = {c['name'] for c in file_data.get('classes', [])}
-        # Create a map of local import aliases/names to full import names
-        local_imports = {imp.get('alias') or imp['name'].split('.')[-1]: imp['name']
-                         for imp in file_data.get('imports', [])}
-
-        for class_item in file_data.get('classes', []):
-            if not class_item.get('bases'):
-                continue
-
-            for base_class_str in class_item['bases']:
-                if base_class_str == 'object':
-                    continue
-
-                resolved_path = None
-                target_class_name = base_class_str.split('.')[-1]
-
-                # Handle qualified names like module.Class or alias.Class
-                if '.' in base_class_str:
-                    lookup_name = base_class_str.split('.')[0]
-                    
-                    # Case 1: The prefix is a known import
-                    if lookup_name in local_imports:
-                        full_import_name = local_imports[lookup_name]
-                        possible_paths = imports_map.get(target_class_name, [])
-                        # Find the path that corresponds to the imported module
-                        for path in possible_paths:
-                            if full_import_name.replace('.', '/') in path:
-                                resolved_path = path
-                                break
-                # Handle simple names
-                else:
-                    lookup_name = base_class_str
-                    # Case 2: The base class is in the same file
-                    if lookup_name in local_class_names:
-                        resolved_path = caller_file_path
-                    # Case 3: The base class was imported directly (e.g., from module import Parent)
-                    elif lookup_name in local_imports:
-                        full_import_name = local_imports[lookup_name]
-                        possible_paths = imports_map.get(target_class_name, [])
-                        for path in possible_paths:
-                            if full_import_name.replace('.', '/') in path:
-                                resolved_path = path
-                                break
-                    # Case 4: Fallback to global map (less reliable)
-                    elif lookup_name in imports_map:
-                        possible_paths = imports_map[lookup_name]
-                        if len(possible_paths) == 1:
-                            resolved_path = possible_paths[0]
+            # Handle CONTAINS relationship between rules and their selectors/properties
+            for rule in file_data.get('rules', []):
+                rule_name = rule['name']
+                # Connect rule to its selectors
+                for selector in file_data.get('selectors', []):
+                    if selector.get('rule_name') == rule_name:
+                        session.run("""
+                            MATCH (r:Rule {name: $rule_name, file_path: $file_path})
+                            MATCH (s:Selector {name: $selector_name, file_path: $file_path, line_number: $line_number})
+                            MERGE (r)-[:HAS_SELECTOR]->(s)
+                        """, rule_name=rule_name, file_path=file_path_str, selector_name=selector['name'], line_number=selector['line_number'])
                 
-                # If a path was found, create the relationship
-                if resolved_path:
-                    session.run("""
-                        MATCH (child:Class {name: $child_name, file_path: $file_path})
-                        MATCH (parent:Class {name: $parent_name, file_path: $resolved_parent_file_path})
-                        MERGE (child)-[:INHERITS]->(parent)
-                    """,
-                    child_name=class_item['name'],
-                    file_path=caller_file_path,
-                    parent_name=target_class_name,
-                    resolved_parent_file_path=resolved_path)
+                # Connect rule to its properties
+                for prop in file_data.get('properties', []):
+                    if prop.get('rule_name') == rule_name:
+                        session.run("""
+                            MATCH (r:Rule {name: $rule_name, file_path: $file_path})
+                            MATCH (p:Property {name: $prop_name, file_path: $file_path, line_number: $line_number})
+                            MERGE (r)-[:HAS_PROPERTY]->(p)
+                        """, rule_name=rule_name, file_path=file_path_str, prop_name=prop['name'], line_number=prop['line_number'])
 
-    def _create_all_inheritance_links(self, all_file_data: list[Dict], imports_map: dict):
-        """Create INHERITS relationships for all classes after all files have been processed."""
+            # CSS specificity and cascade relationships are handled in a separate pass after all files are processed.
+
+    # Second pass to create relationships that depend on all files being present like CSS cascade and specificity
+    def _create_css_cascade_relationships(self, session, file_data: Dict, imports_map: dict):
+        """Create CSS cascade and specificity relationships."""
+        caller_file_path = str(Path(file_data['file_path']).resolve())
+        
+        # Create relationships for CSS cascade (rules that override each other)
+        for rule in file_data.get('rules', []):
+            rule_name = rule['name']
+            specificity = rule.get('specificity', 0)
+            
+            # Find rules with same selectors but different specificity
+            for other_rule in file_data.get('rules', []):
+                if (other_rule['name'] != rule_name and 
+                    other_rule.get('specificity', 0) > specificity and
+                    other_rule.get('line_number', 0) > rule.get('line_number', 0)):
+                    
+                    session.run("""
+                        MATCH (weaker:Rule {name: $weaker_name, file_path: $file_path})
+                        MATCH (stronger:Rule {name: $stronger_name, file_path: $file_path})
+                        MERGE (weaker)-[:OVERRIDDEN_BY {specificity_diff: $specificity_diff}]->(stronger)
+                    """,
+                    weaker_name=rule_name,
+                    stronger_name=other_rule['name'],
+                    file_path=caller_file_path,
+                    specificity_diff=other_rule.get('specificity', 0) - specificity)
+
+    def _create_all_css_cascade_relationships(self, all_file_data: list[Dict], imports_map: dict):
+        """Create CSS cascade relationships for all rules after all files have been processed."""
         with self.driver.session() as session:
             for file_data in all_file_data:
-                self._create_inheritance_links(session, file_data, imports_map)
+                self._create_css_cascade_relationships(session, file_data, imports_map)
+
+    def _create_css_media_relationships(self, session, file_data: Dict, imports_map: dict):
+        """Create CSS media query relationships."""
+        caller_file_path = str(Path(file_data['file_path']).resolve())
+        
+        # Create relationships for CSS media queries
+        for rule in file_data.get('rules', []):
+            if rule.get('media_query'):
+                session.run("""
+                    MATCH (r:Rule {name: $rule_name, file_path: $file_path})
+                    MERGE (m:MediaQuery {name: $media_name, file_path: $file_path})
+                    SET m.conditions = $conditions
+                    MERGE (m)-[:CONTAINS]->(r)
+                """,
+                rule_name=rule['name'],
+                file_path=caller_file_path,
+                media_name=rule['media_query']['name'],
+                conditions=rule['media_query'].get('conditions', []))
+
+    def _create_all_css_media_relationships(self, all_file_data: list[Dict], imports_map: dict):
+        """Create CSS media query relationships for all rules after all files have been processed."""
+        with self.driver.session() as session:
+            for file_data in all_file_data:
+                self._create_css_media_relationships(session, file_data, imports_map)
                 
     def delete_file_from_graph(self, file_path: str):
         """Deletes a file and all its contained elements and relationships."""
@@ -536,8 +409,8 @@ class GraphBuilder:
                         self.job_manager.update_job(job_id, processed_files=processed_count)
                     await asyncio.sleep(0.01)
 
-            self._create_all_inheritance_links(all_file_data, imports_map)
-            self._create_all_function_calls(all_file_data, imports_map)
+            self._create_all_css_media_relationships(all_file_data, imports_map)
+            self._create_all_css_cascade_relationships(all_file_data, imports_map)
             
             if job_id:
                 self.job_manager.update_job(job_id, status=JobStatus.COMPLETED, end_time=datetime.now())
