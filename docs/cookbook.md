@@ -198,6 +198,8 @@ This cookbook provides examples of how to use the `mcp` tool to query and unders
   }
   ```
 
+> For advanced usage (languages, edge cases, post-filtering, examples) see: [Full list_imports Guide](./list_imports.md)
+
 ---
 
 ## Repository Information Queries

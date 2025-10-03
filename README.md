@@ -44,6 +44,11 @@ An MCP server that indexes local code into a graph database to provide context t
 -   **Live Updates:** Watches local files for changes and automatically updates the graph.
 -   **Interactive Setup:** A user-friendly command-line wizard for easy setup.
 
+## Tool Guides
+Focused deep dives on individual tools:
+
+- [list_imports](docs/list_imports.md) – enumerate imports/dependencies across a path (Python / JS / TS / Java)
+
 ## Used By
 
 CodeGraphContext is already being explored by developers and projects for:
