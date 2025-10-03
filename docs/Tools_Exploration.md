@@ -39,3 +39,49 @@ Below is an embedded link to a demo video showcasing the usage of the `analyse_c
 [![Watch the demo](./images/tool_images/3.png)](https://drive.google.com/file/d/154M_lTPbg9_Gj9bd2ErnAVbJArSbcb2M/view?usp=drive_link) 
 
 ---
+
+## execute_cypher_query Tool
+
+The `execute_cypher_query` tool lets you run read-only Cypher queries against the CodeGraphContext Neo4j graph to explore the indexed codebase. It is ideal for custom graph lookups beyond the built-in analysis tools.
+
+### Safety and Restrictions
+- Read-only only: queries are validated to block mutation keywords like `CREATE`, `MERGE`, `DELETE`, `SET`, `REMOVE`, `DROP`, and `CALL apoc`.
+- Validation happens server-side before execution to protect the database.
+
+### Where it’s implemented
+- Server tool: `src/codegraphcontext/server.py` (`execute_cypher_query_tool`)
+- System wrapper: `src/codegraphcontext/tools/system.py` (`execute_cypher_query_tool`)
+
+### CLI usage
+Run a Cypher query directly from the CLI:
+
+```
+python -m codegraphcontext cypher "MATCH (f:Function) RETURN f.name, f.file_path LIMIT 10"
+```
+
+### MCP tool invocation
+Use the tool name `execute_cypher_query` with the argument `cypher_query`:
+
+```json
+{
+  "tool": "execute_cypher_query",
+  "args": {
+    "cypher_query": "MATCH (c:Class) RETURN c.name, c.file_path LIMIT 25"
+  }
+}
+```
+
+### Useful example queries
+- Find functions:
+  - `MATCH (n:Function) RETURN n.name, n.file_path, n.line_number LIMIT 50`
+- Find classes:
+  - `MATCH (n:Class) RETURN n.name, n.file_path, n.line_number LIMIT 50`
+- Find dataclasses:
+  - `MATCH (c:Class) WHERE 'dataclass' IN c.decorators RETURN c.name, c.file_path`
+- Circular imports between files:
+  - `MATCH path = (f1:File)-[:IMPORTS*2..]->(f1) RETURN path LIMIT 10`
+
+### Demo video
+A short demo showing end-to-end usage (CLI and tool invocation) will be attached as part of issue tracking. See the issue for updates: [Add Demo and Usage Guide for execute_cypher_query Tool #225](https://github.com/Shashankss1205/CodeGraphContext/issues/225).
+
+---
