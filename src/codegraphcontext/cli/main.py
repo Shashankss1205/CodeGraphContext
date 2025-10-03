@@ -13,10 +13,12 @@ Commands:
 import typer
 from rich.console import Console
 from rich.table import Table
+from typing import Optional
 import asyncio
 import logging
 import json
 import os
+import time
 from pathlib import Path
 from dotenv import load_dotenv, find_dotenv
 from importlib.metadata import version as pkg_version, PackageNotFoundError
@@ -130,24 +132,95 @@ def start():
         loop.close()
 
 
+
+def _run_tool(tool_name: str, tool_args: dict):
+    """Helper function to run a tool and handle the server lifecycle."""
+    _load_credentials()
+    try:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        server = MCPServer(loop=loop)
+
+        result = loop.run_until_complete(server.handle_tool_call(tool_name, tool_args))
+        
+        if isinstance(result, dict) and "job_id" in result:
+            job_id = result["job_id"]
+            console.print(f"[green]Successfully started job '{job_id}' for tool '{tool_name}'.[/green]")
+            console.print(f"Estimated files: {result.get('estimated_files')}, Estimated duration: {result.get('estimated_duration_human')}")
+            console.print(f"\n[bold yellow]Polling for completion...[/bold yellow]")
+            
+            while True:
+                time.sleep(2)
+                status_result = loop.run_until_complete(server.handle_tool_call("check_job_status", {"job_id": job_id}))
+                job_status = status_result.get("job", {}).get("status")
+                processed_files = status_result.get("job", {}).get("processed_files", 0)
+                total_files = status_result.get("job", {}).get("total_files", 0)
+                console.print(f"Job status: {job_status} ({processed_files}/{total_files} files)")
+                if job_status in ["completed", "failed", "cancelled"]:
+                    console.print(json.dumps(status_result, indent=2))
+                    break
+        else:
+            console.print(json.dumps(result, indent=2))
+
+    except ValueError as e:
+        console.print(f"[bold red]Configuration Error:[/bold red] {e}")
+    except Exception as e:
+        console.print(f"[bold red]An unexpected error occurred:[/bold red] {e}")
+    finally:
+        if 'loop' in locals() and loop.is_running():
+            loop.close()
+
 @app.command()
-def tool(
-    name: str = typer.Argument(..., help="The name of the tool to call."),
-    args: str = typer.Argument("{}", help="A JSON string of arguments for the tool."),
-):
+def index(path: Optional[str] = typer.Argument(None, help="Path to the directory or file to index. Defaults to the current directory.")):
     """
-    Directly call a CodeGraphContext tool from the command line.
-
-    IMPORTANT: This is a placeholder for debugging and does not connect to a running
-    server. It creates a new, temporary server instance for each call, so it cannot
-    be used to check the status of jobs started by `cgc start`.
+    Indexes a directory or file by adding it to the code graph.
+    If no path is provided, it indexes the current directory.
     """
-    console.print(f"Calling tool [bold cyan]{name}[/bold cyan] with args: {args}")
-    console.print("[yellow]Note: This is a placeholder for direct tool invocation.[/yellow]")
+    if path is None:
+        path = "."
+    _run_tool("add_code_to_graph", {"path": path})
+
+@app.command()
+def delete(path: str = typer.Argument(..., help="Path of the repository to delete from the code graph.")):
+    """
+    Deletes a repository from the code graph.
+    """
+    _run_tool("delete_repository", {"repo_path": path})
+
+@app.command()
+def visualize(query: Optional[str] = typer.Argument(None, help="The Cypher query to visualize.")):
+    """
+    Generates a URL to visualize a Cypher query in the Neo4j Browser.
+    If no query is provided, a default query will be used.
+    """
+    if query is None:
+        query = "MATCH p=()-->() RETURN p"
+    _run_tool("visualize_graph_query", {"cypher_query": query})
+
+@app.command(name="list_repos")
+def list_repos():
+    """
+    Lists all indexed repositories.
+    """
+    _run_tool("list_indexed_repositories", {})
+
+@app.command(name="add_package")
+def add_package(package_name: str = typer.Argument(..., help="Name of the Python package to add.")):
+    """
+    Adds a Python package to the code graph.
+    """
+    _run_tool("add_package_to_graph", {"package_name": package_name})
+
+@app.command()
+def cypher(query: str = typer.Argument(..., help="The read-only Cypher query to execute.")):
+    """
+    Executes a read-only Cypher query.
+    """
+    _run_tool("execute_cypher_query", {"cypher_query": query})
 
 
-@app.command(name="list")
-def list_tools():
+@app.command(name="list_mcp_tools")
+def list_mcp_tools():
     """
     Lists all available tools and their descriptions.
     """

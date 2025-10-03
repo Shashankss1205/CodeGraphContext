@@ -41,28 +41,29 @@ CodeGraphContext is an **MCP (Model Context Protocol) server** that indexes your
 
 ---
 
+An MCP server that indexes local code into a graph database to provide context to AI assistants.
+
+### Indexing a codebase
+![Indexing using an MCP client](https://github.com/Shashankss1205/CodeGraphContext/blob/main/images/Indexing.gif)
+
+### Using the MCP server
+![Using the MCP server](https://github.com/Shashankss1205/CodeGraphContext/blob/main/images/Usecase.gif)
+
+## Project Details
+- **Version:** 0.1.14
+- **Authors:** Shashank Shekhar Singh <shashankshekharsingh1205@gmail.com>
+- **License:** MIT License (See [LICENSE](LICENSE) for details)
+- **Website:** [CodeGraphContext](http://codegraphcontext.vercel.app/)
+
+## Star History
+[![Star History Chart](https://api.star-history.com/svg?repos=Shashankss1205/CodeGraphContext&type=Date)](https://www.star-history.com/#Shashankss1205/CodeGraphContext&Date)
+
 ## Features
-- **Graph-Based Code Intelligence**: Functions, classes, files, imports, relationships (CALLS, CONTAINS, INHERITS, IMPORTS, ARGUMENTS) stored in Neo4j.
-- **Natural Language Querying**: Ask questions via any MCP-enabled AI client; the server selects tools and returns structured results.
-- **Live File Watching**: Continuous incremental updates using `watchdog`—no need to re-index manually.
-- **Complexity & Dead Code Detection**: Cyclomatic complexity, most complex functions, unused functions.
-- **Import & Dependency Introspection**: Enumerate imported packages across Python/JS/TS/Java (`list_imports`).
-- **Background Job Management**: Long-running indexing jobs tracked with IDs & status checks.
-- **Interactive Setup Wizard**: Automatic environment + MCP client configuration.
-- **Extensible Tooling Layer**: Add new analysis tools with minimal friction.
 
-## Screenshots / Demo
-### Indexing a Codebase
-![Indexing using an MCP client](images/Indexing.gif)
-
-### Using the MCP Server
-![Using the MCP server](images/Usecase.gif)
-
-## Supported Languages
-| Purpose | Languages |
-|---------|-----------|
-| Full AST / graph extraction | Python (primary) |
-| Import enumeration | Python, JavaScript, TypeScript, Java |
+-   **Code Indexing:** Analyzes Python code and builds a knowledge graph of its components.
+-   **Relationship Analysis:** Query for callers, callees, class hierarchies, and more.
+-   **Live Updates:** Watches local files for changes and automatically updates the graph.
+-   **Interactive Setup:** A user-friendly command-line wizard for easy setup.
 
 Additional language parsers (e.g. CSS, C++, Rust) are planned / in progress. See open issues.
 
