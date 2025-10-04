@@ -63,7 +63,7 @@ class GraphBuilder:
         self.db_manager = db_manager
         self.job_manager = job_manager
         self.loop = loop
-        self.driver = self.db_manager.get_driver()
+        self.driver = None
         self.parsers = {
             '.py': TreeSitterParser('python'),
             '.js': TreeSitterParser('javascript'), # Added JavaScript parser
@@ -77,12 +77,19 @@ class GraphBuilder:
             '.hpp': TreeSitterParser('cpp'),
             '.rs': TreeSitterParser('rust'),
         }
-        self.create_schema()
+
+    # A lazy driver getter
+    def get_driver(self):
+        """Lazy initialization of the driver."""
+        if self.driver is None:
+            self.driver = self.db_manager.get_driver()
+            self.create_schema()  # Create schema when driver is first accessed
+        return self.driver
 
     # A general schema creation based on common features across languages
     def create_schema(self):
         """Create constraints and indexes in Neo4j."""
-        with self.driver.session() as session:
+        with self.get_driver().session() as session:
             try:
                 session.run("CREATE CONSTRAINT repository_path IF NOT EXISTS FOR (r:Repository) REQUIRE r.path IS UNIQUE")
                 session.run("CREATE CONSTRAINT file_path IF NOT EXISTS FOR (f:File) REQUIRE f.path IS UNIQUE")
