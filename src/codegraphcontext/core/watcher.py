@@ -52,19 +52,20 @@ class RepositoryEventHandler(FileSystemEventHandler):
     def _initial_scan(self):
         """Scans the entire repository, parses all files, and builds the initial graph."""
         logger.info(f"Performing initial scan for watcher: {self.repo_path}")
-        all_files = list(self.repo_path.rglob("*.py"))
+        all_files = list(self.repo_path.rglob("*.css"))
         
         # 1. Pre-scan all files to get a global map of where every symbol is defined.
         self.imports_map = self.graph_builder._pre_scan_for_imports(all_files)
         
         # 2. Parse all files in detail and cache the parsed data.
         for f in all_files:
-            parsed_data = self.graph_builder.parse_python_file(self.repo_path, f, self.imports_map)
+            parsed_data = self.graph_builder.parse_file(self.repo_path, f)
             if "error" not in parsed_data:
                 self.all_file_data.append(parsed_data)
         
-        # 3. After all files are parsed, create the relationships (e.g., function calls) between them.
-        self.graph_builder._create_all_function_calls(self.all_file_data, self.imports_map)
+        # 3. After all files are parsed, create the CSS cascade relationships.
+        self.graph_builder._create_all_css_cascade_relationships(self.all_file_data, self.imports_map)
+        self.graph_builder._create_all_css_media_relationships(self.all_file_data, self.imports_map)
         logger.info(f"Initial scan and graph linking complete for: {self.repo_path}")
 
     def _debounce(self, event_path, action):
@@ -120,19 +121,19 @@ class RepositoryEventHandler(FileSystemEventHandler):
 
     # The following methods are called by the watchdog observer when a file event occurs.
     def on_created(self, event):
-        if not event.is_directory and event.src_path.endswith('.py'):
+        if not event.is_directory and event.src_path.endswith('.css'):
             self._debounce(event.src_path, lambda: self._handle_modification(event.src_path))
 
     def on_modified(self, event):
-        if not event.is_directory and event.src_path.endswith('.py'):
+        if not event.is_directory and event.src_path.endswith('.css'):
             self._debounce(event.src_path, lambda: self._handle_modification(event.src_path))
 
     def on_deleted(self, event):
-        if not event.is_directory and event.src_path.endswith('.py'):
+        if not event.is_directory and event.src_path.endswith('.css'):
             self._debounce(event.src_path, lambda: self._handle_modification(event.src_path))
 
     def on_moved(self, event):
-        if not event.is_directory and event.src_path.endswith('.py'):
+        if not event.is_directory and event.src_path.endswith('.css'):
             # A move is treated as a deletion at the old path and a creation at the new path.
             self._debounce(event.src_path, lambda: self._handle_modification(event.src_path))
             self._debounce(event.dest_path, lambda: self._handle_modification(event.dest_path))
