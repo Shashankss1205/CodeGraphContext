@@ -1,0 +1,875 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      
+        <link rel="next" href="installation/">
+      
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.21">
+    
+    
+      
+        <title>CodeGraphContext</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.2a3383ac.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#welcome-to-codegraphcontext" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="CodeGraphContext" class="md-header__button md-logo" aria-label="CodeGraphContext" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            CodeGraphContext
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Home
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="CodeGraphContext" class="md-nav__button md-logo" aria-label="CodeGraphContext" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    CodeGraphContext
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="." class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="use_cases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Use Cases
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CLI Reference
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Server
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="core/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Core Concepts
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tools
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="cookbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Cookbook
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            Contributing
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="contributing_languages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Adding New Languages
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Troubleshooting
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="future_work/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Future Work
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="license/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    License
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="welcome-to-codegraphcontext">Welcome to CodeGraphContext</h1>
+<p>This is the official documentation for CodeGraphContext.</p>
+<hr />
+<h1 id="codegraphcontext">CodeGraphContext</h1>
+<!-- ====== Project stats ====== -->
+<p><a href="https://github.com/Shashankss1205/CodeGraphContext/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/Shashankss1205/CodeGraphContext?logo=github" /></a>
+<a href="https://github.com/Shashankss1205/CodeGraphContext/network/members"><img alt="Forks" src="https://img.shields.io/github/forks/Shashankss1205/CodeGraphContext?logo=github" /></a>
+<a href="https://github.com/Shashankss1205/CodeGraphContext/issues"><img alt="Open Issues" src="https://img.shields.io/github/issues-raw/Shashankss1205/CodeGraphContext?logo=github" /></a>
+<a href="https://github.com/Shashankss1205/CodeGraphContext/pulls"><img alt="Open PRs" src="https://img.shields.io/github/issues-pr/Shashankss1205/CodeGraphContext?logo=github" /></a>
+<a href="https://github.com/Shashankss1205/CodeGraphContext/pulls?q=is%3Apr+is%3Aclosed"><img alt="Closed PRs" src="https://img.shields.io/github/issues-pr-closed/Shashankss1205/CodeGraphContext?logo=github&amp;color=lightgrey" /></a>
+<a href="https://github.com/Shashankss1205/CodeGraphContext/graphs/contributors"><img alt="Contributors" src="https://img.shields.io/github/contributors/Shashankss1205/CodeGraphContext?logo=github" /></a>
+<a href="https://github.com/Shashankss1205/CodeGraphContext"><img alt="Languages" src="https://img.shields.io/github/languages/count/Shashankss1205/CodeGraphContext?logo=github" /></a>
+<a href="https://github.com/Shashankss1205/CodeGraphContext/actions/workflows/test.yml"><img alt="Build Status" src="https://github.com/Shashankss1205/CodeGraphContext/actions/workflows/test.yml/badge.svg" /></a>
+<a href="https://github.com/Shashankss1205/CodeGraphContext/actions/workflows/e2e-tests.yml"><img alt="Build Status" src="https://github.com/Shashankss1205/CodeGraphContext/actions/workflows/e2e-tests.yml/badge.svg" /></a>
+<a href="https://pypi.org/project/codegraphcontext/"><img alt="PyPI version" src="https://img.shields.io/pypi/v/codegraphcontext?" /></a>
+<a href="https://pypi.org/project/codegraphcontext/"><img alt="PyPI downloads" src="https://img.shields.io/pypi/dm/codegraphcontext?" /></a>
+<a href="license/"><img alt="License" src="https://img.shields.io/github/license/Shashankss1205/CodeGraphContext?" /></a>
+<a href="http://codegraphcontext.vercel.app/"><img alt="Website" src="https://img.shields.io/badge/website-up-brightgreen?" /></a>
+<a href="https://youtu.be/KYYSdxhg1xU"><img alt="YouTube" src="https://img.shields.io/badge/YouTube-Watch%20Demo-red?logo=youtube" /></a>
+<a href="https://discord.gg/dR4QY32uYQ"><img alt="Discord" src="https://img.shields.io/badge/Discord-Join%20Chat-7289da?logo=discord&amp;logoColor=white" /></a></p>
+<p>An MCP server that indexes local code into a graph database to provide context to AI assistants.</p>
+<h3 id="indexing-a-codebase">Indexing a codebase</h3>
+<p><img alt="Indexing using an MCP client" src="images/Indexing.gif" /></p>
+<h3 id="using-the-mcp-server">Using the MCP server</h3>
+<p><img alt="Using the MCP server" src="images/Usecase.gif" /></p>
+<h2 id="project-details">Project Details</h2>
+<ul>
+<li><strong>Version:</strong> 0.1.15</li>
+<li><strong>Authors:</strong> Shashank Shekhar Singh <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#115;&#104;&#97;&#115;&#104;&#97;&#110;&#107;&#115;&#104;&#101;&#107;&#104;&#97;&#114;&#115;&#105;&#110;&#103;&#104;&#49;&#50;&#48;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;">&#115;&#104;&#97;&#115;&#104;&#97;&#110;&#107;&#115;&#104;&#101;&#107;&#104;&#97;&#114;&#115;&#105;&#110;&#103;&#104;&#49;&#50;&#48;&#53;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;</a></li>
+<li><strong>License:</strong> MIT License (See <a href="license/">LICENSE</a> for details)</li>
+<li><strong>Website:</strong> <a href="http://codegraphcontext.vercel.app/">CodeGraphContext</a></li>
+</ul>
+<h2 id="star-history">Star History</h2>
+<p><a href="https://www.star-history.com/#Shashankss1205/CodeGraphContext&amp;Date"><img alt="Star History Chart" src="https://api.star-history.com/svg?repos=Shashankss1205/CodeGraphContext&amp;type=Date" /></a></p>
+<h2 id="features">Features</h2>
+<ul>
+<li><strong>Code Indexing:</strong> Analyzes code and builds a knowledge graph of its components.</li>
+<li><strong>Relationship Analysis:</strong> Query for callers, callees, class hierarchies, call chains and more.</li>
+<li><strong>Live Updates:</strong> Watches local files for changes and automatically updates the graph.</li>
+<li><strong>Interactive Setup:</strong> A user-friendly command-line wizard for easy setup.</li>
+</ul>
+<h2 id="used-by">Used By</h2>
+<p>CodeGraphContext is already being explored by developers and projects for:</p>
+<ul>
+<li><strong>Static code analysis in AI assistants</strong></li>
+<li><strong>Graph-based visualization of projects</strong></li>
+<li><strong>Dead code and complexity detection</strong></li>
+</ul>
+<p>If you’re using CodeGraphContext in your project, feel free to open a PR and add it here! 🚀</p>
+<h2 id="dependencies">Dependencies</h2>
+<ul>
+<li><code>neo4j&gt;=5.15.0</code></li>
+<li><code>watchdog&gt;=3.0.0</code></li>
+<li><code>requests&gt;=2.31.0</code></li>
+<li><code>stdlibs&gt;=2023.11.18</code></li>
+<li><code>typer[all]&gt;=0.9.0</code></li>
+<li><code>rich&gt;=13.7.0</code></li>
+<li><code>inquirerpy&gt;=0.3.4</code></li>
+<li><code>python-dotenv&gt;=1.0.0</code></li>
+<li><code>tree-sitter==0.20.4</code></li>
+<li><code>tree-sitter-languages==1.10.2</code></li>
+</ul>
+<h2 id="getting-started">Getting Started</h2>
+<ol>
+<li><strong>Install:</strong> <code>pip install codegraphcontext</code></li>
+<li>
+<p><strong>Configure Your Environment:</strong>
+    Run the interactive setup wizard to connect to your database and configure your IDE:
+    <code>bash
+    cgc setup</code>
+    The wizard helps you with:</p>
+<ul>
+<li><strong>Database Connection:</strong><ul>
+<li><strong>Docker (Recommended):</strong> Automatically sets up a local Neo4j instance.</li>
+<li><strong>Linux Binary:</strong> Installs Neo4j directly on Debian-based systems.</li>
+<li><strong>Hosted:</strong> Connects to a remote Neo4j database like AuraDB.</li>
+</ul>
+</li>
+<li><strong>IDE Integration:</strong><ul>
+<li>Automatically configures tools like VS Code, Cursor, Gemini CLI, and more.</li>
+<li>Generates the necessary <code>mcp.json</code> and <code>.env</code> files for you.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Start:</strong> <code>cgc start</code></p>
+</li>
+</ol>
+<h2 id="mcp-client-configuration">MCP Client Configuration</h2>
+<p>The <code>cgc setup</code> command attempts to automatically configure your IDE/CLI. If you choose not to use the automatic setup, or if your tool is not supported, you can configure it manually.</p>
+<p>Add the following server configuration to your client's settings file (e.g., VS Code's <code>settings.json</code> or <code>.claude.json</code>):</p>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;CodeGraphContext&quot;: {
+      &quot;command&quot;: &quot;cgc&quot;,
+      &quot;args&quot;: [
+        &quot;start&quot;
+      ],
+      &quot;env&quot;: {
+        &quot;NEO4J_URI&quot;: &quot;YOUR_NEO4J_URI&quot;,
+        &quot;NEO4J_USERNAME&quot;: &quot;YOUR_NEO4J_USERNAME&quot;,
+        &quot;NEO4J_PASSWORD&quot;: &quot;YOUR_NEO4J_PASSWORD&quot;
+      },
+      &quot;tools&quot;: {
+        &quot;alwaysAllow&quot;: [
+          &quot;list_imports&quot;,
+          &quot;add_code_to_graph&quot;,
+          &quot;add_package_to_graph&quot;,
+          &quot;check_job_status&quot;,
+          &quot;list_jobs&quot;,
+          &quot;find_code&quot;,
+          &quot;analyze_code_relationships&quot;,
+          &quot;watch_directory&quot;,
+          &quot;find_dead_code&quot;,
+          &quot;execute_cypher_query&quot;,
+          &quot;calculate_cyclomatic_complexity&quot;,
+          &quot;find_most_complex_functions&quot;,
+          &quot;list_indexed_repositories&quot;,
+          &quot;delete_repository&quot;,
+          &quot;visualize_graph_query&quot;,
+          &quot;list_watched_paths&quot;,
+          &quot;unwatch_directory&quot;
+        ],
+        &quot;disabled&quot;: false
+      },
+      &quot;disabled&quot;: false,
+      &quot;alwaysAllow&quot;: []
+    }
+  }
+}
+</code></pre>
+<h2 id="natural-language-interaction-examples">Natural Language Interaction Examples</h2>
+<p>Once the server is running, you can interact with it through your AI assistant using plain English. Here are some examples of what you can say:</p>
+<h3 id="indexing-and-watching-files">Indexing and Watching Files</h3>
+<ul>
+<li>
+<p><strong>To index a new project:</strong></p>
+<ul>
+<li>"Please index the code in the <code>/path/to/my-project</code> directory."
+OR</li>
+<li>"Add the project at <code>~/dev/my-other-project</code> to the code graph."</li>
+</ul>
+</li>
+<li>
+<p><strong>To start watching a directory for live changes:</strong></p>
+<ul>
+<li>"Watch the <code>/path/to/my-active-project</code> directory for changes."
+OR</li>
+<li>"Keep the code graph updated for the project I'm working on at <code>~/dev/main-app</code>."</li>
+</ul>
+<p>When you ask to watch a directory, the system performs two actions at once:
+1.  It kicks off a full scan to index all the code in that directory. This process runs in the background, and you'll receive a <code>job_id</code> to track its progress.
+2.  It begins watching the directory for any file changes to keep the graph updated in real-time.</p>
+<p>This means you can start by simply telling the system to watch a directory, and it will handle both the initial indexing and the continuous updates automatically.</p>
+</li>
+</ul>
+<h3 id="querying-and-understanding-code">Querying and Understanding Code</h3>
+<ul>
+<li>
+<p><strong>Finding where code is defined:</strong></p>
+<ul>
+<li>"Where is the <code>process_payment</code> function?"</li>
+<li>"Find the <code>User</code> class for me."</li>
+<li>"Show me any code related to 'database connection'."</li>
+</ul>
+</li>
+<li>
+<p><strong>Analyzing relationships and impact:</strong></p>
+<ul>
+<li>"What other functions call the <code>get_user_by_id</code> function?"</li>
+<li>"If I change the <code>calculate_tax</code> function, what other parts of the code will be affected?"</li>
+<li>"Show me the inheritance hierarchy for the <code>BaseController</code> class."</li>
+<li>"What methods does the <code>Order</code> class have?"</li>
+</ul>
+</li>
+<li>
+<p><strong>Exploring dependencies:</strong></p>
+<ul>
+<li>"Which files import the <code>requests</code> library?"</li>
+<li>"Find all implementations of the <code>render</code> method."</li>
+</ul>
+</li>
+<li>
+<p><strong>Advanced Call Chain and Dependency Tracking (Spanning Hundreds of Files):</strong>
+    The CodeGraphContext excels at tracing complex execution flows and dependencies across vast codebases. Leveraging the power of graph databases, it can identify direct and indirect callers and callees, even when a function is called through multiple layers of abstraction or across numerous files. This is invaluable for:</p>
+<ul>
+<li><strong>Impact Analysis:</strong> Understand the full ripple effect of a change to a core function.</li>
+<li><strong>Debugging:</strong> Trace the path of execution from an entry point to a specific bug.</li>
+<li>
+<p><strong>Code Comprehension:</strong> Grasp how different parts of a large system interact.</p>
+</li>
+<li>
+<p>"Show me the full call chain from the <code>main</code> function to <code>process_data</code>."</p>
+</li>
+<li>"Find all functions that directly or indirectly call <code>validate_input</code>."</li>
+<li>"What are all the functions that <code>initialize_system</code> eventually calls?"</li>
+<li>"Trace the dependencies of the <code>DatabaseManager</code> module."</li>
+</ul>
+</li>
+<li>
+<p><strong>Code Quality and Maintenance:</strong></p>
+<ul>
+<li>"Is there any dead or unused code in this project?"</li>
+<li>"Calculate the cyclomatic complexity of the <code>process_data</code> function in <code>src/utils.py</code>."</li>
+<li>"Find the 5 most complex functions in the codebase."</li>
+</ul>
+</li>
+<li>
+<p><strong>Repository Management:</strong></p>
+<ul>
+<li>"List all currently indexed repositories."</li>
+<li>"Delete the indexed repository at <code>/path/to/old-project</code>."</li>
+</ul>
+</li>
+</ul>
+<h2 id="social-coverage">Social Coverage</h2>
+<ul>
+<li><strong>Youtube:</strong> <a href="https://www.youtube.com/watch?v=KYYSdxhg1xU">https://www.youtube.com/watch?v=KYYSdxhg1xU</a></li>
+<li><strong>Blog:</strong> <a href="https://medium.com/@shashankshekharsingh1205/building-codegraphcontext-my-end-term-journey-in-summer-of-bitcoin-2025-422c9a4dc87e">https://medium.com/@shashankshekharsingh1205/building-codegraphcontext-my-end-term-journey-in-summer-of-bitcoin-2025-422c9a4dc87e</a></li>
+<li><strong>Twitter:</strong> <a href="https://x.com/braidpool/status/1968683721625637203">https://x.com/braidpool/status/1968683721625637203</a></li>
+<li><strong>PulseMCP:</strong> <a href="https://www.pulsemcp.com/servers/codegraphcontext">https://www.pulsemcp.com/servers/codegraphcontext</a></li>
+<li><strong>MCPMarket:</strong> <a href="https://mcpmarket.com/server/codegraphcontext">https://mcpmarket.com/server/codegraphcontext</a></li>
+<li><strong>Playbooks:</strong> <a href="https://playbooks.com/mcp/codegraphcontext">https://playbooks.com/mcp/codegraphcontext</a></li>
+<li><strong>MCPHunt:</strong> <a href="https://mcp-hunt.com/mcp/server/codegraphcontext">https://mcp-hunt.com/mcp/server/codegraphcontext</a></li>
+<li><strong>StackerNews:</strong> <a href="https://stacker.news/items/1227191">https://stacker.news/items/1227191</a></li>
+<li><strong>Glama.ai:</strong> <a href="https://glama.ai/mcp/servers/@Shashankss1205/CodeGraphContext/blob/a346d340d8f705ce93626b4b322dd0e2823ba46b/src/codegraphcontext/core/jobs.py">https://glama.ai/mcp/servers/@Shashankss1205/CodeGraphContext/blob/a346d340d8f705ce93626b4b322dd0e2823ba46b/src/codegraphcontext/core/jobs.py</a></li>
+</ul>
+<h2 id="contributing">Contributing</h2>
+<p>Contributions are welcome! 🎉<br />
+Please see our <a href="contributing/">CONTRIBUTING.md</a> for detailed guidelines.
+If you have ideas for new features, integrations, or improvements, open an <a href="https://github.com/Shashankss1205/CodeGraphContext/issues">issue</a> or submit a Pull Request.</p>
+<p>Join discussions and help shape the future of CodeGraphContext.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": ".", "features": [], "search": "assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2106 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../tools/">
+      
+      
+        <link rel="next" href="../contributing/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.21">
+    
+    
+      
+        <title>Cookbook - CodeGraphContext</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.2a3383ac.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#mcp-tool-cookbook" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="CodeGraphContext" class="md-header__button md-logo" aria-label="CodeGraphContext" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            CodeGraphContext
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Cookbook
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="CodeGraphContext" class="md-nav__button md-logo" aria-label="CodeGraphContext" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    CodeGraphContext
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../use_cases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Use Cases
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CLI Reference
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Server
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../core/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Core Concepts
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tools
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Cookbook
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Cookbook
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#basic-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic Queries
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Basic Queries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-find-a-specific-function-by-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Find a specific function by name
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-find-all-calls-to-a-specific-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Find all calls to a specific function
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-find-what-a-function-calls" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Find what a function calls
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-find-all-imports-of-a-specific-module" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Find all imports of a specific module
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-find-all-methods-of-a-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Find all methods of a class
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-find-all-classes-that-inherit-from-a-specific-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Find all classes that inherit from a specific class
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-find-all-functions-with-a-specific-decorator" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Find all functions with a specific decorator
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-find-all-dataclasses" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Find all dataclasses
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code-analysis-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Analysis &amp; Quality
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Code Analysis &amp; Quality">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#9-find-the-5-most-complex-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      9. Find the 5 most complex functions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10-calculate-cyclomatic-complexity-of-a-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      10. Calculate cyclomatic complexity of a function
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#11-find-unused-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      11. Find unused code
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-find-the-call-chain-between-two-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      12. Find the call chain between two functions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-find-all-direct-and-indirect-callers-of-a-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      13. Find all direct and indirect callers of a function
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-find-functions-by-argument-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      14. Find functions by argument name
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-list-all-python-package-imports-from-a-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      15. List all python package imports from a directory
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#repository-information-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      Repository Information Queries
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Repository Information Queries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#16-list-all-indexed-projects" class="md-nav__link">
+    <span class="md-ellipsis">
+      16. List all indexed projects
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#17-check-the-status-of-an-indexing-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      17. Check the status of an indexing job
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#18-list-all-background-jobs" class="md-nav__link">
+    <span class="md-ellipsis">
+      18. List all background jobs
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-cypher-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advanced Cypher Queries
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Cypher Queries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#19-find-all-function-definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      19. Find all function definitions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#20-find-all-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      20. Find all classes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#21-find-all-functions-in-a-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      21. Find all functions in a file
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-find-all-classes-in-a-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      22. Find all classes in a file
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-list-all-top-level-functions-and-classes-in-a-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      23. List all top-level functions and classes in a file
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-find-functions-in-one-module-that-call-a-function-in-another" class="md-nav__link">
+    <span class="md-ellipsis">
+      24. Find functions in one module that call a function in another
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-find-circular-file-imports" class="md-nav__link">
+    <span class="md-ellipsis">
+      25. Find circular file imports
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-find-all-functions-with-more-than-5-arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      26. Find all functions with more than 5 arguments
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27-find-all-functions-in-a-file-that-have-a-docstring" class="md-nav__link">
+    <span class="md-ellipsis">
+      27. Find all functions in a file that have a docstring
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#28-find-all-classes-that-have-a-specific-method" class="md-nav__link">
+    <span class="md-ellipsis">
+      28. Find all classes that have a specific method
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#29-find-the-depth-of-inheritance-for-all-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      29. Find the depth of inheritance for all classes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#30-find-all-functions-that-have-a-docstring" class="md-nav__link">
+    <span class="md-ellipsis">
+      30. Find all functions that have a docstring
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#31-find-all-decorated-methods-in-a-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      31. Find all decorated methods in a class
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-find-the-number-of-functions-in-each-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      32. Find the number of functions in each file
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-find-all-methods-that-override-a-parent-method" class="md-nav__link">
+    <span class="md-ellipsis">
+      33. Find all methods that override a parent method
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-find-all-functions-that-call-super" class="md-nav__link">
+    <span class="md-ellipsis">
+      34. Find all functions that call super()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-find-all-calls-to-a-function-with-a-specific-argument" class="md-nav__link">
+    <span class="md-ellipsis">
+      35. Find all calls to a function with a specific argument
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-find-all-functions-that-are-not-called-by-any-other-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      36. Find all functions that are not called by any other function
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-find-all-functions-that-are-called-with-a-specific-argument" class="md-nav__link">
+    <span class="md-ellipsis">
+      37. Find all functions that are called with a specific argument
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-find-all-direct-and-indirect-callees-of-a-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      38. Find all direct and indirect callees of a function
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#39-find-all-functions-that-are-overridden" class="md-nav__link">
+    <span class="md-ellipsis">
+      39. Find all functions that are overridden
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#40-find-all-modules-imported-by-module_a" class="md-nav__link">
+    <span class="md-ellipsis">
+      40. Find all modules imported by module_a
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#41-find-large-functions-that-should-be-refactored" class="md-nav__link">
+    <span class="md-ellipsis">
+      41. Find large functions that should be refactored
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-find-recursive-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      42. Find recursive functions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-find-most-connected-functions-hub-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      43. Find most connected functions (hub functions)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-sensitive-data-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Security &amp; Sensitive Data Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security &amp; Sensitive Data Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#44-find-potential-security-vulnerabilities-hardcoded-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      44. Find potential security vulnerabilities (hardcoded secrets)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            Contributing
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing_languages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Adding New Languages
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Troubleshooting
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../future_work/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Future Work
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../license/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    License
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#basic-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic Queries
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Basic Queries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-find-a-specific-function-by-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Find a specific function by name
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-find-all-calls-to-a-specific-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Find all calls to a specific function
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-find-what-a-function-calls" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Find what a function calls
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-find-all-imports-of-a-specific-module" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Find all imports of a specific module
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-find-all-methods-of-a-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Find all methods of a class
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-find-all-classes-that-inherit-from-a-specific-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Find all classes that inherit from a specific class
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-find-all-functions-with-a-specific-decorator" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Find all functions with a specific decorator
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-find-all-dataclasses" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Find all dataclasses
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code-analysis-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Analysis &amp; Quality
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Code Analysis &amp; Quality">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#9-find-the-5-most-complex-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      9. Find the 5 most complex functions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10-calculate-cyclomatic-complexity-of-a-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      10. Calculate cyclomatic complexity of a function
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#11-find-unused-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      11. Find unused code
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-find-the-call-chain-between-two-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      12. Find the call chain between two functions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-find-all-direct-and-indirect-callers-of-a-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      13. Find all direct and indirect callers of a function
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-find-functions-by-argument-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      14. Find functions by argument name
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-list-all-python-package-imports-from-a-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      15. List all python package imports from a directory
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#repository-information-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      Repository Information Queries
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Repository Information Queries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#16-list-all-indexed-projects" class="md-nav__link">
+    <span class="md-ellipsis">
+      16. List all indexed projects
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#17-check-the-status-of-an-indexing-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      17. Check the status of an indexing job
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#18-list-all-background-jobs" class="md-nav__link">
+    <span class="md-ellipsis">
+      18. List all background jobs
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-cypher-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advanced Cypher Queries
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Cypher Queries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#19-find-all-function-definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      19. Find all function definitions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#20-find-all-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      20. Find all classes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#21-find-all-functions-in-a-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      21. Find all functions in a file
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-find-all-classes-in-a-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      22. Find all classes in a file
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-list-all-top-level-functions-and-classes-in-a-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      23. List all top-level functions and classes in a file
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-find-functions-in-one-module-that-call-a-function-in-another" class="md-nav__link">
+    <span class="md-ellipsis">
+      24. Find functions in one module that call a function in another
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-find-circular-file-imports" class="md-nav__link">
+    <span class="md-ellipsis">
+      25. Find circular file imports
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-find-all-functions-with-more-than-5-arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      26. Find all functions with more than 5 arguments
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27-find-all-functions-in-a-file-that-have-a-docstring" class="md-nav__link">
+    <span class="md-ellipsis">
+      27. Find all functions in a file that have a docstring
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#28-find-all-classes-that-have-a-specific-method" class="md-nav__link">
+    <span class="md-ellipsis">
+      28. Find all classes that have a specific method
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#29-find-the-depth-of-inheritance-for-all-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      29. Find the depth of inheritance for all classes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#30-find-all-functions-that-have-a-docstring" class="md-nav__link">
+    <span class="md-ellipsis">
+      30. Find all functions that have a docstring
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#31-find-all-decorated-methods-in-a-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      31. Find all decorated methods in a class
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-find-the-number-of-functions-in-each-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      32. Find the number of functions in each file
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-find-all-methods-that-override-a-parent-method" class="md-nav__link">
+    <span class="md-ellipsis">
+      33. Find all methods that override a parent method
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-find-all-functions-that-call-super" class="md-nav__link">
+    <span class="md-ellipsis">
+      34. Find all functions that call super()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-find-all-calls-to-a-function-with-a-specific-argument" class="md-nav__link">
+    <span class="md-ellipsis">
+      35. Find all calls to a function with a specific argument
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-find-all-functions-that-are-not-called-by-any-other-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      36. Find all functions that are not called by any other function
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-find-all-functions-that-are-called-with-a-specific-argument" class="md-nav__link">
+    <span class="md-ellipsis">
+      37. Find all functions that are called with a specific argument
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-find-all-direct-and-indirect-callees-of-a-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      38. Find all direct and indirect callees of a function
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#39-find-all-functions-that-are-overridden" class="md-nav__link">
+    <span class="md-ellipsis">
+      39. Find all functions that are overridden
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#40-find-all-modules-imported-by-module_a" class="md-nav__link">
+    <span class="md-ellipsis">
+      40. Find all modules imported by module_a
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#41-find-large-functions-that-should-be-refactored" class="md-nav__link">
+    <span class="md-ellipsis">
+      41. Find large functions that should be refactored
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-find-recursive-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      42. Find recursive functions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-find-most-connected-functions-hub-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      43. Find most connected functions (hub functions)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-sensitive-data-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Security &amp; Sensitive Data Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security &amp; Sensitive Data Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#44-find-potential-security-vulnerabilities-hardcoded-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      44. Find potential security vulnerabilities (hardcoded secrets)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="mcp-tool-cookbook">MCP Tool Cookbook</h1>
+<p>This cookbook provides examples of how to use the <code>mcp</code> tool to query and understand your Python codebase. The "Tool" indicates which <code>mcp</code> tool to use, and the "JSON Arguments" are what the LLM would provide to that tool.</p>
+<hr />
+<h2 id="basic-queries">Basic Queries</h2>
+<h3 id="1-find-a-specific-function-by-name">1. Find a specific function by name</h3>
+<ul>
+<li><strong>Natural Language:</strong> "Where is the function <code>foo</code> defined?"</li>
+<li><strong>Tool:</strong> <code>find_code</code></li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "query": "foo"
+  }</code></li>
+</ul>
+<p><img alt="Query 1" src="../images/1.png" /></p>
+<h3 id="2-find-all-calls-to-a-specific-function">2. Find all calls to a specific function</h3>
+<ul>
+<li><strong>Natural Language:</strong> "Find all calls to the <code>helper</code> function."</li>
+<li><strong>Tool:</strong> <code>analyze_code_relationships</code></li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "query_type": "find_callers",
+    "target": "helper"
+  }</code></li>
+</ul>
+<p><img alt="Query 2" src="../images/2.png" /></p>
+<h3 id="3-find-what-a-function-calls">3. Find what a function calls</h3>
+<ul>
+<li><strong>Natural Language:</strong> "What functions are called inside the <code>foo</code> function?"</li>
+<li><strong>Tool:</strong> <code>analyze_code_relationships</code></li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "query_type": "find_callees",
+    "target": "foo",
+    "context": "/teamspace/studios/this_studio/demo/CodeGraphContext/tests/sample_project/module_a.py"
+  }</code></li>
+</ul>
+<p><img alt="Query 3" src="../images/3.png" /></p>
+<h3 id="4-find-all-imports-of-a-specific-module">4. Find all imports of a specific module</h3>
+<ul>
+<li><strong>Natural Language:</strong> "Where is the <code>math</code> module imported?"</li>
+<li><strong>Tool:</strong> <code>analyze_code_relationships</code></li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "query_type": "find_importers",
+    "target": "math"
+  }</code></li>
+</ul>
+<p><img alt="Query 4" src="../images/4.png" /></p>
+<h3 id="5-find-all-methods-of-a-class">5. Find all methods of a class</h3>
+<ul>
+<li><strong>Natural Language:</strong> "What are the methods of the <code>A</code> class?"</li>
+<li><strong>Tool:</strong> <code>analyze_code_relationships</code></li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "query_type": "class_hierarchy",
+    "target": "A"
+  }</code></li>
+<li><strong>Note:</strong> The response for <code>class_hierarchy</code> includes a list of methods.</li>
+</ul>
+<p><img alt="Query 5" src="../images/5.png" /></p>
+<h3 id="6-find-all-classes-that-inherit-from-a-specific-class">6. Find all classes that inherit from a specific class</h3>
+<ul>
+<li><strong>Natural Language:</strong> "Show me all classes that inherit from <code>Base</code>."</li>
+<li><strong>Tool:</strong> <code>analyze_code_relationships</code></li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "query_type": "class_hierarchy",
+    "target": "Base"
+  }</code></li>
+<li><strong>Note:</strong> The response for <code>class_hierarchy</code> includes a list of child classes.</li>
+</ul>
+<p><img alt="Query 6" src="../images/6.png" /></p>
+<h3 id="7-find-all-functions-with-a-specific-decorator">7. Find all functions with a specific decorator</h3>
+<ul>
+<li><strong>Natural Language:</strong> "Find all functions with the <code>log_decorator</code>."</li>
+<li><strong>Tool:</strong> <code>analyze_code_relationships</code></li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "query_type": "find_functions_by_decorator",
+    "target": "log_decorator"
+  }</code></li>
+</ul>
+<p><img alt="Query 7" src="../images/7.png" /></p>
+<h3 id="8-find-all-dataclasses">8. Find all dataclasses</h3>
+<ul>
+<li><strong>Natural Language:</strong> "Find all dataclasses."</li>
+<li><strong>Tool:</strong> <code>execute_cypher_query</code></li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "cypher_query": "MATCH (c:Class) WHERE 'dataclass' IN c.decorators RETURN c.name, c.file_path"
+  }</code></li>
+</ul>
+<p><img alt="Query 8" src="../images/8.png" /></p>
+<hr />
+<h2 id="code-analysis-quality">Code Analysis &amp; Quality</h2>
+<h3 id="9-find-the-5-most-complex-functions">9. Find the 5 most complex functions</h3>
+<ul>
+<li><strong>Natural Language:</strong> "Find the 5 most complex functions."</li>
+<li><strong>Tool:</strong> <code>find_most_complex_functions</code></li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "limit": 5
+  }</code></li>
+</ul>
+<p><img alt="Query 9" src="../images/9.png" /></p>
+<h3 id="10-calculate-cyclomatic-complexity-of-a-function">10. Calculate cyclomatic complexity of a function</h3>
+<ul>
+<li><strong>Natural Language:</strong> "What is the cyclomatic complexity of <code>try_except_finally</code>?"</li>
+<li><strong>Tool:</strong> <code>calculate_cyclomatic_complexity</code></li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "function_name": "try_except_finally"
+  }</code></li>
+</ul>
+<h3 id="11-find-unused-code">11. Find unused code</h3>
+<ul>
+<li><strong>Natural Language:</strong> "Find unused code, but ignore API endpoints decorated with <code>@app.route</code>."</li>
+<li><strong>Tool:</strong> <code>find_dead_code</code></li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "exclude_decorated_with": ["@app.route"]
+  }</code></li>
+</ul>
+<p><img alt="Query 11" src="../images/11.png" /></p>
+<h3 id="12-find-the-call-chain-between-two-functions">12. Find the call chain between two functions</h3>
+<ul>
+<li><strong>Natural Language:</strong> "What is the call chain from <code>wrapper</code> to <code>helper</code>?"</li>
+<li><strong>Tool:</strong> <code>analyze_code_relationships</code></li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "query_type": "call_chain",
+    "target": "wrapper-&gt;helper"
+  }</code></li>
+</ul>
+<p><img alt="Query 12" src="../images/12.png" /></p>
+<h3 id="13-find-all-direct-and-indirect-callers-of-a-function">13. Find all direct and indirect callers of a function</h3>
+<ul>
+<li><strong>Natural Language:</strong> "Show me all functions that eventually call the <code>helper</code> function."</li>
+<li><strong>Tool:</strong> <code>analyze_code_relationships</code></li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "query_type": "find_all_callers",
+    "target": "helper"
+  }</code></li>
+</ul>
+<p><img alt="Query 13" src="../images/13.png" /></p>
+<h3 id="14-find-functions-by-argument-name">14. Find functions by argument name</h3>
+<ul>
+<li><strong>Natural Language:</strong> "Find all functions that take <code>self</code> as an argument."</li>
+<li><strong>Tool:</strong> <code>analyze_code_relationships</code></li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "query_type": "find_functions_by_argument",
+    "target": "self"
+  }</code></li>
+</ul>
+<p><img alt="Query 14" src="../images/14.png" /></p>
+<h3 id="15-list-all-python-package-imports-from-a-directory">15. List all python package imports from a directory</h3>
+<ul>
+<li><strong>Natural Language:</strong> "List all python package imports from my project directory."</li>
+<li><strong>Tool:</strong> <code>list_imports</code></li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "path": "/teamspace/studios/this_studio/demo/CodeGraphContext/tests/sample_project"
+  }</code></li>
+</ul>
+<hr />
+<h2 id="repository-information-queries">Repository Information Queries</h2>
+<h3 id="16-list-all-indexed-projects">16. List all indexed projects</h3>
+<ul>
+<li><strong>Natural Language:</strong> "List all projects I have indexed."</li>
+<li><strong>Tool:</strong> <code>list_indexed_repositories</code></li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {}</code></li>
+</ul>
+<p><img alt="Query 16" src="../images/16.png" /></p>
+<h3 id="17-check-the-status-of-an-indexing-job">17. Check the status of an indexing job</h3>
+<ul>
+<li><strong>Natural Language:</strong> "What is the status of job <code>4cb9a60e-c1b1-43a7-9c94-c840771506bc</code>?"</li>
+<li><strong>Tool:</strong> <code>check_job_status</code></li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "job_id": "4cb9a60e-c1b1-43a7-9c94-c840771506bc"
+  }</code></li>
+</ul>
+<h3 id="18-list-all-background-jobs">18. List all background jobs</h3>
+<ul>
+<li><strong>Natural Language:</strong> "Show me all background jobs."</li>
+<li><strong>Tool:</strong> <code>list_jobs</code></li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {}</code></li>
+</ul>
+<hr />
+<h2 id="advanced-cypher-queries">Advanced Cypher Queries</h2>
+<p>These examples use the <code>execute_cypher_query</code> tool for more specific and complex questions.</p>
+<h3 id="19-find-all-function-definitions">19. Find all function definitions</h3>
+<ul>
+<li><strong>Natural Language:</strong> "Find all function definitions in the codebase."</li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "cypher_query": "MATCH (n:Function) RETURN n.name, n.file_path, n.line_number LIMIT 50"
+  }</code></li>
+</ul>
+<p><img alt="Query 19" src="../images/19.png" /></p>
+<h3 id="20-find-all-classes">20. Find all classes</h3>
+<ul>
+<li><strong>Natural Language:</strong> "Show me all the classes."</li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "cypher_query": "MATCH (n:Class) RETURN n.name, n.file_path, n.line_number LIMIT 50"
+  }</code></li>
+</ul>
+<p><img alt="Query 20" src="../images/20.png" /></p>
+<h3 id="21-find-all-functions-in-a-file">21. Find all functions in a file</h3>
+<ul>
+<li><strong>Natural Language:</strong> "Find all functions in <code>module_a.py</code>."</li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "cypher_query": "MATCH (f:Function) WHERE f.file_path ENDS WITH 'module_a.py' RETURN f.name"
+  }</code></li>
+</ul>
+<p><img alt="Query 21" src="../images/21.png" /></p>
+<h3 id="22-find-all-classes-in-a-file">22. Find all classes in a file</h3>
+<ul>
+<li><strong>Natural Language:</strong> "Find all classes in <code>advanced_classes.py</code>."</li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "cypher_query": "MATCH (c:Class) WHERE c.file_path ENDS WITH 'advanced_classes.py' RETURN c.name"
+  }</code></li>
+</ul>
+<p><img alt="Query 22" src="../images/22.png" /></p>
+<h3 id="23-list-all-top-level-functions-and-classes-in-a-file">23. List all top-level functions and classes in a file</h3>
+<ul>
+<li><strong>Natural Language:</strong> "List all top-level functions and classes in <code>module_a.py</code>."</li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "cypher_query": "MATCH (f:File)-[:CONTAINS]-&gt;(n) WHERE f.name = 'module_a.py' AND (n:Function OR n:Class) AND n.context IS NULL RETURN n.name"
+  }</code></li>
+</ul>
+<p><img alt="Query 23" src="../images/23.png" /></p>
+<h3 id="24-find-functions-in-one-module-that-call-a-function-in-another">24. Find functions in one module that call a function in another</h3>
+<ul>
+<li><strong>Natural Language:</strong> "Find functions in <code>module_a.py</code> that call <code>helper</code> in <code>module_b.py</code>."</li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "cypher_query": "MATCH (caller:Function)-[:CALLS]-&gt;(callee:Function {name: 'helper'}) WHERE caller.file_path ENDS WITH 'module_a.py' AND callee.file_path ENDS WITH 'module_b.py' RETURN caller.name"
+  }</code></li>
+</ul>
+<p><img alt="Query 24" src="../images/24.png" /></p>
+<h3 id="25-find-circular-file-imports">25. Find circular file imports</h3>
+<ul>
+<li><strong>Natural Language:</strong> "Are there any circular dependencies between files?"</li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "cypher_query": "MATCH (f1:File)-[:IMPORTS]-&gt;(m2:Module), (f2:File)-[:IMPORTS]-&gt;(m1:Module) WHERE f1.name = m1.name + '.py' AND f2.name = m2.name + '.py' RETURN f1.name, f2.name"
+  }</code></li>
+</ul>
+<h3 id="26-find-all-functions-with-more-than-5-arguments">26. Find all functions with more than 5 arguments</h3>
+<ul>
+<li><strong>Natural Language:</strong> "Find all functions with a large number of arguments."</li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "cypher_query": "MATCH (f:Function) WHERE size(f.args) &gt; 5 RETURN f.name, f.file_path, size(f.args) as arg_count"
+  }</code></li>
+</ul>
+<p><img alt="Query 26" src="../images/26.png" /></p>
+<h3 id="27-find-all-functions-in-a-file-that-have-a-docstring">27. Find all functions in a file that have a docstring</h3>
+<ul>
+<li><strong>Natural Language:</strong> "Find all functions in <code>module_a.py</code> that have a docstring."</li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "cypher_query": "MATCH (f:Function) WHERE f.file_path ENDS WITH 'module_a.py' AND f.docstring IS NOT NULL AND f.docstring &lt;&gt; '' RETURN f.name"
+  }</code></li>
+</ul>
+<h3 id="28-find-all-classes-that-have-a-specific-method">28. Find all classes that have a specific method</h3>
+<ul>
+<li><strong>Natural Language:</strong> "Find all classes that have a <code>greet</code> method."</li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "cypher_query": "MATCH (c:Class)-[:CONTAINS]-&gt;(m:Function {name: 'greet'}) RETURN c.name, c.file_path"
+  }</code></li>
+</ul>
+<p><img alt="Query 28" src="../images/28.png" /></p>
+<h3 id="29-find-the-depth-of-inheritance-for-all-classes">29. Find the depth of inheritance for all classes</h3>
+<ul>
+<li><strong>Natural Language:</strong> "How deep are the inheritance chains for all classes?"</li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "cypher_query": "MATCH (c:Class) OPTIONAL MATCH path = (c)-[:INHERITS*]-&gt;(parent:Class) RETURN c.name, c.file_path, length(path) AS depth ORDER BY depth DESC"
+  }</code></li>
+</ul>
+<p><img alt="Query 29" src="../images/29.png" /></p>
+<h3 id="30-find-all-functions-that-have-a-docstring">30. Find all functions that have a docstring</h3>
+<ul>
+<li><strong>Natural Language:</strong> "Show me all functions that are documented."</li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "cypher_query": "MATCH (f:Function) WHERE f.docstring IS NOT NULL AND f.docstring &lt;&gt; '' RETURN f.name, f.file_path LIMIT 50"
+  }</code></li>
+</ul>
+<p><img alt="Query 30" src="../images/30.png" /></p>
+<h3 id="31-find-all-decorated-methods-in-a-class">31. Find all decorated methods in a class</h3>
+<ul>
+<li><strong>Natural Language:</strong> "Find all decorated methods in the <code>Child</code> class."</li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "cypher_query": "MATCH (c:Class {name: 'Child'})-[:CONTAINS]-&gt;(m:Function) WHERE m.decorators IS NOT NULL AND size(m.decorators) &gt; 0 RETURN m.name"
+  }</code></li>
+</ul>
+<p><img alt="Query 31" src="../images/31.png" /></p>
+<h3 id="32-find-the-number-of-functions-in-each-file">32. Find the number of functions in each file</h3>
+<ul>
+<li><strong>Natural Language:</strong> "How many functions are in each file?"</li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "cypher_query": "MATCH (f:Function) RETURN f.file_path, count(f) AS function_count ORDER BY function_count DESC"
+  }</code></li>
+</ul>
+<p><img alt="Query 32" src="../images/32.png" /></p>
+<h3 id="33-find-all-methods-that-override-a-parent-method">33. Find all methods that override a parent method</h3>
+<ul>
+<li><strong>Natural Language:</strong> "Find all methods that are overridden from a parent class."</li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "cypher_query": "MATCH (c:Class)-[:INHERITS]-&gt;(p:Class), (c)-[:CONTAINS]-&gt;(m:Function), (p)-[:CONTAINS]-&gt;(m_parent:Function) WHERE m.name = m_parent.name RETURN m.name as method, c.name as child_class, p.name as parent_class"
+  }</code></li>
+</ul>
+<p><img alt="Query 33" src="../images/33.png" /></p>
+<h3 id="34-find-all-functions-that-call-super">34. Find all functions that call <code>super()</code></h3>
+<ul>
+<li><strong>Natural Language:</strong> "Find all methods that call their parent's method via <code>super()</code>."</li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "cypher_query": "MATCH (f:Function)-[r:CALLS]-&gt;() WHERE r.full_call_name STARTS WITH 'super(' RETURN f.name, f.file_path"
+  }</code></li>
+</ul>
+<p><img alt="Query 34" src="../images/34.png" /></p>
+<h3 id="35-find-all-calls-to-a-function-with-a-specific-argument">35. Find all calls to a function with a specific argument</h3>
+<ul>
+<li><strong>Natural Language:</strong> "Find all calls to <code>helper</code> with the argument <code>x</code>."</li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "cypher_query": "MATCH ()-[r:CALLS]-&gt;(f:Function {name: 'helper'}) WHERE 'x' IN r.args RETURN r.full_call_name, r.line_number, r.file_path"
+  }</code></li>
+</ul>
+<p><img alt="Query 35" src="../images/35.png" /></p>
+<h3 id="36-find-all-functions-that-are-not-called-by-any-other-function">36. Find all functions that are not called by any other function</h3>
+<ul>
+<li><strong>Natural Language:</strong> "Find all dead code (functions that are never called)."</li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "cypher_query": "MATCH (f:Function) WHERE NOT (()-[:CALLS]-&gt;(f)) AND f.is_dependency = false RETURN f.name, f.file_path"
+  }</code></li>
+</ul>
+<p><img alt="Query 36" src="../images/36.png" /></p>
+<h3 id="37-find-all-functions-that-are-called-with-a-specific-argument">37. Find all functions that are called with a specific argument</h3>
+<ul>
+<li><strong>Natural Language:</strong> "Find all calls to <code>print</code> with the argument <code>'hello'</code>."</li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "cypher_query": "MATCH (c:Call) WHERE c.name = 'print' AND 'hello' IN c.args RETURN c.file, c.lineno"
+  }</code></li>
+</ul>
+<h3 id="38-find-all-direct-and-indirect-callees-of-a-function">38. Find all direct and indirect callees of a function</h3>
+<ul>
+<li><strong>Natural Language:</strong> "Show me all functions that are eventually called by the <code>foo</code> function."</li>
+<li><strong>Tool:</strong> <code>analyze_code_relationships</code></li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "query_type": "find_all_callees",
+    "target": "foo",
+    "context": "/teamspace/studios/this_studio/demo/CodeGraphContext/tests/sample_project/module_a.py"
+  }</code></li>
+</ul>
+<p><img alt="Query 38" src="../images/38.png" /></p>
+<h3 id="39-find-all-functions-that-are-overridden">39. Find all functions that are overridden</h3>
+<ul>
+<li><strong>Natural Language:</strong> "Find all functions that are overridden."</li>
+<li><strong>Tool:</strong> <code>analyze_code_relationships</code></li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "query_type": "overrides",
+    "target": "foo"
+  }</code></li>
+</ul>
+<p><img alt="Query 39" src="../images/39.png" /></p>
+<h3 id="40-find-all-modules-imported-by-module_a">40. Find all modules imported by <code>module_a</code></h3>
+<ul>
+<li><strong>Natural Language:</strong> "Find all modules imported by <code>module_a</code>."</li>
+<li><strong>Tool:</strong> <code>execute_cypher_query</code></li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "cypher_query": "MATCH (f:File {name: 'module_a.py'})-[:IMPORTS]-&gt;(m:Module) RETURN m.name AS imported_module_name"
+  }</code></li>
+</ul>
+<p><img alt="Query 40" src="../images/40.png" /></p>
+<h3 id="41-find-large-functions-that-should-be-refactored">41. Find large functions that should be refactored</h3>
+<ul>
+<li><strong>Natural Language:</strong> "Find functions with more than 20 lines of code that might need refactoring."</li>
+<li><strong>Tool:</strong> <code>execute_cypher_query</code></li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "cypher_query": "MATCH (f:Function)\n    WHERE f.end_line - f.line_number &gt; 20\n    RETURN f"
+  }</code></li>
+</ul>
+<p><img alt="Query 41" src="../images/41.png" /></p>
+<h3 id="42-find-recursive-functions">42. Find recursive functions</h3>
+<ul>
+<li><strong>Natural Language:</strong> "Find all functions that call themselves (recursive functions)."</li>
+<li><strong>Tool:</strong> <code>execute_cypher_query</code></li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "cypher_query": "MATCH p=(f:Function)-[:CALLS]-&gt;(f2:Function)\n    WHERE f.name = f2.name AND f.file_path = f2.file_path\n    RETURN p"
+  }</code>
+<img alt="Query 42" src="../images/42.png" /></li>
+</ul>
+<h3 id="43-find-most-connected-functions-hub-functions">43. Find most connected functions (hub functions)</h3>
+<ul>
+<li><strong>Natural Language:</strong> "Find the functions that are most central to the codebase (called by many and call many others)."</li>
+<li><strong>Tool:</strong> <code>execute_cypher_query</code></li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "cypher_query": "MATCH (f:Function)\n    OPTIONAL MATCH (f)-[:CALLS]-&gt;(callee:Function)\n    OPTIONAL MATCH (caller:Function)-[:CALLS]-&gt;(f)\n    WITH f, count(DISTINCT callee) AS calls_out, count(DISTINCT caller) AS calls_in\n    ORDER BY (calls_out + calls_in) DESC\n    LIMIT 5\n    MATCH p=(f)-[*0..2]-()\n    RETURN p"
+  }</code>
+<img alt="Query 43" src="../images/43.png" /></li>
+</ul>
+<h2 id="security-sensitive-data-analysis">Security &amp; Sensitive Data Analysis</h2>
+<h3 id="44-find-potential-security-vulnerabilities-hardcoded-secrets">44. Find potential security vulnerabilities (hardcoded secrets)</h3>
+<ul>
+<li><strong>Natural Language:</strong> "Find potential hardcoded passwords, API keys, or secrets in the codebase."</li>
+<li><strong>Tool:</strong> <code>execute_cypher_query</code></li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "cypher_query": "WITH [\"password\",  \"api_key\", \"apikey\",    \"secret_token\", \"token\", \"auth\", \"access_key\", \"private_key\", \"client_secret\", \"sessionid\", \"jwt\"] AS keywords\n    MATCH (f:Function)\n    WHERE ANY(word IN keywords WHERE toLower(f.source_code) CONTAINS word)\n    RETURN f"
+  }</code></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>
