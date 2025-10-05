@@ -77,3 +77,21 @@ Below is an embedded link to a demo video showcasing the usage of the `analyse_c
 [![Watch the demo](./images/tool_images/3.png)](https://drive.google.com/file/d/154M_lTPbg9_Gj9bd2ErnAVbJArSbcb2M/view?usp=drive_link) 
 
 ---
+
+## list_imports tool
+
+The `list_imports` tool allows users to retrieve and inspect all the import statements across a given codebase or within a specific file. 
+It helps developers (and AI assistants) understand external dependencies, module usage, and overall package structure within a project.
+
+### Typical Scenarios
+
+- View All Imports in a Project
+
+- Inspect Imports in a Single File
+
+- Dependency Auditing
+
+Below is an embedded link to a demo video showcasing the usage of the `list_imports` tool. 
+[![Watch the demo](./images/tool_images/4.png)](https://drive.google.com/file/d/1EsvDx0A-uFZbniPPX09qXCzGD2KRqjdH/preview)
+
+
