@@ -445,15 +445,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#list_imports" class="md-nav__link">
-    <span class="md-ellipsis">
-      list_imports
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#find_dead_code" class="md-nav__link">
     <span class="md-ellipsis">
       find_dead_code
@@ -888,15 +879,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#list_imports" class="md-nav__link">
-    <span class="md-ellipsis">
-      list_imports
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#find_dead_code" class="md-nav__link">
     <span class="md-ellipsis">
       find_dead_code
@@ -1008,7 +990,6 @@
 <li><code>CodeWatcher</code>: Monitors the file system for changes to keep the code graph up-to-date.</li>
 <li><code>GraphBuilder</code>: Builds the code graph from the source code.</li>
 <li><code>CodeFinder</code>: Provides tools for searching and analyzing the code graph.</li>
-<li><code>ImportExtractor</code>: Extracts import statements from code files.</li>
 </ul>
 <h2 id="tool-manifest">Tool Manifest</h2>
 <p>The <code>MCPServer</code> exposes a set of tools to the AI assistant. These tools are defined in the <code>_init_tools</code> method. Here is a list of available tools:</p>
@@ -1051,8 +1032,6 @@
 </ul>
 <h3 id="add_package_to_graph"><code>add_package_to_graph</code></h3>
 <p>Add a Python package to Neo4j graph by discovering its location. Returns immediately with job ID.</p>
-<h3 id="list_imports"><code>list_imports</code></h3>
-<p>Extract all package imports from code files in a directory or file.</p>
 <h3 id="find_dead_code"><code>find_dead_code</code></h3>
 <p>Find potentially unused functions (dead code) across the entire indexed codebase, optionally excluding functions with specific decorators.</p>
 <h3 id="calculate_cyclomatic_complexity"><code>calculate_cyclomatic_complexity</code></h3>
