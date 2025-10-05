@@ -570,6 +570,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#15-list-all-python-package-imports-from-a-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      15. List all python package imports from a directory
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1223,6 +1232,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#15-list-all-python-package-imports-from-a-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      15. List all python package imports from a directory
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1721,6 +1739,17 @@
   }</code></li>
 </ul>
 <p><img alt="Query 14" src="../images/14.png" /></p>
+<h3 id="15-list-all-python-package-imports-from-a-directory">15. List all python package imports from a directory</h3>
+<ul>
+<li><strong>Natural Language:</strong> "List all python package imports from my project directory."</li>
+<li><strong>Tool:</strong> <code>execute_cypher_query</code></li>
+<li><strong>JSON Arguments:</strong>
+  <code>json
+  {
+    "cypher_query": "MATCH (f:File)-[:IMPORTS]-&gt;(m:Module) WHERE f.path ENDS WITH '.py' RETURN DISTINCT m.name"
+  }</code></li>
+</ul>
+<hr />
 <h2 id="repository-information-queries">Repository Information Queries</h2>
 <h3 id="16-list-all-indexed-projects">16. List all indexed projects</h3>
 <ul>
