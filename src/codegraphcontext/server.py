@@ -3,8 +3,6 @@ import urllib.parse
 import asyncio
 import json
 import logging
-import importlib
-import stdlibs
 import sys
 import traceback
 import os
@@ -24,6 +22,7 @@ from .tools.graph_builder import GraphBuilder
 from .tools.code_finder import CodeFinder
 from .tools.import_extractor import ImportExtractor
 from .utils.debug_log import debug_log
+from .package_resolver import get_local_package_path
 
 logger = logging.getLogger(__name__)
 
@@ -151,11 +150,12 @@ class MCPServer:
             },
             "add_package_to_graph": {
                 "name": "add_package_to_graph",
-                "description": "Add a Python package to Neo4j graph by discovering its location. Returns immediately with job ID.",
+                "description": "Add a package to Neo4j graph by discovering its location. Supports Python and C++ packages. Returns immediately with job ID.",
                 "inputSchema": {
                     "type": "object",
                     "properties": {
-                        "package_name": {"type": "string", "description": "Name of the Python package to add (e.g., 'requests')"},
+                        "package_name": {"type": "string", "description": "Name of the package to add (e.g., 'requests' for Python, 'tinyxml2' for C++)"},
+                        "language": {"type": "string", "description": "Programming language of the package", "enum": ["python", "cpp"], "default": "python"},
                         "is_dependency": {"type": "boolean", "description": "Mark as a dependency", "default": True}
                     },
                     "required": ["package_name"]
@@ -257,65 +257,7 @@ class MCPServer:
     def get_database_status(self) -> dict:
         """Returns the current connection status of the Neo4j database."""
         return {"connected": self.db_manager.is_connected()}
-        
-    def get_local_package_path(self, package_name: str) -> Optional[str]:
-        """
-        Finds the local installation path of a Python package.
 
-        This method uses `importlib` to locate a package and determines its root
-        directory, handling both regular packages (directories with __init__.py)
-        and single-file modules.
-
-        Args:
-            package_name: The name of the package to locate (e.g., "requests").
-
-        Returns:
-            The absolute path to the package's directory as a string, or None if not found.
-        """
-        try:
-            debug_log(f"Getting local path for package: {package_name}")
-            
-            module = importlib.import_module(package_name)
-            
-            if hasattr(module, '__file__') and module.__file__:
-                module_file = Path(module.__file__)
-                debug_log(f"Module file: {module_file}")
-
-                if module_file.name == '__init__.py':
-                    # For a package, the path is the parent directory of __init__.py
-                    package_path = str(module_file.parent)
-                elif package_name in stdlibs.module_names:
-                    # For a standard library single file module, the path is the file itself
-                    package_path = str(module_file)
-                else:
-                    # For other single-file modules, assume the parent directory is the container
-                    package_path = str(module_file.parent)
-
-                debug_log(f"Determined package path: {package_path}")
-                return package_path
-
-            elif hasattr(module, '__path__'):
-                # This handles namespace packages which may not have an __init__.py
-                if isinstance(module.__path__, list) and module.__path__:
-                    package_path = str(Path(module.__path__[0]))
-                    debug_log(f"Package path from __path__: {package_path}")
-                    return package_path
-                else:
-                    # Fallback for other __path__ formats
-                    package_path = str(Path(str(module.__path__)))
-                    debug_log(f"Package path from __path__ (str): {package_path}")
-                    return package_path
-            
-            debug_log(f"Could not determine path for {package_name}")
-            return None
-            
-        except ImportError as e:
-            debug_log(f"Could not import {package_name}: {e}")
-            return None
-        except Exception as e:
-            debug_log(f"Error getting local path for {package_name}: {e}")
-            return None
-        
     def execute_cypher_query_tool(self, **args) -> Dict[str, Any]:
         """
         Tool implementation for executing a read-only Cypher query.
@@ -646,10 +588,11 @@ class MCPServer:
             return {"error": f"Failed to start background processing: {str(e)}"}
     
     def add_package_to_graph_tool(self, **args) -> Dict[str, Any]:
-        """Tool to add a Python package to Neo4j graph by auto-discovering its location"""
+        """Tool to add a package to Neo4j graph by auto-discovering its location"""
         package_name = args.get("package_name")
+        language = args.get("language", "python")
         is_dependency = args.get("is_dependency", True)
-        
+
         try:
             # Check if the package is already indexed
             indexed_repos = self.list_indexed_repositories_tool().get("repositories", [])
@@ -660,42 +603,43 @@ class MCPServer:
                         "message": f"Package '{package_name}' is already indexed."
                     }
 
-            package_path = self.get_local_package_path(package_name)
-            
+            package_path = get_local_package_path(package_name, language)
+
             if not package_path:
-                return {"error": f"Could not find package '{package_name}'. Make sure it's installed."}
-            
+                return {"error": f"Could not find {language} package '{package_name}'. Make sure it's installed."}
+
             if not os.path.exists(package_path):
                 return {"error": f"Package path '{package_path}' does not exist"}
-            
+
             path_obj = Path(package_path)
-            
+
             total_files, estimated_time = self.graph_builder.estimate_processing_time(path_obj)
-            
+
             job_id = self.job_manager.create_job(package_path, is_dependency)
-            
+
             self.job_manager.update_job(job_id, total_files=total_files, estimated_duration=estimated_time)
-            
+
             coro = self.graph_builder.build_graph_from_path_async(
                 path_obj, is_dependency, job_id
             )
             asyncio.run_coroutine_threadsafe(coro, self.loop)
-            
-            debug_log(f"Started background job {job_id} for package: {package_name} at {package_path}, is_dependency: {is_dependency}")
-            
+
+            debug_log(f"Started background job {job_id} for {language} package: {package_name} at {package_path}, is_dependency: {is_dependency}")
+
             return {
                 "success": True, "job_id": job_id, "package_name": package_name,
+                "language": language,
                 "discovered_path": package_path,
-                "message": f"Background processing started for package '{package_name}'",
+                "message": f"Background processing started for {language} package '{package_name}'",
                 "estimated_files": total_files,
                 "estimated_duration_seconds": round(estimated_time, 2),
                 "estimated_duration_human": f"{int(estimated_time // 60)}m {int(estimated_time % 60)}s" if estimated_time >= 60 else f"{int(estimated_time)}s",
                 "instructions": f"Use 'check_job_status' with job_id '{job_id}' to monitor progress"
             }
-        
+
         except Exception as e:
-            debug_log(f"Error creating background job for package {package_name}: {str(e)}")
-            return {"error": f"Failed to start background processing for package '{package_name}': {str(e)}"}
+            debug_log(f"Error creating background job for {language} package {package_name}: {str(e)}")
+            return {"error": f"Failed to start background processing for {language} package '{package_name}': {str(e)}"}
     
     def check_job_status_tool(self, **args) -> Dict[str, Any]:
         """Tool to check job status"""
