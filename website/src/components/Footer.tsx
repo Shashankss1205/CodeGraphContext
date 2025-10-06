@@ -4,13 +4,15 @@ import { FaDiscord } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { createClient } from "@supabase/supabase-js";
+import { FaInstagram } from "react-icons/fa";
 
 // Only create Supabase client if environment variables are set
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-const supabase = supabaseUrl && supabaseAnonKey 
-  ? createClient(supabaseUrl, supabaseAnonKey)
-  : null;
+const supabase =
+  supabaseUrl && supabaseAnonKey
+    ? createClient(supabaseUrl, supabaseAnonKey)
+    : null;
 
 const Footer = () => {
   const [email, setEmail] = useState("");
@@ -52,7 +54,9 @@ const Footer = () => {
 
     // Check if Supabase is configured
     if (!supabase) {
-      toast.error("Newsletter subscription is currently unavailable. Please try again later.");
+      toast.error(
+        "Newsletter subscription is currently unavailable. Please try again later."
+      );
       return;
     }
 
@@ -98,45 +102,99 @@ const Footer = () => {
                 Transform your codebase into an intelligent knowledge graph for
                 AI assistants.
               </p>
-              <div className="flex gap-3 flex-wrap">
-                <Button variant="outline" size="sm" asChild>
+              <div className="flex gap-3 items-center">
+                {/* GitHub */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  asChild
+                  className="p-2 rounded-full"
+                >
                   <a
                     href="https://github.com/Shashankss1205/CodeGraphContext"
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label="GitHub"
+                    title="GitHub"
+                    className="flex items-center justify-center transition-colors duration-300 hover:text-[#171515]"
                   >
-                    <Github className="h-4 w-4 mr-2" />
-                    GitHub
+                    <Github className="h-5 w-5 text-gray-700" />
                   </a>
                 </Button>
-                <Button variant="outline" size="sm" asChild>
+
+                {/* Discord */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  asChild
+                  className="p-2 rounded-full"
+                >
                   <a
                     href="https://discord.com/invite/dR4QY32uYQ"
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label="Discord"
+                    title="Discord"
+                    className="flex items-center justify-center transition-colors duration-300 hover:text-[#5865F2]"
                   >
-                    <FaDiscord className="h-4 w-4 mr-2" />
-                    Discord
+                    <FaDiscord className="h-5 w-5 text-gray-700" />
                   </a>
                 </Button>
-                <Button variant="outline" size="sm" asChild>
+
+                {/* Instagram (new) */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  asChild
+                  className="p-2 rounded-full"
+                >
+                  <a
+                    href="https://www.instagram.com/yourhandle" // replace with real handle
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Instagram"
+                    title="Instagram"
+                    className="flex items-center justify-center transition-colors duration-300 hover:text-[#E4405F]"
+                  >
+                    <FaInstagram className="h-5 w-5 text-gray-700" />
+                  </a>
+                </Button>
+
+                {/* PyPI */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  asChild
+                  className="p-2 rounded-full"
+                >
                   <a
                     href="https://pypi.org/project/codegraphcontext/"
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label="PyPI"
+                    title="PyPI"
+                    className="flex items-center justify-center transition-colors duration-300 hover:text-[#FFD43B]"
                   >
-                    <ExternalLink className="h-4 w-4 mr-2" />
-                    PyPI
+                    <ExternalLink className="h-5 w-5 text-gray-700" />
                   </a>
                 </Button>
-                <Button variant="outline" size="sm" asChild>
+
+                {/* Documentation */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  asChild
+                  className="p-2 rounded-full"
+                >
                   <a
                     href="https://shashankss1205.github.io/CodeGraphContext/"
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label="Documentation"
+                    title="Documentation"
+                    className="flex items-center justify-center transition-colors duration-300 hover:text-[#40E0D0]"
                   >
-                    <ExternalLink className="h-4 w-4 mr-2" />
-                    Documentation
+                    <ExternalLink className="h-5 w-5 text-gray-700" />
                   </a>
                 </Button>
               </div>
@@ -210,9 +268,7 @@ const Footer = () => {
                 </div> */}
                 <div className="flex items-start gap-3">
                   <MapPin className="h-5 w-5 mt-1 text-primary" />
-                  <p className="text-sm">
-                    (Available Worldwide 🌍)
-                  </p>
+                  <p className="text-sm">(Available Worldwide 🌍)</p>
                 </div>
                 <div>
                   <p className="font-medium text-foreground">

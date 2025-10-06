@@ -49,9 +49,21 @@
     --graph-edge: 222 47% 25%;
 
     /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(263 70% 65%), hsl(180 100% 70%));
-    --gradient-hero: linear-gradient(135deg, hsl(222 47% 5%) 0%, hsl(222 47% 8%) 100%);
-    --gradient-card: linear-gradient(135deg, hsl(222 47% 8%) 0%, hsl(222 47% 10%) 100%);
+    --gradient-primary: linear-gradient(
+      135deg,
+      hsl(263 70% 65%),
+      hsl(180 100% 70%)
+    );
+    --gradient-hero: linear-gradient(
+      135deg,
+      hsl(222 47% 5%) 0%,
+      hsl(222 47% 8%) 100%
+    );
+    --gradient-card: linear-gradient(
+      135deg,
+      hsl(222 47% 8%) 0%,
+      hsl(222 47% 10%) 100%
+    );
 
     /* Shadows with graph glow */
     --shadow-glow: 0 0 40px hsl(263 70% 65% / 0.15);
@@ -99,11 +111,14 @@
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 263 70% 55%;
-    --gradient-primary: linear-gradient(135deg, hsl(263, 49%, 40%), hsl(180, 45%, 47%));
-
+    --gradient-primary: linear-gradient(
+      135deg,
+      hsl(263, 49%, 40%),
+      hsl(180, 45%, 47%)
+    );
   }
   .theme {
-    --animate-orbit: orbit calc(var(--duration)*1s) linear infinite;
+    --animate-orbit: orbit calc(var(--duration) * 1s) linear infinite;
   }
 }
 
@@ -115,9 +130,16 @@
   body {
     @apply bg-background text-foreground overflow-x-hidden;
     background: hsl(var(--background));
-    background-image: 
-      radial-gradient(circle at 20% 20%, hsl(263 70% 65% / 0.05) 0%, transparent 50%),
-      radial-gradient(circle at 80% 80%, hsl(180 100% 70% / 0.05) 0%, transparent 50%);
+    background-image: radial-gradient(
+        circle at 20% 20%,
+        hsl(263 70% 65% / 0.05) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 80% 80%,
+        hsl(180 100% 70% / 0.05) 0%,
+        transparent 50%
+      );
   }
 
   /* Smooth scrolling */
@@ -127,11 +149,12 @@
 
   /* Custom animations */
   @keyframes graph-pulse {
-    0%, 100% { 
+    0%,
+    100% {
       opacity: 1;
       transform: scale(1);
     }
-    50% { 
+    50% {
       opacity: 0.7;
       transform: scale(1.05);
     }
@@ -149,9 +172,15 @@
   }
 
   @keyframes code-highlight {
-    0% { background-color: transparent; }
-    50% { background-color: hsl(263 70% 65% / 0.1); }
-    100% { background-color: transparent; }
+    0% {
+      background-color: transparent;
+    }
+    50% {
+      background-color: hsl(263 70% 65% / 0.1);
+    }
+    100% {
+      background-color: transparent;
+    }
   }
 
   .animate-graph-pulse {
@@ -174,8 +203,7 @@
   @keyframes orbit {
     0% {
       transform: rotate(calc(var(--angle) * 1deg))
-        translateY(calc(var(--radius) * 1px))
-        rotate(calc(var(--angle) * -1deg));
+        translateY(calc(var(--radius) * 1px)) rotate(calc(var(--angle) * -1deg));
     }
     100% {
       transform: rotate(calc(var(--angle) * 1deg + 360deg))
@@ -191,12 +219,10 @@
     box-shadow: var(--shadow-glow);
   }
 
-  
-
   .graph-edge {
     @apply stroke-graph-edge transition-all duration-300;
     stroke-width: 2;
-    stroke-dasharray: 5,5;
+    stroke-dasharray: 5, 5;
     animation: dash 20s linear infinite;
   }
 
@@ -225,11 +251,74 @@
 
 @theme inline {
   @keyframes orbit {
-  0% {
-    transform: rotate(calc(var(--angle) * 1deg)) translateY(calc(var(--radius) * 1px)) rotate(calc(var(--angle) * -1deg));
+    0% {
+      transform: rotate(calc(var(--angle) * 1deg))
+        translateY(calc(var(--radius) * 1px)) rotate(calc(var(--angle) * -1deg));
     }
-  100% {
-    transform: rotate(calc(var(--angle) * 1deg + 360deg)) translateY(calc(var(--radius) * 1px)) rotate(calc((var(--angle) * -1deg) - 360deg));
+    100% {
+      transform: rotate(calc(var(--angle) * 1deg + 360deg))
+        translateY(calc(var(--radius) * 1px))
+        rotate(calc((var(--angle) * -1deg) - 360deg));
     }
   }
+}
+
+/* Basic button shape / animation */
+a[title] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  position: relative;
+  transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+a[title] svg,
+a[title] .fa {
+  color: inherit;
+  transition: color 0.3s ease, transform 0.3s ease;
+  font-size: 20px;
+}
+
+a[title="GitHub"] {
+  color: #fff; 
+}
+a[title="Discord"] {
+  color: #5865f2;
+}
+a[title="Instagram"] {
+  color: #e4405f;
+}
+a[title="PyPI"] {
+  color: #ffd43b;
+}
+a[title="Documentation"] {
+  color: #40e0d0;
+}
+
+a[title="GitHub"]:hover {
+  background: #000;
+  color: #fff;
+}
+
+a[title="Discord"]:hover {
+  background: #5865f2;
+  color: #fff;
+}
+
+a[title="Instagram"]:hover {
+  background: #e4405f;
+  color: #fff;
+}
+
+a[title="PyPI"]:hover {
+  background: #ffd43b;
+  color: #fff;
+}
+
+a[title="Documentation"]:hover {
+  background: #40e0d0;
+  color: #fff;
 }
