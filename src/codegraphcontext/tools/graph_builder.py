@@ -74,7 +74,8 @@ class GraphBuilder:
         self.db_manager = db_manager
         self.job_manager = job_manager
         self.loop = loop
-        self.driver = self.db_manager.get_driver()
+        self.driver = None
+        self._schema_created = False
         self.parsers = {
             '.py': TreeSitterParser('python'),
             '.ipynb': TreeSitterParser('python'),
@@ -94,12 +95,24 @@ class GraphBuilder:
             '.java': TreeSitterParser('java'),
             '.rb': TreeSitterParser('ruby')
         }
-        self.create_schema()
+
+    # A lazy driver getter
+    def get_driver(self):
+        """Lazy initialization of the driver."""
+        if self.driver is None:
+            self.driver = self.db_manager.get_driver()
+        return self.driver
+
+    def ensure_schema(self):
+        """Ensure schema is created."""
+        if not self._schema_created:
+            self.create_schema()
+            self._schema_created = True
 
     # A general schema creation based on common features across languages
     def create_schema(self):
         """Create constraints and indexes in Neo4j."""
-        with self.driver.session() as session:
+        with self.get_driver().session() as session:
             try:
                 session.run("CREATE CONSTRAINT repository_path IF NOT EXISTS FOR (r:Repository) REQUIRE r.path IS UNIQUE")
                 session.run("CREATE CONSTRAINT file_path IF NOT EXISTS FOR (f:File) REQUIRE f.path IS UNIQUE")
@@ -191,9 +204,10 @@ class GraphBuilder:
     # Language-agnostic method
     def add_repository_to_graph(self, repo_path: Path, is_dependency: bool = False):
         """Adds a repository node using its absolute path as the unique key."""
+        self.ensure_schema()
         repo_name = repo_path.name
         repo_path_str = str(repo_path.resolve())
-        with self.driver.session() as session:
+        with self.get_driver().session() as session:
             session.run(
                 """
                 MERGE (r:Repository {path: $path})
@@ -212,7 +226,7 @@ class GraphBuilder:
         file_name = Path(file_path_str).name
         is_dependency = file_data.get('is_dependency', False)
 
-        with self.driver.session() as session:
+        with self.get_driver().session() as session:
             try:
                 # Match repository by path, not name, to avoid conflicts with same-named folders at different locations
                 repo_result = session.run("MATCH (r:Repository {path: $repo_path}) RETURN r.path as path", repo_path=str(Path(file_data['repo_path']).resolve())).single()
@@ -407,7 +421,7 @@ class GraphBuilder:
 
     def _create_all_function_calls(self, all_file_data: list[Dict], imports_map: dict):
         """Create CALLS relationships for all functions after all files have been processed."""
-        with self.driver.session() as session:
+        with self.get_driver().session() as session:
             for file_data in all_file_data:
                 self._create_function_calls(session, file_data, imports_map)
 
@@ -477,14 +491,14 @@ class GraphBuilder:
 
     def _create_all_inheritance_links(self, all_file_data: list[Dict], imports_map: dict):
         """Create INHERITS relationships for all classes after all files have been processed."""
-        with self.driver.session() as session:
+        with self.get_driver().session() as session:
             for file_data in all_file_data:
                 self._create_inheritance_links(session, file_data, imports_map)
                 
     def delete_file_from_graph(self, file_path: str):
         """Deletes a file and all its contained elements and relationships."""
         file_path_str = str(Path(file_path).resolve())
-        with self.driver.session() as session:
+        with self.get_driver().session() as session:
             parents_res = session.run("""
                 MATCH (f:File {path: $path})<-[:CONTAINS*]-(d:Directory)
                 RETURN d.path as path ORDER BY d.path DESC
@@ -511,7 +525,7 @@ class GraphBuilder:
     def delete_repository_from_graph(self, repo_path: str):
         """Deletes a repository and all its contents from the graph."""
         repo_path_str = str(Path(repo_path).resolve())
-        with self.driver.session() as session:
+        with self.get_driver().session() as session:
             session.run("""MATCH (r:Repository {path: $path})
                           OPTIONAL MATCH (r)-[:CONTAINS*]->(e)
                           DETACH DELETE r, e""", path=repo_path_str)
