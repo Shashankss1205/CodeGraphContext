@@ -16,10 +16,32 @@ from tree_sitter_languages import get_language
 
 logger = logging.getLogger(__name__)
 
+import multiprocessing
+from concurrent.futures import ProcessPoolExecutor
+
 # This is for developers and testers only. It enables detailed debug logging to a file.
 # Set to 1 to enable, 0 to disable.
 debug_mode = 0
+def _parse_file_worker(file_path_str: str, repo_path_str: str, is_dependency: bool, language_name: str) -> Dict:
+    """
+    A worker function to parse a single file in a separate process.
+    """
+    file_path = Path(file_path_str)
+    repo_path = Path(repo_path_str)
 
+    parser = TreeSitterParser(language_name)
+
+    try:
+        if language_name == 'python':
+            is_notebook = file_path.suffix == '.ipynb'
+            file_data = parser.parse(file_path, is_dependency, is_notebook=is_notebook)
+        else:
+            file_data = parser.parse(file_path, is_dependency)
+        file_data['repo_path'] = str(repo_path)
+        return file_data
+    except Exception as e:
+        logger.error(f"Error parsing {file_path} with {language_name} parser: {e}")
+        return {"file_path": str(file_path), "error": str(e)}
 
 class TreeSitterParser:
     """A generic parser wrapper for a specific language using tree-sitter."""
@@ -206,6 +228,127 @@ class GraphBuilder:
                 name=repo_name,
                 is_dependency=is_dependency,
             )
+
+    def _add_batch_to_graph(self, batch: list[Dict], repo_name: str, imports_map: dict):
+        with self.driver.session() as session:
+            with session.begin_transaction() as tx:
+                for file_data in batch:
+                    file_path_str = str(Path(file_data['file_path']).resolve())
+                    file_name = Path(file_path_str).name
+                    is_dependency = file_data.get('is_dependency', False)
+
+                    try:
+                        repo_result = tx.run("MATCH (r:Repository {path: $repo_path}) RETURN r.path as path", repo_path=str(Path(file_data['repo_path']).resolve())).single()
+                        relative_path = str(Path(file_path_str).relative_to(Path(repo_result['path']))) if repo_result else file_name
+                    except ValueError:
+                        relative_path = file_name
+
+                    tx.run("""
+                        MERGE (f:File {path: $path})
+                        SET f.name = $name, f.relative_path = $relative_path, f.is_dependency = $is_dependency
+                    """, path=file_path_str, name=file_name, relative_path=relative_path, is_dependency=is_dependency)
+
+                    file_path_obj = Path(file_path_str)
+                    repo_path_obj = Path(repo_result['path'])
+                    
+                    relative_path_to_file = file_path_obj.relative_to(repo_path_obj)
+                    
+                    parent_path = str(repo_path_obj)
+                    parent_label = 'Repository'
+
+                    for part in relative_path_to_file.parts[:-1]:
+                        current_path = Path(parent_path) / part
+                        current_path_str = str(current_path)
+                        
+                        tx.run(f"""
+                            MATCH (p:{parent_label} {{path: $parent_path}})
+                            MERGE (d:Directory {{path: $current_path}})
+                            SET d.name = $part
+                            MERGE (p)-[:CONTAINS]->(d)
+                        """, parent_path=parent_path, current_path=current_path_str, part=part)
+
+                        parent_path = current_path_str
+                        parent_label = 'Directory'
+
+                    tx.run(f"""
+                        MATCH (p:{parent_label} {{path: $parent_path}})
+                        MATCH (f:File {{path: $file_path}})
+                        MERGE (p)-[:CONTAINS]->(f)
+                    """, parent_path=parent_path, file_path=file_path_str)
+
+                    item_mappings = [
+                        (file_data.get('functions', []), 'Function'),
+                        (file_data.get('classes', []), 'Class'),
+                        (file_data.get('variables', []), 'Variable'),
+                        (file_data.get('interfaces', []), 'Interface'),
+                        (file_data.get('macros', []), 'Macro')
+                    ]
+                    for item_data, label in item_mappings:
+                        for item in item_data:
+                            if label == 'Function' and 'cyclomatic_complexity' not in item:
+                                item['cyclomatic_complexity'] = 1
+
+                            query = f"""
+                                MATCH (f:File {{path: $file_path}})
+                                MERGE (n:{label} {{name: $name, file_path: $file_path, line_number: $line_number}})
+                                SET n += $props
+                                MERGE (f)-[:CONTAINS]->(n)
+                            """
+                            tx.run(query, file_path=file_path_str, name=item['name'], line_number=item['line_number'], props=item)
+                            
+                            if label == 'Function':
+                                for arg_name in item.get('args', []):
+                                    tx.run("""
+                                        MATCH (fn:Function {name: $func_name, file_path: $file_path, line_number: $line_number})
+                                        MERGE (p:Parameter {name: $arg_name, file_path: $file_path, function_line_number: $line_number})
+                                        MERGE (fn)-[:HAS_PARAMETER]->(p)
+                                    """, func_name=item['name'], file_path=file_path_str, line_number=item['line_number'], arg_name=arg_name)
+
+                    for item in file_data.get('functions', []):
+                        if item.get("context_type") == "function_definition":
+                            tx.run("""
+                                MATCH (outer:Function {name: $context, file_path: $file_path})
+                                MATCH (inner:Function {name: $name, file_path: $file_path, line_number: $line_number})
+                                MERGE (outer)-[:CONTAINS]->(inner)
+                            """, context=item["context"], file_path=file_path_str, name=item["name"], line_number=item["line_number"])
+
+                    for imp in file_data.get('imports', []):
+                        lang = file_data.get('lang')
+                        if lang == 'javascript':
+                            module_name = imp.get('source')
+                            if not module_name: continue
+                            rel_props = {'imported_name': imp.get('name', '*')}
+                            if imp.get('alias'):
+                                rel_props['alias'] = imp.get('alias')
+                            tx.run("""
+                                MATCH (f:File {path: $file_path})
+                                MERGE (m:Module {name: $module_name})
+                                MERGE (f)-[r:IMPORTS]->(m)
+                                SET r += $props
+                            """, file_path=file_path_str, module_name=module_name, props=rel_props)
+                        else:
+                            set_clauses = ["m.alias = $alias"]
+                            if 'full_import_name' in imp:
+                                set_clauses.append("m.full_import_name = $full_import_name")
+                            set_clause_str = ", ".join(set_clauses)
+                            tx.run(f"""
+                                MATCH (f:File {{path: $file_path}})
+                                MERGE (m:Module {{name: $name}})
+                                SET {set_clause_str}
+                                MERGE (f)-[:IMPORTS]->(m)
+                            """, file_path=file_path_str, **imp)
+
+                    for func in file_data.get('functions', []):
+                        if func.get('class_context'):
+                            tx.run("""
+                                MATCH (c:Class {name: $class_name, file_path: $file_path})
+                                MATCH (fn:Function {name: $func_name, file_path: $file_path, line_number: $func_line})
+                                MERGE (c)-[:CONTAINS]->(fn)
+                            """, 
+                            class_name=func['class_context'],
+                            file_path=file_path_str,
+                            func_name=func['name'],
+                            func_line=func['line_number'])
 
     # First pass to add file and its contents
     def add_file_to_graph(self, file_data: Dict, repo_name: str, imports_map: dict):
@@ -616,20 +759,37 @@ class GraphBuilder:
 
             all_file_data = []
 
-            processed_count = 0
-            for file in files:
-                if file.is_file():
-                    if job_id:
-                        self.job_manager.update_job(job_id, current_file=str(file))
-                    repo_path = path.resolve() if path.is_dir() else file.parent.resolve()
-                    file_data = self.parse_file(repo_path, file, is_dependency)
-                    if "error" not in file_data:
-                        self.add_file_to_graph(file_data, repo_name, imports_map)
-                        all_file_data.append(file_data)
+            with ProcessPoolExecutor(mp_context=multiprocessing.get_context('spawn')) as executor:
+                loop = asyncio.get_running_loop()
+                tasks = []
+                for file in files:
+                    if file.is_file():
+                        repo_path_for_file = path.resolve() if path.is_dir() else file.parent.resolve()
+                        language_name = self.parsers.get(file.suffix).language_name
+                        tasks.append(loop.run_in_executor(executor, _parse_file_worker, str(file), str(repo_path_for_file), is_dependency, language_name))
+
+                batch = []
+                batch_size = 50
+                processed_count = 0
+                total_files_count = len(files)
+
+                for future in asyncio.as_completed(tasks):
+                    file_data = await future
                     processed_count += 1
+
+                    if "error" not in file_data:
+                        batch.append(file_data)
+                        all_file_data.append(file_data)
+                    
+                    if len(batch) >= batch_size or processed_count == total_files_count:
+                        if batch:
+                            await loop.run_in_executor(
+                                None, self._add_batch_to_graph, batch, repo_name, imports_map
+                            )
+                            batch = [] # Reset the batch
+
                     if job_id:
-                        self.job_manager.update_job(job_id, processed_files=processed_count)
-                    await asyncio.sleep(0.01)
+                        self.job_manager.update_job(job_id, processed_files=processed_count, current_file=file_data.get('file_path', ''))
 
             self._create_all_inheritance_links(all_file_data, imports_map)
             self._create_all_function_calls(all_file_data, imports_map)
