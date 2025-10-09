@@ -59,6 +59,11 @@ CPP_QUERIES = {
             name: (identifier) @name
         ) @macro
     """,
+    "templates": """
+        (template_declaration
+            parameters: (template_parameter_list) @params 
+        )@template
+    """,
 }
 
 class CppTreeSitterParser:
@@ -93,6 +98,7 @@ class CppTreeSitterParser:
         enums = self._find_enums(root_node)
         unions = self._find_unions(root_node)
         macros = self._find_macros(root_node)
+        templates = self._find_templates(root_node)
         
         return {
             "file_path": str(file_path),
@@ -107,6 +113,7 @@ class CppTreeSitterParser:
             "function_calls": [],  # Placeholder
             "is_dependency": is_dependency,
             "lang": self.language_name,
+            "templates": templates,
         }
 
     def _find_functions(self, root_node):
@@ -222,6 +229,42 @@ class CppTreeSitterParser:
                     "source_code": self._get_node_text(macro_node),
                 })
         return macros
+    
+    def _find_templates(self, root_node):
+        templates = []
+        query = self.queries['templates']
+        for match in query.captures(root_node):
+            capture_name = match[1]
+            node = match[0]
+            if capture_name == 'template':  
+                name = self._extract_template_name(node)
+                templates.append({
+                    "name": name,
+                    "line_number": node.start_point[0] + 1,
+                    "end_line": node.end_point[0] + 1,
+                    "source_code": self._get_node_text(node),
+                })
+        return  templates
+    
+    def _extract_template_name(self, template_node):
+        """Extract the name from a template declaration."""
+        for child in template_node.children:
+            if child.type == 'function_definition':
+                 for descendent in child.children:
+                     if descendent.type == 'function_declarator':
+                         for node in descendent.children:
+                             if node.type == 'identifier':
+                                 return self._get_node_text(node)
+            elif child.type == 'class_specifier':
+                 for node in child.children:
+                     if node.type == 'type_identifier':
+                         return self._get_node_text(node)
+            elif child.type == 'struct-specifier':
+                for node in child.children :
+                    if node.type == 'type_identifier':
+                        return self._get_node_text(node)
+                    
+        return "unnamed_template"
 
 def pre_scan_cpp(files: list[Path], parser_wrapper) -> dict:
     """
