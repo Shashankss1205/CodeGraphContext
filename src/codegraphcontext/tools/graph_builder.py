@@ -111,6 +111,7 @@ class GraphBuilder:
                 session.run("CREATE CONSTRAINT macro_unique IF NOT EXISTS FOR (m:Macro) REQUIRE (m.name, m.file_path, m.line_number) IS UNIQUE")
                 session.run("CREATE CONSTRAINT variable_unique IF NOT EXISTS FOR (v:Variable) REQUIRE (v.name, v.file_path, v.line_number) IS UNIQUE")
                 session.run("CREATE CONSTRAINT module_name IF NOT EXISTS FOR (m:Module) REQUIRE m.name IS UNIQUE")
+                session.run("CREATE CONSTRAINT template_unique IF NOT EXISTS FOR (t:Template) REQUIRE (t.name,t.file_path,t.line_number) IS U   NIQUE")
 
                 # Indexes for language attribute
                 session.run("CREATE INDEX function_lang IF NOT EXISTS FOR (f:Function) ON (f.lang)")
@@ -267,6 +268,7 @@ class GraphBuilder:
                 (file_data.get('variables', []), 'Variable'),
                 (file_data.get('interfaces', []), 'Interface'),
                 (file_data.get('macros', []), 'Macro')
+                (file_data.get('templates',[]), 'Template')
             ]
             for item_data, label in item_mappings:
                 for item in item_data:
@@ -495,6 +497,103 @@ class GraphBuilder:
             for file_data in all_file_data:
                 self._create_inheritance_links(session, file_data, imports_map)
                 
+    def _create_template_instantiations(self, session, file_data: Dict, imports_map: dict):
+    """Create USES_TEMPLATE relationships between code elements and templates."""
+    file_path = str(Path(file_data['file_path']).resolve())
+    
+    # Get local template names for quick lookup
+    local_template_names = {t['name'] for t in file_data.get('templates', [])}
+    
+    # Get local imports for resolving external templates
+    local_imports = {imp.get('alias') or imp['name'].split('.')[-1]: imp['name']
+                     for imp in file_data.get('imports', [])}
+    
+    for inst in file_data.get('template_instantiations', []):
+        template_name = inst['template_name']
+        line_number = inst['line_number']
+        arguments = inst.get('arguments', [])
+        
+        resolved_path = None
+        
+        # Check if template is defined locally
+        if template_name in local_template_names:
+            resolved_path = file_path
+        # Check if template is imported
+        elif template_name in local_imports:
+            full_import_name = local_imports[template_name]
+            possible_paths = imports_map.get(template_name, [])
+            for path in possible_paths:
+                if full_import_name.replace('.', '/') in path:
+                    resolved_path = path
+                    break
+        # Fallback to imports_map
+        elif template_name in imports_map:
+            possible_paths = imports_map[template_name]
+            if len(possible_paths) == 1:
+                resolved_path = possible_paths[0]
+        
+        if not resolved_path:
+            resolved_path = file_path  # Default to current file
+        
+        # Find the containing function or class for this instantiation
+        containing_context = self._find_containing_context(file_data, line_number)
+        
+        if containing_context:
+            context_type, context_name, context_line = containing_context
+            
+            session.run(f"""
+                MATCH (ctx:{context_type} {{name: $ctx_name, file_path: $ctx_file, line_number: $ctx_line}})
+                MATCH (t:Template {{name: $template_name, file_path: $template_file}})
+                MERGE (ctx)-[r:USES_TEMPLATE {{
+                    line_number: $line_number,
+                    arguments: $arguments
+                }}]->(t)
+            """,
+            ctx_name=context_name,
+            ctx_file=file_path,
+            ctx_line=context_line,
+            template_name=template_name,
+            template_file=resolved_path,
+            line_number=line_number,
+            arguments=str(arguments))
+        else:
+            # If no containing context, link from File to Template
+            session.run("""
+                MATCH (f:File {path: $file_path})
+                MATCH (t:Template {name: $template_name, file_path: $template_file})
+                MERGE (f)-[r:USES_TEMPLATE {
+                    line_number: $line_number,
+                    arguments: $arguments
+                }]->(t)
+            """,
+            file_path=file_path,
+            template_name=template_name,
+            template_file=resolved_path,
+            line_number=line_number,
+            arguments=str(arguments))
+
+def _find_containing_context(self, file_data: Dict, line_number: int):
+    """Find which function or class contains a given line number."""
+    # Check functions first
+    for func in file_data.get('functions', []):
+        if func['line_number'] <= line_number <= func.get('end_line', func['line_number']):
+            return ('Function', func['name'], func['line_number'])
+    
+    # Check classes
+    for cls in file_data.get('classes', []):
+        if cls['line_number'] <= line_number <= cls.get('end_line', cls['line_number']):
+            return ('Class', cls['name'], cls['line_number'])
+    
+    return None
+
+def _create_all_template_instantiations(self, all_file_data: list[Dict], imports_map: dict):
+    """Create USES_TEMPLATE relationships for all templates after all files have been processed."""
+    with self.driver.session() as session:
+        for file_data in all_file_data:
+            # Only process if the file actually has template instantiations
+            if file_data.get('template_instantiations'):
+                self._create_template_instantiations(session, file_data, imports_map)
+                
     def delete_file_from_graph(self, file_path: str):
         """Deletes a file and all its contained elements and relationships."""
         file_path_str = str(Path(file_path).resolve())
@@ -633,6 +732,7 @@ class GraphBuilder:
 
             self._create_all_inheritance_links(all_file_data, imports_map)
             self._create_all_function_calls(all_file_data, imports_map)
+            self._create_all_template_instantiations(all_file_data, imports_map)
             
             if job_id:
                 self.job_manager.update_job(job_id, status=JobStatus.COMPLETED, end_time=datetime.now())
