@@ -177,7 +177,8 @@ def index(path: Optional[str] = typer.Argument(None, help="Path to the directory
     If no path is provided, it indexes the current directory.
     """
     if path is None:
-        path = "."
+        # Use absolute current working directory to avoid ambiguous '.' path behavior
+        path = str(Path.cwd())
     _run_tool("add_code_to_graph", {"path": path})
 
 @app.command()
