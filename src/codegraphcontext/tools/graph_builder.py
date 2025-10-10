@@ -108,6 +108,7 @@ class GraphBuilder:
                 session.run("CREATE CONSTRAINT function_unique IF NOT EXISTS FOR (f:Function) REQUIRE (f.name, f.file_path, f.line_number) IS UNIQUE")
                 session.run("CREATE CONSTRAINT class_unique IF NOT EXISTS FOR (c:Class) REQUIRE (c.name, c.file_path, c.line_number) IS UNIQUE")
                 session.run("CREATE CONSTRAINT interface_unique IF NOT EXISTS FOR (i:Interface) REQUIRE (i.name, i.file_path, i.line_number) IS UNIQUE")
+                session.run("CREATE CONSTRAINT trait_unique IF NOT EXISTS FOR (t:Trait) REQUIRE (t.name, t.file_path, t.line_number) IS UNIQUE")
                 session.run("CREATE CONSTRAINT macro_unique IF NOT EXISTS FOR (m:Macro) REQUIRE (m.name, m.file_path, m.line_number) IS UNIQUE")
                 session.run("CREATE CONSTRAINT variable_unique IF NOT EXISTS FOR (v:Variable) REQUIRE (v.name, v.file_path, v.line_number) IS UNIQUE")
                 session.run("CREATE CONSTRAINT module_name IF NOT EXISTS FOR (m:Module) REQUIRE m.name IS UNIQUE")
@@ -273,6 +274,7 @@ class GraphBuilder:
                 (file_data.get('structs',[]), 'Struct'),
                 (file_data.get('enums',[]), 'Enum'),
                 (file_data.get('unions',[]), 'Union'),
+                (file_data.get('traits',[]), 'Trait'),
             ]
             for item_data, label in item_mappings:
                 for item in item_data:
