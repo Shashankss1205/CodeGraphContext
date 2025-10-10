@@ -17,8 +17,10 @@ RUST_QUERIES = {
         [
             (struct_item name: (type_identifier) @name)
             (enum_item name: (type_identifier) @name)
-            (trait_item name: (type_identifier) @name)
         ] @class
+    """,
+    "traits": """
+        (trait_item name: (type_identifier) @name) @trait
     """,
     "imports": """
         (use_declaration) @import
@@ -61,9 +63,8 @@ class RustTreeSitterParser:
         root_node = tree.root_node
 
         functions = self._find_functions(root_node)
-        classes = self._find_structs(
-            root_node
-        )  # In Rust, this now includes structs, enums, and traits
+        classes = self._find_structs(root_node)
+        traits = self._find_traits(root_node)
         imports = self._find_imports(root_node)
         function_calls = self._find_calls(root_node)
 
@@ -71,6 +72,7 @@ class RustTreeSitterParser:
             "file_path": str(file_path),
             "functions": functions,
             "classes": classes,
+            "traits": traits,
             "variables": [],  # Placeholder
             "imports": imports,
             "function_calls": function_calls,
@@ -142,6 +144,31 @@ class RustTreeSitterParser:
                     }
                 )
         return structs
+
+    def _find_traits(self, root_node: Any) -> list[Dict[str, Any]]:
+        traits: list[Dict[str, Any]] = []
+        query = self.queries["traits"]
+        for node, capture_name in query.captures(root_node):
+            if capture_name != "trait":
+                continue
+            name_node = node.child_by_field_name("name") if hasattr(node, 'child_by_field_name') else None
+            # For trait_item the capture already targets the item, and name is a child captured separately above in query
+            # But to keep consistent, derive name by scanning children if needed
+            name: Optional[str] = None
+            for child in node.children:
+                if child.type in ("type_identifier", "identifier"):
+                    name = self._get_node_text(child)
+                    break
+            if not name:
+                # Fallback: try query's named capture 'name' if present in match context
+                pass
+            traits.append({
+                "name": name if name else "<anonymous_trait>",
+                "line_number": node.start_point[0] + 1,
+                "end_line": node.end_point[0] + 1,
+                "source_code": self._get_node_text(node),
+            })
+        return traits
 
     def _find_imports(self, root_node: Any) -> list[Dict[str, Any]]:
         imports = []
