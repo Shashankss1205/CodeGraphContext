@@ -10,6 +10,8 @@ Commands:
 - help: Displays help information.
 - version: Show the installed version.
 """
+import incremental
+from mcp_use import logger
 import typer
 from rich.console import Console
 from rich.table import Table
@@ -24,7 +26,9 @@ from dotenv import load_dotenv, find_dotenv
 from importlib.metadata import version as pkg_version, PackageNotFoundError
 from codegraphcontext.server import MCPServer
 from .setup_wizard import run_setup_wizard
-
+from ..tools.graph_builder import GraphBuilder
+from ..core.database import DatabaseManager
+from ..core.jobs import JobManager
 # Set the log level for the noisy neo4j logger to WARNING to keep the output clean.
 logging.getLogger("neo4j").setLevel(logging.WARNING)
 
@@ -50,6 +54,8 @@ def get_version() -> str:
     except PackageNotFoundError:
         return "0.0.0 (dev)"
 
+
+        return False
 
 @app.command()
 def setup():
@@ -171,15 +177,77 @@ def _run_tool(tool_name: str, tool_args: dict):
             loop.close()
 
 @app.command()
-def index(path: Optional[str] = typer.Argument(None, help="Path to the directory or file to index. Defaults to the current directory.")):
+def index(
+    path: Optional[str] = typer.Argument(None, help="Path to the directory or file to index. Defaults to the current directory."),
+    incremental: bool = typer.Option(
+        False, 
+        "--incremental",
+        "-i",
+        help="If set, only changed files will be re-indexed (default: False).",
+    )
+    ):
     """
     Indexes a directory or file by adding it to the code graph.
     If no path is provided, it indexes the current directory.
+    
+    Incremental mode compares file metadata to skip unchanged files,
+    making re-indexing significantly faster for large codebases.
     """
-    if path is None:
-        path = "."
-    _run_tool("add_code_to_graph", {"path": path})
+    console = Console()
+    
+    try:
+        
+        if path is None:
+            path = "."
 
+        # convert to absolute path
+        repo_path = Path(path).resolve()
+        
+        # Validate path exists
+        if not repo_path.exists():
+            console.print(f"[red] Error: Path '{path}' does not exist[/red]")
+            raise typer.Exit(code=1)
+        
+        mode = "incremental" if incremental else "full"
+        console.print(f"\n[cyan] Starting {mode} index: {repo_path}[/cyan]")
+        
+        if incremental:
+            console.print("[yellow] Checking for changed files...[/yellow]")
+        
+        _load_credentials()
+        console.print("[dim]Loaded Neo4j credentials from local mcp.json.[/dim]")
+        
+        
+        #initializign the dependencies
+        db_manager = DatabaseManager()
+        job_manager = JobManager()
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        
+        graph_builder = GraphBuilder(
+            db_manager=db_manager, 
+            job_manager=job_manager,
+            loop=loop
+        )
+        
+        asyncio.run(
+            graph_builder.build_graph_from_path_async(
+                path=repo_path,
+                is_dependency=False,
+                incremental=incremental
+            )
+        )
+        
+        console.print(f"\n[green]✅ {mode.capitalize()} indexing complete![/green]")
+        
+    except KeyboardInterrupt:
+        console.print("\n[yellow]⚠ Interrupted by user[/yellow]")
+        raise typer.Exit(code=130)
+    except Exception as e:
+        console.print(f"\n[red]❌ Error: {str(e)}[/red]")
+        logger.exception("Indexing failed")
+        raise typer.Exit(code=1)
+    
 @app.command()
 def delete(path: str = typer.Argument(..., help="Path of the repository to delete from the code graph.")):
     """

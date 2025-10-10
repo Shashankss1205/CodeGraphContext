@@ -14,6 +14,10 @@ from ..utils.debug_log import debug_log
 from tree_sitter import Language, Parser
 from tree_sitter_languages import get_language
 
+# imports for file metadata functions
+from ..core.file_metadata import get_file_metadata, has_file_changed, FileMetadata
+
+
 logger = logging.getLogger(__name__)
 
 # This is for developers and testers only. It enables detailed debug logging to a file.
@@ -125,8 +129,34 @@ class GraphBuilder:
                 logger.info("Database schema verified/created successfully")
             except Exception as e:
                 logger.warning(f"Schema creation warning: {e}")
+                
+    
+    def get_stored_file_metadata(self, file_path: str) -> Optional[dict]:
+        """
+        Query Neo4j for stored metadata of a file.
+        
+        Args:
+            file_path: Absolute path to file
+        Returns:
+            Dictionary with metadata fields or None if file not indexed
+        """
+        file_path_str = str(Path(file_path).resolve())
+        
+        with self.driver.session() as session:
+            result = session.run("""
+                MATCH (f:File {path: $path})
+                RETURN f.content_hash as content_hash,
+                    f.last_modified as last_modified,
+                    f.size as size,
+                    f.last_indexed as last_indexed,
+                    f.parser_version as parser_version
+            """, path=file_path_str).single()
+            
+            if result:
+                return dict(result)
+            return None
 
-
+        
     def _pre_scan_for_imports(self, files: list[Path]) -> dict:
         """Dispatches pre-scan to the correct language-specific implementation."""
         imports_map = {}
@@ -214,6 +244,10 @@ class GraphBuilder:
         file_path_str = str(Path(file_data['file_path']).resolve())
         file_name = Path(file_path_str).name
         is_dependency = file_data.get('is_dependency', False)
+        
+        # COLLECTING METADATA AND CHECKING FOR CHANGES
+        metadata = get_file_metadata(file_path_str)
+
 
         with self.driver.session() as session:
             try:
@@ -223,10 +257,44 @@ class GraphBuilder:
             except ValueError:
                 relative_path = file_name
 
-            session.run("""
+            if metadata:
+                # METADATA handling and STORING in FILE NODE
+                session.run("""
                 MERGE (f:File {path: $path})
-                SET f.name = $name, f.relative_path = $relative_path, f.is_dependency = $is_dependency
-            """, path=file_path_str, name=file_name, relative_path=relative_path, is_dependency=is_dependency)
+                SET f.name = $name, 
+                    f.relative_path = $relative_path, 
+                    f.is_dependency = $is_dependency,
+                    f.content_hash = $content_hash,
+                    f.last_modified = $last_modified,
+                    f.size = $size,
+                    f.last_indexed = $last_indexed,
+                    f.parser_version = $parser_version
+                    """, 
+                    path=file_path_str, 
+                    name=file_name, 
+                    relative_path=relative_path, 
+                    is_dependency=is_dependency,
+                    content_hash=metadata.content_hash,
+                    last_modified=metadata.last_modified,
+                    size=metadata.size,
+                    last_indexed=metadata.last_indexed,
+                    parser_version=metadata.parser_version
+                )
+            
+            else:
+                # Store File node WITHOUT metadata (fallback)
+                logger.warning(f"Indexing {file_name} without metadata")
+                session.run("""
+                    MERGE (f:File {path: $path})
+                    SET f.name = $name, 
+                        f.relative_path = $relative_path, 
+                        f.is_dependency = $is_dependency
+                """, 
+                path=file_path_str, 
+                name=file_name, 
+                relative_path=relative_path, 
+                is_dependency=is_dependency
+                )
 
             file_path_obj = Path(file_path_str)
             repo_path_obj = Path(repo_result['path'])
@@ -594,7 +662,7 @@ class GraphBuilder:
             return None
 
     async def build_graph_from_path_async(
-        self, path: Path, is_dependency: bool = False, job_id: str = None
+        self, path: Path, is_dependency: bool = False, job_id: str = None, incremental: bool = False
     ):
         """Builds graph from a directory or file path."""
         try:
@@ -607,6 +675,31 @@ class GraphBuilder:
             supported_extensions = self.parsers.keys()
             all_files = path.rglob("*") if path.is_dir() else [path]
             files = [f for f in all_files if f.is_file() and f.suffix in supported_extensions]
+            
+            #FILTERING FILES BASED ON METADATA AND CHANGE STATUS
+            if incremental:
+                files_to_process = []
+                skipped_count = 0
+                
+                for file in files:
+                    file_path_str = str(file.resolve())
+                    
+                    # Get stored metadata from Neo4j
+                    stored_metadata = self.get_stored_file_metadata(file_path_str)
+                    
+                    # Check if file changed
+                    changed, reason = has_file_changed(file_path_str, stored_metadata)
+                    
+                    if changed:
+                        logger.info(f"File changed ({reason}): {file.name}")
+                        files_to_process.append(file)
+                    else:
+                        logger.debug(f"Skipping unchanged file: {file.name}")
+                        skipped_count += 1
+                
+                logger.info(f"Incremental mode: Processing {len(files_to_process)} changed files, skipping {skipped_count} unchanged files")
+                files = files_to_process
+            
             if job_id:
                 self.job_manager.update_job(job_id, total_files=len(files))
             
