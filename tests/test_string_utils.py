@@ -1,7 +1,7 @@
 """Tests for string_utils module."""
 
 import pytest
-from src.codegraphcontext.utils.string_utils import (
+from src.codegraphcontext.string_utils import (
     reverse_string,
     is_palindrome,
     truncate_string,
