@@ -80,6 +80,25 @@ def _generate_mcp_json(creds):
     console.print(f"[cyan]Neo4j credentials also saved to: {env_file}[/cyan]")
     _configure_ide(mcp_config)
 
+
+def find_jetbrains_mcp_config():
+    bases = [
+        Path.home() / ".config" / "JetBrains",
+        Path.home() / "Library/Application Support/JetBrains",
+        Path.home() / "AppData/Roaming/JetBrains"
+    ]
+    configs = []
+    for base in bases:
+        if base.exists():
+            for folder in base.iterdir():  # each IDE/version
+                options = folder / "options"
+                mcp_file = options / "mcpServer.xml"
+                if mcp_file.exists():
+                    configs.append(mcp_file)
+                    print(mcp_file)
+                    return configs
+
+
 def convert_mcp_json_to_yaml():
     json_path = Path.cwd() / "mcp.json"
     yaml_path = Path.cwd() / "devfile.yaml"
@@ -109,7 +128,7 @@ def _configure_ide(mcp_config):
         {
             "type": "list",
             "message": "Choose your IDE/CLI to configure:",
-            "choices": ["VS Code", "Cursor", "Windsurf", "Claude code", "Gemini CLI", "ChatGPT Codex", "Cline", "RooCode", "Amazon Q Developer", "None of the above"],
+            "choices": ["VS Code", "Cursor", "Windsurf", "Claude code", "Gemini CLI", "ChatGPT Codex", "Cline", "RooCode", "Amazon Q Developer", "JetBrainsAI" , "None of the above"],
             "name": "ide_choice",
         }
     ]
@@ -120,7 +139,7 @@ def _configure_ide(mcp_config):
         console.print("\n[cyan]You can add the MCP server manually to your IDE/CLI.[/cyan]")
         return
 
-    if ide_choice in ["VS Code", "Cursor", "Claude code", "Gemini CLI", "ChatGPT Codex", "Cline", "Windsurf", "RooCode", "Amazon Q Developer"]:
+    if ide_choice in ["VS Code", "Cursor", "Claude code", "Gemini CLI", "ChatGPT Codex", "Cline", "Windsurf", "RooCode", "Amazon Q Developer , JetBrainsAI"]:
         console.print(f"\n[bold cyan]Configuring for {ide_choice}...[/bold cyan]")
 
         if ide_choice == "Amazon Q Developer":
@@ -164,6 +183,9 @@ def _configure_ide(mcp_config):
                 Path.home() / "Library" / "Application Support" / "Code" / "User" / "globalStorage" / "saoudrizwan.claude-dev" / "settings" / "cline_mcp_settings.json",
                 Path.home() / "AppData" / "Roaming" / "Code" / "User" / "globalStorage" / "saoudrizwan.claude-dev" / "settings" / "cline_mcp_settings.json"
             ],
+
+            "JetBrainsAI": find_jetbrains_mcp_config(), #only for jetbrains ide
+
             "RooCode": [
                 Path.home() / ".config" / "Code" / "User" / "settings.json",   # Linux 
                 Path.home() / "AppData" / "Roaming" / "Code" / "User" / "settings.json",  # Windows

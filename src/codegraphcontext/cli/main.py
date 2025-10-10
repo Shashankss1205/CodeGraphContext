@@ -36,7 +36,7 @@ logging.getLogger("neo4j").setLevel(logging.WARNING)
 app = typer.Typer(
     name="cgc",
     help="CodeGraphContext: An MCP server for AI-powered code analysis.",
-    add_completion=False,
+    add_completion=True,
 )
 console = Console(stderr=True)
 
