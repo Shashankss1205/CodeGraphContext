@@ -635,7 +635,6 @@ class GraphBuilder:
                     processed_count += 1
                     if job_id:
                         self.job_manager.update_job(job_id, processed_files=processed_count)
-                    await asyncio.sleep(0.01)
 
             self._create_all_inheritance_links(all_file_data, imports_map)
             self._create_all_function_calls(all_file_data, imports_map)
