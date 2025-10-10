@@ -311,7 +311,7 @@ class GraphBuilder:
             for imp in file_data.get('imports', []):
                 logger.info(f"Processing import: {imp}")
                 lang = file_data.get('lang')
-                if lang == 'javascript':
+                if lang in ('javascript', 'typescript'):
                     # New, correct logic for JS
                     module_name = imp.get('source')
                     if not module_name: continue
