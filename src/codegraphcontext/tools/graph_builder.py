@@ -111,7 +111,10 @@ class GraphBuilder:
                 session.run("CREATE CONSTRAINT macro_unique IF NOT EXISTS FOR (m:Macro) REQUIRE (m.name, m.file_path, m.line_number) IS UNIQUE")
                 session.run("CREATE CONSTRAINT variable_unique IF NOT EXISTS FOR (v:Variable) REQUIRE (v.name, v.file_path, v.line_number) IS UNIQUE")
                 session.run("CREATE CONSTRAINT module_name IF NOT EXISTS FOR (m:Module) REQUIRE m.name IS UNIQUE")
-                session.run("CREATE CONSTRAINT template_unique IF NOT EXISTS FOR (t:Template) REQUIRE (t.name,t.file_path,t.line_number) IS U   NIQUE")
+                session.run("CREATE CONSTRAINT template_unique IF NOT EXISTS FOR (t:Template) REQUIRE (t.name,t.file_path,t.line_number) IS UNIQUE")
+                session.run("CREATE CONSTRAINT struct_cpp IF NOT EXISTS FOR (cstruct: Struct) REQUIRE (cstruct.name, cstruct.file_path, cstruct.line_number) IS UNIQUE")
+                session.run("CREATE CONSTRAINT enum_cpp IF NOT EXISTS FOR (cenum: Enum) REQUIRE (cenum.name, cenum.file_path, cenum.line_number) IS UNIQUE")
+                session.run("CREATE CONSTRAINT union_cpp IF NOT EXISTS FOR (cunion: Union) REQUIRE (cunion.name, cunion.file_path, cunion.line_number) IS UNIQUE")
 
                 # Indexes for language attribute
                 session.run("CREATE INDEX function_lang IF NOT EXISTS FOR (f:Function) ON (f.lang)")
@@ -267,8 +270,11 @@ class GraphBuilder:
                 (file_data.get('classes', []), 'Class'),
                 (file_data.get('variables', []), 'Variable'),
                 (file_data.get('interfaces', []), 'Interface'),
-                (file_data.get('macros', []), 'Macro')
                 (file_data.get('templates',[]), 'Template')
+                (file_data.get('macros', []), 'Macro'),
+                (file_data.get('structs',[]), 'Struct'),
+                (file_data.get('enums',[]), 'Enum'),
+                (file_data.get('unions',[]), 'Union'),
             ]
             for item_data, label in item_mappings:
                 for item in item_data:

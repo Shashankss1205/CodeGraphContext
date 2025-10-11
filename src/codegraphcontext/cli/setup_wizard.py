@@ -139,7 +139,8 @@ def _configure_ide(mcp_config):
         console.print("\n[cyan]You can add the MCP server manually to your IDE/CLI.[/cyan]")
         return
 
-    if ide_choice in ["VS Code", "Cursor", "Claude code", "Gemini CLI", "ChatGPT Codex", "Cline", "Windsurf", "RooCode", "Amazon Q Developer , JetBrainsAI"]:
+
+    if ide_choice in ["VS Code", "Cursor/CLI", "Claude code", "Gemini CLI", "ChatGPT Codex", "Cline", "Windsurf", "RooCode", "Amazon Q Developer , JetBrainsAI"]:
         console.print(f"\n[bold cyan]Configuring for {ide_choice}...[/bold cyan]")
 
         if ide_choice == "Amazon Q Developer":
@@ -152,7 +153,7 @@ def _configure_ide(mcp_config):
                 Path.home() / "Library" / "Application Support" / "Code" / "User" / "settings.json",
                 Path.home() / "AppData" / "Roaming" / "Code" / "User" / "settings.json"
             ],
-            "Cursor": [
+            "Cursor/CLI": [
                 Path.home() / ".cursor" / "settings.json",
                 Path.home() / ".config" / "cursor" / "settings.json",
                 Path.home() / "Library" / "Application Support" / "cursor" / "settings.json",
