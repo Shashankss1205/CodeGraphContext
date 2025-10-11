@@ -88,7 +88,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className="border-t border-border/50 py-16 px-6 bg-muted/10">
+    <footer className="border-t border-border/50 py-16 px-6 bg-muted/10" data-aos="fade-up">
       <div className="container mx-auto max-w-7xl">
         {/* Top Section */}
         <div className="flex flex-col lg:flex-row justify-between gap-12">
@@ -319,3 +319,4 @@ const Footer = () => {
 };
 
 export default Footer;
+

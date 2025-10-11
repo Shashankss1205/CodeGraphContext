@@ -36,7 +36,7 @@ export default function ShowDownloads() {
   if (!stats) return <p>Loading stats...</p>;
 
   return (
-    <>
+    <div data-aos="fade-in">
       {stats?.data ? (
         <>
           <p>Last month downloads: {stats.data.last_month.toLocaleString()}+</p>
@@ -44,6 +44,6 @@ export default function ShowDownloads() {
       ) : (
         <p>No data available yet for this package</p>
       )}
-    </>
+    </div>
   );
 }

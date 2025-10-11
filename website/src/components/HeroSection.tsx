@@ -3,9 +3,9 @@ import { Badge } from "@/components/ui/badge";
 import { Github, Download, ExternalLink } from "lucide-react";
 import heroGraph from "@/assets/hero-graph.jpg";
 import { useState, useEffect } from "react";
-import ShowDownloads from "./ShowDownloads";
-import ShowStarGraph from "./ShowStarGraph";
-import { ThemeToggle } from "./ThemeToggle";
+import ShowDownloads from "@/components/ShowDownloads";
+import ShowStarGraph from "@/components/ShowStarGraph";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const HeroSection = () => {
   const [stars, setStars] = useState(null);
@@ -45,7 +45,7 @@ const HeroSection = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Header with Theme Toggle */}
-      <div className="absolute top-0 left-0 right-0 z-20 p-4">
+      <div className="absolute top-0 left-0 right-0 z-20 p-4" data-aos="fade-down">
         <div className="container mx-auto flex justify-end">
           <div className="rounded-full bg-white/60 backdrop-blur-md border border-gray-200 shadow-sm p-2 dark:bg-transparent dark:border-transparent dark:shadow-none">
             <ThemeToggle />
@@ -64,7 +64,7 @@ const HeroSection = () => {
       
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 text-center max-w-5xl">
-        <div className="animate-float-up">
+        <div className="animate-float-up" data-aos="fade-up">
           <Badge variant="secondary" className="mb-6 text-sm font-medium">
             <div className="w-2 h-2 bg-accent rounded-full mr-2 animate-graph-pulse" />
             Version {version} • MIT License
@@ -81,7 +81,7 @@ const HeroSection = () => {
             knowledge graph for AI assistants
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12" data-aos="fade-up" data-aos-delay="200">
             <Button size="lg" className="bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-800 text-primary-foreground hover:opacity-90 transition-all duration-300 shadow-glow ring-1 ring-primary/20 dark:bg-gradient-primary" asChild>
               <a href="https://pypi.org/project/codegraphcontext/" target="_blank" rel="noopener noreferrer">
                 <Download className="mr-2 h-5 w-5" />
@@ -105,7 +105,7 @@ const HeroSection = () => {
           </div>
           
           {/* Stats */}
-          <div className="flex flex-wrap justify-center gap-8 text-sm text-muted-foreground">
+          <div className="flex flex-wrap justify-center gap-8 text-sm text-muted-foreground" data-aos="fade-up" data-aos-delay="400">
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 bg-graph-node-1 rounded-full animate-graph-pulse" />
               {stars !== null ? <span>{stars} GitHub Stars</span> : <span>Loading...</span>}
@@ -132,3 +132,4 @@ const HeroSection = () => {
 };
 
 export default HeroSection;
+

@@ -163,6 +163,7 @@ export default function ComparisonTable() {
       ref={containerRef}
       className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-secondary/5 overflow-hidden"
       style={{ maxWidth: "100vw", overflow: "hidden", padding: "2rem 1rem" }}
+      data-aos="zoom-in"
     >
       <FloatingBackground />
 
@@ -254,7 +255,7 @@ export default function ComparisonTable() {
                         ${index % 2 === 0 ? "bg-background/30" : "bg-secondary/3"}
                       `}
                     >
-                      <td className="p-2 sm:p-4 text-foreground font-semibold text-[0.6rem] sm:text-xs sm:text-sm text-left relative z-10">
+                      <td className="p-2 sm:p-4 text-foreground font-semibold text-[0.6rem] sm:text-sm text-left relative z-10">
                         {row.feature}
                         <motion.div
                           className="absolute left-0 top-0 w-1 h-0 bg-gradient-to-b from-primary to-accent group-hover:h-full transition-all duration-500"
@@ -306,3 +307,4 @@ export default function ComparisonTable() {
     </section>
   );
 }
+

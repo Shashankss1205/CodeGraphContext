@@ -53,9 +53,9 @@ export default function ShowStarGraph() {
 
   return (
     <>
-      <section className="px-4 bg-gradient-to-b from-secondary/10 to-background">
+      <section className="px-4 bg-gradient-to-b from-secondary/10 to-background" data-aos="fade-up">
         <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
+          <div className="text-center mb-12" data-aos="fade-down">
             <div className="flex items-center justify-center gap-2 mb-4">
               <Star className="h-6 w-6 text-yellow-500 fill-yellow-500" />
 
@@ -69,7 +69,7 @@ export default function ShowStarGraph() {
             </p>
           </div>
 
-          <Card className="w-full shadow-2xl border-border/50 bg-card/50 backdrop-blur-sm">
+          <Card className="w-full shadow-2xl border-border/50 bg-card/50 backdrop-blur-sm" data-aos="zoom-in-up">
             <CardHeader className="text-center">
               <CardTitle className="flex items-center justify-center gap-2 text-2xl">
                 <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
@@ -140,7 +140,7 @@ export default function ShowStarGraph() {
               </div>
 
               {imageLoaded && !isRefreshing && (
-                <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-center items-center" data-aos="fade-up" data-aos-delay="200">
                   <Button
                     variant="outline"
                     onClick={() => window.open(githubRepoUrl, "_blank")}
@@ -173,3 +173,4 @@ export default function ShowStarGraph() {
     </>
   );
 }
+

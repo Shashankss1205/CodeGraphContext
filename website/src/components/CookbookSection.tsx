@@ -161,68 +161,70 @@ const CookbookSection = () => {
     isOpen: boolean;
     onToggle: () => void;
   }) => (
-    <Collapsible open={isOpen} onOpenChange={onToggle}>
-      <CollapsibleTrigger asChild>
-        <Card className="cursor-pointer hover:bg-muted/30 transition-all duration-200 border border-border/50">
-          <CardHeader>
-            <div className="flex flex-col-reverse gap-5 md:gap-0 md:flex-row items-center md:items-start justify-between">
-              <div className="text-center md:text-left">
-                <CardTitle className="text-base font-medium text-foreground">
-                  {example.title}
-                </CardTitle>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {example.description}
-                </p>
-              </div>
-              <div className="flex items-center gap-2 self-start sm:self-auto">
-                <div className="flex items-center gap-1 bg-secondary text-secondary-foreground px-2 py-1 rounded-md text-xs">
-                  <span>{example.tool}</span>
-                  <ChevronDown
-                    className={`h-3.5 w-3.5 transition-transform ${
-                      isOpen ? "rotate-180" : ""
-                    }`}
-                  />
+    <div data-aos="fade-up" data-aos-delay="100">
+      <Collapsible open={isOpen} onOpenChange={onToggle}>
+        <CollapsibleTrigger asChild>
+          <Card className="cursor-pointer hover:bg-muted/30 transition-all duration-200 border border-border/50">
+            <CardHeader>
+              <div className="flex flex-col-reverse gap-5 md:gap-0 md:flex-row items-center md:items-start justify-between">
+                <div className="text-center md:text-left">
+                  <CardTitle className="text-base font-medium text-foreground">
+                    {example.title}
+                  </CardTitle>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {example.description}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 self-start sm:self-auto">
+                  <div className="flex items-center gap-1 bg-secondary text-secondary-foreground px-2 py-1 rounded-md text-xs">
+                    <span>{example.tool}</span>
+                    <ChevronDown
+                      className={`h-3.5 w-3.5 transition-transform ${
+                        isOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-          </CardHeader>
-        </Card>
-      </CollapsibleTrigger>
+            </CardHeader>
+          </Card>
+        </CollapsibleTrigger>
 
-      <CollapsibleContent>
-        <Card className="mt-2 border border-border/30 bg-muted/20">
-          <CardContent className="p-4">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between flex-wrap gap-2">
-                <span className="text-sm font-medium text-muted-foreground">
-                  JSON Arguments:
-                </span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => copyToClipboard(example.args)}
-                  className="h-7"
-                >
-                  <Copy className="h-3 w-3" />
-                </Button>
+        <CollapsibleContent>
+          <Card className="mt-2 border border-border/30 bg-muted/20">
+            <CardContent className="p-4">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <span className="text-sm font-medium text-muted-foreground">
+                    JSON Arguments:
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => copyToClipboard(example.args)}
+                    className="h-7"
+                  >
+                    <Copy className="h-3 w-3" />
+                  </Button>
+                </div>
+                <pre className="bg-muted/50 rounded-md p-3 text-sm overflow-x-auto border border-border/30">
+                  <code className="text-foreground break-words">
+                    {example.args}
+                  </code>
+                </pre>
               </div>
-              <pre className="bg-muted/50 rounded-md p-3 text-sm overflow-x-auto border border-border/30">
-                <code className="text-foreground break-words">
-                  {example.args}
-                </code>
-              </pre>
-            </div>
-          </CardContent>
-        </Card>
-      </CollapsibleContent>
-    </Collapsible>
+            </CardContent>
+          </Card>
+        </CollapsibleContent>
+      </Collapsible>
+    </div>
   );
 
   return (
-    <section className="py-20 px-4 bg-gradient-subtle relative overflow-hidden">
+    <section className="py-20 px-4 bg-gradient-subtle relative overflow-hidden" data-aos="fade-in">
       <div className="absolute inset-0 bg-grid-pattern opacity-20" />
       <div className="container mx-auto max-w-6xl relative z-10">
-        <div className="text-center mb-16">
+        <div className="text-center mb-16" data-aos="fade-down">
           <div className="flex items-center justify-center gap-3 mb-6">
             <div className="p-2 rounded-lg bg-primary/10 border border-primary/20">
               <BookOpen className="h-6 w-6 text-primary" />
@@ -238,7 +240,7 @@ const CookbookSection = () => {
         </div>
 
         <Tabs defaultValue="basic" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-8">
+          <TabsList className="grid w-full grid-cols-3 mb-8" data-aos="fade-up" data-aos-delay="200">
             <TabsTrigger value="basic" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
               <Search className="h-3 w-3 sm:h-4 sm:w-4" />
               <span className="hidden sm:inline">Basic Navigation</span>
@@ -308,7 +310,7 @@ const CookbookSection = () => {
           </TabsContent>
         </Tabs>
 
-        <div className="mt-16 text-center">
+        <div className="mt-16 text-center" data-aos="fade-up" data-aos-delay="300">
           <Card className="inline-block p-6 bg-gradient-to-r from-primary/5 to-accent/5 border border-primary/20">
             <div className="flex items-center gap-3 mb-3">
               <Code className="h-5 w-5 text-primary" />
@@ -334,3 +336,4 @@ const CookbookSection = () => {
 };
 
 export default CookbookSection;
+

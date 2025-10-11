@@ -25,6 +25,8 @@ const MoveToTop: React.FC = () => {
             {showButton && (
                 <button
                     onClick={scrollToTop}
+                    data-aos="fade-in"
+                    data-aos-duration="300"
                     style={{
                         position: "fixed",
                         bottom: "40px",
