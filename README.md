@@ -131,6 +131,20 @@ If you’re using CodeGraphContext in your project, feel free to open a PR and a
 
 3.  **Start:** `cgc start`
 
+## Docker Image
+
+- Build locally with `docker build -t codegraphcontext:latest .`
+- Run commands through Docker while mounting your workspace and configuration:
+
+  ```bash
+  docker run --rm -it \
+    -v "$PWD":/workspace \
+    -v "$HOME/.codegraphcontext":/home/cgc/.codegraphcontext \
+    codegraphcontext:latest setup
+  ```
+
+- Instructions for publishing the container to Docker Hub are documented in [`docs/docker.md`](docs/docker.md).
+
 ## Ignoring Files (`.cgcignore`)
 
 You can tell CodeGraphContext to ignore specific files and directories by creating a `.cgcignore` file in the root of your project. This file uses the same syntax as `.gitignore`.
