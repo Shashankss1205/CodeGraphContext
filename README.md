@@ -19,8 +19,19 @@
 [![Discord](https://img.shields.io/badge/Discord-Join%20Chat-7289da?logo=discord&logoColor=white)](https://discord.gg/dR4QY32uYQ)
 
 
-
 An MCP server that indexes local code into a graph database to provide context to AI assistants.
+
+This repository is officially participating in Hacktoberfest 2025!
+
+Eligible PRs made in October 2025 will count towards Hacktoberfest rewards.
+
+Please contribute meaningfully—spam/low-quality PRs will be marked invalid.
+
+How to Participate
+1. Register at Hacktoberfest.com
+2. Check our open issues, especially those tagged hacktoberfest, good first issue, or help wanted.
+3. Follow our contributing guide below.
+4. Submit your PR and celebrate contributing to OSS!
 
 ### Indexing a codebase
 ![Indexing using an MCP client](https://github.com/Shashankss1205/CodeGraphContext/blob/main/images/Indexing.gif)
@@ -35,7 +46,7 @@ An MCP server that indexes local code into a graph database to provide context t
 - **Website:** [CodeGraphContext](http://codegraphcontext.vercel.app/)
 
 ## Star History
-[![Star History Chart](https://api.star-history.com/svg?repos=Shashankss1205/CodeGraphContext&type=Date)](https://www.star-history.com/#Shashankss1205/CodeGraphContext&Date)
+![Star History](https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/10d555796d4dc11a2fcfccb58547f013/966692b6-7553-4967-b3f1-49cc78287a30/f002b33b.png)
 
 ## Features
 
