@@ -354,21 +354,21 @@ class GraphBuilder:
         """Create CALLS relationships with a unified, prioritized logic flow for all call types."""
         caller_file_path = str(Path(file_data['file_path']).resolve())
         local_function_names = {func['name'] for func in file_data.get('functions', [])}
-        local_imports = {imp.get('alias') or imp['name'].split('.')[-1]: imp['name'] 
+        local_imports = {imp.get('alias') or imp['name'].split('.')[-1]: imp['name']
                         for imp in file_data.get('imports', [])}
-        
+
         for call in file_data.get('function_calls', []):
             called_name = call['name']
             if called_name in __builtins__: continue
 
             resolved_path = None
-            
+
             if call.get('inferred_obj_type'):
                 obj_type = call['inferred_obj_type']
                 possible_paths = imports_map.get(obj_type, [])
                 if len(possible_paths) > 0:
                     resolved_path = possible_paths[0]
-            
+
             else:
                 lookup_name = call['full_name'].split('.')[0] if '.' in call['full_name'] else called_name
                 possible_paths = imports_map.get(lookup_name, [])
@@ -383,12 +383,27 @@ class GraphBuilder:
                         if full_import_name.replace('.', '/') in path:
                             resolved_path = path
                             break
-            
+
             if not resolved_path:
                 if called_name in imports_map and imports_map[called_name]:
                     resolved_path = imports_map[called_name][0]
                 else:
                     resolved_path = caller_file_path
+
+            # Check if the called_name is a class, and if so, redirect to __init__
+            is_class_result = session.run("""
+                MATCH (c:Class {name: $called_name, file_path: $resolved_path})
+                RETURN count(c) > 0 as is_class
+            """, called_name=called_name, resolved_path=resolved_path).single()
+
+            if is_class_result and is_class_result['is_class']:
+                # Find the __init__ method of this class
+                init_result = session.run("""
+                    MATCH (c:Class {name: $class_name, file_path: $resolved_path})-[:CONTAINS]->(f:Function {name: '__init__'})
+                    RETURN f.name as init_name
+                """, class_name=called_name, resolved_path=resolved_path).single()
+                if init_result:
+                    called_name = '__init__'
 
             caller_context = call.get('context')
             if caller_context and len(caller_context) == 3 and caller_context[0] is not None:
