@@ -262,3 +262,13 @@ def main(
         console.print("👉 Run [cyan]cgc help[/cyan] to see all available commands.\n")
         console.print("👉 Run [cyan]cgc --version[/cyan] to check the version.\n")
         console.print("👉 Running [green]codegraphcontext [white]works the same as using [green]cgc")
+@app.command()
+def index_sample():
+    """
+
+    Index a sample project for testing or CI purposes.
+    """
+    _load_credentials()
+    from pathlib import Path
+    sample_path= Path(__file__).parent.parent / "tests" /"sample_project_typescript"
+    index_helper(str(sample_path))

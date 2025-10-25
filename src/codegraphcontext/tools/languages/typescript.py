@@ -5,8 +5,8 @@ from codegraphcontext.utils.debug_log import debug_log, info_logger, error_logge
 TS_QUERIES = {
     "functions": """
         (function_declaration
-            name: (identifier) @name
-            parameters: (formal_parameters) @params
+            (identifier) @name
+            (formal_parameters) @params
         ) @function_node
 
         (variable_declarator
@@ -54,8 +54,7 @@ TS_QUERIES = {
         )
     """,
     "classes": """
-        (class_declaration) @class
-        (class) @class
+        (class_declaration) @class_node
     """,
     "interfaces": """
         (interface_declaration
@@ -105,7 +104,7 @@ class TypescriptTreeSitterParser:
     def _get_node_text(self, node) -> str:
         return node.text.decode('utf-8')
 
-    def _get_parent_context(self, node, types=('function_declaration', 'class_declaration')):
+    def _get_parent_context(self, node, types=('function_declaration', 'class_declaration', 'method_definition')):
         curr = node.parent
         while curr:
             if curr.type in types:
@@ -223,7 +222,11 @@ class TypescriptTreeSitterParser:
             elif data.get('single_param'):
                 args = [self._get_node_text(data['single_param'])]
             context, context_type, _ = self._get_parent_context(func_node)
-            class_context = context if context_type == 'class_declaration' else None
+            if context_type == 'class_declaration':
+                class_context = context
+                context_type = 'method_definition'
+            else:
+                class_context = None
             docstring = None
             func_data = {
                 "name": name,
@@ -264,32 +267,40 @@ class TypescriptTreeSitterParser:
         classes = []
         query = self.queries['classes']
         for class_node, capture_name in query.captures(root_node):
-            if capture_name == 'class':
-                name_node = class_node.child_by_field_name('name')
-                if not name_node: continue
-                name = self._get_node_text(name_node)
-                bases = []
-                heritage_node = next((child for child in class_node.children if child.type == 'class_heritage'), None)
-                if heritage_node:
-                    if heritage_node.named_child_count > 0:
-                        base_expr_node = heritage_node.named_child(0)
-                        bases.append(self._get_node_text(base_expr_node))
-                    elif heritage_node.child_count > 0:
-                        base_expr_node = heritage_node.child(heritage_node.child_count - 1)
-                        bases.append(self._get_node_text(base_expr_node))
-                class_data = {
-                    "name": name,
-                    "line_number": class_node.start_point[0] + 1,
-                    "end_line": class_node.end_point[0] + 1,
-                    "bases": bases,
-                    "source": self._get_node_text(class_node),
-                    "docstring": self._get_docstring(class_node),
-                    "context": None,
-                    "decorators": [],
-                    "lang": self.language_name,
-                    "is_dependency": False,
-                }
-                classes.append(class_data)
+            if capture_name != 'class_node':
+                continue
+            name_node = class_node.child_by_field_name('name')
+                #if not name_node: continue
+            name = self._get_node_text(name_node) if name_node else None
+                #heritage_node = next((child for child in class_node.children if child.type == 'class_heritage'), None)
+                
+            bases = []
+            extends_node = class_node.child_by_field_name('extends')
+            if extends_node:
+                for child in extends_node.named_children:
+                    if child.type == 'identifier':
+                        bases.append(self._get_node_text(child))
+
+            interfaces=[]
+            implements_node= class_node.child_by_field_name('implements')
+            if implements_node:
+                for child in implements_node.named_children:
+                    if child.type == 'identifier':
+                        interfaces.append(self._get_node_text(child))
+            
+            class_data = {
+                "name": name,
+                "line_number": class_node.start_point[0] + 1,
+                "end_line": class_node.end_point[0] + 1,
+                "bases":bases,
+                "source": self._get_node_text(class_node),
+                "docstring": self._get_docstring(class_node),
+                "context": None,
+                "decorators": [],
+                "lang": self.language_name,
+                "is_dependency": False,
+            }
+            classes.append(class_data)
         return classes
     
     def _find_interfaces(self, root_node):
@@ -301,11 +312,19 @@ class TypescriptTreeSitterParser:
                 if not name_node: continue
                 
                 name = self._get_node_text(name_node)
+                generics_node = node.child_by_field_name('type_parameters')
+                #func_data['generics'] = self._get_node_text(generics_node) if generics_node else None
+                extends_node = node.child_by_field_name('extends')
+
+                methods=[self._get_node_text(child) for child in node.named_children if child.type == 'method_signature']
                 interface_data = {
                     "name": name,
                     "line_number": node.start_point[0] + 1,
                     "end_line": node.end_point[0] + 1,
                     "source_code": self._get_node_text(node),
+                    "generics": self._get_node_text(generics_node) if generics_node else None,
+                    "extends": [self._get_node_text(e) for e in extends_node.named_children] if extends_node else [],
+                    "methods": methods
                 }
                 interfaces.append(interface_data)
         return interfaces
@@ -319,11 +338,15 @@ class TypescriptTreeSitterParser:
                 if not name_node: continue
 
                 name = self._get_node_text(name_node)
+
+                type_node = node.child_by_field_name('type')
+                type_expression = self._get_node_text(type_node) if type_node else None
                 type_alias_data = {
                     "name": name,
                     "line_number": node.start_point[0] + 1,
                     "end_line": node.end_point[0] + 1,
                     "source_code": self._get_node_text(node),
+                    "type_expression": type_expression
                 }
                 type_aliases.append(type_alias_data)
         return type_aliases
@@ -408,12 +431,16 @@ class TypescriptTreeSitterParser:
             if capture_name == 'name':
                 var_node = node.parent
                 name = self._get_node_text(node)
-                value = None
-                type_text = None
+
+                type_annotation = var_node.child_by_field_name('type')
+                type_text = self._get_node_text(type_annotation) if type_annotation else None
+                value_node = var_node.child_by_field_name('value')
+                value_text = self._get_node_text(value_node) if value_node else None
+
                 variable_data = {
                     "name": name,
                     "line_number": node.start_point[0] + 1,
-                    "value": value,
+                    "value": value_text,
                     "type": type_text,
                     "context": None,
                     "class_context": None,
