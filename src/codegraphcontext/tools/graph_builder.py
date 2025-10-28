@@ -436,7 +436,8 @@ class GraphBuilder:
                          for imp in file_data.get('imports', [])}
 
         for class_item in file_data.get('classes', []):
-            if not class_item.get('bases'):
+            bases = class_item.get('bases') or class_item.get('extends')
+            if not bases:
                 continue
 
             for base_class_str in class_item['bases']:
@@ -478,18 +479,29 @@ class GraphBuilder:
                         possible_paths = imports_map[lookup_name]
                         if len(possible_paths) == 1:
                             resolved_path = possible_paths[0]
+                        
                 
                 # If a path was found, create the relationship
+               
                 if resolved_path:
                     session.run("""
-                        MATCH (child:Class {name: $child_name, file_path: $file_path})
-                        MATCH (parent:Class {name: $parent_name, file_path: $resolved_parent_file_path})
+                        MATCH (child:Class {name: $child_name, file_path: $child_path})
+                        MATCH (parent:Class {name: $parent_name, file_path: $parent_path})
+                        MERGE (child)-[:INHERITS]->(parent)
+                    """,
+                    child_name=class_item['name'],
+                    child_path=caller_file_path,
+                    parent_name=target_class_name,
+                    parent_path=resolved_path)
+                else:
+                    session.run("""
+                        MATCH (child:Class {name: $child_name, file_path: $child_path})
+                        MATCH (parent:Class {name: $parent_name})
                         MERGE (child)-[:INHERITS]->(parent)
                     """,
                     child_name=class_item['name'],
                     file_path=caller_file_path,
-                    parent_name=target_class_name,
-                    resolved_parent_file_path=resolved_path)
+                    parent_name=target_class_name)
 
     def _create_all_inheritance_links(self, all_file_data: list[Dict], imports_map: dict):
         """Create INHERITS relationships for all classes after all files have been processed."""
