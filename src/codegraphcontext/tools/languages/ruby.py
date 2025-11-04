@@ -12,10 +12,11 @@ RUBY_QUERIES = {
         (class
             name: (constant) @name
         ) @class
-        
+    """,
+    "modules": """
         (module
             name: (constant) @name
-        ) @class
+        ) @module_node
     """,
     "imports": """
         (call
@@ -35,7 +36,6 @@ RUBY_QUERIES = {
             left: (identifier) @name
             right: (_) @value
         )
-        
         (assignment
             left: (instance_variable) @name
             right: (_) @value
@@ -43,6 +43,12 @@ RUBY_QUERIES = {
     """,
     "comments": """
         (comment) @comment
+    """,
+    "module_includes": """
+        (call
+          method: (identifier) @method
+          arguments: (argument_list (constant) @module)
+        ) @include_call
     """,
 }
 
@@ -63,6 +69,64 @@ class RubyTreeSitterParser:
 
     def _get_node_text(self, node: Any) -> str:
         return node.text.decode("utf-8")
+    
+    def _enclosing_class_name(self, node: Any) -> Optional[str]:
+        name, typ, _ = self._get_parent_context(node, ('class',))
+        return name
+    
+    def _find_modules(self, root_node: Any) -> list[Dict[str, Any]]:
+        modules = []
+        query = self.queries["modules"]
+        # name via captures
+        captures = list(query.captures(root_node))
+        for node, cap in captures:
+            if cap == "module_node":
+                name = None
+                for n, c in captures:
+                    if c == "name":
+                        if n.start_byte >= node.start_byte and n.end_byte <= node.end_byte:
+                            name = self._get_node_text(n)
+                            break
+                if name:
+                    modules.append({
+                        "name": name,
+                        "line_number": node.start_point[0] + 1,
+                        "end_line": node.end_point[0] + 1,
+                        "source": self._get_node_text(node),
+                        "source_code": self._get_node_text(node),
+                        "lang": self.language_name,
+                        "is_dependency": False,
+                    })
+        return modules
+
+    def _find_module_inclusions(self, root_node: Any) -> list[Dict[str, Any]]:
+        includes = []
+        query = self.queries["module_includes"]
+        for node, cap in query.captures(root_node):
+            if cap == "method":
+                method_name = self._get_node_text(node)
+                if method_name != "include":
+                    continue
+            if cap == "include_call":
+                method = None
+                module = None
+                for n, c in query.captures(node):
+                    if c == "method":
+                        method = self._get_node_text(n)
+                    elif c == "module":
+                        module = self._get_node_text(n)
+                if method == "include" and module:
+                    cls = self._enclosing_class_name(node)
+                    if cls:
+                        includes.append({
+                            "class": cls,
+                            "module": module,
+                            "line_number": node.start_point[0] + 1,
+                            "lang": self.language_name,
+                            "is_dependency": False,
+                        })
+        return includes
+
 
     def _get_parent_context(self, node: Any, types: Tuple[str, ...] = ('class', 'module', 'method')):
         """Find parent context for Ruby constructs."""
@@ -128,6 +192,8 @@ class RubyTreeSitterParser:
         imports = self._find_imports(root_node)
         function_calls = self._find_calls(root_node)
         variables = self._find_variables(root_node)
+        modules = self._find_modules(root_node)
+        module_inclusions = self._find_module_inclusions(root_node)
 
         return {
             "file_path": str(file_path),
@@ -138,6 +204,8 @@ class RubyTreeSitterParser:
             "function_calls": function_calls,
             "is_dependency": is_dependency,
             "lang": self.language_name,
+            "modules": modules,
+            "module_inclusions": module_inclusions,
         }
 
     def _find_functions(self, root_node: Any) -> list[Dict[str, Any]]:

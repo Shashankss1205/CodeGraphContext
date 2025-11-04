@@ -292,6 +292,14 @@ class GraphBuilder:
                                 MERGE (fn)-[:HAS_PARAMETER]->(p)
                             """, func_name=item['name'], file_path=file_path_str, line_number=item['line_number'], arg_name=arg_name)
 
+            # --- NEW: persist Ruby Modules ---
+            for m in file_data.get('modules', []):
+                session.run("""
+                    MERGE (mod:Module {name: $name})
+                    ON CREATE SET mod.lang = $lang
+                    ON MATCH  SET mod.lang = coalesce(mod.lang, $lang)
+                """, name=m["name"], lang=file_data.get("lang"))
+
             # Create CONTAINS relationships for nested functions
             for item in file_data.get('functions', []):
                 if item.get("context_type") == "function_definition":
@@ -347,6 +355,17 @@ class GraphBuilder:
                     file_path=file_path_str,
                     func_name=func['name'],
                     func_line=func['line_number'])
+
+            # --- NEW: Class INCLUDES Module (Ruby mixins) ---
+            for inc in file_data.get('module_inclusions', []):
+                session.run("""
+                    MATCH (c:Class {name: $class_name, file_path: $file_path})
+                    MERGE (m:Module {name: $module_name})
+                    MERGE (c)-[:INCLUDES]->(m)
+                """,
+                class_name=inc["class"],
+                file_path=file_path_str,
+                module_name=inc["module"])
 
             # Class inheritance is handled in a separate pass after all files are processed.
             # Function calls are also handled in a separate pass after all files are processed.
