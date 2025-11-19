@@ -63,7 +63,8 @@ This file is auto-generated. Do not edit manually.
 | Rank | Contributor | Commits | Lines Added | Lines Deleted | Link to Contributions |
 |---|---|---|---|---|---|
 | 1 | TanmayRanaware | 1 | 426 | 0 | [ruby.py](https://github.com/Shashankss1205/CodeGraphContext/commits/main/src/codegraphcontext/tools/languages/ruby.py?author=tanmayranware2000@gmail.com) |
-| 2 | Shashankss1205 | 1 | 2 | 5 | [ruby.py](https://github.com/Shashankss1205/CodeGraphContext/commits/main/src/codegraphcontext/tools/languages/ruby.py?author=shashankshekharsingh1205@gmail.com) |
+| 2 | Peter Jusko | 1 | 71 | 3 | [ruby.py](https://github.com/Shashankss1205/CodeGraphContext/commits/main/src/codegraphcontext/tools/languages/ruby.py?author=peter.jusko@student.tuke.sk) |
+| 3 | Shashankss1205 | 1 | 2 | 5 | [ruby.py](https://github.com/Shashankss1205/CodeGraphContext/commits/main/src/codegraphcontext/tools/languages/ruby.py?author=shashankshekharsingh1205@gmail.com) |
 
 
 ## Rust Contributors
