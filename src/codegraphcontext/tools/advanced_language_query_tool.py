@@ -10,6 +10,7 @@ from ..tools.query_tool_languages.python_toolkit import PythonToolkit
 from ..tools.query_tool_languages.ruby_toolkit import RubyToolkit
 from ..tools.query_tool_languages.rust_toolkit import RustToolkit
 from ..tools.query_tool_languages.typescript_toolkit import TypescriptToolkit
+from ..tools.query_tool_languages.csharp_toolkit import CSharpToolkit
 
 from ..core.database import DatabaseManager
 from ..utils.debug_log import debug_log
@@ -33,7 +34,8 @@ class Advanced_language_query:
         "python": PythonToolkit,
         "ruby": RubyToolkit,
         "rust": RustToolkit,
-        "typescript": TypescriptToolkit
+        "typescript": TypescriptToolkit,
+        "c_sharp": CSharpToolkit
     }
     Supported_queries = {
         "repository": "Repository",

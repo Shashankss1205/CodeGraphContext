@@ -51,6 +51,9 @@ class TreeSitterParser:
         elif self.language_name == 'ruby':
             from .languages.ruby import RubyTreeSitterParser
             self.language_specific_parser = RubyTreeSitterParser(self)
+        elif self.language_name == 'c_sharp':
+            from .languages.csharp import CSharpTreeSitterParser
+            self.language_specific_parser = CSharpTreeSitterParser(self)
 
 
     def parse(self, file_path: Path, is_dependency: bool = False, **kwargs) -> Dict:
@@ -85,7 +88,8 @@ class GraphBuilder:
             '.c': TreeSitterParser('c'),
             # '.h': TreeSitterParser('c'), # Need to write an algo for distinguishing C vs C++ headers
             '.java': TreeSitterParser('java'),
-            '.rb': TreeSitterParser('ruby')
+            '.rb': TreeSitterParser('ruby'),
+            '.cs': TreeSitterParser('c_sharp')
         }
         self.create_schema()
 
@@ -109,6 +113,8 @@ class GraphBuilder:
                 session.run("CREATE CONSTRAINT enum_cpp IF NOT EXISTS FOR (cenum: Enum) REQUIRE (cenum.name, cenum.file_path, cenum.line_number) IS UNIQUE")
                 session.run("CREATE CONSTRAINT union_cpp IF NOT EXISTS FOR (cunion: Union) REQUIRE (cunion.name, cunion.file_path, cunion.line_number) IS UNIQUE")
                 session.run("CREATE CONSTRAINT annotation_unique IF NOT EXISTS FOR (a:Annotation) REQUIRE (a.name, a.file_path, a.line_number) IS UNIQUE")
+                session.run("CREATE CONSTRAINT record_unique IF NOT EXISTS FOR (r:Record) REQUIRE (r.name, r.file_path, r.line_number) IS UNIQUE")
+                session.run("CREATE CONSTRAINT property_unique IF NOT EXISTS FOR (p:Property) REQUIRE (p.name, p.file_path, p.line_number) IS UNIQUE")
                 
                 # Indexes for language attribute
                 session.run("CREATE INDEX function_lang IF NOT EXISTS FOR (f:Function) ON (f.lang)")
@@ -186,6 +192,9 @@ class GraphBuilder:
         elif '.rb' in files_by_lang:
             from .languages import ruby as ruby_lang_module
             imports_map.update(ruby_lang_module.pre_scan_ruby(files_by_lang['.rb'], self.parsers['.rb']))
+        elif '.cs' in files_by_lang:
+            from .languages import csharp as csharp_lang_module
+            imports_map.update(csharp_lang_module.pre_scan_csharp(files_by_lang['.cs'], self.parsers['.cs']))
             
         return imports_map
 
@@ -269,6 +278,8 @@ class GraphBuilder:
                 (file_data.get('structs',[]), 'Struct'),
                 (file_data.get('enums',[]), 'Enum'),
                 (file_data.get('unions',[]), 'Union'),
+                (file_data.get('records',[]), 'Record'),
+                (file_data.get('properties',[]), 'Property'),
             ]
             for item_data, label in item_mappings:
                 for item in item_data:
@@ -510,11 +521,82 @@ class GraphBuilder:
                     parent_name=target_class_name,
                     resolved_parent_file_path=resolved_path)
 
+
+    def _create_csharp_inheritance_and_interfaces(self, session, file_data: Dict, imports_map: dict):
+        """Create INHERITS and IMPLEMENTS relationships for C# types."""
+        if file_data.get('lang') != 'c_sharp':
+            return
+            
+        caller_file_path = str(Path(file_data['file_path']).resolve())
+        
+        # Collect all local type names
+        local_type_names = set()
+        for type_list in ['classes', 'interfaces', 'structs', 'records']:
+            local_type_names.update(t['name'] for t in file_data.get(type_list, []))
+        
+        # Process all type declarations that can have bases
+        for type_list_name, type_label in [('classes', 'Class'), ('structs', 'Struct'), ('records', 'Record'), ('interfaces', 'Interface')]:
+            for type_item in file_data.get(type_list_name, []):
+                if not type_item.get('bases'):
+                    continue
+                
+                for base_str in type_item['bases']:
+                    # Clean up the base name (remove generic parameters, etc.)
+                    base_name = base_str.split('<')[0].strip()
+                    
+                    # Determine if this is an interface
+                    is_interface = False
+                    resolved_path = caller_file_path
+                    
+                    # Check if base is a local interface
+                    for iface in file_data.get('interfaces', []):
+                        if iface['name'] == base_name:
+                            is_interface = True
+                            break
+                    
+                    # Check if base is in imports_map
+                    if base_name in imports_map:
+                        possible_paths = imports_map[base_name]
+                        if len(possible_paths) > 0:
+                            resolved_path = possible_paths[0]
+                    
+                    # For C#, first base is usually the class (if any), rest are interfaces
+                    base_index = type_item['bases'].index(base_str)
+                    
+                    # Try to determine if it's an interface
+                    if is_interface or (base_index > 0 and type_label == 'Class'):
+                        # This is an IMPLEMENTS relationship
+                        session.run("""
+                            MATCH (child {name: $child_name, file_path: $file_path})
+                            WHERE child:Class OR child:Struct OR child:Record
+                            MATCH (iface:Interface {name: $interface_name})
+                            MERGE (child)-[:IMPLEMENTS]->(iface)
+                        """,
+                        child_name=type_item['name'],
+                        file_path=caller_file_path,
+                        interface_name=base_name)
+                    else:
+                        # This is an INHERITS relationship
+                        session.run("""
+                            MATCH (child {name: $child_name, file_path: $file_path})
+                            WHERE child:Class OR child:Record OR child:Interface
+                            MATCH (parent {name: $parent_name})
+                            WHERE parent:Class OR parent:Record OR parent:Interface
+                            MERGE (child)-[:INHERITS]->(parent)
+                        """,
+                        child_name=type_item['name'],
+                        file_path=caller_file_path,
+                        parent_name=base_name)
+
     def _create_all_inheritance_links(self, all_file_data: list[Dict], imports_map: dict):
         """Create INHERITS relationships for all classes after all files have been processed."""
         with self.driver.session() as session:
             for file_data in all_file_data:
-                self._create_inheritance_links(session, file_data, imports_map)
+                # Handle C# separately
+                if file_data.get('lang') == 'c_sharp':
+                    self._create_csharp_inheritance_and_interfaces(session, file_data, imports_map)
+                else:
+                    self._create_inheritance_links(session, file_data, imports_map)
                 
     def delete_file_from_graph(self, file_path: str):
         """Deletes a file and all its contained elements and relationships."""
