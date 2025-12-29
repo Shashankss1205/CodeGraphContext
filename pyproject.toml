@@ -5,7 +5,7 @@ description = "An MCP server that indexes local code into a graph database to pr
 authors = [{ name = "Shashank Shekhar Singh", email = "shashankshekharsingh1205@gmail.com" }]
 readme = "README.md"
 license = { file = "LICENSE" }
-requires-python = ">=3.9"
+requires-python = ">=3.12"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -29,7 +29,8 @@ dependencies = [
     "pytest",
     "nbformat",
     "nbconvert>=7.16.6",
-    "pathspec>=0.12.1"
+    "pathspec>=0.12.1",
+    "falkordblite>=0.1.0"
 ]
 
 [project.urls]

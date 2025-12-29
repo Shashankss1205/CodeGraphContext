@@ -35,7 +35,7 @@ class CodeFinder:
                 result = session.run(self.format_query("Function", fuzzy_search), search_term=formatted_search_term)
             else:
                 result = session.run(self.format_query("Function", fuzzy_search), search_term=search_term)
-            return [dict(record) for record in result]
+            return result.data()
 
     def find_by_class_name(self, search_term: str, fuzzy_search: bool) -> List[Dict]:
         """Find classes by name matching using the full-text index."""
@@ -45,7 +45,7 @@ class CodeFinder:
                 result = session.run(self.format_query("Class", fuzzy_search), search_term=formatted_search_term)
             else:
                 result = session.run(self.format_query("Class", fuzzy_search), search_term=search_term)
-            return [dict(record) for record in result]
+            return result.data()
 
     def find_by_variable_name(self, search_term: str) -> List[Dict]:
         """Find variables by name matching"""
@@ -59,7 +59,7 @@ class CodeFinder:
                 LIMIT 20
             """, search_term=search_term, regex_pattern=f"(?i).*{re.escape(search_term)}.*")
             
-            return [dict(record) for record in result]
+            return result.data()
 
     def find_by_content(self, search_term: str) -> List[Dict]:
         """Find code by content matching in source or docstrings using the full-text index."""
@@ -80,7 +80,7 @@ class CodeFinder:
                 ORDER BY score DESC
                 LIMIT 20
             """, search_term=search_term)
-            return [dict(record) for record in result]
+            return result.data()
 
     def find_related_code(self, user_query: str, fuzzy_search: bool, edit_distance: int) -> Dict[str, Any]:
         """Find code related to a query using multiple search strategies"""
@@ -149,7 +149,7 @@ class CodeFinder:
                     LIMIT 20
                 """
                 result = session.run(query, argument_name=argument_name)
-            return [dict(record) for record in result]
+            return result.data()
 
     def find_functions_by_decorator(self, decorator_name: str, file_path: str = None) -> List[Dict]:
         """Find functions that have a specific decorator applied to them."""
@@ -174,7 +174,7 @@ class CodeFinder:
                     LIMIT 20
                 """
                 result = session.run(query, decorator_name=decorator_name)
-            return [dict(record) for record in result]
+            return result.data()
     
     def who_calls_function(self, function_name: str, file_path: str = None) -> List[Dict]:
         """Find what functions call a specific function using CALLS relationships with improved matching"""
@@ -284,7 +284,7 @@ class CodeFinder:
                     LIMIT 20
                 """, function_name=function_name)
             
-            return [dict(record) for record in result]
+            return result.data()
     
     def who_imports_module(self, module_name: str) -> List[Dict]:
         """Find what files import a specific module using IMPORTS relationships"""
@@ -309,7 +309,7 @@ class CodeFinder:
                 LIMIT 20
             """, module_name=module_name)
             
-            return [dict(record) for record in result]
+            return result.data()
     
     def who_modifies_variable(self, variable_name: str) -> List[Dict]:
         """Find what functions contain or modify a specific variable"""
@@ -340,7 +340,7 @@ class CodeFinder:
                 LIMIT 20
             """, variable_name=variable_name)
             
-            return [dict(record) for record in result]
+            return result.data()
     
     def find_class_hierarchy(self, class_name: str, file_path: str = None) -> Dict[str, Any]:
         """Find class inheritance relationships using INHERITS relationships"""
@@ -418,7 +418,7 @@ class CodeFinder:
                 LIMIT 20
             """, function_name=function_name)
             
-            return [dict(record) for record in result]
+            return result.data()
     
     def find_dead_code(self, exclude_decorated_with: List[str] = None) -> Dict[str, Any]:
         """Find potentially unused functions (not called by other functions in the project), optionally excluding those with specific decorators."""
@@ -476,7 +476,7 @@ class CodeFinder:
                     LIMIT 50
                 """
                 result = session.run(query, function_name=function_name)
-            return [dict(record) for record in result]
+            return result.data()
 
     def find_all_callees(self, function_name: str, file_path: str = None) -> List[Dict]:
         """Find all direct and indirect callees of a specific function."""
@@ -499,7 +499,7 @@ class CodeFinder:
                     LIMIT 50
                 """
                 result = session.run(query, function_name=function_name)
-            return [dict(record) for record in result]
+            return result.data()
 
     def find_function_call_chain(self, start_function: str, end_function: str, max_depth: int = 5) -> List[Dict]:
         """Find call chains between two functions"""
@@ -526,7 +526,7 @@ class CodeFinder:
                 LIMIT 10
             """, start_function=start_function, end_function=end_function)
             
-            return [dict(record) for record in result]
+            return result.data()
     
     def find_module_dependencies(self, module_name: str) -> Dict[str, Any]:
         """Find all dependencies and dependents of a module"""
@@ -749,7 +749,7 @@ class CodeFinder:
                 """
                 result = session.run(query, function_name=function_name)
             
-            return [dict(record) for record in result]
+            return result.data()
 
     def find_most_complex_functions(self, limit: int = 10) -> List[Dict]:
         """Find the most complex functions based on cyclomatic complexity."""
@@ -762,7 +762,7 @@ class CodeFinder:
                 LIMIT $limit
             """
             result = session.run(query, limit=limit)
-            return [dict(record) for record in result]
+            return result.data()
 
     def list_indexed_repositories(self) -> List[Dict]:
         """List all indexed repositories."""
@@ -772,4 +772,4 @@ class CodeFinder:
                 RETURN r.name as name, r.path as path, r.is_dependency as is_dependency
                 ORDER BY r.name
             """)
-            return [dict(record) for record in result]
+            return result.data()
