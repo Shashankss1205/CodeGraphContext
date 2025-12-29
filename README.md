@@ -64,11 +64,11 @@ If you’re using CodeGraphContext in your project, feel free to open a PR and a
 - `rich>=13.7.0`
 - `inquirerpy>=0.3.4`
 - `python-dotenv>=1.0.0`
-- `tree-sitter==0.20.4`
-- `tree-sitter-languages==1.10.2`
-- `pyyaml`
-- `pytest`
-- `nbformat`
+- `tree-sitter>=0.25.2`
+- `tree_sitter_language_pack==0.13.0`
+- `pyyaml>=6.0,<7`
+- `pytest>=7.4,<9`
+- `nbformat>=5.9,<6`
 - `nbconvert>=7.16.6`
 - `pathspec>=0.12.1`
 
