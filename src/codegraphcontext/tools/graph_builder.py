@@ -12,7 +12,7 @@ from ..utils.debug_log import debug_log, info_logger, error_logger, warning_logg
 
 # New imports for tree-sitter
 from tree_sitter import Language, Parser
-from tree_sitter_languages import get_language
+from tree_sitter_language_pack import get_language
 
 class TreeSitterParser:
     """A generic parser wrapper for a specific language using tree-sitter."""
