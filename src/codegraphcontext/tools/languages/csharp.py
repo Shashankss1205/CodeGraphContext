@@ -5,76 +5,92 @@ from codegraphcontext.utils.debug_log import debug_log, info_logger, error_logge
 
 CSHARP_QUERIES = {
     "functions": """
+        ;; Methods
         (method_declaration
             name: (identifier) @name
             parameters: (parameter_list) @params
         ) @function_node
-        
+
+        ;; Constructors
         (constructor_declaration
             name: (identifier) @name
             parameters: (parameter_list) @params
         ) @function_node
-        
+
+        ;; Local functions inside methods
         (local_function_statement
             name: (identifier) @name
             parameters: (parameter_list) @params
         ) @function_node
     """,
+
     "classes": """
-        (class_declaration 
+        (class_declaration
             name: (identifier) @name
-            bases: (base_list)? @bases
+            (base_list)? @bases
         ) @class
     """,
+
     "interfaces": """
-        (interface_declaration 
+        (interface_declaration
             name: (identifier) @name
-            bases: (base_list)? @bases
+            (base_list)? @bases
         ) @interface
     """,
+
     "structs": """
-        (struct_declaration 
+        (struct_declaration
             name: (identifier) @name
-            bases: (base_list)? @bases
+            (base_list)? @bases
         ) @struct
     """,
+
     "enums": """
-        (enum_declaration 
+        (enum_declaration
             name: (identifier) @name
         ) @enum
     """,
+
     "records": """
-        (record_declaration 
+        (record_declaration
             name: (identifier) @name
-            bases: (base_list)? @bases
+            (base_list)? @bases
         ) @record
     """,
+
     "properties": """
         (property_declaration
             name: (identifier) @name
         ) @property
     """,
+
     "imports": """
         (using_directive) @import
     """,
+
     "calls": """
+        ;; Method calls
         (invocation_expression
-            function: [
-                (identifier) @name
-                (member_access_expression
-                    name: (identifier) @name
-                )
-            ]
+            (identifier) @name
         )
-        
+
+        (invocation_expression
+            (member_access_expression
+                name: (identifier) @name
+            )
+        )
+
+        ;; Object creation expressions
         (object_creation_expression
-            type: [
-                (identifier) @name
-                (qualified_name) @name
-            ]
+            (identifier) @name
+        )
+
+        (object_creation_expression
+            (qualified_name) @name
         )
     """,
 }
+
 
 class CSharpTreeSitterParser:
     def __init__(self, generic_parser_wrapper: Any):

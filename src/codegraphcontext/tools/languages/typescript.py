@@ -4,86 +4,110 @@ from codegraphcontext.utils.debug_log import debug_log, info_logger, error_logge
 
 TS_QUERIES = {
     "functions": """
+        ;; Top-level function declarations
         (function_declaration
             name: (identifier) @name
             parameters: (formal_parameters) @params
         ) @function_node
 
+        ;; Function expressions assigned to variables
         (variable_declarator
             name: (identifier) @name
-            value: (function
+            value: (function_expression
                 parameters: (formal_parameters) @params
-            ) @function_node
-        )
+            )
+        ) @function_node
 
+        ;; Arrow functions assigned to variables
         (variable_declarator
             name: (identifier) @name
             value: (arrow_function
                 parameters: (formal_parameters) @params
-            ) @function_node
-        )
+            )
+        ) @function_node
 
-        (variable_declarator
-            name: (identifier) @name
-            value: (arrow_function
-                parameter: (identifier) @single_param
-            ) @function_node
-        )
-
+        ;; Method definitions inside classes or objects
         (method_definition
             name: (property_identifier) @name
             parameters: (formal_parameters) @params
         ) @function_node
 
+        ;; Assignment of function expressions to object properties
         (assignment_expression
             left: (member_expression
                 property: (property_identifier) @name
             )
-            right: (function
+            right: (function_expression
                 parameters: (formal_parameters) @params
-            ) @function_node
-        )
+            )
+        ) @function_node
 
+        ;; Assignment of arrow functions to object properties
         (assignment_expression
             left: (member_expression
                 property: (property_identifier) @name
             )
             right: (arrow_function
                 parameters: (formal_parameters) @params
-            ) @function_node
-        )
+            )
+        ) @function_node
     """,
+
     "classes": """
+        ;; Only class declarations are valid
         (class_declaration) @class
-        (class) @class
     """,
+
     "interfaces": """
+        ;; TypeScript interfaces
         (interface_declaration
             name: (type_identifier) @name
         ) @interface_node
     """,
+
     "type_aliases": """
+        ;; TypeScript type aliases
         (type_alias_declaration
             name: (type_identifier) @name
         ) @type_alias_node
     """,
+
     "imports": """
+        ;; ES6 import statements
         (import_statement) @import
+
+        ;; CommonJS require calls
         (call_expression
             function: (identifier) @require_call (#eq? @require_call "require")
         ) @import
     """,
+
     "calls": """
-        (call_expression function: (identifier) @name)
-        (call_expression function: (member_expression property: (property_identifier) @name))
+        ;; Function calls
+        (call_expression
+            function: (identifier) @name
+        )
+        ;; Method calls on objects
+        (call_expression
+            function: (member_expression
+                property: (property_identifier) @name
+            )
+        )
     """,
+
     "variables": """
-        (variable_declarator name: (identifier) @name)
+        ;; Variable declarations
+        (variable_declarator
+            name: (identifier) @name
+        )
     """,
+
     "docstrings": """
+        ;; Comments treated as docstrings
         (comment) @docstring_comment
     """,
 }
+
 
 def is_typescript_file(file_path: Path) -> bool:
     return file_path.suffix in {".ts", ".tsx"}
