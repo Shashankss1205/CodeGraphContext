@@ -7,7 +7,7 @@ import time
 from rich.console import Console
 from rich.table import Table
 
-from ..core.database import DatabaseManager
+from ..core import get_database_manager
 from ..core.jobs import JobManager
 from ..tools.code_finder import CodeFinder
 from ..tools.graph_builder import GraphBuilder
@@ -19,7 +19,12 @@ console = Console()
 def _initialize_services():
     """Initializes and returns core service managers."""
     console.print("[dim]Initializing services and database connection...[/dim]")
-    db_manager = DatabaseManager()
+    try:
+        db_manager = get_database_manager()
+    except ValueError as e:
+        console.print(f"[bold red]Database Configuration Error:[/bold red] {e}")
+        return None, None, None
+
     try:
         db_manager.get_driver()
     except ValueError as e:
@@ -188,14 +193,134 @@ def cypher_helper(query: str):
         db_manager.close_driver()
 
 
+import webbrowser
+
 def visualize_helper(query: str):
-    """Generates a URL to visualize a Cypher query."""
+    """Generates a visualization."""
+    services = _initialize_services()
+    if not all(services):
+        return
+
+    db_manager, _, _ = services
+    
+    # Check if FalkorDB
+    if "FalkorDB" in db_manager.__class__.__name__:
+        _visualize_falkordb(db_manager)
+    else:
+        try:
+            encoded_query = urllib.parse.quote(query)
+            visualization_url = f"http://localhost:7474/browser/?cmd=edit&arg={encoded_query}"
+            console.print("[green]Graph visualization URL:[/green]")
+            console.print(visualization_url)
+            console.print("Open the URL in your browser to see the graph.")
+        except Exception as e:
+            console.print(f"[bold red]An error occurred while generating URL:[/bold red] {e}")
+        finally:
+            db_manager.close_driver()
+
+def _visualize_falkordb(db_manager):
+    console.print("[dim]Generating FalkorDB visualization (showing up to 500 relationships)...[/dim]")
     try:
-        encoded_query = urllib.parse.quote(query)
-        visualization_url = f"http://localhost:7474/browser/?cmd=edit&arg={encoded_query}"
-        console.print("[green]Graph visualization URL:[/green]")
-        console.print(visualization_url)
-        console.print("Open the URL in your browser to see the graph.")
+        data_nodes = []
+        data_edges = []
+        
+        with db_manager.get_driver().session() as session:
+            # Fetch nodes and edges
+            q = "MATCH (n)-[r]->(m) RETURN n, r, m LIMIT 500"
+            result = session.run(q)
+            
+            seen_nodes = set()
+            
+            for record in result:
+                # record values are Node/Relationship objects from falkordb client
+                n = record['n']
+                r = record['r']
+                m = record['m']
+                
+                # Process Node helper
+                def process_node(node):
+                    nid = getattr(node, 'id', -1)
+                    labels = getattr(node, 'labels', [])
+                    lbl = list(labels)[0] if labels else "Node"
+                    props = getattr(node, 'properties', {})
+                    name = props.get('name', str(nid))
+                    
+                    if nid not in seen_nodes:
+                        seen_nodes.add(nid)
+                        color = "#97c2fc" # Default blue
+                        if "Repository" in labels: color = "#ffb3ba" # Red
+                        elif "File" in labels: color = "#baffc9" # Green
+                        elif "Class" in labels: color = "#bae1ff" # Light Blue
+                        elif "Function" in labels: color = "#ffffba" # Yellow
+                        elif "Package" in labels: color = "#ffdfba" # Orange
+                        
+                        data_nodes.append({
+                            "id": nid, 
+                            "label": name, 
+                            "group": lbl, 
+                            "title": str(props),
+                            "color": color
+                        })
+                    return nid
+
+                nid = process_node(n)
+                mid = process_node(m)
+                
+                # Check Edge
+                e_type = getattr(r, 'relation', '') or getattr(r, 'type', 'REL')
+                data_edges.append({
+                    "from": nid,
+                    "to": mid,
+                    "label": e_type,
+                    "arrows": "to"
+                })
+        
+        filename = "codegraph_viz.html"
+        html_content = f"""
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CodeGraphContext Visualization</title>
+  <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <style type="text/css">
+    #mynetwork {{
+      width: 100%;
+      height: 100vh;
+      border: 1px solid lightgray;
+    }}
+  </style>
+</head>
+<body>
+  <div id="mynetwork"></div>
+  <script type="text/javascript">
+    var nodes = new vis.DataSet({json.dumps(data_nodes)});
+    var edges = new vis.DataSet({json.dumps(data_edges)});
+    var container = document.getElementById('mynetwork');
+    var data = {{ nodes: nodes, edges: edges }};
+    var options = {{
+        nodes: {{ shape: 'dot', size: 16 }},
+        physics: {{ stabilization: false }},
+        layout: {{ improvedLayout: false }}
+    }};
+    var network = new vis.Network(container, data, options);
+  </script>
+</body>
+</html>
+"""
+        
+        out_path = Path(filename).resolve()
+        with open(out_path, "w") as f:
+            f.write(html_content)
+            
+        console.print(f"[green]Visualization generated at:[/green] {out_path}")
+        console.print("Opening in default browser...")
+        webbrowser.open(f"file://{out_path}")
+
     except Exception as e:
-        console.print(f"[bold red]An error occurred while generating URL:[/bold red] {e}")
+        console.print(f"[bold red]Visualization failed:[/bold red] {e}")
+        import traceback
+        traceback.print_exc()
+    finally:
+        db_manager.close_driver()
+
 

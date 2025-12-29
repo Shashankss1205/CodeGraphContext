@@ -29,7 +29,8 @@ dependencies = [
     "pytest",
     "nbformat",
     "nbconvert>=7.16.6",
-    "pathspec>=0.12.1"
+    "pathspec>=0.12.1",
+    "falkordblite>=0.1.0"
 ]
 
 [project.urls]

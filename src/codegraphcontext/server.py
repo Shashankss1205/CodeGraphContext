@@ -16,7 +16,7 @@ from dataclasses import asdict
 from typing import Any, Dict, Coroutine, Optional
 
 from .prompts import LLM_SYSTEM_PROMPT
-from .core.database import DatabaseManager
+from .core import get_database_manager
 from .core.jobs import JobManager, JobStatus
 from .core.watcher import CodeWatcher
 from .tools.graph_builder import GraphBuilder
@@ -32,7 +32,7 @@ class MCPServer:
     The main MCP Server class.
     
     This class orchestrates all the major components of the application, including:
-    - Database connection management (`DatabaseManager`)
+    - Database connection management (`DatabaseManager` or `FalkorDBManager`)
     - Background job tracking (`JobManager`)
     - File system watching for live updates (`CodeWatcher`)
     - Tool handlers for graph building, code searching, etc.
@@ -48,9 +48,9 @@ class MCPServer:
                   running loop or creates a new one.
         """
         try:
-            # Initialize the database manager and establish a connection early
-            # to fail fast if credentials are wrong.
-            self.db_manager = DatabaseManager()
+            # Initialize the database manager (Neo4j or FalkorDB Lite based on env var)
+            # to fail fast if credentials/configuration are wrong.
+            self.db_manager = get_database_manager()
             self.db_manager.get_driver() 
         except ValueError as e:
             raise ValueError(f"Database configuration error: {e}")

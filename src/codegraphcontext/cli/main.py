@@ -18,7 +18,7 @@ import logging
 import json
 import os
 from pathlib import Path
-from dotenv import load_dotenv, find_dotenv
+from dotenv import load_dotenv, find_dotenv, set_key
 from importlib.metadata import version as pkg_version, PackageNotFoundError
 
 from codegraphcontext.server import MCPServer
@@ -63,10 +63,17 @@ def get_version() -> str:
 @app.command()
 def setup():
     """
-    Runs the interactive setup wizard to configure the server and database connection.
-    This helps users set up a local Docker-based Neo4j instance or connect to a remote one.
+    Configure Neo4j Database Connection.
+    
+    Note: CodeGraphContext works out of the box with FalkorDB Lite (Default).
+    This setup is ONLY required if you want to use an external Neo4j database.
     """
-    run_setup_wizard()
+    console.print("\n[bold cyan]CodeGraphContext Setup[/bold cyan]")
+    console.print("CodeGraphContext works out of the box with FalkorDB. This setup is only required if you want to use Neo4j.\n")
+    if typer.confirm("Do you want to configure Neo4j now?", default=True):
+         run_setup_wizard()
+    else:
+         console.print("Setup cancelled. You can continue using FalkorDB Lite.")
 
 def _load_credentials():
     """
@@ -110,6 +117,33 @@ def _load_credentials():
             console.print("[yellow]No local mcp.json or .env file found. Credentials may not be set.[/yellow]")
     except Exception as e:
         console.print(f"[bold red]Error loading .env file:[/bold red] {e}")
+
+
+# Create a subcommand group for "default"
+default_app = typer.Typer(help="Manage default configurations")
+app.add_typer(default_app, name="default")
+
+@default_app.command("database")
+def set_default_database(db_type: str = typer.Argument(..., help="Backend type: 'falkordb' or 'neo4j'")):
+    """
+    Set the default database backend.
+    
+    This preference is stored in ~/.codegraphcontext/.env
+    """
+    db_type = db_type.lower()
+    if db_type not in ['falkordb', 'neo4j']:
+        console.print(f"[bold red]Invalid database type: {db_type}.[/bold red] Must be 'falkordb' or 'neo4j'")
+        raise typer.Exit(code=1)
+    
+    env_path = Path.home() / ".codegraphcontext" / ".env"
+    env_path.parent.mkdir(parents=True, exist_ok=True)
+    if not env_path.exists():
+        env_path.touch()
+        
+    set_key(env_path, "DEFAULT_DATABASE", db_type)
+    console.print(f"[green]✔ Default database set to {db_type}[/green]")
+
+
 
 
 @app.command()
@@ -239,6 +273,7 @@ def version_cmd():
 @app.callback(invoke_without_command=True)
 def main(
     ctx: typer.Context,
+    database: Optional[str] = typer.Option(None, "--database", "-d", help="Override default database backend (falkordb or neo4j)"),
     version_: bool = typer.Option(
         None,
         "--version",
@@ -251,6 +286,9 @@ def main(
     Main entry point for the cgc CLI application.
     If no subcommand is provided, it displays a welcome message with instructions.
     """
+    if database:
+        os.environ["CGC_RUNTIME_DB_TYPE"] = database
+
     if version_:
         console.print(f"CodeGraphContext [bold cyan]{get_version()}[/bold cyan]")
         raise typer.Exit()
@@ -262,3 +300,6 @@ def main(
         console.print("👉 Run [cyan]cgc help[/cyan] to see all available commands.\n")
         console.print("👉 Run [cyan]cgc --version[/cyan] to check the version.\n")
         console.print("👉 Running [green]codegraphcontext [white]works the same as using [green]cgc")
+
+if __name__ == "__main__":
+    app()

@@ -47,3 +47,10 @@ devfile.yaml
 javascript.py.bak
 src/codegraphcontext/cli/nl.py
 *.bak
+
+# temporary files
+*.temp
+*.tmp
+*.log
+tempor
+codegraph_viz.html
