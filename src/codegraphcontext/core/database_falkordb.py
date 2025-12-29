@@ -66,6 +66,9 @@ class FalkorDBManager:
             A FalkorDB graph instance that mimics Neo4j driver interface.
         """
         if self._driver is None:
+            if sys.version_info < (3, 12):
+                raise ValueError("FalkorDB Lite is not supported on Python < 3.12.")
+
             with self._lock:
                 if self._driver is None:
                     # CRITICAL FIX: Prevent ~/.local/bin/falkordb.so from shadowing falkordb package
@@ -212,6 +215,9 @@ class FalkorDBManager:
         Tests the FalkorDB Lite connection availability.
         """
         try:
+            if sys.version_info < (3, 12):
+                return False, "FalkorDB Lite is not supported on Python < 3.12. Please upgrade or use Neo4j."
+
             import falkordb
             return True, None
         except ImportError:

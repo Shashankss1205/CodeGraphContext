@@ -15,6 +15,9 @@ import importlib.util
 
 def _is_falkordb_available() -> bool:
     """Check if FalkorDB Lite is installed (without importing native modules)."""
+    import sys
+    if sys.version_info < (3, 12):
+        return False
     try:
         # Check for redislite/falkordb-client spec without loading it
         return importlib.util.find_spec("redislite") is not None
@@ -79,11 +82,23 @@ def get_database_manager() -> Union['DatabaseManager', 'FalkorDBManager']:
         info_logger("Using Neo4j Server (auto-detected)")
         return DatabaseManager()
 
-    raise ValueError(
-        "No database backend available.\n"
-        "Recommended: Install FalkorDB Lite ('pip install falkordblite')\n"
-        "Alternative: Run 'cgc setup' to configure Neo4j."
-    )
+    import sys
+    error_msg = "No database backend available.\n"
+    
+    if sys.version_info < (3, 12):
+        error_msg += (
+            "FalkorDB Lite is not supported on Python < 3.12.\n"
+            "You are running Python " + str(sys.version_info.major) + "." + str(sys.version_info.minor) + ".\n"
+            "Please upgrade to Python 3.12+ to use the embedded database,\n"
+            "OR run 'cgc setup' to configure an external Neo4j database."
+        )
+    else:
+        error_msg += (
+            "Recommended: Install FalkorDB Lite ('pip install falkordblite')\n"
+            "Alternative: Run 'cgc setup' to configure Neo4j."
+        )
+            
+    raise ValueError(error_msg)
 
 # For backward compatibility, export DatabaseManager
 from .database import DatabaseManager
