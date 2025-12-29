@@ -65,7 +65,16 @@ If you’re using CodeGraphContext in your project, feel free to open a PR and a
 - `inquirerpy>=0.3.4`
 - `python-dotenv>=1.0.0`
 - `tree-sitter>=0.25.2`
-- `tree_sitter_language_pack==0.13.0`
+- `tree-sitter-python`
+- `tree-sitter-javascript`
+- `tree-sitter-go`
+- `tree-sitter-typescript`
+- `tree-sitter-cpp`
+- `tree-sitter-c`
+- `tree-sitter-rust`
+- `tree-sitter-java`
+- `tree-sitter-ruby`
+- `tree-sitter-c-sharp`
 - `pyyaml>=6.0,<7`
 - `pytest>=7.4,<9`
 - `nbformat>=5.9,<6`
