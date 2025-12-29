@@ -25,9 +25,9 @@ dependencies = [
     "python-dotenv>=1.0.0",
     "tree-sitter>=0.25.2",
     "tree_sitter_language_pack==0.13.0",
-    "pyyaml",
-    "pytest",
-    "nbformat",
+    "pyyaml>=6.0,<7",
+    "pytest>=7.4,<9",
+    "nbformat>=5.9,<6",
     "nbconvert>=7.16.6",
     "pathspec>=0.12.1"
 ]
