@@ -12,7 +12,36 @@ from ..utils.debug_log import debug_log, info_logger, error_logger, warning_logg
 
 # New imports for tree-sitter
 from tree_sitter import Language, Parser
-from tree_sitter_language_pack import get_language
+
+import tree_sitter_python
+import tree_sitter_javascript
+import tree_sitter_go
+import tree_sitter_typescript
+import tree_sitter_cpp
+import tree_sitter_c
+import tree_sitter_rust
+import tree_sitter_java
+import tree_sitter_ruby
+import tree_sitter_c_sharp
+
+_LANGUAGE_MAP = {
+    "python": Language(tree_sitter_python.language()),
+    "javascript": Language(tree_sitter_javascript.language()),
+    "go": Language(tree_sitter_go.language()),
+    "typescript": Language(tree_sitter_typescript.language_typescript()),
+    "cpp": Language(tree_sitter_cpp.language()),
+    "c": Language(tree_sitter_c.language()),
+    "rust": Language(tree_sitter_rust.language()),
+    "java": Language(tree_sitter_java.language()),
+    "ruby": Language(tree_sitter_ruby.language()),
+    "c_sharp": Language(tree_sitter_c_sharp.language()),
+}
+
+def get_language(language_name: str) -> Language:
+    try:
+        return _LANGUAGE_MAP[language_name]
+    except KeyError:
+        raise ValueError(f"Unsupported tree-sitter language: {language_name}")
 
 class TreeSitterParser:
     """A generic parser wrapper for a specific language using tree-sitter."""
@@ -21,9 +50,10 @@ class TreeSitterParser:
         self.language_name = language_name
         self.language: Language = get_language(language_name)
         self.parser = Parser()
-        self.parser.set_language(self.language)
+        self.parser.language = self.language
 
         self.language_specific_parser = None
+        
         if self.language_name == 'python':
             from .languages.python import PythonTreeSitterParser
             self.language_specific_parser = PythonTreeSitterParser(self)
