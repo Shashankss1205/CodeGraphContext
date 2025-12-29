@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 from codegraphcontext.utils.debug_log import debug_log, info_logger, error_logger, warning_logger, debug_logger
+from codegraphcontext.utils.tree_sitter_manager import execute_query
 
 RUBY_QUERIES = {
     "functions": """
@@ -62,11 +63,6 @@ class RubyTreeSitterParser:
         self.language = generic_parser_wrapper.language
         self.parser = generic_parser_wrapper.parser
 
-        self.queries = {
-            name: self.language.query(query_str)
-            for name, query_str in RUBY_QUERIES.items()
-        }
-
     def _get_node_text(self, node: Any) -> str:
         return node.text.decode("utf-8")
     
@@ -76,9 +72,9 @@ class RubyTreeSitterParser:
     
     def _find_modules(self, root_node: Any) -> list[Dict[str, Any]]:
         modules = []
-        query = self.queries["modules"]
+        query_str = RUBY_QUERIES["modules"]
         # name via captures
-        captures = list(query.captures(root_node))
+        captures = list(execute_query(self.language, query_str, root_node))
         for node, cap in captures:
             if cap == "module_node":
                 name = None
@@ -101,8 +97,8 @@ class RubyTreeSitterParser:
 
     def _find_module_inclusions(self, root_node: Any) -> list[Dict[str, Any]]:
         includes = []
-        query = self.queries["module_includes"]
-        for node, cap in query.captures(root_node):
+        query_str = RUBY_QUERIES["module_includes"]
+        for node, cap in execute_query(self.language, query_str, root_node):
             if cap == "method":
                 method_name = self._get_node_text(node)
                 if method_name != "include":
@@ -110,7 +106,7 @@ class RubyTreeSitterParser:
             if cap == "include_call":
                 method = None
                 module = None
-                for n, c in query.captures(node):
+                for n, c in execute_query(self.language, query_str, node):
                     if c == "method":
                         method = self._get_node_text(n)
                     elif c == "module":
@@ -211,10 +207,10 @@ class RubyTreeSitterParser:
     def _find_functions(self, root_node: Any) -> list[Dict[str, Any]]:
         """Find all function/method definitions."""
         functions = []
-        query = self.queries["functions"]
+        query_str = RUBY_QUERIES["functions"]
         
         # Collect all captures first
-        all_captures = list(query.captures(root_node))
+        all_captures = list(execute_query(self.language, query_str, root_node))
         
         # Group captures by function node using a different approach
         captures_by_function = {}
@@ -269,10 +265,10 @@ class RubyTreeSitterParser:
     def _find_classes(self, root_node: Any) -> list[Dict[str, Any]]:
         """Find all class and module definitions."""
         classes = []
-        query = self.queries["classes"]
+        query_str = RUBY_QUERIES["classes"]
         
         # Collect all captures first
-        all_captures = list(query.captures(root_node))
+        all_captures = list(execute_query(self.language, query_str, root_node))
         
         # Group captures by class node using a different approach
         captures_by_class = {}
@@ -323,10 +319,10 @@ class RubyTreeSitterParser:
     def _find_imports(self, root_node: Any) -> list[Dict[str, Any]]:
         """Find all require/load statements."""
         imports = []
-        query = self.queries["imports"]
+        query_str = RUBY_QUERIES["imports"]
         
         # Collect all captures first
-        all_captures = list(query.captures(root_node))
+        all_captures = list(execute_query(self.language, query_str, root_node))
         
         # Group captures by import node using a different approach
         captures_by_import = {}
@@ -380,9 +376,9 @@ class RubyTreeSitterParser:
     def _find_calls(self, root_node: Any) -> list[Dict[str, Any]]:
         """Find all function and method calls."""
         calls = []
-        query = self.queries["calls"]
+        query_str = RUBY_QUERIES["calls"]
         
-        for node, capture_name in query.captures(root_node):
+        for node, capture_name in execute_query(self.language, query_str, root_node):
             if capture_name == 'name':
                 name = self._get_node_text(node)
                 full_name = name
@@ -404,11 +400,11 @@ class RubyTreeSitterParser:
     def _find_variables(self, root_node: Any) -> list[Dict[str, Any]]:
         """Find all variable assignments."""
         variables = []
-        query = self.queries["variables"]
+        query_str = RUBY_QUERIES["variables"]
         
         # Group captures by assignment node
         captures_by_assignment = {}
-        for node, capture_name in query.captures(root_node):
+        for node, capture_name in execute_query(self.language, query_str, root_node):
             if capture_name == 'name':
                 # Find the parent assignment node
                 current = node.parent
@@ -473,14 +469,14 @@ def pre_scan_ruby(files: list[Path], parser_wrapper) -> dict:
             name: (identifier) @name
         )
     """
-    query = parser_wrapper.language.query(query_str)
+    
 
     for file_path in files:
         try:
             with open(file_path, "r", encoding="utf-8") as f:
                 tree = parser_wrapper.parser.parse(bytes(f.read(), "utf8"))
 
-            for capture, _ in query.captures(tree.root_node):
+            for capture, _ in execute_query(parser_wrapper.language, query_str, tree.root_node):
                 name = capture.text.decode('utf-8')
                 if name not in imports_map:
                     imports_map[name] = []

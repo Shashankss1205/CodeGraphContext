@@ -2,6 +2,7 @@
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 from codegraphcontext.utils.debug_log import debug_log, info_logger, error_logger, warning_logger
+from codegraphcontext.utils.tree_sitter_manager import execute_query
 
 CPP_QUERIES = {
     "functions": """
@@ -100,11 +101,6 @@ class CppTreeSitterParser:
         self.language = generic_parser_wrapper.language
         self.parser = generic_parser_wrapper.parser
 
-        self.queries = {
-            name: self.language.query(query_str)
-            for name, query_str in CPP_QUERIES.items()
-        }
-
     def _get_node_text(self, node) -> str:
         return node.text.decode('utf-8')
 
@@ -145,8 +141,8 @@ class CppTreeSitterParser:
 
     def _find_functions(self, root_node):
         functions = []
-        query = self.queries['functions']
-        for match in query.captures(root_node):
+        query_str = CPP_QUERIES['functions']
+        for match in execute_query(self.language, query_str, root_node):
             capture_name = match[1]
             node = match[0]
             if capture_name == 'name':
@@ -163,8 +159,8 @@ class CppTreeSitterParser:
 
     def _find_classes(self, root_node):
         classes = []
-        query = self.queries['classes']
-        for match in query.captures(root_node):
+        query_str = CPP_QUERIES['classes']
+        for match in execute_query(self.language, query_str, root_node):
             capture_name = match[1]
             node = match[0]
             if capture_name == 'name':
@@ -181,8 +177,8 @@ class CppTreeSitterParser:
 
     def _find_imports(self, root_node):
         imports = []
-        query = self.queries['imports']
-        for match in query.captures(root_node):
+        query_str = CPP_QUERIES['imports']
+        for match in execute_query(self.language, query_str, root_node):
             capture_name = match[1]
             node = match[0]
             if capture_name == 'path':
@@ -197,8 +193,8 @@ class CppTreeSitterParser:
     
     def _find_enums(self, root_node):
         enums = []
-        query = self.queries['enums']
-        for node, capture_name in query.captures(root_node):
+        query_str = CPP_QUERIES['enums']
+        for node, capture_name in execute_query(self.language, query_str, root_node):
             if capture_name == 'name':
                 name = self._get_node_text(node)
                 enum_node = node.parent
@@ -212,8 +208,8 @@ class CppTreeSitterParser:
  
     def _find_structs(self, root_node):
         structs = []
-        query = self.queries['structs']
-        for node, capture_name in query.captures(root_node):
+        query_str = CPP_QUERIES['structs']
+        for node, capture_name in execute_query(self.language, query_str, root_node):
             if capture_name == 'name':
                 name = self._get_node_text(node)
                 struct_node = node.parent
@@ -227,8 +223,8 @@ class CppTreeSitterParser:
 
     def _find_unions(self, root_node):
         unions = []
-        query = self.queries['unions']
-        for node, capture_name in query.captures(root_node):
+        query_str = CPP_QUERIES['unions']
+        for node, capture_name in execute_query(self.language, query_str, root_node):
             if capture_name == 'name':
                 name = self._get_node_text(node)
                 union_node = node.parent
@@ -242,8 +238,8 @@ class CppTreeSitterParser:
 
     def _find_macros(self, root_node):
         macros = []
-        query = self.queries['macros']
-        for match in query.captures(root_node):
+        query_str = CPP_QUERIES['macros']
+        for match in execute_query(self.language, query_str, root_node):
             capture_name = match[1]
             node = match[0]
             if capture_name == 'name':
@@ -259,10 +255,10 @@ class CppTreeSitterParser:
     
     def _find_lambda_assignments(self, root_node):
         functions = []
-        query = self.queries.get('lambda_assignments')
-        if not query: return []
+        query_str = CPP_QUERIES.get('lambda_assignments')
+        if not query_str: return []
 
-        for match in query.captures(root_node):
+        for match in execute_query(self.language, query_str, root_node):
             capture_name = match[1]
             node = match[0]
 
@@ -302,8 +298,8 @@ class CppTreeSitterParser:
     
     def _find_variables(self, root_node):
         variables = []
-        query = self.queries['variables']
-        for match in query.captures(root_node):
+        query_str = CPP_QUERIES['variables']
+        for match in execute_query(self.language, query_str, root_node):
             capture_name = match[1]
             node = match[0]
 
@@ -348,8 +344,8 @@ class CppTreeSitterParser:
     
     def _find_calls(self, root_node):
         calls = []
-        query = self.queries['calls']
-        for node, capture_name in query.captures(root_node):
+        query_str = CPP_QUERIES['calls']
+        for node, capture_name in execute_query(self.language, query_str, root_node):
             if capture_name == "function_name":
                 func_name = self._get_node_text(node)
                 func_node = node.parent.parent  # function_declarator -> function_definition
@@ -357,7 +353,7 @@ class CppTreeSitterParser:
 
                 # Find return type node (captured separately)
                 return_type_node = None
-                for n, cap in query.captures(func_node):
+                for n, cap in execute_query(self.language, query_str, func_node):
                     if cap == "return_type":
                         return_type_node = n
                         break
@@ -438,7 +434,7 @@ def pre_scan_cpp(files: list[Path], parser_wrapper) -> dict:
         (struct_specifier name: (type_identifier) @name)
         (function_definition declarator: (function_declarator declarator: (identifier) @name))
     """
-    query = parser_wrapper.language.query(query_str)
+    
 
     for file_path in files:
         try:
@@ -446,7 +442,7 @@ def pre_scan_cpp(files: list[Path], parser_wrapper) -> dict:
                 source_bytes = f.read().encode("utf-8")
                 tree = parser_wrapper.parser.parse(source_bytes)
 
-            for node, capture_name in query.captures(tree.root_node):
+            for node, capture_name in execute_query(parser_wrapper.language, query_str, tree.root_node):
                 if capture_name == "name":
                     name = node.text.decode("utf-8")
                     imports_map.setdefault(name, []).append(str(file_path.resolve()))

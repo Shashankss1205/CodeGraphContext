@@ -10,18 +10,21 @@ from ..core.database import DatabaseManager
 from ..core.jobs import JobManager, JobStatus
 from ..utils.debug_log import debug_log, info_logger, error_logger, warning_logger
 
-# New imports for tree-sitter
+# New imports for tree-sitter (using tree-sitter-language-pack)
 from tree_sitter import Language, Parser
-from tree_sitter_languages import get_language
+from ..utils.tree_sitter_manager import get_tree_sitter_manager
 
 class TreeSitterParser:
     """A generic parser wrapper for a specific language using tree-sitter."""
 
     def __init__(self, language_name: str):
         self.language_name = language_name
-        self.language: Language = get_language(language_name)
-        self.parser = Parser()
-        self.parser.set_language(self.language)
+        self.ts_manager = get_tree_sitter_manager()
+        
+        # Get the language (cached) and create a new parser for this instance
+        self.language: Language = self.ts_manager.get_language_safe(language_name)
+        # In tree-sitter 0.25+, Parser takes language in constructor
+        self.parser = Parser(self.language)
 
         self.language_specific_parser = None
         if self.language_name == 'python':

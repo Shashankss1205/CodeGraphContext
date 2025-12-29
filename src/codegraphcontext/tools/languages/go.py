@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 from codegraphcontext.utils.debug_log import debug_log, info_logger, error_logger, warning_logger
+from codegraphcontext.utils.tree_sitter_manager import execute_query
 
 
 GO_QUERIES = {
@@ -78,11 +79,6 @@ class GoTreeSitterParser:
         self.language_name = generic_parser_wrapper.language_name
         self.language = generic_parser_wrapper.language
         self.parser = generic_parser_wrapper.parser
-
-        self.queries = {
-            name: self.language.query(query_str)
-            for name, query_str in GO_QUERIES.items()
-        }
 
     def _get_node_text(self, node) -> str:
         return node.text.decode('utf-8')
@@ -165,11 +161,11 @@ class GoTreeSitterParser:
 
     def _find_functions(self, root_node):
         functions = []
-        query = self.queries['functions']
+        query_str = GO_QUERIES['functions']
 
         captures_by_function = {}
 
-        for node, capture_name in query.captures(root_node):
+        for node, capture_name in execute_query(self.language, query_str, root_node):
             if capture_name == 'function_node':
                 func_id = id(node)
                 if func_id not in captures_by_function:
@@ -295,8 +291,8 @@ class GoTreeSitterParser:
 
     def _find_structs(self, root_node):
         structs = []
-        struct_query = self.queries['structs']
-        for node, capture_name in struct_query.captures(root_node):
+        struct_query_str = GO_QUERIES['structs']
+        for node, capture_name in execute_query(self.language, struct_query_str, root_node):
             if capture_name == 'name':
                 struct_node = self._find_type_declaration_for_name(node)
                 if struct_node:
@@ -318,8 +314,8 @@ class GoTreeSitterParser:
 
     def _find_interfaces(self, root_node):
         interfaces = []
-        interface_query = self.queries['interfaces']
-        for node, capture_name in interface_query.captures(root_node):
+        interface_query_str = GO_QUERIES['interfaces']
+        for node, capture_name in execute_query(self.language, interface_query_str, root_node):
             if capture_name == 'name':
                 interface_node = self._find_type_declaration_for_name(node)
                 if interface_node:
@@ -349,9 +345,9 @@ class GoTreeSitterParser:
 
     def _find_imports(self, root_node):
         imports = []
-        query = self.queries['imports']
+        query_str = GO_QUERIES['imports']
         
-        for node, capture_name in query.captures(root_node):
+        for node, capture_name in execute_query(self.language, query_str, root_node):
             line_number = node.start_point[0] + 1
             
             if capture_name == 'path':
@@ -377,9 +373,9 @@ class GoTreeSitterParser:
 
     def _find_calls(self, root_node):
         calls = []
-        query = self.queries['calls']
+        query_str = GO_QUERIES['calls']
         
-        for node, capture_name in query.captures(root_node):
+        for node, capture_name in execute_query(self.language, query_str, root_node):
             if capture_name == 'name':
                 call_node = node.parent
                 while call_node and call_node.type != 'call_expression':
@@ -405,9 +401,9 @@ class GoTreeSitterParser:
 
     def _find_variables(self, root_node):
         variables = []
-        query = self.queries['variables']
+        query_str = GO_QUERIES['variables']
         
-        for node, capture_name in query.captures(root_node):
+        for node, capture_name in execute_query(self.language, query_str, root_node):
             if capture_name == 'name':
                 name = self._get_node_text(node)
                 
@@ -433,14 +429,14 @@ def pre_scan_go(files: list[Path], parser_wrapper) -> dict:
         (method_declaration name: (field_identifier) @name)
         (type_declaration (type_spec name: (type_identifier) @name))
     """
-    query = parser_wrapper.language.query(query_str)
+    
 
     for file_path in files:
         try:
             with open(file_path, "r", encoding="utf-8") as f:
                 tree = parser_wrapper.parser.parse(bytes(f.read(), "utf8"))
 
-            for capture, _ in query.captures(tree.root_node):
+            for capture, _ in execute_query(parser_wrapper.language, query_str, tree.root_node):
                 name = capture.text.decode('utf-8')
                 if name not in imports_map:
                     imports_map[name] = []

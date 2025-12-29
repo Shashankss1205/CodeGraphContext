@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 import re
 from codegraphcontext.utils.debug_log import debug_log, info_logger, error_logger, warning_logger
+from codegraphcontext.utils.tree_sitter_manager import execute_query
 
 # --- Helpers to classify JS methods ---
 _GETTER_RE = re.compile(r"^\s*(?:static\s+)?get\b")
@@ -43,7 +44,7 @@ JS_QUERIES = {
         
         (variable_declarator 
             name: (identifier) @name 
-            value: (function 
+            value: (function_expression 
                 parameters: (formal_parameters) @params
             ) @function_node
         )
@@ -71,7 +72,7 @@ JS_QUERIES = {
             left: (member_expression 
                 property: (property_identifier) @name
             )
-            right: (function
+            right: (function_expression
                 parameters: (formal_parameters) @params
             ) @function_node
         )
@@ -116,11 +117,6 @@ class JavascriptTreeSitterParser:
         self.language_name = generic_parser_wrapper.language_name
         self.language = generic_parser_wrapper.language
         self.parser = generic_parser_wrapper.parser
-
-        self.queries = {
-            name: self.language.query(query_str)
-            for name, query_str in JS_QUERIES.items()
-        }
 
     def _get_node_text(self, node) -> str:
         return node.text.decode('utf-8')
@@ -186,7 +182,7 @@ class JavascriptTreeSitterParser:
 
     def _find_functions(self, root_node):
         functions = []
-        query = self.queries['functions']
+        query_str = JS_QUERIES['functions']
 
     # Local helpers so we don't depend on class attrs being present
         def _fn_for_name(name_node):
@@ -220,7 +216,7 @@ class JavascriptTreeSitterParser:
                 'node': node, 'name': None, 'params': None, 'single_param': None
             })
 
-        for node, capture_name in query.captures(root_node):
+        for node, capture_name in execute_query(self.language, query_str, root_node):
             if capture_name == 'function_node':
                 _bucket_for(node)
             elif capture_name == 'name':
@@ -356,8 +352,8 @@ class JavascriptTreeSitterParser:
 
     def _find_classes(self, root_node):
         classes = []
-        query = self.queries['classes']
-        for class_node, capture_name in query.captures(root_node):
+        query_str = JS_QUERIES['classes']
+        for class_node, capture_name in execute_query(self.language, query_str, root_node):
             if capture_name == 'class':
                 name_node = class_node.child_by_field_name('name')
                 if not name_node: continue
@@ -392,8 +388,8 @@ class JavascriptTreeSitterParser:
 
     def _find_imports(self, root_node):
         imports = []
-        query = self.queries['imports']
-        for node, capture_name in query.captures(root_node):
+        query_str = JS_QUERIES['imports']
+        for node, capture_name in execute_query(self.language, query_str, root_node):
             if capture_name != 'import':
                 continue
 
@@ -455,8 +451,8 @@ class JavascriptTreeSitterParser:
 
     def _find_calls(self, root_node):
         calls = []
-        query = self.queries['calls']
-        for node, capture_name in query.captures(root_node):
+        query_str = JS_QUERIES['calls']
+        for node, capture_name in execute_query(self.language, query_str, root_node):
             # Placeholder for JS call extraction logic
             if capture_name == 'name':
                 call_node = node.parent
@@ -482,8 +478,8 @@ class JavascriptTreeSitterParser:
 
     def _find_variables(self, root_node):
         variables = []
-        query = self.queries['variables']
-        for match in query.captures(root_node):
+        query_str = JS_QUERIES['variables']
+        for match in execute_query(self.language, query_str, root_node):
             capture_name = match[1]
             node = match[0]
 
@@ -538,14 +534,14 @@ def pre_scan_javascript(files: list[Path], parser_wrapper) -> dict:
     query_str = """
         (class_declaration name: (identifier) @name)
         (function_declaration name: (identifier) @name)
-        (variable_declarator name: (identifier) @name value: (function))
+        (variable_declarator name: (identifier) @name value: (function_expression))
         (variable_declarator name: (identifier) @name value: (arrow_function))
         (method_definition name: (property_identifier) @name)
         (assignment_expression
             left: (member_expression 
                 property: (property_identifier) @name
             )
-            right: (function)
+            value: (function_expression)
         )
         (assignment_expression
             left: (member_expression 
@@ -554,14 +550,14 @@ def pre_scan_javascript(files: list[Path], parser_wrapper) -> dict:
             right: (arrow_function)
         )
     """
-    query = parser_wrapper.language.query(query_str)
+    
 
     for file_path in files:
         try:
             with open(file_path, "r", encoding="utf-8") as f:
                 tree = parser_wrapper.parser.parse(bytes(f.read(), "utf8"))
 
-            for capture, _ in query.captures(tree.root_node):
+            for capture, _ in execute_query(parser_wrapper.language, query_str, tree.root_node):
                 name = capture.text.decode('utf-8')
                 if name not in imports_map:
                     imports_map[name] = []

@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 import re
 from codegraphcontext.utils.debug_log import debug_log, info_logger, error_logger, warning_logger
+from codegraphcontext.utils.tree_sitter_manager import execute_query
 
 CSHARP_QUERIES = {
     "functions": """
@@ -83,11 +84,6 @@ class CSharpTreeSitterParser:
         self.language = generic_parser_wrapper.language
         self.parser = generic_parser_wrapper.parser
 
-        self.queries = {
-            name: self.language.query(query_str)
-            for name, query_str in CSHARP_QUERIES.items()
-        }
-
     def parse(self, file_path: Path, is_dependency: bool = False) -> Dict[str, Any]:
         try:
             with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
@@ -123,8 +119,8 @@ class CSharpTreeSitterParser:
             parsed_imports = []
             parsed_calls = []
 
-            for capture_name, query in self.queries.items():
-                captures = query.captures(tree.root_node)
+            for capture_name, query_str in CSHARP_QUERIES.items():
+                captures = execute_query(self.language, query_str, tree.root_node)
 
                 if capture_name == "functions":
                     parsed_functions = self._parse_functions(captures, source_code, file_path, tree.root_node)

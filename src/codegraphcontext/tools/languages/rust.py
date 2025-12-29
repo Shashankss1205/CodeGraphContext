@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 import re
 from codegraphcontext.utils.debug_log import debug_log, info_logger, error_logger, warning_logger, debug_logger
+from codegraphcontext.utils.tree_sitter_manager import execute_query
 
 RUST_QUERIES = {
     "functions": """
@@ -42,11 +43,6 @@ class RustTreeSitterParser:
         self.language_name = "rust"
         self.language = generic_parser_wrapper.language
         self.parser = generic_parser_wrapper.parser
-
-        self.queries = {
-            name: self.language.query(query_str)
-            for name, query_str in RUST_QUERIES.items()
-        }
 
     def _get_node_text(self, node: Any) -> str:
         return node.text.decode("utf-8")
@@ -98,9 +94,10 @@ class RustTreeSitterParser:
 
     def _find_functions(self, root_node: Any) -> list[Dict[str, Any]]:
         functions = []
-        query = self.queries["functions"]
-        for match in query.matches(root_node):
-            captures = {name: node for node, name in match.captures}
+        query_str = RUST_QUERIES["functions"]
+        captures_list = execute_query(self.language, query_str, root_node)
+        captures = {name: node for node, name in captures_list}
+        if captures:
 
             func_node = captures.get("function_node")
             name_node = captures.get("name")
@@ -123,9 +120,10 @@ class RustTreeSitterParser:
 
     def _find_structs(self, root_node: Any) -> list[Dict[str, Any]]:
         structs = []
-        query = self.queries["classes"]
-        for match in query.matches(root_node):
-            captures = {name: node for node, name in match.captures}
+        query_str = RUST_QUERIES["classes"]
+        captures_list = execute_query(self.language, query_str, root_node)
+        captures = {name: node for node, name in captures_list}
+        if captures:
             class_node = captures.get("class")
             name_node = captures.get("name")
 
@@ -144,9 +142,10 @@ class RustTreeSitterParser:
 
     def _find_traits(self, root_node: Any) -> list[Dict[str, Any]]:
         traits = []
-        query = self.queries["traits"]
-        for match in query.matches(root_node):
-            captures = {name: node for node, name in match.captures}
+        query_str = RUST_QUERIES["traits"]
+        captures_list = execute_query(self.language, query_str, root_node)
+        captures = {name: node for node, name in captures_list}
+        if captures:
             trait_node = captures.get("trait_node")
             name_node = captures.get("name")
             if trait_node and name_node:
@@ -163,8 +162,8 @@ class RustTreeSitterParser:
 
     def _find_imports(self, root_node: Any) -> list[Dict[str, Any]]:
         imports = []
-        query = self.queries["imports"]
-        for node, _ in query.captures(root_node):
+        query_str = RUST_QUERIES["imports"]
+        for node, _ in execute_query(self.language, query_str, root_node):
             full_import_name = self._get_node_text(node)
             alias = None
 
@@ -194,8 +193,8 @@ class RustTreeSitterParser:
     def _find_calls(self, root_node: Any) -> list[Dict[str, Any]]:
         """Finds all function and method calls."""
         calls = []
-        query = self.queries["calls"]
-        for node, capture_name in query.captures(root_node):
+        query_str = RUST_QUERIES["calls"]
+        for node, capture_name in execute_query(self.language, query_str, root_node):
             if capture_name == "name":
                 call_name = self._get_node_text(node)
                 calls.append(
@@ -215,14 +214,14 @@ def pre_scan_rust(files: list[Path], parser_wrapper) -> dict:
         (enum_item name: (type_identifier) @name)
         (trait_item name: (type_identifier) @name)
     """
-    query = parser_wrapper.language.query(query_str)
+    
 
     for file_path in files:
         try:
             with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
                 tree = parser_wrapper.parser.parse(bytes(f.read(), "utf8"))
 
-            for capture, _ in query.captures(tree.root_node):
+            for capture, _ in execute_query(parser_wrapper.language, query_str, tree.root_node):
                 name = capture.text.decode('utf-8')
                 if name not in imports_map:
                     imports_map[name] = []
