@@ -202,6 +202,7 @@ def visualize(query: Optional[str] = typer.Argument(None, help="The Cypher query
     """
     if query is None:
         query = "MATCH p=()-->() RETURN p"
+    _load_credentials()
     visualize_helper(query)
 
 @app.command(name="list-repos")
