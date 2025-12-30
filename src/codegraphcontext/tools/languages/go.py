@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 from codegraphcontext.utils.debug_log import debug_log, info_logger, error_logger, warning_logger
+from codegraphcontext.utils.tree_sitter_manager import execute_query
 
 
 GO_QUERIES = {
@@ -78,11 +79,6 @@ class GoTreeSitterParser:
         self.language_name = generic_parser_wrapper.language_name
         self.language = generic_parser_wrapper.language
         self.parser = generic_parser_wrapper.parser
-
-        self.queries = {
-            name: self.language.query(query_str)
-            for name, query_str in GO_QUERIES.items()
-        }
 
     def _get_node_text(self, node) -> str:
         return node.text.decode('utf-8')
@@ -165,13 +161,13 @@ class GoTreeSitterParser:
 
     def _find_functions(self, root_node):
         functions = []
-        query = self.queries['functions']
+        query_str = GO_QUERIES['functions']
 
         captures_by_function = {}
 
-        for node, capture_name in query.captures(root_node):
+        for node, capture_name in execute_query(self.language, query_str, root_node):
             if capture_name == 'function_node':
-                func_id = id(node)
+                func_id = node.id
                 if func_id not in captures_by_function:
                     captures_by_function[func_id] = {
                         'node': node,
@@ -182,7 +178,7 @@ class GoTreeSitterParser:
             elif capture_name == 'name':
                 func_node = self._find_function_node_for_name(node)
                 if func_node:
-                    func_id = id(func_node)
+                    func_id = func_node.id
                     if func_id not in captures_by_function:
                         captures_by_function[func_id] = {
                             'node': func_node,
@@ -194,7 +190,7 @@ class GoTreeSitterParser:
             elif capture_name == 'params':
                 func_node = self._find_function_node_for_params(node)
                 if func_node:
-                    func_id = id(func_node)
+                    func_id = func_node.id
                     if func_id not in captures_by_function:
                         captures_by_function[func_id] = {
                             'node': func_node,
@@ -206,7 +202,7 @@ class GoTreeSitterParser:
             elif capture_name == 'receiver':
                 func_node = node.parent
                 if func_node and func_node.type == 'method_declaration':
-                    func_id = id(func_node)
+                    func_id = func_node.id
                     if func_id not in captures_by_function:
                         captures_by_function[func_id] = {
                             'node': func_node,
@@ -275,9 +271,13 @@ class GoTreeSitterParser:
         if params_node.type == 'parameter_list':
             for child in params_node.children:
                 if child.type == 'parameter_declaration':
-                    name_node = child.child_by_field_name('name')
-                    if name_node:
-                        params.append(self._get_node_text(name_node))
+                    # Handle multiple names for same type: func(x, y int)
+                    # We iterate children and find all identifiers that are not the type node.
+                    type_node = child.child_by_field_name('type')
+                    for grandchild in child.children:
+                        if grandchild.type == 'identifier':
+                            if grandchild.id != (type_node.id if type_node else None):
+                                params.append(self._get_node_text(grandchild))
                 elif child.type == 'variadic_parameter_declaration':
                     name_node = child.child_by_field_name('name')
                     if name_node:
@@ -295,8 +295,8 @@ class GoTreeSitterParser:
 
     def _find_structs(self, root_node):
         structs = []
-        struct_query = self.queries['structs']
-        for node, capture_name in struct_query.captures(root_node):
+        struct_query_str = GO_QUERIES['structs']
+        for node, capture_name in execute_query(self.language, struct_query_str, root_node):
             if capture_name == 'name':
                 struct_node = self._find_type_declaration_for_name(node)
                 if struct_node:
@@ -318,8 +318,8 @@ class GoTreeSitterParser:
 
     def _find_interfaces(self, root_node):
         interfaces = []
-        interface_query = self.queries['interfaces']
-        for node, capture_name in interface_query.captures(root_node):
+        interface_query_str = GO_QUERIES['interfaces']
+        for node, capture_name in execute_query(self.language, interface_query_str, root_node):
             if capture_name == 'name':
                 interface_node = self._find_type_declaration_for_name(node)
                 if interface_node:
@@ -349,9 +349,9 @@ class GoTreeSitterParser:
 
     def _find_imports(self, root_node):
         imports = []
-        query = self.queries['imports']
+        query_str = GO_QUERIES['imports']
         
-        for node, capture_name in query.captures(root_node):
+        for node, capture_name in execute_query(self.language, query_str, root_node):
             line_number = node.start_point[0] + 1
             
             if capture_name == 'path':
@@ -377,9 +377,11 @@ class GoTreeSitterParser:
 
     def _find_calls(self, root_node):
         calls = []
-        query = self.queries['calls']
+        query_str = GO_QUERIES['calls']
         
-        for node, capture_name in query.captures(root_node):
+        seen_calls = set()
+
+        for node, capture_name in execute_query(self.language, query_str, root_node):
             if capture_name == 'name':
                 call_node = node.parent
                 while call_node and call_node.type != 'call_expression':
@@ -387,15 +389,31 @@ class GoTreeSitterParser:
                 
                 if call_node:
                     name = self._get_node_text(node)
+                    line_number = node.start_point[0] + 1
+                    
+                    call_key = f"{name}_{line_number}"
+                    if call_key in seen_calls:
+                        continue
+                    seen_calls.add(call_key)
+                    
+                    full_name = self._get_node_text(call_node.child_by_field_name('function')) if call_node.child_by_field_name('function') else name
+                    
+                    # Resolve context
+                    context_name, context_type, context_line = self._get_parent_context(node)
+                    
+                    # In Go, methods are defined on types (structs/interfaces). If we are in a method, the context is the method name.
+                    # Ideally we might want the receiver type as "class_context", but this requires more complex AST traversal up to the method declaration's receiver.
+                    # For now, we reuse the context resolution logic.
+                    class_context = None 
                     
                     call_data = {
                         "name": name,
-                        "full_name": self._get_node_text(call_node.child_by_field_name('function')) if call_node.child_by_field_name('function') else name,
-                        "line_number": node.start_point[0] + 1,
+                        "full_name": full_name,
+                        "line_number": line_number,
                         "args": [],
                         "inferred_obj_type": None,
-                        "context": None,
-                        "class_context": None,
+                        "context": (context_name, context_type, context_line),
+                        "class_context": class_context,
                         "lang": self.language_name,
                         "is_dependency": False,
                     }
@@ -405,9 +423,9 @@ class GoTreeSitterParser:
 
     def _find_variables(self, root_node):
         variables = []
-        query = self.queries['variables']
+        query_str = GO_QUERIES['variables']
         
-        for node, capture_name in query.captures(root_node):
+        for node, capture_name in execute_query(self.language, query_str, root_node):
             if capture_name == 'name':
                 name = self._get_node_text(node)
                 
@@ -433,14 +451,14 @@ def pre_scan_go(files: list[Path], parser_wrapper) -> dict:
         (method_declaration name: (field_identifier) @name)
         (type_declaration (type_spec name: (type_identifier) @name))
     """
-    query = parser_wrapper.language.query(query_str)
+    
 
     for file_path in files:
         try:
             with open(file_path, "r", encoding="utf-8") as f:
                 tree = parser_wrapper.parser.parse(bytes(f.read(), "utf8"))
 
-            for capture, _ in query.captures(tree.root_node):
+            for capture, _ in execute_query(parser_wrapper.language, query_str, tree.root_node):
                 name = capture.text.decode('utf-8')
                 if name not in imports_map:
                     imports_map[name] = []

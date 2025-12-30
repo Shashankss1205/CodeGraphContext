@@ -10,18 +10,21 @@ from ..core.database import DatabaseManager
 from ..core.jobs import JobManager, JobStatus
 from ..utils.debug_log import debug_log, info_logger, error_logger, warning_logger
 
-# New imports for tree-sitter
+# New imports for tree-sitter (using tree-sitter-language-pack)
 from tree_sitter import Language, Parser
-from tree_sitter_languages import get_language
+from ..utils.tree_sitter_manager import get_tree_sitter_manager
 
 class TreeSitterParser:
     """A generic parser wrapper for a specific language using tree-sitter."""
 
     def __init__(self, language_name: str):
         self.language_name = language_name
-        self.language: Language = get_language(language_name)
-        self.parser = Parser()
-        self.parser.set_language(self.language)
+        self.ts_manager = get_tree_sitter_manager()
+        
+        # Get the language (cached) and create a new parser for this instance
+        self.language: Language = self.ts_manager.get_language_safe(language_name)
+        # In tree-sitter 0.25+, Parser takes language in constructor
+        self.parser = Parser(self.language)
 
         self.language_specific_parser = None
         if self.language_name == 'python':
@@ -54,6 +57,9 @@ class TreeSitterParser:
         elif self.language_name == 'c_sharp':
             from .languages.csharp import CSharpTreeSitterParser
             self.language_specific_parser = CSharpTreeSitterParser(self)
+        elif self.language_name == 'php':
+            from .languages.php import PhpTreeSitterParser
+            self.language_specific_parser = PhpTreeSitterParser(self)
 
 
     def parse(self, file_path: Path, is_dependency: bool = False, **kwargs) -> Dict:
@@ -89,7 +95,10 @@ class GraphBuilder:
             # '.h': TreeSitterParser('c'), # Need to write an algo for distinguishing C vs C++ headers
             '.java': TreeSitterParser('java'),
             '.rb': TreeSitterParser('ruby'),
-            '.cs': TreeSitterParser('c_sharp')
+            '.java': TreeSitterParser('java'),
+            '.rb': TreeSitterParser('ruby'),
+            '.cs': TreeSitterParser('c_sharp'),
+            '.php': TreeSitterParser('php')
         }
         self.create_schema()
 
@@ -147,43 +156,43 @@ class GraphBuilder:
         if '.py' in files_by_lang:
             from .languages import python as python_lang_module
             imports_map.update(python_lang_module.pre_scan_python(files_by_lang['.py'], self.parsers['.py']))
-        elif '.ipynb' in files_by_lang:
+        if '.ipynb' in files_by_lang:
             from .languages import python as python_lang_module
             imports_map.update(python_lang_module.pre_scan_python(files_by_lang['.ipynb'], self.parsers['.ipynb']))
-        elif '.js' in files_by_lang:
+        if '.js' in files_by_lang:
             from .languages import javascript as js_lang_module
             imports_map.update(js_lang_module.pre_scan_javascript(files_by_lang['.js'], self.parsers['.js']))
-        elif '.jsx' in files_by_lang:
+        if '.jsx' in files_by_lang:
             from .languages import javascript as js_lang_module
             imports_map.update(js_lang_module.pre_scan_javascript(files_by_lang['.jsx'], self.parsers['.jsx']))
-        elif '.mjs' in files_by_lang:
+        if '.mjs' in files_by_lang:
             from .languages import javascript as js_lang_module
             imports_map.update(js_lang_module.pre_scan_javascript(files_by_lang['.mjs'], self.parsers['.mjs']))
-        elif '.cjs' in files_by_lang:
+        if '.cjs' in files_by_lang:
             from .languages import javascript as js_lang_module
             imports_map.update(js_lang_module.pre_scan_javascript(files_by_lang['.cjs'], self.parsers['.cjs']))
-        elif '.go' in files_by_lang:
+        if '.go' in files_by_lang:
              from .languages import go as go_lang_module
              imports_map.update(go_lang_module.pre_scan_go(files_by_lang['.go'], self.parsers['.go']))
-        elif '.ts' in files_by_lang:
+        if '.ts' in files_by_lang:
             from .languages import typescript as ts_lang_module
             imports_map.update(ts_lang_module.pre_scan_typescript(files_by_lang['.ts'], self.parsers['.ts']))
-        elif '.tsx' in files_by_lang:
+        if '.tsx' in files_by_lang:
             from .languages import typescript as ts_lang_module
             imports_map.update(ts_lang_module.pre_scan_typescript(files_by_lang['.tsx'], self.parsers['.tsx']))
-        elif '.cpp' in files_by_lang:
+        if '.cpp' in files_by_lang:
             from .languages import cpp as cpp_lang_module
             imports_map.update(cpp_lang_module.pre_scan_cpp(files_by_lang['.cpp'], self.parsers['.cpp']))
-        elif '.h' in files_by_lang:
+        if '.h' in files_by_lang:
             from .languages import cpp as cpp_lang_module
             imports_map.update(cpp_lang_module.pre_scan_cpp(files_by_lang['.h'], self.parsers['.h']))
-        elif '.hpp' in files_by_lang:
+        if '.hpp' in files_by_lang:
             from .languages import cpp as cpp_lang_module
             imports_map.update(cpp_lang_module.pre_scan_cpp(files_by_lang['.hpp'], self.parsers['.hpp']))
-        elif '.rs' in files_by_lang:
+        if '.rs' in files_by_lang:
             from .languages import rust as rust_lang_module
             imports_map.update(rust_lang_module.pre_scan_rust(files_by_lang['.rs'], self.parsers['.rs']))
-        elif '.c' in files_by_lang:
+        if '.c' in files_by_lang:
             from .languages import c as c_lang_module
             imports_map.update(c_lang_module.pre_scan_c(files_by_lang['.c'], self.parsers['.c']))
         elif '.java' in files_by_lang:
@@ -385,7 +394,8 @@ class GraphBuilder:
     def _create_function_calls(self, session, file_data: Dict, imports_map: dict):
         """Create CALLS relationships with a unified, prioritized logic flow for all call types."""
         caller_file_path = str(Path(file_data['file_path']).resolve())
-        local_function_names = {func['name'] for func in file_data.get('functions', [])}
+        local_names = {f['name'] for f in file_data.get('functions', [])} | \
+                      {c['name'] for c in file_data.get('classes', [])}
         local_imports = {imp.get('alias') or imp['name'].split('.')[-1]: imp['name'] 
                         for imp in file_data.get('imports', [])}
         
@@ -394,40 +404,87 @@ class GraphBuilder:
             if called_name in __builtins__: continue
 
             resolved_path = None
+            full_call = call.get('full_name', called_name)
+            base_obj = full_call.split('.')[0] if '.' in full_call else None
+            lookup_name = base_obj if base_obj else called_name
+
+            # 1. Check for local context keywords/direct local names
+            if base_obj in ('self', 'this', 'super', 'super()', 'cls', '@'):
+                resolved_path = caller_file_path
+            elif lookup_name in local_names:
+                resolved_path = caller_file_path
             
-            if call.get('inferred_obj_type'):
+            # 2. Check inferred type if available
+            elif call.get('inferred_obj_type'):
                 obj_type = call['inferred_obj_type']
                 possible_paths = imports_map.get(obj_type, [])
                 if len(possible_paths) > 0:
                     resolved_path = possible_paths[0]
             
-            else:
-                lookup_name = call['full_name'].split('.')[0] if '.' in call['full_name'] else called_name
+            # 3. Check imports map with validation against local imports
+            if not resolved_path:
                 possible_paths = imports_map.get(lookup_name, [])
-
-                if lookup_name in local_function_names:
-                    resolved_path = caller_file_path
-                elif len(possible_paths) == 1:
+                if len(possible_paths) == 1:
                     resolved_path = possible_paths[0]
-                elif len(possible_paths) > 1 and lookup_name in local_imports:
-                    full_import_name = local_imports[lookup_name]
-                    for path in possible_paths:
-                        if full_import_name.replace('.', '/') in path:
-                            resolved_path = path
-                            break
+                elif len(possible_paths) > 1:
+                    if lookup_name in local_imports:
+                        full_import_name = local_imports[lookup_name]
+                        for path in possible_paths:
+                            if full_import_name.replace('.', '/') in path:
+                                resolved_path = path
+                                break
             
             if not resolved_path:
-                if called_name in imports_map and imports_map[called_name]:
-                    resolved_path = imports_map[called_name][0]
+                 warning_logger(f"Could not resolve call {called_name} (lookup: {lookup_name}) in {caller_file_path}")
+            # else:
+            #      info_logger(f"Resolved call {called_name} -> {resolved_path}")
+            
+            # Legacy fallback block (was mis-indented)
+            if not resolved_path:
+                possible_paths = imports_map.get(lookup_name, [])
+                if len(possible_paths) > 0:
+                     # Final fallback: global candidate
+                     # Check if it was imported explicitly, otherwise risky
+                     if lookup_name in local_imports:
+                         # We already tried specific matching above, but if we are here
+                         # it means we had ambiguity without matching path?
+                         pass
+                     else:
+                        # Fallback to first available if not imported? Or skip?
+                        # Original logic: resolved_path = possible_paths[0]
+                        # But wait, original code logic was:
+                        pass
+            if not resolved_path:
+                if called_name in local_names:
+                    resolved_path = caller_file_path
+                elif called_name in imports_map and imports_map[called_name]:
+                    # Check if any path in imports_map for called_name matches current file's imports
+                    candidates = imports_map[called_name]
+                    for path in candidates:
+                        for imp_name in local_imports.values():
+                            if imp_name.replace('.', '/') in path:
+                                resolved_path = path
+                                break
+                        if resolved_path: break
+                    if not resolved_path:
+                        resolved_path = candidates[0]
                 else:
                     resolved_path = caller_file_path
 
             caller_context = call.get('context')
             if caller_context and len(caller_context) == 3 and caller_context[0] is not None:
                 caller_name, _, caller_line_number = caller_context
+                # if called_name == "sumOfSquares":
+                    # print(f"DEBUG_CYPHER: caller={caller_name}, caller_line={caller_line_number}, called={called_name}, path={resolved_path}")
+
                 session.run("""
-                    MATCH (caller:Function {name: $caller_name, file_path: $caller_file_path, line_number: $caller_line_number})
-                    MATCH (called:Function {name: $called_name, file_path: $called_file_path})
+                    MATCH (caller) WHERE (caller:Function OR caller:Class) 
+                      AND caller.name = $caller_name 
+                      AND caller.file_path = $caller_file_path 
+                      AND caller.line_number = $caller_line_number
+                    MATCH (called) WHERE (called:Function OR called:Class)
+                      AND called.name = $called_name 
+                      AND called.file_path = $called_file_path
                     MERGE (caller)-[:CALLS {line_number: $line_number, args: $args, full_call_name: $full_call_name}]->(called)
                 """,
                 caller_name=caller_name,
@@ -441,7 +498,9 @@ class GraphBuilder:
             else:
                 session.run("""
                     MATCH (caller:File {path: $caller_file_path})
-                    MATCH (called:Function {name: $called_name, file_path: $called_file_path})
+                    MATCH (called) WHERE (called:Function OR called:Class)
+                      AND called.name = $called_name 
+                      AND called.file_path = $called_file_path
                     MERGE (caller)-[:CALLS {line_number: $line_number, args: $args, full_call_name: $full_call_name}]->(called)
                 """,
                 caller_file_path=caller_file_path,

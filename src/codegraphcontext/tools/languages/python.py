@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 import ast
 from codegraphcontext.utils.debug_log import debug_log, info_logger, error_logger, warning_logger, debug_logger
+from codegraphcontext.utils.tree_sitter_manager import execute_query
 
 
 PY_QUERIES = {
@@ -54,11 +55,6 @@ class PythonTreeSitterParser:
         self.language_name = generic_parser_wrapper.language_name
         self.language = generic_parser_wrapper.language
         self.parser = generic_parser_wrapper.parser
-
-        self.queries = {
-            name: self.language.query(query_str)
-            for name, query_str in PY_QUERIES.items()
-        }
 
     def _get_node_text(self, node) -> str:
         return node.text.decode('utf-8')
@@ -155,10 +151,10 @@ class PythonTreeSitterParser:
 
     def _find_lambda_assignments(self, root_node):
         functions = []
-        query = self.queries.get('lambda_assignments')
-        if not query: return []
+        query_str = PY_QUERIES.get('lambda_assignments')
+        if not query_str: return []
 
-        for match in query.captures(root_node):
+        for match in execute_query(self.language, query_str, root_node):
             capture_name = match[1]
             node = match[0]
 
@@ -192,8 +188,8 @@ class PythonTreeSitterParser:
 
     def _find_functions(self, root_node):
         functions = []
-        query = self.queries['functions']
-        for match in query.captures(root_node):
+        query_str = PY_QUERIES['functions']
+        for match in execute_query(self.language, query_str, root_node):
             capture_name = match[1]
             node = match[0]
 
@@ -242,8 +238,8 @@ class PythonTreeSitterParser:
 
     def _find_classes(self, root_node):
         classes = []
-        query = self.queries['classes']
-        for match in query.captures(root_node):
+        query_str = PY_QUERIES['classes']
+        for match in execute_query(self.language, query_str, root_node):
             capture_name = match[1]
             node = match[0]
 
@@ -279,8 +275,8 @@ class PythonTreeSitterParser:
     def _find_imports(self, root_node):
         imports = []
         seen_modules = set()
-        query = self.queries['imports']
-        for node, capture_name in query.captures(root_node):
+        query_str = PY_QUERIES['imports']
+        for node, capture_name in execute_query(self.language, query_str, root_node):
             if capture_name in ('import', 'from_import_stmt'):
                 # For 'import_statement'
                 if capture_name == 'import':
@@ -347,8 +343,8 @@ class PythonTreeSitterParser:
 
     def _find_calls(self, root_node):
         calls = []
-        query = self.queries['calls']
-        for node, capture_name in query.captures(root_node):
+        query_str = PY_QUERIES['calls']
+        for node, capture_name in execute_query(self.language, query_str, root_node):
             if capture_name == 'name':
                 call_node = node.parent if node.parent.type == 'call' else node.parent.parent
                 full_call_node = call_node.child_by_field_name('function')
@@ -377,8 +373,8 @@ class PythonTreeSitterParser:
 
     def _find_variables(self, root_node):
         variables = []
-        query = self.queries['variables']
-        for match in query.captures(root_node):
+        query_str = PY_QUERIES['variables']
+        for match in execute_query(self.language, query_str, root_node):
             capture_name = match[1]
             node = match[0]
 
@@ -419,7 +415,6 @@ def pre_scan_python(files: list[Path], parser_wrapper) -> dict:
         (class_definition name: (identifier) @name)
         (function_definition name: (identifier) @name)
     """
-    query = parser_wrapper.language.query(query_str)
     
     for file_path in files:
         temp_py_file = None
@@ -441,7 +436,7 @@ def pre_scan_python(files: list[Path], parser_wrapper) -> dict:
 
             tree = parser_wrapper.parser.parse(bytes(source_to_parse, "utf8"))
             
-            for capture, _ in query.captures(tree.root_node):
+            for capture, _ in execute_query(parser_wrapper.language, query_str, tree.root_node):
                 name = capture.text.decode('utf-8')
                 if name not in imports_map:
                     imports_map[name] = []

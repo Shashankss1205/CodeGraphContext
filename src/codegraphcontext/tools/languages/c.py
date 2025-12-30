@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 from codegraphcontext.utils.debug_log import debug_log, info_logger, error_logger, warning_logger
+from codegraphcontext.utils.tree_sitter_manager import execute_query
 
 C_QUERIES = {
     "functions": """
@@ -92,11 +93,6 @@ class CTreeSitterParser:
         self.language = generic_parser_wrapper.language
         self.parser = generic_parser_wrapper.parser
 
-        self.queries = {
-            name: self.language.query(query_str)
-            for name, query_str in C_QUERIES.items()
-        }
-
     def _get_node_text(self, node: Any) -> str:
         return node.text.decode("utf-8")
 
@@ -132,9 +128,24 @@ class CTreeSitterParser:
         curr = node.parent
         while curr:
             if curr.type in types:
-                name_node = curr.child_by_field_name('name')
-                if name_node:
-                    return self._get_node_text(name_node), curr.type, curr.start_point[0] + 1
+                if curr.type == 'function_definition':
+                    # Traverse declarator to find name and use its line number
+                    decl = curr.child_by_field_name('declarator')
+                    while decl:
+                        if decl.type == 'identifier':
+                             return self._get_node_text(decl), curr.type, decl.start_point[0] + 1
+                        
+                        # Handle recursive declarators (function, pointer, array, parenthesized)
+                        child = decl.child_by_field_name('declarator')
+                        if child:
+                            decl = child
+                        else:
+                            # Fallback if structure is different
+                            break
+                else:
+                    name_node = curr.child_by_field_name('name')
+                    if name_node:
+                        return self._get_node_text(name_node), curr.type, name_node.start_point[0] + 1
             curr = curr.parent
         return None, None, None
 
@@ -207,8 +218,8 @@ class CTreeSitterParser:
 
     def _find_functions(self, root_node: Any) -> list[Dict[str, Any]]:
         functions = []
-        query = self.queries["functions"]
-        for match in query.captures(root_node):
+        query_str = C_QUERIES["functions"]
+        for match in execute_query(self.language, query_str, root_node):
             capture_name = match[1]
             node = match[0]
             if capture_name == 'name':
@@ -251,8 +262,8 @@ class CTreeSitterParser:
         classes = []
         
         # Find structs
-        query = self.queries["structs"]
-        for match in query.captures(root_node):
+        query_str = C_QUERIES["structs"]
+        for match in execute_query(self.language, query_str, root_node):
             capture_name = match[1]
             node = match[0]
             if capture_name == 'name':
@@ -275,8 +286,8 @@ class CTreeSitterParser:
                 })
 
         # Find unions
-        query = self.queries["unions"]
-        for match in query.captures(root_node):
+        query_str = C_QUERIES["unions"]
+        for match in execute_query(self.language, query_str, root_node):
             capture_name = match[1]
             node = match[0]
             if capture_name == 'name':
@@ -299,8 +310,8 @@ class CTreeSitterParser:
                 })
 
         # Find enums
-        query = self.queries["enums"]
-        for match in query.captures(root_node):
+        query_str = C_QUERIES["enums"]
+        for match in execute_query(self.language, query_str, root_node):
             capture_name = match[1]
             node = match[0]
             if capture_name == 'name':
@@ -326,8 +337,8 @@ class CTreeSitterParser:
 
     def _find_imports(self, root_node: Any) -> list[Dict[str, Any]]:
         imports = []
-        query = self.queries["imports"]
-        for match in query.captures(root_node):
+        query_str = C_QUERIES["imports"]
+        for match in execute_query(self.language, query_str, root_node):
             capture_name = match[1]
             node = match[0]
             if capture_name == 'path':
@@ -348,8 +359,8 @@ class CTreeSitterParser:
     def _find_calls(self, root_node: Any) -> list[Dict[str, Any]]:
         """Enhanced function call detection."""
         calls = []
-        query = self.queries["calls"]
-        for match in query.captures(root_node):
+        query_str = C_QUERIES["calls"]
+        for match in execute_query(self.language, query_str, root_node):
             capture_name = match[1]
             node = match[0]
             if capture_name == "name":
@@ -364,15 +375,17 @@ class CTreeSitterParser:
                         if child.type not in ['(', ')', ',']:
                             args.append(self._get_node_text(child))
                 
-                context, context_type, _ = self._get_parent_context(call_node)
+                context_name, context_type, context_line = self._get_parent_context(call_node)
                 
+                # print(f"DEBUG_C_PARSER: Call {call_name} context: {context_name}, {context_type}, {context_line}")
+
                 calls.append({
                     "name": call_name,
                     "full_name": call_name,  # For C, function name is the same as full name
                     "line_number": node.start_point[0] + 1,
                     "args": args,
                     "inferred_obj_type": None,
-                    "context": context,
+                    "context": (context_name, context_type, context_line),
                     "class_context": None,
                     "lang": self.language_name,
                     "is_dependency": False,
@@ -382,8 +395,8 @@ class CTreeSitterParser:
     def _find_variables(self, root_node: Any) -> list[Dict[str, Any]]:
         """Enhanced variable declaration detection."""
         variables = []
-        query = self.queries["variables"]
-        for match in query.captures(root_node):
+        query_str = C_QUERIES["variables"]
+        for match in execute_query(self.language, query_str, root_node):
             capture_name = match[1]
             node = match[0]
             if capture_name == "name":
@@ -438,8 +451,8 @@ class CTreeSitterParser:
     def _find_macros(self, root_node: Any) -> list[Dict[str, Any]]:
         """Enhanced preprocessor macro detection."""
         macros = []
-        query = self.queries["macros"]
-        for match in query.captures(root_node):
+        query_str = C_QUERIES["macros"]
+        for match in execute_query(self.language, query_str, root_node):
             capture_name = match[1]
             node = match[0]
             if capture_name == 'name':
@@ -513,14 +526,14 @@ def pre_scan_c(files: list[Path], parser_wrapper) -> dict:
             name: (identifier) @name
         )
     """
-    query = parser_wrapper.language.query(query_str)
+    
     
     for file_path in files:
         try:
             with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
                 tree = parser_wrapper.parser.parse(bytes(f.read(), "utf8"))
             
-            for capture, _ in query.captures(tree.root_node):
+            for capture, _ in execute_query(parser_wrapper.language, query_str, tree.root_node):
                 name = capture.text.decode('utf-8')
                 if name not in imports_map:
                     imports_map[name] = []

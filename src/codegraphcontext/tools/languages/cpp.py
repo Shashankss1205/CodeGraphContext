@@ -2,12 +2,16 @@
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 from codegraphcontext.utils.debug_log import debug_log, info_logger, error_logger, warning_logger
+from codegraphcontext.utils.tree_sitter_manager import execute_query
 
 CPP_QUERIES = {
     "functions": """
         (function_definition
             declarator: (function_declarator
-                declarator: (identifier) @name
+                declarator: [
+                    (identifier) @name
+                    (field_identifier) @name
+                ]
             )
         ) @function_node
     """,
@@ -80,6 +84,15 @@ CPP_QUERIES = {
         declarator: (init_declarator
                         declarator: (pointer_declarator
                             declarator: (identifier) @name)))
+
+    (field_declaration
+        declarator: [
+             (field_identifier) @name
+             (pointer_declarator declarator: (field_identifier) @name)
+             (array_declarator declarator: (field_identifier) @name)
+             (reference_declarator (field_identifier) @name)
+        ]
+    )
     """,
     "lambda_assignments": """
     ; Match a lambda assigned to a variable
@@ -99,11 +112,6 @@ class CppTreeSitterParser:
         self.language_name = "cpp"
         self.language = generic_parser_wrapper.language
         self.parser = generic_parser_wrapper.parser
-
-        self.queries = {
-            name: self.language.query(query_str)
-            for name, query_str in CPP_QUERIES.items()
-        }
 
     def _get_node_text(self, node) -> str:
         return node.text.decode('utf-8')
@@ -145,26 +153,81 @@ class CppTreeSitterParser:
 
     def _find_functions(self, root_node):
         functions = []
-        query = self.queries['functions']
-        for match in query.captures(root_node):
+        query_str = CPP_QUERIES['functions']
+        for match in execute_query(self.language, query_str, root_node):
             capture_name = match[1]
             node = match[0]
             if capture_name == 'name':
-                func_node = node.parent.parent.parent
+                # node is identifier
+                # node.parent is function_declarator
+                # node.parent.parent is function_definition
+                func_node = node.parent.parent
+                
+                # Double check to prevent crashes if AST is different (e.g. pointers)
+                if func_node.type != 'function_definition':
+                    # Fallback or try finding function_definition upwards
+                    curr = node
+                    while curr and curr.type != 'function_definition':
+                        curr = curr.parent
+                    func_node = curr
+                
+                if not func_node: continue
+
                 name = self._get_node_text(node)
+                
+                params = self._extract_function_params(func_node)
+                
                 functions.append({
                     "name": name,
                     "line_number": node.start_point[0] + 1,
                     "end_line": func_node.end_point[0] + 1,
                     "source_code": self._get_node_text(func_node),
-                    "args": [], # Placeholder
+                    "args": params,
                 })
         return functions
 
+    def _extract_function_params(self, func_node) -> list[str]:
+        params = []
+        declarator_node = func_node.child_by_field_name('declarator')
+        if not declarator_node:
+            return []
+            
+        parameters_node = declarator_node.child_by_field_name('parameters')
+        if not parameters_node or parameters_node.type != 'parameter_list':
+            return []
+
+        for param in parameters_node.children:
+            if param.type == 'parameter_declaration':
+                # Extract name
+                param_decl = param.child_by_field_name('declarator')
+                # Unwrap pointers/refs to find identifier
+                while param_decl and param_decl.type not in ('identifier', 'field_identifier', 'type_identifier'):
+                    child = param_decl.child_by_field_name('declarator')
+                    if child:
+                        param_decl = child
+                    else:
+                        break
+                
+                name = self._get_node_text(param_decl) if param_decl else ""
+                
+                # Extract type
+                param_type_node = param.child_by_field_name('type')
+                type_str = self._get_node_text(param_type_node) if param_type_node else ""
+                
+                if name:
+                    # Storing "type name" string, or just name? 
+                    # Standard in this project seems to be list of strings.
+                    # Given C++ complexity, providing "type name" provides more info.
+                    if type_str:
+                         params.append(f"{type_str} {name}")
+                    else:
+                         params.append(name)
+        return params
+
     def _find_classes(self, root_node):
         classes = []
-        query = self.queries['classes']
-        for match in query.captures(root_node):
+        query_str = CPP_QUERIES['classes']
+        for match in execute_query(self.language, query_str, root_node):
             capture_name = match[1]
             node = match[0]
             if capture_name == 'name':
@@ -181,8 +244,8 @@ class CppTreeSitterParser:
 
     def _find_imports(self, root_node):
         imports = []
-        query = self.queries['imports']
-        for match in query.captures(root_node):
+        query_str = CPP_QUERIES['imports']
+        for match in execute_query(self.language, query_str, root_node):
             capture_name = match[1]
             node = match[0]
             if capture_name == 'path':
@@ -197,8 +260,8 @@ class CppTreeSitterParser:
     
     def _find_enums(self, root_node):
         enums = []
-        query = self.queries['enums']
-        for node, capture_name in query.captures(root_node):
+        query_str = CPP_QUERIES['enums']
+        for node, capture_name in execute_query(self.language, query_str, root_node):
             if capture_name == 'name':
                 name = self._get_node_text(node)
                 enum_node = node.parent
@@ -212,8 +275,8 @@ class CppTreeSitterParser:
  
     def _find_structs(self, root_node):
         structs = []
-        query = self.queries['structs']
-        for node, capture_name in query.captures(root_node):
+        query_str = CPP_QUERIES['structs']
+        for node, capture_name in execute_query(self.language, query_str, root_node):
             if capture_name == 'name':
                 name = self._get_node_text(node)
                 struct_node = node.parent
@@ -227,8 +290,8 @@ class CppTreeSitterParser:
 
     def _find_unions(self, root_node):
         unions = []
-        query = self.queries['unions']
-        for node, capture_name in query.captures(root_node):
+        query_str = CPP_QUERIES['unions']
+        for node, capture_name in execute_query(self.language, query_str, root_node):
             if capture_name == 'name':
                 name = self._get_node_text(node)
                 union_node = node.parent
@@ -242,8 +305,8 @@ class CppTreeSitterParser:
 
     def _find_macros(self, root_node):
         macros = []
-        query = self.queries['macros']
-        for match in query.captures(root_node):
+        query_str = CPP_QUERIES['macros']
+        for match in execute_query(self.language, query_str, root_node):
             capture_name = match[1]
             node = match[0]
             if capture_name == 'name':
@@ -259,10 +322,10 @@ class CppTreeSitterParser:
     
     def _find_lambda_assignments(self, root_node):
         functions = []
-        query = self.queries.get('lambda_assignments')
-        if not query: return []
+        query_str = CPP_QUERIES.get('lambda_assignments')
+        if not query_str: return []
 
-        for match in query.captures(root_node):
+        for match in execute_query(self.language, query_str, root_node):
             capture_name = match[1]
             node = match[0]
 
@@ -302,8 +365,8 @@ class CppTreeSitterParser:
     
     def _find_variables(self, root_node):
         variables = []
-        query = self.queries['variables']
-        for match in query.captures(root_node):
+        query_str = CPP_QUERIES['variables']
+        for match in execute_query(self.language, query_str, root_node):
             capture_name = match[1]
             node = match[0]
 
@@ -341,15 +404,30 @@ class CppTreeSitterParser:
         curr = node.parent
         while curr:
             if curr.type in types:
-                name_node = curr.child_by_field_name('name')
-                return self._get_node_text(name_node) if name_node else None, curr.type, curr.start_point[0] + 1
+                if curr.type == 'function_definition':
+                    # Traverse declarator to find name
+                    decl = curr.child_by_field_name('declarator')
+                    while decl:
+                        if decl.type == 'identifier':
+                             return self._get_node_text(decl), curr.type, decl.start_point[0] + 1
+                        
+                        child = decl.child_by_field_name('declarator')
+                        if child:
+                            decl = child
+                        else:
+                            break
+                    # Fallback or if not found
+                    return None, curr.type, curr.start_point[0] + 1
+                else:
+                    name_node = curr.child_by_field_name('name')
+                    return self._get_node_text(name_node) if name_node else None, curr.type, curr.start_point[0] + 1
             curr = curr.parent
         return None, None, None
     
     def _find_calls(self, root_node):
         calls = []
-        query = self.queries['calls']
-        for node, capture_name in query.captures(root_node):
+        query_str = CPP_QUERIES['calls']
+        for node, capture_name in execute_query(self.language, query_str, root_node):
             if capture_name == "function_name":
                 func_name = self._get_node_text(node)
                 func_node = node.parent.parent  # function_declarator -> function_definition
@@ -357,7 +435,7 @@ class CppTreeSitterParser:
 
                 # Find return type node (captured separately)
                 return_type_node = None
-                for n, cap in query.captures(func_node):
+                for n, cap in execute_query(self.language, query_str, func_node):
                     if cap == "return_type":
                         return_type_node = n
                         break
@@ -384,7 +462,7 @@ class CppTreeSitterParser:
                 
 
                 # Get context info (function may be inside class)
-                context, _, _ = self._get_parent_context(node)
+                context_name, context_type, context_line = self._get_parent_context(node)
                 class_context, _, _ = self._get_parent_context(node, types=("class_definition",))
 
                 call_data = {
@@ -393,7 +471,7 @@ class CppTreeSitterParser:
                     "line_number": node.start_point[0] + 1,
                     "args": args,
                     "inferred_obj_type": None,
-                    "context": context,
+                    "context": (context_name, context_type, context_line),
                     "class_context": class_context,
                     "lang": self.language_name,
                     "is_dependency": False,
@@ -438,7 +516,7 @@ def pre_scan_cpp(files: list[Path], parser_wrapper) -> dict:
         (struct_specifier name: (type_identifier) @name)
         (function_definition declarator: (function_declarator declarator: (identifier) @name))
     """
-    query = parser_wrapper.language.query(query_str)
+    
 
     for file_path in files:
         try:
@@ -446,7 +524,7 @@ def pre_scan_cpp(files: list[Path], parser_wrapper) -> dict:
                 source_bytes = f.read().encode("utf-8")
                 tree = parser_wrapper.parser.parse(source_bytes)
 
-            for node, capture_name in query.captures(tree.root_node):
+            for node, capture_name in execute_query(parser_wrapper.language, query_str, tree.root_node):
                 if capture_name == "name":
                     name = node.text.decode("utf-8")
                     imports_map.setdefault(name, []).append(str(file_path.resolve()))

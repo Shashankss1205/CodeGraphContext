@@ -29,7 +29,7 @@ An MCP server that indexes local code into a graph database to provide context t
 ![Using the MCP server](https://github.com/Shashankss1205/CodeGraphContext/blob/main/images/Usecase.gif)
 
 ## Project Details
-- **Version:** 0.1.17
+- **Version:** 0.1.19
 - **Authors:** Shashank Shekhar Singh <shashankshekharsingh1205@gmail.com>
 - **License:** MIT License (See [LICENSE](LICENSE) for details)
 - **Website:** [CodeGraphContext](http://codegraphcontext.vercel.app/)
@@ -43,6 +43,46 @@ An MCP server that indexes local code into a graph database to provide context t
 -   **Relationship Analysis:** Query for callers, callees, class hierarchies, call chains and more.
 -   **Live Updates:** Watches local files for changes and automatically updates the graph.
 -   **Interactive Setup:** A user-friendly command-line wizard for easy setup.
+-   **Multi-Language Support:** Full support for 11 programming languages.
+-   **Flexible Database Backend:** Choose between Neo4j or FalkorDB Lite.
+
+## Supported Programming Languages
+
+CodeGraphContext provides comprehensive parsing and analysis for the following languages:
+
+- **Python** (`.py`) - Including Jupyter notebooks (`.ipynb`)
+- **JavaScript** (`.js`)
+- **TypeScript** (`.ts`)
+- **Java** (`.java`)
+- **C** (`.c`, `.h`)
+- **C++** (`.cpp`, `.cc`, `.cxx`, `.hpp`, `.hxx`)
+- **C#** (`.cs`) - Full support for classes, methods, namespaces, and inheritance
+- **Go** (`.go`)
+- **Rust** (`.rs`)
+- **Ruby** (`.rb`)
+- **PHP** (`.php`)
+
+Each language parser extracts functions, classes, methods, parameters, inheritance relationships, function calls, and imports to build a comprehensive code graph.
+
+## Database Options
+
+CodeGraphContext supports two graph database backends:
+
+### Neo4j (Default)
+- **Production-ready** and widely used graph database
+- Supports local instances (via Docker or native installation) and cloud hosting (Neo4j AuraDB)
+- Full Cypher query support for advanced graph analytics
+- Recommended for most use cases
+
+### FalkorDB Lite
+- **Lightweight** in-memory graph database
+- **No external dependencies** - runs entirely in-process
+- Available for **Python 3.12+** only
+- Perfect for quick testing and development
+- Automatically installed when using Python 3.12 or higher
+
+The `cgc setup` wizard helps you configure neo4j database backend while the falkordb database is
+supported inherently.
 
 ## Used By
 
@@ -58,19 +98,20 @@ If you’re using CodeGraphContext in your project, feel free to open a PR and a
 
 - `neo4j>=5.15.0`
 - `watchdog>=3.0.0`
-- `requests>=2.31.0`
 - `stdlibs>=2023.11.18`
 - `typer[all]>=0.9.0`
 - `rich>=13.7.0`
 - `inquirerpy>=0.3.4`
 - `python-dotenv>=1.0.0`
-- `tree-sitter==0.20.4`
-- `tree-sitter-languages==1.10.2`
+- `tree-sitter>=0.21.0`
+- `tree-sitter-language-pack>=0.6.0`
 - `pyyaml`
 - `pytest`
 - `nbformat`
 - `nbconvert>=7.16.6`
 - `pathspec>=0.12.1`
+
+**Note:** Python 3.9+ is supported, including Python 3.13 and 3.14.
 
 ## Getting Started
 

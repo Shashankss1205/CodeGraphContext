@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 import re
 from codegraphcontext.utils.debug_log import debug_log, info_logger, error_logger, warning_logger
+from codegraphcontext.utils.tree_sitter_manager import execute_query
 
 CSHARP_QUERIES = {
     "functions": """
@@ -23,19 +24,19 @@ CSHARP_QUERIES = {
     "classes": """
         (class_declaration 
             name: (identifier) @name
-            bases: (base_list)? @bases
+            (base_list)? @bases
         ) @class
     """,
     "interfaces": """
         (interface_declaration 
             name: (identifier) @name
-            bases: (base_list)? @bases
+            (base_list)? @bases
         ) @interface
     """,
     "structs": """
         (struct_declaration 
             name: (identifier) @name
-            bases: (base_list)? @bases
+            (base_list)? @bases
         ) @struct
     """,
     "enums": """
@@ -46,7 +47,7 @@ CSHARP_QUERIES = {
     "records": """
         (record_declaration 
             name: (identifier) @name
-            bases: (base_list)? @bases
+            (base_list)? @bases
         ) @record
     """,
     "properties": """
@@ -83,11 +84,6 @@ class CSharpTreeSitterParser:
         self.language = generic_parser_wrapper.language
         self.parser = generic_parser_wrapper.parser
 
-        self.queries = {
-            name: self.language.query(query_str)
-            for name, query_str in CSHARP_QUERIES.items()
-        }
-
     def parse(self, file_path: Path, is_dependency: bool = False) -> Dict[str, Any]:
         try:
             with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
@@ -123,8 +119,8 @@ class CSharpTreeSitterParser:
             parsed_imports = []
             parsed_calls = []
 
-            for capture_name, query in self.queries.items():
-                captures = query.captures(tree.root_node)
+            for capture_name, query_str in CSHARP_QUERIES.items():
+                captures = execute_query(self.language, query_str, tree.root_node)
 
                 if capture_name == "functions":
                     parsed_functions = self._parse_functions(captures, source_code, file_path, tree.root_node)
@@ -191,7 +187,7 @@ class CSharpTreeSitterParser:
                     
                     name_captures = [
                         (n, cn) for n, cn in captures 
-                        if cn == "name" and n.parent == node
+                        if cn == "name" and n.parent.id == node.id
                     ]
                     
                     if name_captures:
@@ -200,14 +196,13 @@ class CSharpTreeSitterParser:
                         
                         params_captures = [
                             (n, cn) for n, cn in captures 
-                            if cn == "params" and n.parent == node
+                            if cn == "params" and n.parent.id == node.id
                         ]
                         
                         parameters = []
                         if params_captures:
                             params_node = params_captures[0][0]
-                            params_text = source_code[params_node.start_byte:params_node.end_byte]
-                            parameters = self._extract_parameter_names(params_text)
+                            parameters = self._extract_parameters(params_node)
 
                         # Extract attributes applied to this function
                         attributes = []
@@ -222,7 +217,7 @@ class CSharpTreeSitterParser:
                         
                         func_data = {
                             "name": func_name,
-                            "parameters": parameters,
+                            "args": parameters,
                             "attributes": attributes,
                             "line_number": start_line,
                             "end_line": end_line,
@@ -265,7 +260,7 @@ class CSharpTreeSitterParser:
                     
                     name_captures = [
                         (n, cn) for n, cn in captures 
-                        if cn == "name" and n.parent == node
+                        if cn == "name" and n.parent.id == node.id
                     ]
                     
                     if name_captures:
@@ -276,7 +271,7 @@ class CSharpTreeSitterParser:
                         bases = []
                         bases_captures = [
                             (n, cn) for n, cn in captures 
-                            if cn == "bases" and n.parent == node
+                            if cn == "bases" and n.parent.id == node.id
                         ]
                         
                         if bases_captures:
@@ -345,6 +340,25 @@ class CSharpTreeSitterParser:
 
         return imports
 
+    def _get_parent_context(self, node: Any, types: Tuple[str, ...] = ('class_declaration', 'struct_declaration', 'function_declaration', 'method_declaration')):
+        """Find parent context for C# constructs."""
+        curr = node.parent
+        while curr:
+            if curr.type in types:
+                if curr.type in ('method_declaration', 'function_declaration'):
+                     name_node = curr.child_by_field_name('name')
+                     return self._get_node_text(name_node) if name_node else None, curr.type, curr.start_point[0] + 1
+                else: 
+                     # Classes, structs, etc.
+                     name_node = curr.child_by_field_name('name')
+                     return self._get_node_text(name_node) if name_node else None, curr.type, curr.start_point[0] + 1
+            curr = curr.parent
+        return None, None, None
+
+    def _get_node_text(self, node: Any) -> str:
+        if not node: return ""
+        return node.text.decode("utf-8")
+
     def _parse_calls(self, captures: list, source_code: str) -> list[dict]:
         calls = []
         seen_calls = set()
@@ -361,14 +375,18 @@ class CSharpTreeSitterParser:
                         continue
                     seen_calls.add(call_key)
                     
+                    # Get context
+                    context_name, context_type, context_line = self._get_parent_context(node)
+                    class_context = context_name if context_type and 'class' in context_type else None
+
                     call_data = {
                         "name": call_name,
                         "full_name": call_name,
                         "line_number": line_number,
                         "args": [],
                         "inferred_obj_type": None,
-                        "context": (None, None),
-                        "class_context": (None, None),
+                        "context": (context_name, context_type, context_line),
+                        "class_context": class_context,
                         "lang": self.language_name,
                         "is_dependency": False,
                     }
@@ -380,29 +398,24 @@ class CSharpTreeSitterParser:
         return calls
     
 
-    def _extract_parameter_names(self, params_text: str) -> list[str]:
+    def _extract_parameters(self, params_node) -> list[str]:
         params = []
-        if not params_text or params_text.strip() == "()":
+        if not params_node:
             return params
             
-        params_content = params_text.strip("()")
-        if not params_content:
-            return params
-            
-        # Handle C# parameters which can have modifiers like ref, out, params, this
-        for param in params_content.split(","):
-            param = param.strip()
-            if param:
-                # Remove modifiers and extract parameter name
-                parts = param.split()
-                if len(parts) >= 2:
-                    # Last part is the parameter name
-                    param_name = parts[-1]
-                    # Remove default value if present
-                    if '=' in param_name:
-                        param_name = param_name.split('=')[0].strip()
-                    params.append(param_name)
-                    
+        # Iterate over parameter nodes in the parameter list
+        for child in params_node.children:
+            if child.type == "parameter":
+                # find the identifier
+                name_node = child.child_by_field_name("name")
+                if name_node:
+                     params.append(self._get_node_text(name_node))
+                else:
+                    # Fallback: scan children for identifier if field name not present in this grammar version
+                    for sub in child.children:
+                        if sub.type == "identifier":
+                            params.append(self._get_node_text(sub))
+                            break
         return params
 
     def _find_containing_type(self, node, source_code):
