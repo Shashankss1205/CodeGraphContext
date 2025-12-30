@@ -1,6 +1,6 @@
 [project]
 name = "codegraphcontext"
-version = "0.1.18"
+version = "0.1.19"
 description = "An MCP server that indexes local code into a graph database to provide context to AI assistants."
 authors = [{ name = "Shashank Shekhar Singh", email = "shashankshekharsingh1205@gmail.com" }]
 readme = "README.md"
@@ -17,7 +17,6 @@ classifiers = [
 dependencies = [
     "neo4j>=5.15.0",
     "watchdog>=3.0.0",
-    "requests>=2.31.0",
     "stdlibs>=2023.11.18",
     "typer[all]>=0.9.0",
     "rich>=13.7.0",
