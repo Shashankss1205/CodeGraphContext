@@ -1,0 +1,123 @@
+/usr/lib/python3/dist-packages/pytz/__init__.py:31: SyntaxWarning: invalid escape sequence '\s'
+  match = re.match("^#\s*version\s*([0-9a-z]*)\s*$", line)
+
+--- Verifying File: Main.java ---
+DEBUG_PARSER: Found call: GreetingServiceImpl (full_name: GreetingServiceImpl, args: []) in context main | Type: object_creation_expression
+DEBUG_PARSER: Found call: User (full_name: User, args: ['"Priya"', 'Role.ADMIN']) in context main | Type: object_creation_expression
+DEBUG_PARSER: Found call: println (full_name: System.out.println, args: ['svc.greet(u)']) in context main | Type: method_invocation
+DEBUG_PARSER: Found call: greet (full_name: svc.greet, args: ['u']) in context main | Type: method_invocation
+DEBUG_PARSER: Found call: sumOfSquares (full_name: CollectionUtils.sumOfSquares, args: ['List.of(1, 2, 3, 4, 5)']) in context main | Type: method_invocation
+DEBUG_PARSER: Found call: of (full_name: List.of, args: ['1', '2', '3', '4', '5']) in context main | Type: method_invocation
+DEBUG_PARSER: Found call: println (full_name: System.out.println, args: ['"sumSquares=" + sumSquares']) in context main | Type: method_invocation
+DEBUG_PARSER: Found call: readFirstLine (full_name: IOHelper.readFirstLine, args: ['"README.md"']) in context main | Type: method_invocation
+DEBUG_PARSER: Found call: println (full_name: System.out.println, args: ['"firstLine=" + first']) in context main | Type: method_invocation
+DEBUG_PARSER: Found call: println (full_name: System.out.println, args: ['"IO failed: " + e.getMessage()']) in context main | Type: method_invocation
+DEBUG_PARSER: Found call: getMessage (full_name: e.getMessage, args: []) in context main | Type: method_invocation
+DEBUG_PARSER: Found call: com.example.app.misc.Outer (full_name: com.example.app.misc.Outer, args: ['"outer"']) in context main | Type: object_creation_expression
+DEBUG_PARSER: Found call: Inner (full_name: Inner, args: ['"inner"']) in context main | Type: object_creation_expression
+DEBUG_PARSER: Found call: println (full_name: System.out.println, args: ['inner.combine()']) in context main | Type: method_invocation
+DEBUG_PARSER: Found call: combine (full_name: inner.combine, args: []) in context main | Type: method_invocation
+Functions (Source): 1
+  Names: [('main', 13)]
+Functions (DB):     1
+  Names: [('main', 13)]
+Classes (Source): 1 | (DB): 1
+Variables (Source): 0 | (DB): 0
+Calls (Source): 15 | (DB): 0
+
+--- Verifying File: Logged.java ---
+Functions (Source): 0
+  Names: []
+Functions (DB):     0
+  Names: []
+Classes (Source): 1 | (DB): 1
+Variables (Source): 0 | (DB): 0
+Calls (Source): 0 | (DB): 0
+
+--- Verifying File: Outer.java ---
+DEBUG_PARSER: Found call: Thread (full_name: Thread, args: ['() -> { /* no-op */ }']) in context combine | Type: object_creation_expression
+DEBUG_PARSER: Found call: start (full_name: t.start, args: []) in context combine | Type: method_invocation
+Functions (Source): 3
+  Names: [('Inner', 9), ('Outer', 5), ('combine', 10)]
+Functions (DB):     3
+  Names: [('Inner', 9), ('Outer', 5), ('combine', 10)]
+Classes (Source): 2 | (DB): 2
+Variables (Source): 0 | (DB): 0
+Calls (Source): 2 | (DB): 0
+
+--- Verifying File: Role.java ---
+Functions (Source): 0
+  Names: []
+Functions (DB):     0
+  Names: []
+Classes (Source): 1 | (DB): 1
+Variables (Source): 0 | (DB): 0
+Calls (Source): 0 | (DB): 0
+
+--- Verifying File: User.java ---
+Functions (Source): 3
+  Names: [('User', 7), ('getName', 11), ('getRole', 12)]
+Functions (DB):     3
+  Names: [('User', 7), ('getName', 11), ('getRole', 12)]
+Classes (Source): 1 | (DB): 1
+Variables (Source): 0 | (DB): 0
+Calls (Source): 0 | (DB): 0
+
+--- Verifying File: AbstractGreeter.java ---
+DEBUG_PARSER: Found call: getName (full_name: u.getName, args: []) in context base | Type: method_invocation
+Functions (Source): 1
+  Names: [('base', 7)]
+Functions (DB):     1
+  Names: [('base', 7)]
+Classes (Source): 1 | (DB): 1
+Variables (Source): 0 | (DB): 0
+Calls (Source): 1 | (DB): 0
+
+--- Verifying File: GreetingService.java ---
+Functions (Source): 1
+  Names: [('greet', 6)]
+Functions (DB):     1
+  Names: [('greet', 6)]
+Classes (Source): 1 | (DB): 1
+Variables (Source): 0 | (DB): 0
+Calls (Source): 0 | (DB): 0
+
+--- Verifying File: GreetingServiceImpl.java ---
+DEBUG_PARSER: Found call: base (full_name: base, args: ['user']) in context greet | Type: method_invocation
+DEBUG_PARSER: Found call: getRole (full_name: user.getRole, args: []) in context greet | Type: method_invocation
+Functions (Source): 1
+  Names: [('greet', 8)]
+Functions (DB):     1
+  Names: [('greet', 8)]
+Classes (Source): 1 | (DB): 1
+Variables (Source): 0 | (DB): 0
+Calls (Source): 2 | (DB): 0
+
+--- Verifying File: CollectionUtils.java ---
+DEBUG_PARSER: Found call: stream (full_name: nums.stream, args: []) in context sumOfSquares | Type: method_invocation
+DEBUG_PARSER: Found call: mapToInt (full_name: nums.stream().mapToInt, args: ['n -> {\n            int v = n.intValue();\n            return v * v;\n        }']) in context sumOfSquares | Type: method_invocation
+DEBUG_PARSER: Found call: intValue (full_name: n.intValue, args: []) in context sumOfSquares | Type: method_invocation
+DEBUG_PARSER: Found call: sum (full_name: nums.stream().mapToInt(n -> {
+            int v = n.intValue();
+            return v * v;
+        }).sum, args: []) in context sumOfSquares | Type: method_invocation
+Functions (Source): 2
+  Names: [('CollectionUtils', 6), ('sumOfSquares', 8)]
+Functions (DB):     2
+  Names: [('CollectionUtils', 6), ('sumOfSquares', 8)]
+Classes (Source): 1 | (DB): 1
+Variables (Source): 0 | (DB): 0
+Calls (Source): 4 | (DB): 0
+
+--- Verifying File: IOHelper.java ---
+DEBUG_PARSER: Found call: BufferedReader (full_name: BufferedReader, args: ['new FileReader(path)']) in context readFirstLine | Type: object_creation_expression
+DEBUG_PARSER: Found call: FileReader (full_name: FileReader, args: ['path']) in context readFirstLine | Type: object_creation_expression
+DEBUG_PARSER: Found call: readLine (full_name: br.readLine, args: []) in context readFirstLine | Type: method_invocation
+DEBUG_PARSER: Found call: RuntimeException (full_name: RuntimeException, args: ['"unable to read: " + path', 'e']) in context readFirstLine | Type: object_creation_expression
+Functions (Source): 2
+  Names: [('IOHelper', 8), ('readFirstLine', 10)]
+Functions (DB):     2
+  Names: [('IOHelper', 8), ('readFirstLine', 10)]
+Classes (Source): 1 | (DB): 1
+Variables (Source): 0 | (DB): 0
+Calls (Source): 4 | (DB): 0

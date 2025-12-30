@@ -1,0 +1,146 @@
+/usr/lib/python3/dist-packages/pytz/__init__.py:31: SyntaxWarning: invalid escape sequence '\s'
+  match = re.match("^#\s*version\s*([0-9a-z]*)\s*$", line)
+
+--- Verifying File: class_features.cpp ---
+Functions (Source): 6
+  Names: [('AccessSpecifierTests', 6), ('ConstructorDestructorTests', 25), ('exampleMethod', 28), ('privateMethod', 16), ('protectedMethod', 12), ('publicMethod', 8)]
+Functions (DB):     6
+  Names: [('AccessSpecifierTests', 6), ('ConstructorDestructorTests', 25), ('exampleMethod', 28), ('privateMethod', 16), ('protectedMethod', 12), ('publicMethod', 8)]
+Classes (Source): 2 | (DB): 2
+Variables (Source): 4 | (DB): 4
+Calls (Source): 0 | (DB): 0
+
+--- Verifying File: classes.cpp ---
+Functions (Source): 3
+  Names: [('classDemo', 15), ('speak', 6), ('speak', 12)]
+Functions (DB):     3
+  Names: [('classDemo', 15), ('speak', 6), ('speak', 12)]
+Classes (Source): 2 | (DB): 2
+Variables (Source): 1 | (DB): 1
+Calls (Source): 0 | (DB): 0
+
+--- Verifying File: control_flow.cpp ---
+Functions (Source): 1
+  Names: [('controlFlow', 4)]
+Functions (DB):     1
+  Names: [('controlFlow', 4)]
+Classes (Source): 0 | (DB): 0
+Variables (Source): 1 | (DB): 1
+Calls (Source): 0 | (DB): 0
+
+--- Verifying File: edge_cases.cpp ---
+Functions (Source): 0
+  Names: []
+Functions (DB):     0
+  Names: []
+Classes (Source): 0 | (DB): 0
+Variables (Source): 0 | (DB): 0
+Calls (Source): 0 | (DB): 0
+
+--- Verifying File: enum_struct_union.cpp ---
+Functions (Source): 1
+  Names: [('main', 31)]
+Functions (DB):     1
+  Names: [('main', 31)]
+Classes (Source): 0 | (DB): 0
+Variables (Source): 6 | (DB): 6
+Calls (Source): 0 | (DB): 0
+
+--- Verifying File: exceptions.cpp ---
+Functions (Source): 1
+  Names: [('exceptionDemo', 5)]
+Functions (DB):     1
+  Names: [('exceptionDemo', 5)]
+Classes (Source): 0 | (DB): 0
+Variables (Source): 0 | (DB): 0
+Calls (Source): 0 | (DB): 0
+
+--- Verifying File: file_io.cpp ---
+Functions (Source): 1
+  Names: [('fileIODemo', 7)]
+Functions (DB):     1
+  Names: [('fileIODemo', 7)]
+Classes (Source): 0 | (DB): 0
+Variables (Source): 2 | (DB): 2
+Calls (Source): 1 | (DB): 1
+
+--- Verifying File: function_chain.cpp ---
+Functions (Source): 4
+  Names: [('[](){ std::cout << "Hello from lambda\\n"; }', 10), ('callTwice', 5), ('functionChainDemo', 9), ('lambda', 10)]
+Functions (DB):     4
+  Names: [('[](){ std::cout << "Hello from lambda\\n"; }', 10), ('callTwice', 5), ('functionChainDemo', 9), ('lambda', 10)]
+Classes (Source): 0 | (DB): 0
+Variables (Source): 0 | (DB): 0
+Calls (Source): 3 | (DB): 1
+
+--- Verifying File: function_chain.h ---
+Functions (Source): 0
+  Names: []
+Functions (DB):     0
+  Names: []
+Classes (Source): 0 | (DB): 0
+Variables (Source): 0 | (DB): 0
+Calls (Source): 0 | (DB): 0
+
+--- Verifying File: function_types.cpp ---
+Functions (Source): 9
+  Names: [('[](int a, int b) { return a + b; }', 37), ('[](int val) { std::cout << val << std::endl; }', 25), ('add', 6), ('lambda', 37), ('main', 30), ('multiply', 12), ('printSum', 24), ('printer', 25), ('subtract', 19)]
+Functions (DB):     9
+  Names: [('[](int a, int b) { return a + b; }', 37), ('[](int val) { std::cout << val << std::endl; }', 25), ('add', 6), ('lambda', 37), ('main', 30), ('multiply', 12), ('printSum', 24), ('printer', 25), ('subtract', 19)]
+Classes (Source): 1 | (DB): 1
+Variables (Source): 1 | (DB): 1
+Calls (Source): 4 | (DB): 3
+
+--- Verifying File: main.cpp ---
+Functions (Source): 1
+  Names: [('main', 3)]
+Functions (DB):     1
+  Names: [('main', 3)]
+Classes (Source): 0 | (DB): 0
+Variables (Source): 0 | (DB): 0
+Calls (Source): 0 | (DB): 0
+
+--- Verifying File: namespaces.cpp ---
+Functions (Source): 2
+  Names: [('bar', 5), ('namespaceDemo', 8)]
+Functions (DB):     2
+  Names: [('bar', 5), ('namespaceDemo', 8)]
+Classes (Source): 0 | (DB): 0
+Variables (Source): 0 | (DB): 0
+Calls (Source): 1 | (DB): 1
+
+--- Verifying File: raii_example.cpp ---
+Functions (Source): 2
+  Names: [('File', 6), ('raiiDemo', 10)]
+Functions (DB):     2
+  Names: [('File', 6), ('raiiDemo', 10)]
+Classes (Source): 1 | (DB): 1
+Variables (Source): 1 | (DB): 1
+Calls (Source): 0 | (DB): 0
+
+--- Verifying File: stl_usage.cpp ---
+Functions (Source): 1
+  Names: [('stlDemo', 6)]
+Functions (DB):     1
+  Names: [('stlDemo', 6)]
+Classes (Source): 0 | (DB): 0
+Variables (Source): 1 | (DB): 1
+Calls (Source): 0 | (DB): 0
+
+--- Verifying File: templates.cpp ---
+Functions (Source): 3
+  Names: [('add', 5), ('add', 8), ('templateDemo', 10)]
+Functions (DB):     3
+  Names: [('add', 5), ('add', 8), ('templateDemo', 10)]
+Classes (Source): 0 | (DB): 0
+Variables (Source): 0 | (DB): 0
+Calls (Source): 2 | (DB): 2
+
+--- Verifying File: types_variable_assignments.cpp ---
+Functions (Source): 5
+  Names: [('[=]() { return PI * a; }', 81), ('lambda', 81), ('main', 91), ('setMember', 12), ('testVariables', 32)]
+Functions (DB):     5
+  Names: [('[=]() { return PI * a; }', 81), ('lambda', 81), ('main', 91), ('setMember', 12), ('testVariables', 32)]
+Classes (Source): 1 | (DB): 1
+Variables (Source): 26 | (DB): 26
+Calls (Source): 2 | (DB): 2
