@@ -99,6 +99,8 @@ JS_QUERIES = {
     "calls": """
         (call_expression function: (identifier) @name)
         (call_expression function: (member_expression property: (property_identifier) @name))
+        (new_expression constructor: (identifier) @name)
+        (new_expression constructor: (member_expression property: (property_identifier) @name))
     """,
     "variables": """
         (variable_declarator name: (identifier) @name)
@@ -121,12 +123,21 @@ class JavascriptTreeSitterParser:
     def _get_node_text(self, node) -> str:
         return node.text.decode('utf-8')
 
-    def _get_parent_context(self, node, types=('function_declaration', 'class_declaration')):
+    def _get_parent_context(self, node, types=('function_declaration', 'class_declaration', 'function_expression', 'method_definition', 'arrow_function')):
         # JS specific context types
         curr = node.parent
         while curr:
             if curr.type in types:
                 name_node = curr.child_by_field_name('name')
+                if not name_node and curr.type in ('function_expression', 'arrow_function'):
+                    # Try to find name from variable declaration
+                    if curr.parent and curr.parent.type == 'variable_declarator':
+                        name_node = curr.parent.child_by_field_name('name')
+                    elif curr.parent and curr.parent.type == 'assignment_expression':
+                        name_node = curr.parent.child_by_field_name('left')
+                    elif curr.parent and curr.parent.type == 'pair': # property: function
+                        name_node = curr.parent.child_by_field_name('key')
+                
                 return self._get_node_text(name_node) if name_node else None, curr.type, curr.start_point[0] + 1
             curr = curr.parent
         return None, None, None
@@ -188,11 +199,11 @@ class JavascriptTreeSitterParser:
         def _fn_for_name(name_node):
             current = name_node.parent
             while current:
-                if current.type in ('function_declaration', 'function', 'arrow_function', 'method_definition'):
+                if current.type in ('function_declaration', 'function', 'arrow_function', 'method_definition', 'function_expression'):
                     return current
                 elif current.type in ('variable_declarator', 'assignment_expression'):
                     for child in current.children:
-                        if child.type in ('function', 'arrow_function'):
+                        if child.type in ('function', 'arrow_function', 'function_expression'):
                             return child
                 current = current.parent
             return None
@@ -200,7 +211,7 @@ class JavascriptTreeSitterParser:
         def _fn_for_params(params_node):
             current = params_node.parent
             while current:
-                if current.type in ('function_declaration', 'function', 'arrow_function', 'method_definition'):
+                if current.type in ('function_declaration', 'function', 'arrow_function', 'method_definition', 'function_expression'):
                     return current
                 current = current.parent
             return None
@@ -211,7 +222,7 @@ class JavascriptTreeSitterParser:
         # Collect captures grouped by function node
         captures_by_function = {}
         def _bucket_for(node):
-            fid = id(node)
+            fid = _key(node)
             return captures_by_function.setdefault(fid, {
                 'node': node, 'name': None, 'params': None, 'single_param': None
             })
@@ -455,20 +466,32 @@ class JavascriptTreeSitterParser:
         for node, capture_name in execute_query(self.language, query_str, root_node):
             # Placeholder for JS call extraction logic
             if capture_name == 'name':
+                # Traverse up to find the call_expression
                 call_node = node.parent
+                while call_node and call_node.type != 'call_expression' and call_node.type != 'program':
+                    call_node = call_node.parent
+                
                 name = self._get_node_text(node)
 
-                # Simplified args extraction for now
+                # Improved args extraction
                 args = []
+                arguments_node = None
+                if call_node and call_node.type in ('call_expression', 'new_expression'):
+                    arguments_node = call_node.child_by_field_name('arguments')
+                
+                if arguments_node:
+                    for arg in arguments_node.children:
+                        if arg.type not in ('(', ')', ','):
+                            args.append(self._get_node_text(arg))
 
                 call_data = {
                     "name": name,
-                    "full_name": self._get_node_text(call_node),  # This might need refinement
+                    "full_name": self._get_node_text(call_node),
                     "line_number": node.start_point[0] + 1,
                     "args": args,
                     "inferred_obj_type": None,
-                    "context": None,  # Placeholder
-                    "class_context": None,  # Placeholder
+                    "context": self._get_parent_context(node),
+                    "class_context": self._get_parent_context(node, types=('class_declaration',))[:2],
                     "lang": self.language_name,
                     "is_dependency": False,
                 }
@@ -483,13 +506,11 @@ class JavascriptTreeSitterParser:
             capture_name = match[1]
             node = match[0]
 
-            # Placeholder for JS variable extraction logic
             if capture_name == 'name':
                 var_node = node.parent
                 name = self._get_node_text(node)
                 value = None 
-                type_text = None  # Placeholder
-
+                type_text = None
 
                 # Detect if variable assigned to a function
                 value_node = var_node.child_by_field_name("value") if var_node else None
@@ -500,27 +521,28 @@ class JavascriptTreeSitterParser:
                     # --- Skip variables that are assigned a function ---
                     if value_type in ("function_expression", "arrow_function"):
                         continue
+                    
+                    # Some grammars might have async_arrow_function or similar
+                    if "function" in value_type or "arrow" in value_type:
+                        continue
 
                     # --- Handle various assignment types ---
                     if value_type == "call_expression":
-                        func_name_node = value_node.child_by_field_name("name")
-                        func_name = (
-                            self._get_node_text(func_name_node) 
-                            if func_name_node
-                            else name
-                        )
-                        value = func_name
+                        func_node = value_node.child_by_field_name("function")
+                        value = self._get_node_text(func_node) if func_node else name
                     else:
-                        # Anything else (e.g. binary expressions)
                         value = self._get_node_text(value_node)
+
+                context, context_type, context_line = self._get_parent_context(node)
+                class_context = context if context_type == 'class_declaration' else None
 
                 variable_data = {
                     "name": name,
                     "line_number": node.start_point[0] + 1,
                     "value": value,
                     "type": type_text,
-                    "context": None,  # Placeholder
-                    "class_context": None,  # Placeholder
+                    "context": context,
+                    "class_context": class_context,
                     "lang": self.language_name,
                     "is_dependency": False,
                 }
@@ -541,7 +563,7 @@ def pre_scan_javascript(files: list[Path], parser_wrapper) -> dict:
             left: (member_expression 
                 property: (property_identifier) @name
             )
-            value: (function_expression)
+            right: (function_expression)
         )
         (assignment_expression
             left: (member_expression 

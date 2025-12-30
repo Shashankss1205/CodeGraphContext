@@ -64,13 +64,15 @@ If you’re using CodeGraphContext in your project, feel free to open a PR and a
 - `rich>=13.7.0`
 - `inquirerpy>=0.3.4`
 - `python-dotenv>=1.0.0`
-- `tree-sitter==0.20.4`
-- `tree-sitter-languages==1.10.2`
+- `tree-sitter>=0.21.0`
+- `tree-sitter-language-pack>=0.6.0`
 - `pyyaml`
 - `pytest`
 - `nbformat`
 - `nbconvert>=7.16.6`
 - `pathspec>=0.12.1`
+
+**Note:** Python 3.9+ is supported, including Python 3.13 and 3.14.
 
 ## Getting Started
 

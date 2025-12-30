@@ -128,9 +128,24 @@ class CTreeSitterParser:
         curr = node.parent
         while curr:
             if curr.type in types:
-                name_node = curr.child_by_field_name('name')
-                if name_node:
-                    return self._get_node_text(name_node), curr.type, curr.start_point[0] + 1
+                if curr.type == 'function_definition':
+                    # Traverse declarator to find name and use its line number
+                    decl = curr.child_by_field_name('declarator')
+                    while decl:
+                        if decl.type == 'identifier':
+                             return self._get_node_text(decl), curr.type, decl.start_point[0] + 1
+                        
+                        # Handle recursive declarators (function, pointer, array, parenthesized)
+                        child = decl.child_by_field_name('declarator')
+                        if child:
+                            decl = child
+                        else:
+                            # Fallback if structure is different
+                            break
+                else:
+                    name_node = curr.child_by_field_name('name')
+                    if name_node:
+                        return self._get_node_text(name_node), curr.type, name_node.start_point[0] + 1
             curr = curr.parent
         return None, None, None
 
@@ -360,15 +375,17 @@ class CTreeSitterParser:
                         if child.type not in ['(', ')', ',']:
                             args.append(self._get_node_text(child))
                 
-                context, context_type, _ = self._get_parent_context(call_node)
+                context_name, context_type, context_line = self._get_parent_context(call_node)
                 
+                # print(f"DEBUG_C_PARSER: Call {call_name} context: {context_name}, {context_type}, {context_line}")
+
                 calls.append({
                     "name": call_name,
                     "full_name": call_name,  # For C, function name is the same as full name
                     "line_number": node.start_point[0] + 1,
                     "args": args,
                     "inferred_obj_type": None,
-                    "context": context,
+                    "context": (context_name, context_type, context_line),
                     "class_context": None,
                     "lang": self.language_name,
                     "is_dependency": False,

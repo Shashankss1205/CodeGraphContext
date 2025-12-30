@@ -8,7 +8,10 @@ CPP_QUERIES = {
     "functions": """
         (function_definition
             declarator: (function_declarator
-                declarator: (identifier) @name
+                declarator: [
+                    (identifier) @name
+                    (field_identifier) @name
+                ]
             )
         ) @function_node
     """,
@@ -81,6 +84,15 @@ CPP_QUERIES = {
         declarator: (init_declarator
                         declarator: (pointer_declarator
                             declarator: (identifier) @name)))
+
+    (field_declaration
+        declarator: [
+             (field_identifier) @name
+             (pointer_declarator declarator: (field_identifier) @name)
+             (array_declarator declarator: (field_identifier) @name)
+             (reference_declarator (field_identifier) @name)
+        ]
+    )
     """,
     "lambda_assignments": """
     ; Match a lambda assigned to a variable
@@ -146,16 +158,71 @@ class CppTreeSitterParser:
             capture_name = match[1]
             node = match[0]
             if capture_name == 'name':
-                func_node = node.parent.parent.parent
+                # node is identifier
+                # node.parent is function_declarator
+                # node.parent.parent is function_definition
+                func_node = node.parent.parent
+                
+                # Double check to prevent crashes if AST is different (e.g. pointers)
+                if func_node.type != 'function_definition':
+                    # Fallback or try finding function_definition upwards
+                    curr = node
+                    while curr and curr.type != 'function_definition':
+                        curr = curr.parent
+                    func_node = curr
+                
+                if not func_node: continue
+
                 name = self._get_node_text(node)
+                
+                params = self._extract_function_params(func_node)
+                
                 functions.append({
                     "name": name,
                     "line_number": node.start_point[0] + 1,
                     "end_line": func_node.end_point[0] + 1,
                     "source_code": self._get_node_text(func_node),
-                    "args": [], # Placeholder
+                    "args": params,
                 })
         return functions
+
+    def _extract_function_params(self, func_node) -> list[str]:
+        params = []
+        declarator_node = func_node.child_by_field_name('declarator')
+        if not declarator_node:
+            return []
+            
+        parameters_node = declarator_node.child_by_field_name('parameters')
+        if not parameters_node or parameters_node.type != 'parameter_list':
+            return []
+
+        for param in parameters_node.children:
+            if param.type == 'parameter_declaration':
+                # Extract name
+                param_decl = param.child_by_field_name('declarator')
+                # Unwrap pointers/refs to find identifier
+                while param_decl and param_decl.type not in ('identifier', 'field_identifier', 'type_identifier'):
+                    child = param_decl.child_by_field_name('declarator')
+                    if child:
+                        param_decl = child
+                    else:
+                        break
+                
+                name = self._get_node_text(param_decl) if param_decl else ""
+                
+                # Extract type
+                param_type_node = param.child_by_field_name('type')
+                type_str = self._get_node_text(param_type_node) if param_type_node else ""
+                
+                if name:
+                    # Storing "type name" string, or just name? 
+                    # Standard in this project seems to be list of strings.
+                    # Given C++ complexity, providing "type name" provides more info.
+                    if type_str:
+                         params.append(f"{type_str} {name}")
+                    else:
+                         params.append(name)
+        return params
 
     def _find_classes(self, root_node):
         classes = []
@@ -337,8 +404,23 @@ class CppTreeSitterParser:
         curr = node.parent
         while curr:
             if curr.type in types:
-                name_node = curr.child_by_field_name('name')
-                return self._get_node_text(name_node) if name_node else None, curr.type, curr.start_point[0] + 1
+                if curr.type == 'function_definition':
+                    # Traverse declarator to find name
+                    decl = curr.child_by_field_name('declarator')
+                    while decl:
+                        if decl.type == 'identifier':
+                             return self._get_node_text(decl), curr.type, decl.start_point[0] + 1
+                        
+                        child = decl.child_by_field_name('declarator')
+                        if child:
+                            decl = child
+                        else:
+                            break
+                    # Fallback or if not found
+                    return None, curr.type, curr.start_point[0] + 1
+                else:
+                    name_node = curr.child_by_field_name('name')
+                    return self._get_node_text(name_node) if name_node else None, curr.type, curr.start_point[0] + 1
             curr = curr.parent
         return None, None, None
     
@@ -380,7 +462,7 @@ class CppTreeSitterParser:
                 
 
                 # Get context info (function may be inside class)
-                context, _, _ = self._get_parent_context(node)
+                context_name, context_type, context_line = self._get_parent_context(node)
                 class_context, _, _ = self._get_parent_context(node, types=("class_definition",))
 
                 call_data = {
@@ -389,7 +471,7 @@ class CppTreeSitterParser:
                     "line_number": node.start_point[0] + 1,
                     "args": args,
                     "inferred_obj_type": None,
-                    "context": context,
+                    "context": (context_name, context_type, context_line),
                     "class_context": class_context,
                     "lang": self.language_name,
                     "is_dependency": False,

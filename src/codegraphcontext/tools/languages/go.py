@@ -167,7 +167,7 @@ class GoTreeSitterParser:
 
         for node, capture_name in execute_query(self.language, query_str, root_node):
             if capture_name == 'function_node':
-                func_id = id(node)
+                func_id = node.id
                 if func_id not in captures_by_function:
                     captures_by_function[func_id] = {
                         'node': node,
@@ -178,7 +178,7 @@ class GoTreeSitterParser:
             elif capture_name == 'name':
                 func_node = self._find_function_node_for_name(node)
                 if func_node:
-                    func_id = id(func_node)
+                    func_id = func_node.id
                     if func_id not in captures_by_function:
                         captures_by_function[func_id] = {
                             'node': func_node,
@@ -190,7 +190,7 @@ class GoTreeSitterParser:
             elif capture_name == 'params':
                 func_node = self._find_function_node_for_params(node)
                 if func_node:
-                    func_id = id(func_node)
+                    func_id = func_node.id
                     if func_id not in captures_by_function:
                         captures_by_function[func_id] = {
                             'node': func_node,
@@ -202,7 +202,7 @@ class GoTreeSitterParser:
             elif capture_name == 'receiver':
                 func_node = node.parent
                 if func_node and func_node.type == 'method_declaration':
-                    func_id = id(func_node)
+                    func_id = func_node.id
                     if func_id not in captures_by_function:
                         captures_by_function[func_id] = {
                             'node': func_node,
@@ -271,9 +271,13 @@ class GoTreeSitterParser:
         if params_node.type == 'parameter_list':
             for child in params_node.children:
                 if child.type == 'parameter_declaration':
-                    name_node = child.child_by_field_name('name')
-                    if name_node:
-                        params.append(self._get_node_text(name_node))
+                    # Handle multiple names for same type: func(x, y int)
+                    # We iterate children and find all identifiers that are not the type node.
+                    type_node = child.child_by_field_name('type')
+                    for grandchild in child.children:
+                        if grandchild.type == 'identifier':
+                            if grandchild.id != (type_node.id if type_node else None):
+                                params.append(self._get_node_text(grandchild))
                 elif child.type == 'variadic_parameter_declaration':
                     name_node = child.child_by_field_name('name')
                     if name_node:
@@ -375,6 +379,8 @@ class GoTreeSitterParser:
         calls = []
         query_str = GO_QUERIES['calls']
         
+        seen_calls = set()
+
         for node, capture_name in execute_query(self.language, query_str, root_node):
             if capture_name == 'name':
                 call_node = node.parent
@@ -383,15 +389,31 @@ class GoTreeSitterParser:
                 
                 if call_node:
                     name = self._get_node_text(node)
+                    line_number = node.start_point[0] + 1
+                    
+                    call_key = f"{name}_{line_number}"
+                    if call_key in seen_calls:
+                        continue
+                    seen_calls.add(call_key)
+                    
+                    full_name = self._get_node_text(call_node.child_by_field_name('function')) if call_node.child_by_field_name('function') else name
+                    
+                    # Resolve context
+                    context_name, context_type, context_line = self._get_parent_context(node)
+                    
+                    # In Go, methods are defined on types (structs/interfaces). If we are in a method, the context is the method name.
+                    # Ideally we might want the receiver type as "class_context", but this requires more complex AST traversal up to the method declaration's receiver.
+                    # For now, we reuse the context resolution logic.
+                    class_context = None 
                     
                     call_data = {
                         "name": name,
-                        "full_name": self._get_node_text(call_node.child_by_field_name('function')) if call_node.child_by_field_name('function') else name,
-                        "line_number": node.start_point[0] + 1,
+                        "full_name": full_name,
+                        "line_number": line_number,
                         "args": [],
                         "inferred_obj_type": None,
-                        "context": None,
-                        "class_context": None,
+                        "context": (context_name, context_type, context_line),
+                        "class_context": class_context,
                         "lang": self.language_name,
                         "is_dependency": False,
                     }

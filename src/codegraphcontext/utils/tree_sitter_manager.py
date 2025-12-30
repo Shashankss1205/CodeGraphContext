@@ -31,6 +31,8 @@ LANGUAGE_ALIASES = {
     "rb": "ruby",
     "rs": "rust",
     "go": "go",
+    "php": "php",
+    ".php": "php",
     
     # Canonical names (map to themselves for consistency)
     "python": "python",

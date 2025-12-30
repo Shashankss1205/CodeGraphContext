@@ -29,8 +29,10 @@ RUBY_QUERIES = {
     """,
     "calls": """
         (call
+            receiver: (_)? @receiver
             method: (identifier) @name
-        )
+            arguments: (argument_list)? @args
+        ) @call_node
     """,
     "variables": """
         (assignment
@@ -378,19 +380,61 @@ class RubyTreeSitterParser:
         calls = []
         query_str = RUBY_QUERIES["calls"]
         
-        for node, capture_name in execute_query(self.language, query_str, root_node):
-            if capture_name == 'name':
-                name = self._get_node_text(node)
-                full_name = name
+        # Collect all captures
+        all_captures = list(execute_query(self.language, query_str, root_node))
+        
+        # Group by call node
+        captures_by_call = {}
+        for node, capture_name in all_captures:
+            if capture_name == 'call_node':
+                captures_by_call[id(node)] = {'node': node, 'name': None, 'receiver': None, 'args': []}
+        
+        for node, capture_name in all_captures:
+             for call_id, call_data in captures_by_call.items():
+                call_node = call_data['node']
+                if not (node.start_byte >= call_node.start_byte and node.end_byte <= call_node.end_byte):
+                    continue
+
+                if capture_name == 'name':
+                     # The identifier could be part of receiver or arguments too, be careful
+                     # But tree-sitter structure ensures method name is distinct
+                     # Check if node is child 'method' of call_node
+                     if node == call_node.child_by_field_name('method'):
+                        captures_by_call[call_id]['name'] = self._get_node_text(node)
+                
+                elif capture_name == 'receiver':
+                    captures_by_call[call_id]['receiver'] = self._get_node_text(node)
+                
+                elif capture_name == 'args':
+                     # Capture arguments
+                    args_text = self._get_node_text(node)
+                    # Simple heuristic: split by comma
+                    captures_by_call[call_id]['args'] = [a.strip() for a in args_text.strip("()").split(',') if a.strip()]
+
+        for call_data in captures_by_call.values():
+            call_node = call_data['node']
+            name = call_data['name']
+            
+            if name:
+                receiver = call_data['receiver']
+                full_name = f"{receiver}.{name}" if receiver else name
+                
+                context_name, context_type, context_line = self._get_parent_context(call_node)
+                class_context = context_name if context_type in ('class', 'module') else None
+                if context_type == 'method':
+                     # If inside a method, try to find enclosing class too
+                     enclosing_class, _, _ = self._get_parent_context(call_node.parent, ('class', 'module'))
+                     class_context = enclosing_class
+
 
                 calls.append({
                     "name": name,
                     "full_name": full_name,
-                    "line_number": node.start_point[0] + 1,
-                    "args": [],  # Placeholder - could be enhanced to extract arguments
+                    "line_number": call_node.start_point[0] + 1,
+                    "args": call_data['args'],
                     "inferred_obj_type": None,
-                    "context": None,  # Placeholder
-                    "class_context": None,  # Placeholder
+                    "context": (context_name, context_type, context_line),
+                    "class_context": class_context,
                     "lang": self.language_name,
                     "is_dependency": False,
                 })
