@@ -4,8 +4,8 @@ This module defines the command-line interface (CLI) for the CodeGraphContext ap
 It uses the Typer library to create a user-friendly and well-documented CLI.
 
 Commands:
-- setup: Runs an interactive wizard to configure the Neo4j database connection.
-- start: Launches the main MCP server.
+- mcp setup: Runs an interactive wizard to configure the MCP client.
+- mcp start: Launches the main MCP server.
 - help: Displays help information.
 - version: Show the installed version.
 """
