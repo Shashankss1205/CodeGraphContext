@@ -283,9 +283,9 @@ def run_command(command, console, shell=False, check=True, input_text=None):
         console.print(f"[bold red]Command timed out:[/bold red] {cmd_str}")
         return None
 
-def run_setup_wizard():
-    """Guides the user through setting up CodeGraphContext."""
-    console.print("[bold cyan]Welcome to the CodeGraphContext Setup Wizard![/bold cyan]")
+def run_neo4j_setup_wizard():
+    """Guides the user through setting up Neo4j database for CodeGraphContext."""
+    console.print("[bold cyan]Welcome to the Neo4j Setup Wizard![/bold cyan]")
     
     questions = [
         {
@@ -308,6 +308,70 @@ def run_setup_wizard():
         setup_local_db()
     elif db_location:
         setup_existing_db()
+
+
+def configure_mcp_client():
+    """
+    Configure MCP client (IDE/CLI) integration.
+    This function sets up the MCP server configuration for the user's IDE without requiring Neo4j credentials.
+    Works with FalkorDB by default.
+    """
+    console.print("[bold cyan]MCP Client Configuration[/bold cyan]\n")
+    console.print("This will configure CodeGraphContext integration with your IDE or CLI tool.")
+    console.print("CodeGraphContext works with FalkorDB by default (no database setup needed).\n")
+    
+    # Generate MCP configuration without Neo4j credentials (for FalkorDB use)
+    cgc_path = shutil.which("cgc") or sys.executable
+
+    if "python" in Path(cgc_path).name:
+        # fallback to running as module if no cgc binary is found
+        command = cgc_path
+        args = ["-m", "cgc", "start"]
+    else:
+        command = cgc_path
+        args = ["start"]
+
+    # Create MCP config without Neo4j env vars (uses FalkorDB by default)
+    mcp_config = {
+        "mcpServers": {
+            "CodeGraphContext": {
+                "command": command,
+                "args": args,
+                "tools": {
+                    "alwaysAllow": [
+                        "add_code_to_graph", "add_package_to_graph",
+                        "check_job_status", "list_jobs", "find_code",
+                        "analyze_code_relationships", "watch_directory",
+                        "find_dead_code", "execute_cypher_query",
+                        "calculate_cyclomatic_complexity", "find_most_complex_functions",
+                        "list_indexed_repositories", "delete_repository", "list_watched_paths", 
+                        "unwatch_directory", "visualize_graph_query"
+                    ],
+                    "disabled": False
+                },
+                "disabled": False,
+                "alwaysAllow": []
+            }
+        }
+    }
+
+    console.print("\n[bold green]Configuration generated![/bold green]")
+    console.print("Copy the following JSON and add it to your MCP server configuration file:")
+    console.print(json.dumps(mcp_config, indent=2))
+
+    # Save to file for convenience
+    mcp_file = Path.cwd() / "mcp.json"
+    with open(mcp_file, "w") as f:
+        json.dump(mcp_config, f, indent=2)
+    console.print(f"\n[cyan]Configuration saved to: {mcp_file}[/cyan]")
+    
+    # Configure IDE automatically
+    _configure_ide(mcp_config)
+    
+    console.print("\n[bold green]✅ MCP Client configuration complete![/bold green]")
+    console.print("[cyan]You can now run 'cgc start' to launch the server with FalkorDB.[/cyan]")
+    console.print("[yellow]Note: If you want to use Neo4j instead, run 'cgc neo4j setup' first.[/yellow]\n")
+
 
 def find_latest_neo4j_creds_file():
     """Finds the latest Neo4j credentials file in the Downloads folder."""
