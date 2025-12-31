@@ -1,6 +1,7 @@
 # CodeGraphContext
 
 <!-- ====== Project stats ====== -->
+
 [![Stars](https://img.shields.io/github/stars/Shashankss1205/CodeGraphContext?logo=github)](https://github.com/Shashankss1205/CodeGraphContext/stargazers)
 [![Forks](https://img.shields.io/github/forks/Shashankss1205/CodeGraphContext?logo=github)](https://github.com/Shashankss1205/CodeGraphContext/network/members)
 [![Open Issues](https://img.shields.io/github/issues-raw/Shashankss1205/CodeGraphContext?logo=github)](https://github.com/Shashankss1205/CodeGraphContext/issues)
@@ -18,34 +19,36 @@
 [![YouTube](https://img.shields.io/badge/YouTube-Watch%20Demo-red?logo=youtube)](https://youtu.be/KYYSdxhg1xU)
 [![Discord](https://img.shields.io/badge/Discord-Join%20Chat-7289da?logo=discord&logoColor=white)](https://discord.gg/dR4QY32uYQ)
 
-
-
 A powerful **MCP server** and **CLI tool** that indexes local code into a graph database to provide context to AI assistants and developers. Use it as a standalone CLI for code analysis or connect it to your favorite AI IDE via MCP.
 
 ### Indexing a codebase
+
 ![Indexing using an MCP client](https://github.com/Shashankss1205/CodeGraphContext/blob/main/images/Indexing.gif)
 
 ### Using the MCP server
+
 ![Using the MCP server](https://github.com/Shashankss1205/CodeGraphContext/blob/main/images/Usecase.gif)
 
 ## Project Details
+
 - **Version:** 0.1.21
 - **Authors:** Shashank Shekhar Singh <shashankshekharsingh1205@gmail.com>
 - **License:** MIT License (See [LICENSE](LICENSE) for details)
 - **Website:** [CodeGraphContext](http://codegraphcontext.vercel.app/)
 
 ## Star History
+
 [![Star History Chart](https://api.star-history.com/svg?repos=Shashankss1205/CodeGraphContext&type=Date)](https://www.star-history.com/#Shashankss1205/CodeGraphContext&Date)
 
 ## Features
 
--   **Code Indexing:** Analyzes code and builds a knowledge graph of its components.
--   **Relationship Analysis:** Query for callers, callees, class hierarchies, call chains and more.
--   **Live Updates:** Watches local files for changes and automatically updates the graph.
--   **Interactive Setup:** A user-friendly command-line wizard for easy setup.
--   **Dual Mode:** Works as a standalone **CLI tool** for developers and as an **MCP server** for AI agents.
--   **Multi-Language Support:** Full support for 11 programming languages.
--   **Flexible Database Backend:** Choose between Neo4j or FalkorDB Lite.
+- **Code Indexing:** Analyzes code and builds a knowledge graph of its components.
+- **Relationship Analysis:** Query for callers, callees, class hierarchies, call chains and more.
+- **Live Updates:** Watches local files for changes and automatically updates the graph.
+- **Interactive Setup:** A user-friendly command-line wizard for easy setup.
+- **Dual Mode:** Works as a standalone **CLI tool** for developers and as an **MCP server** for AI agents.
+- **Multi-Language Support:** Full support for 11 programming languages.
+- **Flexible Database Backend:** Choose between Neo4j or FalkorDB Lite.
 
 ## Supported Programming Languages
 
@@ -70,12 +73,14 @@ Each language parser extracts functions, classes, methods, parameters, inheritan
 CodeGraphContext supports two graph database backends:
 
 ### Neo4j (Default)
+
 - **Production-ready** and widely used graph database
 - Supports local instances (via Docker or native installation) and cloud hosting (Neo4j AuraDB)
 - Full Cypher query support for advanced graph analytics
 - Recommended for most use cases
 
 ### FalkorDB Lite
+
 - **Lightweight** embedded graph database (optional)
 - **Platform note:** FalkorDB relies on `redislite`, which is not supported on Windows. For Windows users, run CodeGraphContext inside **WSL/Linux** to use FalkorDB or use the Neo4j backend instead.
 - Available for **Python 3.12+** on supported platforms (Linux/WSL)
@@ -123,57 +128,62 @@ If you’re using CodeGraphContext in your project, feel free to open a PR and a
     <summary>⚙️ Troubleshooting: In case, command <code>cgc</code> not found</summary>
 
     If you encounter <i>"cgc: command not found"</i> after installation, run the PATH fix script:
-    
+
     **Linux/Mac:**
+
     ```bash
     # Download the fix script
     curl -O https://raw.githubusercontent.com/Shashankss1205/CodeGraphContext/main/scripts/post_install_fix.sh
-    
+
     # Make it executable
     chmod +x post_install_fix.sh
-    
+
     # Run the script
     ./post_install_fix.sh
-    
+
     # Restart your terminal or reload shell config
     source ~/.bashrc  # or ~/.zshrc for zsh users
     ```
-    
+
     **Windows (PowerShell):**
+
     ```powershell
     # Download the fix script
     curl -O https://raw.githubusercontent.com/Shashankss1205/CodeGraphContext/main/scripts/post_install_fix.sh
-    
+
     # Run with bash (requires Git Bash or WSL)
     bash post_install_fix.sh
-    
+
     # Restart PowerShell or reload profile
     . $PROFILE
-    ``` 
+    ```
+
     </details>
 
-    
     **Database Configuration:**
-    *   **Local Setup (Docker Recommended):** Helps you set up a local Neo4j instance using Docker. Requires Docker and Docker Compose to be installed.
-    *   **Local Setup (Linux Binary):** For Debian-based Linux systems (like Ubuntu), `cgc neo4j setup` can automate the installation of Neo4j. Requires `sudo` privileges.
-    *   **Hosted Setup:** Allows you to connect to an existing remote Neo4j database (e.g., Neo4j AuraDB).
+
+    - **Local Setup (Docker Recommended):** Helps you set up a local Neo4j instance using Docker. Requires Docker and Docker Compose to be installed.
+    - **Local Setup (Linux Binary):** For Debian-based Linux systems (like Ubuntu), `cgc neo4j setup` can automate the installation of Neo4j. Requires `sudo` privileges.
+    - **Hosted Setup:** Allows you to connect to an existing remote Neo4j database (e.g., Neo4j AuraDB).
 
     **IDE/CLI Configuration:**
     After setting up your database, the wizard will ask to configure your development environment. It can automatically detect and configure the following:
-    *   VS Code
-    *   Cursor
-    *   Windsurf
-    *   Claude
-    *   Gemini CLI
-    *   ChatGPT Codex
-    *   Cline
-    *   RooCode
-    *   Amazon Q Developer
+
+    - VS Code
+    - Cursor
+    - Windsurf
+    - Claude
+    - Gemini CLI
+    - ChatGPT Codex
+    - Cline
+    - RooCode
+    - Amazon Q Developer
 
     Upon successful configuration, `cgc mcp setup` will generate and place the necessary configuration files:
-    *   It creates an `mcp.json` file in your current directory for reference.
-    *   It stores your Neo4j credentials securely in `~/.codegraphcontext/.env`.
-    *   It updates the settings file of your chosen IDE/CLI (e.g., `.claude.json` or VS Code's `settings.json`).
+
+    - It creates an `mcp.json` file in your current directory for reference.
+    - It stores your Neo4j credentials securely in `~/.codegraphcontext/.env`.
+    - It updates the settings file of your chosen IDE/CLI (e.g., `.claude.json` or VS Code's `settings.json`).
 
 3.  **Start:** `cgc mcp start`
 
@@ -182,6 +192,7 @@ If you’re using CodeGraphContext in your project, feel free to open a PR and a
 You can tell CodeGraphContext to ignore specific files and directories by creating a `.cgcignore` file in the root of your project. This file uses the same syntax as `.gitignore`.
 
 **Example `.cgcignore` file:**
+
 ```
 # Ignore build artifacts
 /build/
@@ -206,9 +217,7 @@ Add the following server configuration to your client's settings file (e.g., VS 
   "mcpServers": {
     "CodeGraphContext": {
       "command": "cgc",
-      "args": [
-        "start"
-      ],
+      "args": ["start"],
       "env": {
         "NEO4J_URI": "YOUR_NEO4J_URI",
         "NEO4J_USERNAME": "YOUR_NEO4J_USERNAME",
@@ -248,59 +257,66 @@ Once the server is running, you can interact with it through your AI assistant u
 
 ### Indexing and Watching Files
 
--   **To index a new project:**
-    -   "Please index the code in the `/path/to/my-project` directory."
+- **To index a new project:**
+
+  - "Please index the code in the `/path/to/my-project` directory."
     OR
-    -   "Add the project at `~/dev/my-other-project` to the code graph."
+  - "Add the project at `~/dev/my-other-project` to the code graph."
 
+- **To start watching a directory for live changes:**
 
--   **To start watching a directory for live changes:**
-    -   "Watch the `/path/to/my-active-project` directory for changes."
+  - "Watch the `/path/to/my-active-project` directory for changes."
     OR
-    -   "Keep the code graph updated for the project I'm working on at `~/dev/main-app`."
+  - "Keep the code graph updated for the project I'm working on at `~/dev/main-app`."
 
-    When you ask to watch a directory, the system performs two actions at once:
-    1.  It kicks off a full scan to index all the code in that directory. This process runs in the background, and you'll receive a `job_id` to track its progress.
-    2.  It begins watching the directory for any file changes to keep the graph updated in real-time.
+  When you ask to watch a directory, the system performs two actions at once:
 
-    This means you can start by simply telling the system to watch a directory, and it will handle both the initial indexing and the continuous updates automatically.
+  1.  It kicks off a full scan to index all the code in that directory. This process runs in the background, and you'll receive a `job_id` to track its progress.
+  2.  It begins watching the directory for any file changes to keep the graph updated in real-time.
+
+  This means you can start by simply telling the system to watch a directory, and it will handle both the initial indexing and the continuous updates automatically.
 
 ### Querying and Understanding Code
 
--   **Finding where code is defined:**
-    -   "Where is the `process_payment` function?"
-    -   "Find the `User` class for me."
-    -   "Show me any code related to 'database connection'."
+- **Finding where code is defined:**
 
--   **Analyzing relationships and impact:**
-    -   "What other functions call the `get_user_by_id` function?"
-    -   "If I change the `calculate_tax` function, what other parts of the code will be affected?"
-    -   "Show me the inheritance hierarchy for the `BaseController` class."
-    -   "What methods does the `Order` class have?"
+  - "Where is the `process_payment` function?"
+  - "Find the `User` class for me."
+  - "Show me any code related to 'database connection'."
 
--   **Exploring dependencies:**
-    -   "Which files import the `requests` library?"
-    -   "Find all implementations of the `render` method."
+- **Analyzing relationships and impact:**
 
--   **Advanced Call Chain and Dependency Tracking (Spanning Hundreds of Files):**
-    The CodeGraphContext excels at tracing complex execution flows and dependencies across vast codebases. Leveraging the power of graph databases, it can identify direct and indirect callers and callees, even when a function is called through multiple layers of abstraction or across numerous files. This is invaluable for:
-    -   **Impact Analysis:** Understand the full ripple effect of a change to a core function.
-    -   **Debugging:** Trace the path of execution from an entry point to a specific bug.
-    -   **Code Comprehension:** Grasp how different parts of a large system interact.
+  - "What other functions call the `get_user_by_id` function?"
+  - "If I change the `calculate_tax` function, what other parts of the code will be affected?"
+  - "Show me the inheritance hierarchy for the `BaseController` class."
+  - "What methods does the `Order` class have?"
 
-    -   "Show me the full call chain from the `main` function to `process_data`."
-    -   "Find all functions that directly or indirectly call `validate_input`."
-    -   "What are all the functions that `initialize_system` eventually calls?"
-    -   "Trace the dependencies of the `DatabaseManager` module."
+- **Exploring dependencies:**
 
--   **Code Quality and Maintenance:**
-    -   "Is there any dead or unused code in this project?"
-    -   "Calculate the cyclomatic complexity of the `process_data` function in `src/utils.py`."
-    -   "Find the 5 most complex functions in the codebase."
+  - "Which files import the `requests` library?"
+  - "Find all implementations of the `render` method."
 
--   **Repository Management:**
-    -   "List all currently indexed repositories."
-    -   "Delete the indexed repository at `/path/to/old-project`."
+- **Advanced Call Chain and Dependency Tracking (Spanning Hundreds of Files):**
+  The CodeGraphContext excels at tracing complex execution flows and dependencies across vast codebases. Leveraging the power of graph databases, it can identify direct and indirect callers and callees, even when a function is called through multiple layers of abstraction or across numerous files. This is invaluable for:
+
+  - **Impact Analysis:** Understand the full ripple effect of a change to a core function.
+  - **Debugging:** Trace the path of execution from an entry point to a specific bug.
+  - **Code Comprehension:** Grasp how different parts of a large system interact.
+
+  - "Show me the full call chain from the `main` function to `process_data`."
+  - "Find all functions that directly or indirectly call `validate_input`."
+  - "What are all the functions that `initialize_system` eventually calls?"
+  - "Trace the dependencies of the `DatabaseManager` module."
+
+- **Code Quality and Maintenance:**
+
+  - "Is there any dead or unused code in this project?"
+  - "Calculate the cyclomatic complexity of the `process_data` function in `src/utils.py`."
+  - "Find the 5 most complex functions in the codebase."
+
+- **Repository Management:**
+  - "List all currently indexed repositories."
+  - "Delete the indexed repository at `/path/to/old-project`."
 
 ## Contributing
 

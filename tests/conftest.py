@@ -37,9 +37,15 @@ def server():
 
     process = None
     try:
-        print("Starting cgc server process...")
+        import sys
+        # On Windows: skip server-based tests unless Neo4j credentials are present
+        if sys.platform == "win32":
+            if not (os.getenv('NEO4J_URI') and os.getenv('NEO4J_USERNAME') and os.getenv('NEO4J_PASSWORD')):
+                pytest.skip("No database backend configured on Windows. Skipping server-based tests.")
+
+        print("Starting cgc server process via Python module...")
         process = subprocess.Popen(
-            ["cgc", "start"],
+            [sys.executable, "-m", "codegraphcontext", "start"],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,

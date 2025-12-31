@@ -8,9 +8,9 @@ The `DatabaseManager` class in `database.py` is a thread-safe singleton responsi
 
 ### Key Methods
 
--   `get_driver()`: Returns the active Neo4j Driver instance, creating it if it doesn't exist.
--   `close_driver()`: Closes the Neo4j driver connection.
--   `is_connected()`: Checks if the database connection is currently active.
+- `get_driver()`: Returns the active Neo4j Driver instance, creating it if it doesn't exist.
+- `close_driver()`: Closes the Neo4j driver connection.
+- `is_connected()`: Checks if the database connection is currently active.
 
 ## `JobManager`
 
@@ -19,6 +19,7 @@ The `JobManager` class in `jobs.py` handles long-running, background jobs, such 
 ### `JobStatus`
 
 An enumeration for the possible statuses of a background job:
+
 - `PENDING`
 - `RUNNING`
 - `COMPLETED`
@@ -31,11 +32,11 @@ A data class that holds all information about a single background job, including
 
 ### Key Methods
 
--   `create_job()`: Creates a new job with a unique ID.
--   `update_job()`: Updates the information for a specific job.
--   `get_job()`: Retrieves the information for a single job.
--   `list_jobs()`: Returns a list of all jobs.
--   `cleanup_old_jobs()`: Removes old, completed jobs from memory.
+- `create_job()`: Creates a new job with a unique ID.
+- `update_job()`: Updates the information for a specific job.
+- `get_job()`: Retrieves the information for a single job.
+- `list_jobs()`: Returns a list of all jobs.
+- `cleanup_old_jobs()`: Removes old, completed jobs from memory.
 
 ## `CodeWatcher`
 
@@ -51,8 +52,8 @@ A dedicated event handler for a single repository. It performs an initial scan a
 
 ### Key Methods
 
--   `watch_directory()`: Schedules a directory to be watched for changes.
--   `unwatch_directory()`: Stops watching a directory.
--   `list_watched_paths()`: Returns a list of all currently watched directory paths.
--   `start()`: Starts the observer thread.
--   `stop()`: Stops the observer thread gracefully.
+- `watch_directory()`: Schedules a directory to be watched for changes.
+- `unwatch_directory()`: Stops watching a directory.
+- `list_watched_paths()`: Returns a list of all currently watched directory paths.
+- `start()`: Starts the observer thread.
+- `stop()`: Stops the observer thread gracefully.

@@ -191,7 +191,20 @@ class DatabaseManager:
                         f"  • Try: docker compose up -d (if using Docker)"
                     )
             except Exception as e:
-                return False, f"Error parsing URI or checking connectivity: {str(e)}"
+                # Could be DNS resolution failure (socket.gaierror) or similar; surface as 'Cannot reach Neo4j server'
+                try:
+                    host_port = uri.split('://')[1]
+                    host = host_port.split(':')[0]
+                    port = int(host_port.split(':')[1])
+                    return False, (
+                        f"Cannot reach Neo4j server at {host}:{port} - {str(e)}\n"
+                        "Troubleshooting:\n"
+                        "  • Is Neo4j running? Check with: docker ps (for Docker)\n"
+                        "  • Is the host name correct and resolvable?\n"
+                        "  • Is the port correct? Default is 7687\n"
+                    )
+                except Exception:
+                    return False, f"Cannot reach Neo4j server or parse URI: {str(e)}"
             
             # Now test Neo4j authentication
             driver = GraphDatabase.driver(uri, auth=(username, password))

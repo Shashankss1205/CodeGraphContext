@@ -55,6 +55,10 @@ def run_command(command, shell=False, check=True):
     except subprocess.TimeoutExpired:
         print(f"[ERROR] Command timed out: {cmd_str}")
         return None
+    except FileNotFoundError:
+        # Executable not found (e.g., docker, npm, gem); caller should treat as missing dependency
+        print(f"[ERROR] Command not found: {cmd_str}")
+        return None
 
 def test_end_to_end_workflow_local_db():
     if not run_command(["docker", "--version"], check=False) or not run_command(["docker", "compose", "version"], check=False):
