@@ -21,19 +21,21 @@ Install the `codegraphcontext` package directly from PyPI using pip:
 pip install codegraphcontext
 ```
 
-### 2. Run the Setup Wizard
+### 2. Run the Setup Wizard for MCP Client
 
 Launch the interactive setup wizard to configure your Neo4j database and development environment:
 
 ```bash
-cgc setup
+cgc mcp setup
 ```
+
+This ensures your IDE is configured. To configure a Neo4j database, use `cgc neo4j setup`.
 
 The wizard guides you through a series of intuitive prompts to tailor your setup.
 
 ## 🧭 "Step-by-Step Guide for the Setup Wizard"
 
-When you run `cgc setup`, the wizard offers a thoughtful journey through configuration. Follow these steps to complete your setup with ease:
+When you run `cgc neo4j setup`, the wizard offers a thoughtful journey through configuration. Follow these steps to complete your setup with ease:
 
 **1. Select Your Database Location**
 
@@ -73,7 +75,7 @@ These files ensure smooth communication between CodeGraphContext, your Neo4j ins
 Once configuration is complete, launch the MCP server with:
 
 ```bash
-cgc start
+cgc mcp start
 ```
 
 Your **CodeGraphContext** server is now active, ready to power AI-assisted graph queries.

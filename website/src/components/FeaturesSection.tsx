@@ -40,11 +40,11 @@ const FeaturesSection = () => {
             Transform your codebase into an intelligent knowledge graph that AI assistants can understand and navigate
           </p>
         </div>
-        
+
         <div className="grid md:grid-cols-2 gap-8">
           {features.map((feature, index) => (
             <div key={index} data-aos="fade-up" data-aos-delay={index * 100}>
-              <Card 
+              <Card
                 className="border-border/50 hover:border-primary/30 transition-smooth group hover:shadow-glow animate-float-up dark:bg-gradient-card dark:bg-card/50 dark:border-border/30 dark:hover:border-primary/40 bg-white/95 border-gray-200/50 hover:border-primary/50 shadow-sm h-full"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
