@@ -1,142 +1,61 @@
 # CLI Reference
 
-The CodeGraphContext CLI provides a set of commands to manage the server, index your code, and interact with the code graph.
+The CodeGraphContext CLI provides a comprehensive command-line interface to manage the server, index your code, search, analyzing and interact with the code graph.
 
-## `cgc setup`
+## 1. Project Management
+Use these commands to manage the repositories in your code graph.
 
-Runs the interactive setup wizard to configure the server and database connection. This helps users set up a local Docker-based Neo4j instance or connect to a remote one.
+| Command | Arguments | Description |
+| :--- | :--- | :--- |
+| **`cgc index`** | `[path]` <br> `--force` | Adds a repository to the graph. Default path is current directory. Use `--force` to re-index from scratch. <br> *(Alias: `cgc i`)* |
+| **`cgc list`** | None | Lists all repositories currently indexed in the database. <br> *(Alias: `cgc ls`)* |
+| **`cgc delete`** | `[path]` <br> `--all` | Removes a repository from the graph. Use `--all` to wipe everything. <br> *(Alias: `cgc rm`)* |
+| **`cgc stats`** | `[path]` | Shows indexing statistics (node counts) for the DB or a specific repo. |
+| **`cgc clean`** | None | Removes orphaned nodes and cleans up the database. |
+| **`cgc add-package`** | `<name> <lang>` | Manually adds an external package node (e.g., `cgc add-package requests python`). |
 
-**Usage:**
-```bash
-cgc setup
-```
+## 2. Code Analysis
+Understand the structure, quality, and relationships of your code.
 
-## `cgc start`
+| Command | Arguments | Description |
+| :--- | :--- | :--- |
+| **`cgc analyze calls`** | `<func_name>` <br> `--file` | Shows **outgoing** calls: what functions does this function call? |
+| **`cgc analyze callers`** | `<func_name>` <br> `--file` | Shows **incoming** calls: who calls this function? |
+| **`cgc analyze chain`** | `<start> <end>` <br> `--depth` | Finds the call path between two functions. Default depth is 5. |
+| **`cgc analyze deps`** | `<module>` <br> `--no-external` | Inspects dependencies (imports and importers) for a module. |
+| **`cgc analyze tree`** | `<class_name>` <br> `--file` | Visualizes the Class Inheritance hierarchy for a given class. |
+| **`cgc analyze complexity`**| `[path]` <br> `--threshold` <br> `--limit` | Lists functions with high Cyclomatic Complexity. Default threshold: 10. |
+| **`cgc analyze dead-code`** | `--exclude` | Finds potentially unused functions (0 callers). Use `--exclude` for decorators. |
 
-Starts the CodeGraphContext MCP server, which listens for JSON-RPC requests from stdin.
+## 3. Discovery & Search
+Find code elements when you don't know the exact structure.
 
-**Usage:**
-```bash
-cgc start
-```
+| Command | Arguments | Description |
+| :--- | :--- | :--- |
+| **`cgc find name`** | `<name>` <br> `--type` | Finds code elements (Class, Function) by their **exact** name. |
+| **`cgc find pattern`** | `<pattern>` <br> `--case-sensitive` | Finds elements using fuzzy substring matching (e.g. "User" finds "UserHelper"). |
+| **`cgc find type`** | `<type>` <br> `--limit` | Lists all nodes of a specific type (e.g. `function`, `class`, `module`). |
 
-## `cgc index [PATH]`
+## 4. Configuration & Setup
+Manage your environment and database connections.
 
-Indexes a directory or file by adding it to the code graph. If no path is provided, it indexes the current directory.
+| Command | Arguments | Description |
+| :--- | :--- | :--- |
+| **`cgc mcp setup`** | None | Configures your IDE/MCP Client. Creates `mcp.json`. <br> *(Alias: `cgc m`)* |
+| **`cgc neo4j setup`** | None | Wizard to configure a Neo4j connection. <br> *(Alias: `cgc n`)* |
+| **`cgc config show`** | None | Displays current configuration values. |
+| **`cgc config set`** | `<key> <value>` | Sets a config value (e.g. `DEFAULT_DATABASE`). |
+| **`cgc config reset`** | None | Resets configuration to defaults. |
+| **`cgc config db`** | `<backend>` | Quick switch between `neo4j` and `falkordb`. |
 
-**Arguments:**
-*   `PATH` (optional): Path to the directory or file to index. Defaults to the current directory.
+## 5. Utilities & Runtime
+Helper commands for developers and the MCP server.
 
-**Usage:**
-```bash
-cgc index /path/to/your/project
-```
-
-### Ignoring Files (`.cgcignore`)
-
-You can tell CodeGraphContext to ignore specific files and directories by creating a `.cgcignore` file in the root of your project. This file uses the same syntax as `.gitignore`.
-
-When you run `cgc index`, the command will look for a `.cgcignore` file in the directory being indexed and exclude any files or directories that match the patterns in the file.
-
-**Example `.cgcignore` file:**
-```
-# Ignore build artifacts
-/build/
-/dist/
-
-# Ignore dependencies
-/node_modules/
-/vendor/
-
-# Ignore logs
-*.log
-```
-
-
-## `cgc delete <PATH>`
-
-Deletes a repository from the code graph.
-
-**Arguments:**
-*   `PATH` (required): Path of the repository to delete from the code graph.
-
-**Usage:**
-```bash
-cgc delete /path/to/your/project
-```
-
-## `cgc visualize [QUERY]`
-
-Generates a URL to visualize a Cypher query in the Neo4j Browser. If no query is provided, a default query will be used.
-
-**Arguments:**
-*   `QUERY` (optional): The Cypher query to visualize.
-
-**Usage:**
-```bash
-cgc visualize "MATCH (n) RETURN n"
-```
-
-## `cgc list_repos`
-
-Lists all indexed repositories.
-
-**Usage:**
-```bash
-cgc list_repos
-```
-
-## `cgc add_package <PACKAGE_NAME>`
-
-Adds a Python package to the code graph.
-
-**Arguments:**
-*   `PACKAGE_NAME` (required): Name of the Python package to add.
-
-**Usage:**
-```bash
-cgc add_package requests
-```
-
-## `cgc cypher <QUERY>`
-
-Executes a read-only Cypher query.
-
-**Arguments:**
-*   `QUERY` (required): The read-only Cypher query to execute.
-
-**Usage:**
-```bash
-cgc cypher "MATCH (n:Function) RETURN n.name"
-```
-
-## `cgc list_mcp_tools`
-
-Lists all available tools and their descriptions.
-
-**Usage:**
-```bash
-cgc list_mcp_tools
-```
-
-## `cgc help`
-
-Show the main help message and exit.
-
-**Usage:**
-```bash
-cgc help
-```
-
-## `cgc version`
-
-Show the application version.
-
-**Usage:**
-```bash
-cgc --version
-```
-or
-```bash
-cgc version
-```
+| Command | Arguments | Description |
+| :--- | :--- | :--- |
+| **`cgc doctor`** | None | Runs system diagnostics (DB connection, dependencies, permissions). |
+| **`cgc visualize`** | `[query]` | Generates a link to open the Neo4j Browser. <br> *(Alias: `cgc v`)* |
+| **`cgc query`** | `<query>` | Executes a raw Cypher query directly against the DB. |
+| **`cgc mcp start`** | None | Starts the MCP Server (used by IDEs). |
+| **`cgc mcp tools`** | None | Lists all available MCP tools supported by the server. |
+| **`cgc start`** | None | **Deprecated**. Use `cgc mcp start` instead. |

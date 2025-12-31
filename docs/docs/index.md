@@ -25,9 +25,9 @@ This is the official documentation for CodeGraphContext.
 
 
 
-An MCP server that indexes local code into a graph database to provide context to AI assistants.
+A powerful **CLI tool** and **MCP server** that indexes local code into a graph database to provide context to AI assistants and developers. Use it as a standalone CLI for code analysis or connect it to your favorite AI IDE via MCP.
 
-### Indexing a codebase
+### Indexing a codebase (CLI or MCP)
 ![Indexing using an MCP client](images/Indexing.gif)
 
 ### Using the MCP server
@@ -79,8 +79,9 @@ If you’re using CodeGraphContext in your project, feel free to open a PR and a
 2.  **Configure Your Environment:**
     Run the interactive setup wizard to connect to your database and configure your IDE:
     ```bash
-    cgc setup
+    cgc mcp setup
     ```
+    This ensures your IDE is configured. To configure a Neo4j database, use `cgc neo4j setup`.
     The wizard helps you with:
     -   **Database Connection:**
         -   **Docker (Recommended):** Automatically sets up a local Neo4j instance.
@@ -90,11 +91,11 @@ If you’re using CodeGraphContext in your project, feel free to open a PR and a
         -   Automatically configures tools like VS Code, Cursor, Gemini CLI, and more.
         -   Generates the necessary `mcp.json` and `.env` files for you.
 
-3.  **Start:** `cgc start`
+3.  **Start:** `cgc mcp start`
 
 ## MCP Client Configuration
 
-The `cgc setup` command attempts to automatically configure your IDE/CLI. If you choose not to use the automatic setup, or if your tool is not supported, you can configure it manually.
+The `cgc mcp setup` command attempts to automatically configure your IDE/CLI. If you choose not to use the automatic setup, or if your tool is not supported, you can configure it manually.
 
 Add the following server configuration to your client's settings file (e.g., VS Code's `settings.json` or `.claude.json`):
 
@@ -104,6 +105,7 @@ Add the following server configuration to your client's settings file (e.g., VS 
     "CodeGraphContext": {
       "command": "cgc",
       "args": [
+        "mcp",
         "start"
       ],
       "env": {
