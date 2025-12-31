@@ -29,7 +29,7 @@ A powerful **MCP server** and **CLI tool** that indexes local code into a graph 
 ![Using the MCP server](https://github.com/Shashankss1205/CodeGraphContext/blob/main/images/Usecase.gif)
 
 ## Project Details
-- **Version:** 0.1.20
+- **Version:** 0.1.21
 - **Authors:** Shashank Shekhar Singh <shashankshekharsingh1205@gmail.com>
 - **License:** MIT License (See [LICENSE](LICENSE) for details)
 - **Website:** [CodeGraphContext](http://codegraphcontext.vercel.app/)
@@ -112,7 +112,7 @@ If you’re using CodeGraphContext in your project, feel free to open a PR and a
 - `nbconvert>=7.16.6`
 - `pathspec>=0.12.1`
 
-**Note:** Python 3.9+ is supported, including Python 3.13 and 3.14.
+**Note:** Python 3.10-3.14 is supported.
 
 ## Getting Started
 
