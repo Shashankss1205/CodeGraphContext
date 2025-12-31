@@ -28,17 +28,8 @@ dependencies = [
     "pytest",
     "nbformat",
     "nbconvert>=7.16.6",
-    "pathspec>=0.12.1",
-    "falkordblite>=0.1.0; python_version >= '3.12'"
+    "pathspec>=0.12.1"
 ]
-
-[project.urls]
-"Homepage" = "https://github.com/Shashankss1205/CodeGraphContext"
-"Bug Tracker" = "https://github.com/Shashankss1205/CodeGraphContext/issues"
-
-[project.scripts]
-cgc = "codegraphcontext.cli.main:app"
-codegraphcontext = "codegraphcontext.cli.main:app"
 
 [project.optional-dependencies]
 parsing = [
@@ -50,6 +41,19 @@ dev = [
     "black>=23.11.0",
     "pytest-asyncio>=0.21.0",
 ]
+
+# Optional embedded FalkorDB backend (Linux/WSL-only due to redislite platform limitations)
+falkor = [
+    "falkordblite>=0.1.0"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/Shashankss1205/CodeGraphContext"
+"Bug Tracker" = "https://github.com/Shashankss1205/CodeGraphContext/issues"
+
+[project.scripts]
+cgc = "codegraphcontext.cli.main:app"
+codegraphcontext = "codegraphcontext.cli.main:app"
 
 [tool.setuptools]
 package-dir = { "" = "src" }

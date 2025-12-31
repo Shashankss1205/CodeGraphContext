@@ -14,14 +14,18 @@ from typing import Union
 import importlib.util
 
 def _is_falkordb_available() -> bool:
-    """Check if FalkorDB Lite is installed (without importing native modules)."""
+    """Check if FalkorDB Lite is installed (without importing native modules).
+    Note: redislite (used by FalkorDB Lite) does not support Windows, so return False on Windows."""
     import sys
+    # redislite/FalkorDB Lite is not supported on Windows platform
+    if sys.platform == "win32":
+        return False
     if sys.version_info < (3, 12):
         return False
     try:
         # Check for redislite/falkordb-client spec without loading it
         return importlib.util.find_spec("redislite") is not None
-    except ImportError:
+    except Exception:
         return False
 
 def _is_neo4j_configured() -> bool:
@@ -55,8 +59,17 @@ def get_database_manager() -> Union['DatabaseManager', 'FalkorDBManager']:
     if db_type:
         db_type = db_type.lower()
         if db_type == 'falkordb':
+            import sys
+            if sys.platform == "win32":
+                raise ValueError(
+                    "Database set to 'falkordb' but FalkorDB Lite is not supported on Windows.\n"
+                    "Options: run inside WSL/Linux and install 'codegraphcontext[falkor]' or configure Neo4j with 'cgc neo4j setup'."
+                )
             if not _is_falkordb_available():
-                 raise ValueError("Database set to 'falkordb' but FalkorDB Lite is not installed.\nRun 'pip install falkordblite'")
+                 raise ValueError(
+                     "Database set to 'falkordb' but FalkorDB Lite is not installed or unavailable on this platform.\n"
+                     "Install on Linux/WSL with: pip install codegraphcontext[falkor] or configure Neo4j with 'cgc neo4j setup'."
+                 )
             from .database_falkordb import FalkorDBManager
             info_logger("Using FalkorDB Lite (explicit)")
             return FalkorDBManager()
@@ -84,8 +97,13 @@ def get_database_manager() -> Union['DatabaseManager', 'FalkorDBManager']:
 
     import sys
     error_msg = "No database backend available.\n"
-    
-    if sys.version_info < (3, 12):
+
+    if sys.platform == "win32":
+        error_msg += (
+            "FalkorDB Lite is not supported on Windows due to upstream 'redislite' limitations.\n"
+            "Options: 1) Use Neo4j (run 'cgc neo4j setup'), or 2) Run CodeGraphContext inside WSL/Linux and install 'codegraphcontext[falkor]'.\n"
+        )
+    elif sys.version_info < (3, 12):
         error_msg += (
             "FalkorDB Lite is not supported on Python < 3.12.\n"
             "You are running Python " + str(sys.version_info.major) + "." + str(sys.version_info.minor) + ".\n"
@@ -94,7 +112,7 @@ def get_database_manager() -> Union['DatabaseManager', 'FalkorDBManager']:
         )
     else:
         error_msg += (
-            "Recommended: Install FalkorDB Lite ('pip install falkordblite')\n"
+            "Recommended: Install FalkorDB Lite on Linux/WSL with ('pip install codegraphcontext[falkor]')\n"
             "Alternative: Run 'cgc setup' to configure Neo4j."
         )
             
@@ -102,6 +120,6 @@ def get_database_manager() -> Union['DatabaseManager', 'FalkorDBManager']:
 
 # For backward compatibility, export DatabaseManager
 from .database import DatabaseManager
-from .database_falkordb import FalkorDBManager
 
-__all__ = ['DatabaseManager', 'FalkorDBManager', 'get_database_manager']
+# Import FalkorDBManager lazily when requested (FalkorDB uses platform-specific native libs)
+__all__ = ['DatabaseManager', 'get_database_manager']

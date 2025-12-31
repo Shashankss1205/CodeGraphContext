@@ -76,14 +76,13 @@ CodeGraphContext supports two graph database backends:
 - Recommended for most use cases
 
 ### FalkorDB Lite
-- **Lightweight** in-memory graph database
-- **No external dependencies** - runs entirely in-process
-- Available for **Python 3.12+** only
+- **Lightweight** embedded graph database (optional)
+- **Platform note:** FalkorDB relies on `redislite`, which is not supported on Windows. For Windows users, run CodeGraphContext inside **WSL/Linux** to use FalkorDB or use the Neo4j backend instead.
+- Available for **Python 3.12+** on supported platforms (Linux/WSL)
 - Perfect for quick testing and development
-- Automatically installed when using Python 3.12 or higher
+- Install explicitly as an extra: `pip install codegraphcontext[falkor]`
 
-The `cgc neo4j setup` wizard helps you configure neo4j database backend while the falkordb database is
-supported inherently (enabled by default).
+The `cgc neo4j setup` wizard helps you configure the Neo4j database backend. On Windows the recommended workflow is to use Neo4j (Docker/native) or run inside WSL to use FalkorDB.
 
 ## Used By
 

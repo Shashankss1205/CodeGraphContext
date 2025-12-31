@@ -9,6 +9,11 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger("falkor_worker")
 
+# Platform guard: exit early on Windows since redislite is not supported there
+if sys.platform == "win32":
+    logger.error("FalkorDB Lite worker is not supported on Windows. Run inside WSL/Linux or use Neo4j instead.")
+    sys.exit(1)
+
 # Global to handle shutdown
 db_instance = None
 

@@ -66,6 +66,12 @@ class FalkorDBManager:
             A FalkorDB graph instance that mimics Neo4j driver interface.
         """
         if self._driver is None:
+            # redislite (used by FalkorDB Lite) is not supported on Windows
+            if sys.platform == "win32":
+                raise ValueError(
+                    "FalkorDB Lite is not supported on Windows due to the upstream 'redislite' package. "
+                    "Run inside WSL/Linux to use FalkorDB or configure Neo4j with 'cgc neo4j setup'."
+                )
             if sys.version_info < (3, 12):
                 raise ValueError("FalkorDB Lite is not supported on Python < 3.12.")
 
@@ -100,10 +106,11 @@ class FalkorDBManager:
                             
                     except ImportError as e:
                         error_logger(
-                            "FalkorDB client is not installed. Install it with:\n"
-                            "  pip install falkordblite"
+                            "FalkorDB client is not installed or unavailable on this platform.\n"
+                            "On Linux/WSL install with: pip install codegraphcontext[falkor]\n"
+                            "On Windows, FalkorDB is not supported — use WSL or configure Neo4j ('cgc neo4j setup')."
                         )
-                        raise ValueError("FalkorDB client missing.") from e
+                        raise ValueError("FalkorDB client missing or unsupported.") from e
                     except Exception as e:
                         error_logger(f"Failed to initialize FalkorDB: {e}")
                         raise
@@ -215,15 +222,20 @@ class FalkorDBManager:
         Tests the FalkorDB Lite connection availability.
         """
         try:
+            # Platform guard
+            if sys.platform == "win32":
+                return False, "FalkorDB Lite is not supported on Windows. Use WSL/Linux or configure Neo4j."
+
             if sys.version_info < (3, 12):
                 return False, "FalkorDB Lite is not supported on Python < 3.12. Please upgrade or use Neo4j."
 
-            import falkordb
+            import falkordb  # type: ignore
             return True, None
         except ImportError:
             return False, (
-                "FalkorDB client is not installed.\n"
-                "Install it with: pip install falkordblite"
+                "FalkorDB client is not installed or unavailable.\n"
+                "On Linux/WSL: pip install codegraphcontext[falkor]\n"
+                "On Windows: FalkorDB is not supported — use WSL or Neo4j."
             )
 
 

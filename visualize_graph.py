@@ -1,10 +1,25 @@
 import os
 import json
+import sys
 from pathlib import Path
-from redislite import FalkorDB
+
+
+def _load_falkor():
+    """Try to import FalkorDB client; return (FalkorDB, error_message)"""
+    if sys.platform == "win32":
+        return None, "FalkorDB Lite is not supported on Windows. Run inside WSL/Linux or use Neo4j."
+    try:
+        from redislite import FalkorDB
+        return FalkorDB, None
+    except ImportError:
+        return None, "FalkorDB client not installed. Install with: pip install codegraphcontext[falkor]"
 
 def generate_visualization():
     db_path = os.path.expanduser('~/.codegraphcontext/falkordb.db')
+    FalkorDB, err = _load_falkor()
+    if err:
+        print(f"Error: {err}")
+        return
     if not os.path.exists(db_path):
         print(f"Error: Database not found at {db_path}")
         return

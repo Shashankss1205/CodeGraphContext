@@ -365,8 +365,12 @@ def doctor():
                 import falkordb
                 console.print(f"   [green]✓[/green] FalkorDB Lite is installed")
             except ImportError:
-                console.print(f"   [yellow]⚠[/yellow] FalkorDB Lite not installed (Python 3.12+ only)")
-                console.print(f"       Run: pip install falkordblite")
+                import sys
+                if sys.platform == "win32":
+                    console.print(f"   [yellow]⚠[/yellow] FalkorDB Lite is not available on Windows. Run inside WSL/Linux or configure Neo4j with 'cgc neo4j setup'.")
+                else:
+                    console.print(f"   [yellow]⚠[/yellow] FalkorDB Lite not installed (Python 3.12+ only)")
+                    console.print(f"       Run: pip install codegraphcontext[falkor]  # installs falkordblite")
     except Exception as e:
         console.print(f"   [red]✗[/red] Database check error: {e}")
         all_checks_passed = False
