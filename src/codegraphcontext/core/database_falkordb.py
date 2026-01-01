@@ -65,6 +65,14 @@ class FalkorDBManager:
         Returns:
             A FalkorDB graph instance that mimics Neo4j driver interface.
         """
+        import platform
+        
+        if platform.system() == "Windows":
+            raise RuntimeError(
+                "CodeGraphContext uses redislite/FalkorDB, which does not support Windows.\n"
+                "Please run the project using WSL or Docker."
+            )
+        
         if self._driver is None:
             if sys.version_info < (3, 12):
                 raise ValueError("FalkorDB Lite is not supported on Python < 3.12.")
@@ -113,6 +121,14 @@ class FalkorDBManager:
 
     def _ensure_server_running(self):
         """Starts the FalkorDB worker subprocess if not reachable."""
+        import platform
+        
+        if platform.system() == "Windows":
+            raise RuntimeError(
+                "CodeGraphContext uses redislite/FalkorDB, which does not support Windows.\n"
+                "Please run the project using WSL or Docker."
+            )
+        
         # 1. Try to connect first (maybe running from previous session or other process)
         if os.path.exists(self.socket_path):
             try:
