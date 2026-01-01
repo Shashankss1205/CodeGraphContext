@@ -24,7 +24,7 @@ LANGUAGE_FILES = [
     "csharp.py",
 ]
 
-LANGUAGES_DIR = Path("/home/shashank/Desktop/CodeGraphContext/src/codegraphcontext/tools/languages")
+LANGUAGES_DIR = Path(__file__).resolve().parent.parent / "src" / "codegraphcontext" / "tools" / "languages"
 
 
 def update_imports(content: str) -> str:
