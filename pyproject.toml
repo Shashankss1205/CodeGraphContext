@@ -9,8 +9,7 @@ requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
-    "Operating System :: POSIX :: Linux",
-    "Operating System :: MacOS",
+    "Operating System :: OS Independent",
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
     "Topic :: Software Development :: Libraries :: Application Frameworks",
@@ -30,7 +29,9 @@ dependencies = [
     "nbformat",
     "nbconvert>=7.16.6",
     "pathspec>=0.12.1",
-    "falkordblite>=0.1.0; python_version >= '3.12'"
+    "falkordblite>=0.1.0; (python_version >= '3.12' and platform_system != 'Windows')"
+
+    
 ]
 
 [project.urls]
