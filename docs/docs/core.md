@@ -42,10 +42,6 @@ A data class that holds all information about a single background job, including
 
 The `CodeWatcher` class in `watcher.py` implements the live file-watching functionality using the `watchdog` library. It observes directories for changes and triggers updates to the code graph.
 
-## FalkorDB (embedded)
-
-FalkorDB Lite is an optional embedded backend powered by `redislite`. Note that `redislite` is not supported on Windows; to use FalkorDB on Windows, run CodeGraphContext inside WSL or on Linux. Install the optional Falkor backend with `pip install codegraphcontext[falkor]`.
-
 ### `RepositoryEventHandler`
 
 A dedicated event handler for a single repository. It performs an initial scan and then uses a debouncing mechanism to efficiently handle file changes, creations, or deletions.
@@ -57,3 +53,7 @@ A dedicated event handler for a single repository. It performs an initial scan a
 - `list_watched_paths()`: Returns a list of all currently watched directory paths.
 - `start()`: Starts the observer thread.
 - `stop()`: Stops the observer thread gracefully.
+
+## FalkorDB (embedded)
+
+FalkorDB Lite is an optional embedded backend powered by `redislite`. Note that `redislite` is not supported on Windows; to use FalkorDB on Windows, run CodeGraphContext inside WSL or on Linux. Install the optional Falkor backend with `pip install codegraphcontext[falkor]`.
