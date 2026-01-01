@@ -13,8 +13,11 @@
         <link rel="next" href="installation/">
       
       
+        
+      
+      
       <link rel="icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.21">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
       
@@ -22,7 +25,7 @@
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.2a3383ac.min.css">
+      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
       
       
 
@@ -45,7 +48,6 @@
     
       
 
-    
     
     
   </head>
@@ -206,9 +208,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Home
+  
+
     
   </span>
+  
   
 
       </a>
@@ -229,9 +236,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Installation
+  
+
     
   </span>
+  
   
 
       </a>
@@ -251,9 +263,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Use Cases
+  
+
     
   </span>
+  
   
 
       </a>
@@ -273,9 +290,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Architecture
+  
+
     
   </span>
+  
   
 
       </a>
@@ -295,9 +317,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     CLI Reference
+  
+
     
   </span>
+  
   
 
       </a>
@@ -317,9 +344,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Server
+  
+
     
   </span>
+  
   
 
       </a>
@@ -339,9 +371,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Core Concepts
+  
+
     
   </span>
+  
   
 
       </a>
@@ -361,9 +398,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Tools
+  
+
     
   </span>
+  
   
 
       </a>
@@ -383,9 +425,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Cookbook
+  
+
     
   </span>
+  
   
 
       </a>
@@ -416,9 +463,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Contributing
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -427,7 +479,11 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10">
             <span class="md-nav__icon md-icon"></span>
-            Contributing
+            
+  
+    Contributing
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -443,9 +499,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Overview
+  
+
     
   </span>
+  
   
 
       </a>
@@ -466,9 +527,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Adding New Languages
+  
+
     
   </span>
+  
   
 
       </a>
@@ -496,9 +562,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Troubleshooting
+  
+
     
   </span>
+  
   
 
       </a>
@@ -518,9 +589,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Future Work
+  
+
     
   </span>
+  
   
 
       </a>
@@ -540,9 +616,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     License
+  
+
     
   </span>
+  
   
 
       </a>
@@ -578,6 +659,7 @@
           
           
             <div class="md-content" data-md-component="content">
+              
               <article class="md-content__inner md-typeset">
                 
                   
@@ -604,8 +686,8 @@
 <a href="http://codegraphcontext.vercel.app/"><img alt="Website" src="https://img.shields.io/badge/website-up-brightgreen?" /></a>
 <a href="https://youtu.be/KYYSdxhg1xU"><img alt="YouTube" src="https://img.shields.io/badge/YouTube-Watch%20Demo-red?logo=youtube" /></a>
 <a href="https://discord.gg/dR4QY32uYQ"><img alt="Discord" src="https://img.shields.io/badge/Discord-Join%20Chat-7289da?logo=discord&amp;logoColor=white" /></a></p>
-<p>An MCP server that indexes local code into a graph database to provide context to AI assistants.</p>
-<h3 id="indexing-a-codebase">Indexing a codebase</h3>
+<p>A powerful <strong>CLI tool</strong> and <strong>MCP server</strong> that indexes local code into a graph database to provide context to AI assistants and developers. Use it as a standalone CLI for code analysis or connect it to your favorite AI IDE via MCP.</p>
+<h3 id="indexing-a-codebase-cli-or-mcp">Indexing a codebase (CLI or MCP)</h3>
 <p><img alt="Indexing using an MCP client" src="images/Indexing.gif" /></p>
 <h3 id="using-the-mcp-server">Using the MCP server</h3>
 <p><img alt="Using the MCP server" src="images/Usecase.gif" /></p>
@@ -654,7 +736,8 @@
 <p><strong>Configure Your Environment:</strong>
     Run the interactive setup wizard to connect to your database and configure your IDE:
     <code>bash
-    cgc setup</code>
+    cgc mcp setup</code>
+    This ensures your IDE is configured. To configure a Neo4j database, use <code>cgc neo4j setup</code>.
     The wizard helps you with:</p>
 <ul>
 <li><strong>Database Connection:</strong><ul>
@@ -671,17 +754,18 @@
 </ul>
 </li>
 <li>
-<p><strong>Start:</strong> <code>cgc start</code></p>
+<p><strong>Start:</strong> <code>cgc mcp start</code></p>
 </li>
 </ol>
 <h2 id="mcp-client-configuration">MCP Client Configuration</h2>
-<p>The <code>cgc setup</code> command attempts to automatically configure your IDE/CLI. If you choose not to use the automatic setup, or if your tool is not supported, you can configure it manually.</p>
+<p>The <code>cgc mcp setup</code> command attempts to automatically configure your IDE/CLI. If you choose not to use the automatic setup, or if your tool is not supported, you can configure it manually.</p>
 <p>Add the following server configuration to your client's settings file (e.g., VS Code's <code>settings.json</code> or <code>.claude.json</code>):</p>
 <pre><code class="language-json">{
   &quot;mcpServers&quot;: {
     &quot;CodeGraphContext&quot;: {
       &quot;command&quot;: &quot;cgc&quot;,
       &quot;args&quot;: [
+        &quot;mcp&quot;,
         &quot;start&quot;
       ],
       &quot;env&quot;: {
@@ -865,10 +949,11 @@ If you have ideas for new features, integrations, or improvements, open an <a hr
     
     
       
-      <script id="__config" type="application/json">{"base": ".", "features": [], "search": "assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": [], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="assets/javascripts/bundle.f55a23d4.min.js"></script>
+      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>
