@@ -28,7 +28,8 @@ dependencies = [
     "pytest",
     "nbformat",
     "nbconvert>=7.16.6",
-    "pathspec>=0.12.1"
+    "pathspec>=0.12.1",
+    "falkordblite>=0.1.0; sys_platform != 'win32' and python_version >= '3.12'"
 ]
 
 [project.optional-dependencies]
@@ -40,11 +41,6 @@ dev = [
     "pytest>=7.4.0",
     "black>=23.11.0",
     "pytest-asyncio>=0.21.0",
-]
-
-# Optional embedded FalkorDB backend (Linux/WSL-only due to redislite platform limitations)
-falkor = [
-    "falkordblite>=0.1.0"
 ]
 
 [project.urls]
