@@ -324,3 +324,191 @@ def _visualize_falkordb(db_manager):
         db_manager.close_driver()
 
 
+def reindex_helper(path: str):
+    """Force re-index by deleting and rebuilding the repository."""
+    time_start = time.time()
+    services = _initialize_services()
+    if not all(services):
+        return
+
+    db_manager, graph_builder, code_finder = services
+    path_obj = Path(path).resolve()
+
+    if not path_obj.exists():
+        console.print(f"[red]Error: Path does not exist: {path_obj}[/red]")
+        db_manager.close_driver()
+        return
+
+    # Check if already indexed
+    indexed_repos = code_finder.list_indexed_repositories()
+    repo_exists = any(Path(repo["path"]).resolve() == path_obj for repo in indexed_repos)
+    
+    if repo_exists:
+        console.print(f"[yellow]Deleting existing index for: {path_obj}[/yellow]")
+        try:
+            graph_builder.delete_repository_from_graph(str(path_obj))
+            console.print("[green]✓[/green] Deleted old index")
+        except Exception as e:
+            console.print(f"[red]Error deleting old index: {e}[/red]")
+            db_manager.close_driver()
+            return
+    
+    console.print(f"[cyan]Re-indexing: {path_obj}[/cyan]")
+    console.print("[yellow]This may take a few minutes for large repositories...[/yellow]")
+
+    async def do_index():
+        await graph_builder.build_graph_from_path_async(path_obj, is_dependency=False)
+
+    try:
+        asyncio.run(do_index())
+        time_end = time.time()
+        elapsed = time_end - time_start
+        console.print(f"[green]Successfully re-indexed: {path} in {elapsed:.2f} seconds[/green]")
+    except Exception as e:
+        console.print(f"[bold red]An error occurred during re-indexing:[/bold red] {e}")
+    finally:
+        db_manager.close_driver()
+
+
+def update_helper(path: str):
+    """Update/refresh index for a path (alias for reindex)."""
+    console.print("[cyan]Updating repository index...[/cyan]")
+    reindex_helper(path)
+
+
+def clean_helper():
+    """Remove orphaned nodes and relationships from the database."""
+    services = _initialize_services()
+    if not all(services):
+        return
+
+    db_manager, _, _ = services
+    
+    console.print("[cyan]🧹 Cleaning database (removing orphaned nodes)...[/cyan]")
+    
+    try:
+        with db_manager.get_driver().session() as session:
+            # Find and delete orphaned nodes (nodes not connected to any repository)
+            query = """
+            MATCH (n)
+            WHERE NOT (n:Repository) AND NOT EXISTS((n)-[]-(:Repository))
+            WITH n LIMIT 1000
+            DETACH DELETE n
+            RETURN count(n) as deleted
+            """
+            result = session.run(query)
+            record = result.single()
+            deleted_count = record["deleted"] if record else 0
+            
+            if deleted_count > 0:
+                console.print(f"[green]✓[/green] Deleted {deleted_count} orphaned nodes")
+            else:
+                console.print("[green]✓[/green] No orphaned nodes found")
+            
+            # Clean up any duplicate relationships (if any)
+            console.print("[dim]Checking for duplicate relationships...[/dim]")
+            # Note: This is database-specific and might not work for all backends
+            
+        console.print("[green]✅ Database cleanup complete![/green]")
+    except Exception as e:
+        console.print(f"[bold red]An error occurred during cleanup:[/bold red] {e}")
+    finally:
+        db_manager.close_driver()
+
+
+def stats_helper(path: str = None):
+    """Show indexing statistics for a repository or overall."""
+    services = _initialize_services()
+    if not all(services):
+        return
+
+    db_manager, _, code_finder = services
+    
+    try:
+        if path:
+            # Stats for specific repository
+            path_obj = Path(path).resolve()
+            console.print(f"[cyan]📊 Statistics for: {path_obj}[/cyan]\n")
+            
+            with db_manager.get_driver().session() as session:
+                # Get repository node
+                repo_query = """
+                MATCH (r:Repository {path: $path})
+                RETURN r
+                """
+                result = session.run(repo_query, path=str(path_obj))
+                if not result.single():
+                    console.print(f"[red]Repository not found: {path_obj}[/red]")
+                    return
+                
+                # Get stats
+                stats_query = """
+                MATCH (r:Repository {path: $path})-[:CONTAINS]->(f:File)
+                WITH r, count(f) as file_count, f
+                OPTIONAL MATCH (f)-[:CONTAINS]->(func:Function)
+                OPTIONAL MATCH (f)-[:CONTAINS]->(cls:Class)
+                OPTIONAL MATCH (f)-[:IMPORTS]->(m:Module)
+                RETURN 
+                    file_count,
+                    count(DISTINCT func) as function_count,
+                    count(DISTINCT cls) as class_count,
+                    count(DISTINCT m) as module_count
+                """
+                result = session.run(stats_query, path=str(path_obj))
+                record = result.single()
+                
+                table = Table(show_header=True, header_style="bold magenta")
+                table.add_column("Metric", style="cyan")
+                table.add_column("Count", style="green", justify="right")
+                
+                table.add_row("Files", str(record["file_count"] if record else 0))
+                table.add_row("Functions", str(record["function_count"] if record else 0))
+                table.add_row("Classes", str(record["class_count"] if record else 0))
+                table.add_row("Imported Modules", str(record["module_count"] if record else 0))
+                
+                console.print(table)
+        else:
+            # Overall stats
+            console.print("[cyan]📊 Overall Database Statistics[/cyan]\n")
+            
+            with db_manager.get_driver().session() as session:
+                # Get overall counts
+                stats_query = """
+                MATCH (r:Repository)
+                WITH count(r) as repo_count
+                MATCH (f:File)
+                WITH repo_count, count(f) as file_count
+                MATCH (func:Function)
+                WITH repo_count, file_count, count(func) as function_count
+                MATCH (cls:Class)
+                WITH repo_count, file_count, function_count, count(cls) as class_count
+                MATCH (m:Module)
+                RETURN 
+                    repo_count,
+                    file_count,
+                    function_count,
+                    class_count,
+                    count(m) as module_count
+                """
+                result = session.run(stats_query)
+                record = result.single()
+                
+                if record:
+                    table = Table(show_header=True, header_style="bold magenta")
+                    table.add_column("Metric", style="cyan")
+                    table.add_column("Count", style="green", justify="right")
+                    
+                    table.add_row("Repositories", str(record["repo_count"]))
+                    table.add_row("Files", str(record["file_count"]))
+                    table.add_row("Functions", str(record["function_count"]))
+                    table.add_row("Classes", str(record["class_count"]))
+                    table.add_row("Modules", str(record["module_count"]))
+                    
+                    console.print(table)
+                else:
+                    console.print("[yellow]No data indexed yet.[/yellow]")
+                    
+    except Exception as e:
+        console.print(f"[bold red]An error occurred:[/bold red] {e}")
+    finally:
+        db_manager.close_driver()

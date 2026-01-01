@@ -28,23 +28,39 @@ class CodeFinder:
             """
 
     def find_by_function_name(self, search_term: str, fuzzy_search: bool) -> List[Dict]:
-        """Find functions by name matching using the full-text index."""
+        """Find functions by name matching."""
         with self.driver.session() as session:
-            if fuzzy_search:
-                formatted_search_term = f"name:{search_term}"
-                result = session.run(self.format_query("Function", fuzzy_search), search_term=formatted_search_term)
-            else:
-                result = session.run(self.format_query("Function", fuzzy_search), search_term=search_term)
+            if not fuzzy_search:
+                # Use simple match for exact search to avoid fulltext index dependency
+                result = session.run("""
+                    MATCH (node:Function {name: $name})
+                    RETURN node.name as name, node.file_path as file_path, node.line_number as line_number,
+                           node.source as source, node.docstring as docstring, node.is_dependency as is_dependency
+                    LIMIT 20
+                """, name=search_term)
+                return result.data()
+            
+            # Fuzzy search using fulltext index
+            formatted_search_term = f"name:{search_term}"
+            result = session.run(self.format_query("Function", fuzzy_search), search_term=formatted_search_term)
             return result.data()
 
     def find_by_class_name(self, search_term: str, fuzzy_search: bool) -> List[Dict]:
-        """Find classes by name matching using the full-text index."""
+        """Find classes by name matching."""
         with self.driver.session() as session:
-            if fuzzy_search:
-                formatted_search_term = f"name:{search_term}"
-                result = session.run(self.format_query("Class", fuzzy_search), search_term=formatted_search_term)
-            else:
-                result = session.run(self.format_query("Class", fuzzy_search), search_term=search_term)
+            if not fuzzy_search:
+                # Use simple match for exact search to avoid fulltext index dependency
+                result = session.run("""
+                    MATCH (node:Class {name: $name})
+                    RETURN node.name as name, node.file_path as file_path, node.line_number as line_number,
+                           node.source as source, node.docstring as docstring, node.is_dependency as is_dependency
+                    LIMIT 20
+                """, name=search_term)
+                return result.data()
+
+            # Fuzzy search using fulltext index
+            formatted_search_term = f"name:{search_term}"
+            result = session.run(self.format_query("Class", fuzzy_search), search_term=formatted_search_term)
             return result.data()
 
     def find_by_variable_name(self, search_term: str) -> List[Dict]:
@@ -504,10 +520,11 @@ class CodeFinder:
     def find_function_call_chain(self, start_function: str, end_function: str, max_depth: int = 5) -> List[Dict]:
         """Find call chains between two functions"""
         with self.driver.session() as session:
+            # FalkorDB requires shortestPath in WITH/RETURN clause
             result = session.run(f"""
-                MATCH path = shortestPath(
-                    (start:Function {{name: $start_function}})-[:CALLS*1..{max_depth}]->(end:Function {{name: $end_function}})
-                )
+                MATCH (start:Function {{name: $start_function}}), (end:Function {{name: $end_function}})
+                WITH shortestPath((start)-[:CALLS*1..{max_depth}]->(end)) as path
+                WHERE path IS NOT NULL
                 WITH path, nodes(path) as func_nodes, relationships(path) as call_rels
                 RETURN 
                     [node in func_nodes | {{
@@ -526,6 +543,46 @@ class CodeFinder:
                 LIMIT 10
             """, start_function=start_function, end_function=end_function)
             
+            return result.data()
+
+    def find_by_type(self, element_type: str, limit: int = 50) -> List[Dict]:
+        """Find all elements of a specific type (Function, Class, File, Module)."""
+        # Map input type to node label
+        type_map = {
+            "function": "Function",
+            "class": "Class",
+            "file": "File",
+            "module": "Module"
+        }
+        label = type_map.get(element_type.lower())
+        
+        if not label:
+            return []
+            
+        with self.driver.session() as session:
+            if label == "File":
+                query = f"""
+                    MATCH (n:File)
+                    RETURN n.name as name, n.path as file_path, n.is_dependency as is_dependency
+                    ORDER BY n.path
+                    LIMIT $limit
+                """
+            elif label == "Module":
+                query = f"""
+                    MATCH (n:Module)
+                    RETURN n.name as name, n.name as file_path, false as is_dependency
+                    ORDER BY n.name
+                    LIMIT $limit
+                """
+            else:
+                query = f"""
+                    MATCH (n:{label})
+                    RETURN n.name as name, n.file_path as file_path, n.line_number as line_number, n.is_dependency as is_dependency
+                    ORDER BY n.is_dependency ASC, n.name
+                    LIMIT $limit
+                """
+            
+            result = session.run(query, limit=limit)
             return result.data()
     
     def find_module_dependencies(self, module_name: str) -> Dict[str, Any]:

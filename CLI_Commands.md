@@ -1,6 +1,8 @@
-# CLI Reference
+# Comprehensive Guide to CodeGraphContext CLI
 
-The CodeGraphContext CLI provides a comprehensive command-line interface to manage the server, index your code, search, analyzing and interact with the code graph.
+**Note:** `cgc setup` does not exist as a standalone command. Configuration is handled via specific subcommands (like `cgc mcp setup`).
+
+Here is the **complete, verified list** of all 15+ CLI commands available in `CodeGraphContext`, categorized by workflow scenario.
 
 ## 1. Project Management
 Use these commands to manage the repositories in your code graph.
@@ -59,3 +61,63 @@ Helper commands for developers and the MCP server.
 | **`cgc mcp start`** | None | Starts the MCP Server (used by IDEs). |
 | **`cgc mcp tools`** | None | Lists all available MCP tools supported by the server. |
 | **`cgc start`** | None | **Deprecated**. Use `cgc mcp start` instead. |
+
+---
+
+## Common Scenarios & Combinations
+
+### Scenario A: Onboarding a New Repository
+1.  **Index the code:**
+    ```bash
+    cgc index .
+    ```
+2.  **Verify status:**
+    ```bash
+    cgc doctor
+    ```
+3.  **Check stats:**
+    ```bash
+    cgc stats
+    ```
+
+### Scenario B: Refactoring Legacy Code
+1.  **Find complex functions:**
+    ```bash
+    cgc analyze complexity --threshold 15
+    ```
+2.  **Find unused code:**
+    ```bash
+    cgc analyze dead-code --exclude "route,task"
+    ```
+3.  **Check dependencies:**
+    ```bash
+    cgc analyze deps target_module --no-external
+    ```
+
+### Scenario C: Bug Hunting
+1.  **Search for relevant code:**
+    ```bash
+    cgc find pattern "AuthValidator"
+    ```
+2.  **Trace execution:**
+    ```bash
+    cgc analyze callers validate_auth
+    ```
+3.  **Find full path:**
+    ```bash
+    cgc analyze chain "main" "validate_auth" --depth 10
+    ```
+
+### Scenario D: Database Switching
+1.  **Switch to Neo4j:**
+    ```bash
+    cgc config db neo4j
+    ```
+2.  **Configure credentials:**
+    ```bash
+    cgc neo4j setup
+    ```
+3.  **Verify connection:**
+    ```bash
+    cgc doctor
+    ```

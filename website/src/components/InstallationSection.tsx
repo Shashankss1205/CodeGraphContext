@@ -13,15 +13,15 @@ const installSteps = [
     description: "Install CodeGraphContext using pip."
   },
   {
-    step: "2", 
+    step: "2",
     title: "Setup",
-    command: "cgc setup",
-    description: "Interactive wizard to configure your Neo4j database."
+    command: "cgc mcp setup",
+    description: "Interactive wizard to configure your IDE client."
   },
   {
     step: "3",
     title: "Start",
-    command: "cgc start",
+    command: "cgc mcp start",
     description: "Launch the MCP server and begin indexing."
   }
 ];
@@ -51,7 +51,7 @@ const InstallationSection = () => {
               Simple installation with automated setup for your database configuration.
             </p>
           </div>
-          
+
           <div className="grid gap-6 mb-12">
             {installSteps.map((step, index) => (
               <div key={index} data-aos="fade-up" data-aos-delay={index * 100}>
@@ -79,7 +79,7 @@ const InstallationSection = () => {
               </div>
             ))}
           </div>
-          
+
           <div data-aos="fade-up" data-aos-delay="300">
             <Card className="bg-white/95 dark:bg-card/50">
               <CardHeader>

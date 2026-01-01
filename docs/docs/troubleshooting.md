@@ -1,6 +1,6 @@
 # CodeGraphContext Troubleshooting Guide
 
-Use this checklist whenever `cgc setup` or `cgc start` doesn’t behave as expected. It keeps the happy path short, but includes the fallback steps when something goes wrong.
+Use this checklist whenever `cgc mcp setup` or `cgc mcp start` doesn’t behave as expected. It keeps the happy path short, but includes the fallback steps when something goes wrong.
 
 ## 1. Prerequisites at a glance
 
@@ -27,10 +27,10 @@ py -3.11 -m venv venv
 Launch the wizard:
 
 ```powershell
-.\venv\Scripts\cgc.exe setup
+.\venv\Scripts\cgc.exe neo4j setup
 ```
 
-> **Tip:** If you want the wizard to spin up a local Neo4j instance for you, make sure **Docker Desktop** is installed and running before you launch `cgc setup`. If Docker isn’t running, the setup wizard will fail when it tries to install Neo4j locally.
+> **Tip:** If you want the wizard to spin up a local Neo4j instance for you, make sure **Docker Desktop** is installed and running before you launch `cgc neo4j setup`. If Docker isn’t running, the setup wizard will fail when it tries to install Neo4j locally.
 
 What happens next:
 
@@ -47,7 +47,7 @@ Make sure the Docker container (or remote Neo4j) is still running before you sta
 Once the wizard completes successfully:
 
 ```powershell
-.\venv\Scripts\cgc.exe start
+.\venv\Scripts\cgc.exe mcp start
 ```
 
 Expected output includes:
@@ -77,7 +77,7 @@ If you prefer not to use the wizard or need to fix a broken configuration:
      "mcpServers": {
        "CodeGraphContext": {
          "command": "cgc",
-         "args": ["start"],
+         "args": ["mcp", "start"],
          "env": {
            "NEO4J_URI": "neo4j+s://YOUR-HOSTNAME:7687",
            "NEO4J_USERNAME": "neo4j",
@@ -93,14 +93,14 @@ If you prefer not to use the wizard or need to fix a broken configuration:
 3. Re-run:
 
    ```powershell
-   .\venv\Scripts\cgc.exe start
+   .\venv\Scripts\cgc.exe mcp start
    ```
 
 ## 6. Common issues & fixes
 
 | Symptom | Likely Cause | Fix |
 | --- | --- | --- |
-| `Configuration Error: Neo4j credentials must be set…` | `mcp.json`/`.env` missing or empty | Run `cgc setup` again **with Docker running**, or create the files manually (section 5). |
+| `Configuration Error: Neo4j credentials must be set…` | `mcp.json`/`.env` missing or empty | Run `cgc neo4j setup` again **with Docker running**, or create the files manually (section 5). |
 | `AttributeError: socket.EAI_ADDRFAMILY` | Neo4j 6.x bug on Windows | Install the 5.x driver: `.\venv\Scripts\python.exe -m pip install "neo4j<6"` and retry. |
 | Setup wizard fails while pulling Docker image | Docker Desktop not running or Docker permissions missing | Start Docker Desktop, wait for it to report “Running”, then rerun `cgc setup`. |
 | Server exits immediately with no log | Neo4j instance is offline | Check Docker container status or AuraDB dashboard; restart Neo4j and call `cgc start` again. |

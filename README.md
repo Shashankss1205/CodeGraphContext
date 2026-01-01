@@ -20,7 +20,7 @@
 
 
 
-An MCP server that indexes local code into a graph database to provide context to AI assistants.
+A powerful **MCP server** and **CLI tool** that indexes local code into a graph database to provide context to AI assistants and developers. Use it as a standalone CLI for code analysis or connect it to your favorite AI IDE via MCP.
 
 ### Indexing a codebase
 ![Indexing using an MCP client](https://github.com/Shashankss1205/CodeGraphContext/blob/main/images/Indexing.gif)
@@ -29,7 +29,7 @@ An MCP server that indexes local code into a graph database to provide context t
 ![Using the MCP server](https://github.com/Shashankss1205/CodeGraphContext/blob/main/images/Usecase.gif)
 
 ## Project Details
-- **Version:** 0.1.20
+- **Version:** 0.1.21
 - **Authors:** Shashank Shekhar Singh <shashankshekharsingh1205@gmail.com>
 - **License:** MIT License (See [LICENSE](LICENSE) for details)
 - **Website:** [CodeGraphContext](http://codegraphcontext.vercel.app/)
@@ -43,6 +43,7 @@ An MCP server that indexes local code into a graph database to provide context t
 -   **Relationship Analysis:** Query for callers, callees, class hierarchies, call chains and more.
 -   **Live Updates:** Watches local files for changes and automatically updates the graph.
 -   **Interactive Setup:** A user-friendly command-line wizard for easy setup.
+-   **Dual Mode:** Works as a standalone **CLI tool** for developers and as an **MCP server** for AI agents.
 -   **Multi-Language Support:** Full support for 11 programming languages.
 -   **Flexible Database Backend:** Choose between Neo4j or FalkorDB Lite.
 
@@ -87,8 +88,8 @@ CodeGraphContext supports two graph database backends:
 > 2. Skip FalkorDB and use **Neo4j** directly as your graph database.
 
 
-The `cgc setup` wizard helps you configure neo4j database backend while the falkordb database is
-supported inherently.
+The `cgc neo4j setup` wizard helps you configure neo4j database backend while the falkordb database is
+supported inherently (enabled by default).
 
 ## Used By
 
@@ -117,13 +118,13 @@ If you’re using CodeGraphContext in your project, feel free to open a PR and a
 - `nbconvert>=7.16.6`
 - `pathspec>=0.12.1`
 
-**Note:** Python 3.9+ is supported, including Python 3.13 and 3.14.
+**Note:** Python 3.10-3.14 is supported.
 
 ## Getting Started
 
 1.  **Install:** `pip install codegraphcontext`
-2.  **Setup:** `cgc setup`
-    This interactive command guides you through configuring your Neo4j database connection and automatically setting up your IDE.
+2.  **Setup:** `cgc mcp setup`
+    This command configures your IDE to work with CodeGraphContext. To configure a Neo4j database, use `cgc neo4j setup`.
 
     <details>
     <summary>⚙️ Troubleshooting: In case, command <code>cgc</code> not found</summary>
@@ -161,7 +162,7 @@ If you’re using CodeGraphContext in your project, feel free to open a PR and a
     
     **Database Configuration:**
     *   **Local Setup (Docker Recommended):** Helps you set up a local Neo4j instance using Docker. Requires Docker and Docker Compose to be installed.
-    *   **Local Setup (Linux Binary):** For Debian-based Linux systems (like Ubuntu), `cgc setup` can automate the installation of Neo4j. Requires `sudo` privileges.
+    *   **Local Setup (Linux Binary):** For Debian-based Linux systems (like Ubuntu), `cgc neo4j setup` can automate the installation of Neo4j. Requires `sudo` privileges.
     *   **Hosted Setup:** Allows you to connect to an existing remote Neo4j database (e.g., Neo4j AuraDB).
 
     **IDE/CLI Configuration:**
@@ -176,12 +177,12 @@ If you’re using CodeGraphContext in your project, feel free to open a PR and a
     *   RooCode
     *   Amazon Q Developer
 
-    Upon successful configuration, `cgc setup` will generate and place the necessary configuration files:
+    Upon successful configuration, `cgc mcp setup` will generate and place the necessary configuration files:
     *   It creates an `mcp.json` file in your current directory for reference.
     *   It stores your Neo4j credentials securely in `~/.codegraphcontext/.env`.
     *   It updates the settings file of your chosen IDE/CLI (e.g., `.claude.json` or VS Code's `settings.json`).
 
-3.  **Start:** `cgc start`
+3.  **Start:** `cgc mcp start`
 
 ## Ignoring Files (`.cgcignore`)
 
@@ -203,7 +204,7 @@ You can tell CodeGraphContext to ignore specific files and directories by creati
 
 ## MCP Client Configuration
 
-The `cgc setup` command attempts to automatically configure your IDE/CLI. If you choose not to use the automatic setup, or if your tool is not supported, you can configure it manually.
+The `cgc mcp setup` command attempts to automatically configure your IDE/CLI. If you choose not to use the automatic setup, or if your tool is not supported, you can configure it manually.
 
 Add the following server configuration to your client's settings file (e.g., VS Code's `settings.json` or `.claude.json`):
 
