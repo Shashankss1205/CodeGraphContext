@@ -35,6 +35,14 @@ def run_worker():
     logger.info(f"Socket: {socket_path}")
     
     try:
+        import platform
+        
+        if platform.system() == "Windows":
+            raise RuntimeError(
+                "CodeGraphContext uses redislite/FalkorDB, which does not support Windows.\n"
+                "Please run the project using WSL or Docker."
+            )
+        
         from redislite.falkordb_client import FalkorDB
         
         # Start Embedded DB

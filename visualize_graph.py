@@ -1,6 +1,14 @@
 import os
 import json
+import platform
 from pathlib import Path
+
+if platform.system() == "Windows":
+    raise RuntimeError(
+        "CodeGraphContext uses redislite/FalkorDB, which does not support Windows.\n"
+        "Please run the project using WSL or Docker."
+    )
+
 from redislite import FalkorDB
 
 def generate_visualization():
