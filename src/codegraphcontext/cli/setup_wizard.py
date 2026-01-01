@@ -26,7 +26,7 @@ def _generate_mcp_json(creds):
     if "python" in Path(cgc_path).name:
         # fallback to running as module if no cgc binary is found
         command = cgc_path
-        args = ["-m", "cgc", "start"]
+        args = ["-m", "cgc", "mcp", "start"]
     else:
         command = cgc_path
         args = ["mcp","start"]
