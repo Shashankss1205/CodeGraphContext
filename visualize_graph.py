@@ -9,7 +9,7 @@ def _load_falkor():
     if sys.platform == "win32":
         return None, "FalkorDB Lite is not supported on Windows. Run inside WSL/Linux or use Neo4j."
     try:
-        from redislite import FalkorDB
+        from redislite.falkordb_client import FalkorDB
         return FalkorDB, None
     except ImportError:
         return None, "FalkorDB client not installed. Install with: pip install codegraphcontext[falkor]"
