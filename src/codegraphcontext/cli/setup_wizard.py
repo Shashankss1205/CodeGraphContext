@@ -29,7 +29,7 @@ def _generate_mcp_json(creds):
         args = ["-m", "cgc", "start"]
     else:
         command = cgc_path
-        args = ["start"]
+        args = ["mcp","start"]
 
     mcp_config = {
         "mcpServers": {
