@@ -1,0 +1,42 @@
+.git
+.github
+.gitignore
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.whl
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+
+# Build output
+build/
+dist/
+*.egg-info/
+.venv/
+env/
+venv/
+
+# Environment and local config
+.env
+.env.*
+*.log
+
+# Node / frontend artifacts
+node_modules/
+website/node_modules/
+website/.next/
+
+# Documentation and tests (not required at runtime)
+docs/
+tests/
+images/
+scripts/
+organizer/
+website/
+
