@@ -75,7 +75,7 @@ const HeroSection = () => {
           </h1>
 
           <p className="text-xl md:text-2xl text-muted-foreground mb-4 leading-relaxed">
-            A powerful CLI tool & MCP server that indexes local code into a
+            A powerful CLI toolkit &amp; MCP server that indexes local code into a
           </p>
           <p className="text-xl md:text-2xl text-accent font-semibold mb-8">
             knowledge graph for AI assistants

@@ -23,7 +23,7 @@ const features = [
   {
     icon: Terminal,
     title: "Interactive Setup",
-    description: "User-friendly command-line wizard for easy setup with Neo4j, Docker, or hosted database configurations.",
+    description: "User-friendly command-line wizard for easy setup. FalkorDB Lite is default (Unix and WSL), with Neo4j available via Docker or native installation.",
     color: "graph-node-1"
   }
 ];

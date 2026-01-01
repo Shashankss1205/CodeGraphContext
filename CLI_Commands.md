@@ -1,8 +1,7 @@
 # Comprehensive Guide to CodeGraphContext CLI
 
-**Note:** `cgc setup` does not exist as a standalone command. Configuration is handled via specific subcommands (like `cgc mcp setup`).
 
-Here is the **complete, verified list** of all 15+ CLI commands available in `CodeGraphContext`, categorized by workflow scenario.
+Here is the **complete list** of all CLI commands available in `CodeGraphContext`, categorized by workflow scenario.
 
 ## 1. Project Management
 Use these commands to manage the repositories in your code graph.
@@ -121,3 +120,32 @@ Helper commands for developers and the MCP server.
     ```bash
     cgc doctor
     ```
+
+### Scenario E: Setting Up on Different Operating Systems
+
+**Unix/Linux/macOS (Python 3.12+):**
+```bash
+# FalkorDB Lite is already configured as default
+pip install codegraphcontext
+cgc mcp setup  # Configure your IDE
+cgc index .    # Start indexing
+```
+
+**Windows:**
+```bash
+# Option 1: Use WSL (Recommended)
+wsl --install
+# Then follow Unix instructions above
+
+# Option 2: Use Neo4j with Docker
+pip install codegraphcontext
+cgc neo4j setup  # Choose Docker option
+cgc mcp setup    # Configure your IDE
+cgc index .      # Start indexing
+
+# Option 3: Use Neo4j native installation
+pip install codegraphcontext
+cgc neo4j setup  # Choose native installation
+cgc mcp setup    # Configure your IDE
+cgc index .      # Start indexing
+```

@@ -4,9 +4,11 @@ Use this checklist whenever `cgc mcp setup` or `cgc mcp start` doesn’t behave 
 
 ## 1. Prerequisites at a glance
 
-- **Windows + PowerShell** commands below assume the `py` launcher. Adapt to `python3` if you’re on macOS/Linux.
-- **Python 3.11** (recommended). Run `py -3.11 --version` to confirm.
-- **Neo4j account** (only required if you prefer Neo4j AuraDB instead of Docker).
+- **Windows + PowerShell** commands below assume the `py` launcher. Adapt to `python3` if you're on macOS/Linux.
+- **Python 3.12+** (recommended for FalkorDB Lite support). Run `py -3.12 --version` to confirm.
+- **Database Options:**
+  - **FalkorDB Lite** (default for Unix/Linux/macOS, Python 3.12+): No setup required, works out of the box.
+  - **Neo4j** (required for Windows, optional for others): Requires Docker, WSL, or native installation. Setup via `cgc neo4j setup`.
 
 ## 2. Create and activate a virtual environment
 
@@ -22,19 +24,21 @@ py -3.11 -m venv venv
   .\venv\Scripts\python.exe -m pip install "neo4j<6"
   ```
 
-## 3. Run the setup wizard (preferred)
+## 3. Run the Neo4j setup wizard (optional for Unix, required for Windows)
 
-Launch the wizard:
+**Note:** If you're on Unix/Linux/macOS with Python 3.12+, FalkorDB Lite is already your default database. You can skip this step unless you prefer Neo4j.
+
+**For Windows users or those preferring Neo4j**, launch the wizard:
 
 ```powershell
 .\venv\Scripts\cgc.exe neo4j setup
 ```
 
-> **Tip:** If you want the wizard to spin up a local Neo4j instance for you, make sure **Docker Desktop** is installed and running before you launch `cgc neo4j setup`. If Docker isn’t running, the setup wizard will fail when it tries to install Neo4j locally.
+> **Tip:** If you want the wizard to spin up a local Neo4j instance for you, make sure **Docker Desktop** is installed and running before you launch `cgc neo4j setup`. If Docker isn't running, the setup wizard will fail when it tries to install Neo4j locally.
 
 What happens next:
 
-- The wizard checks for Docker. If it’s running, it can auto-provision a local Neo4j instance for you.
+- The wizard checks for Docker. If it's running, it can auto-provision a local Neo4j instance for you.
 - Alternatively, you can supply credentials for an existing Neo4j AuraDB database.
 - At the end, it generates:
   - `mcp.json` in your project directory (stores the MCP server command + env vars).
@@ -102,8 +106,8 @@ If you prefer not to use the wizard or need to fix a broken configuration:
 | --- | --- | --- |
 | `Configuration Error: Neo4j credentials must be set…` | `mcp.json`/`.env` missing or empty | Run `cgc neo4j setup` again **with Docker running**, or create the files manually (section 5). |
 | `AttributeError: socket.EAI_ADDRFAMILY` | Neo4j 6.x bug on Windows | Install the 5.x driver: `.\venv\Scripts\python.exe -m pip install "neo4j<6"` and retry. |
-| Setup wizard fails while pulling Docker image | Docker Desktop not running or Docker permissions missing | Start Docker Desktop, wait for it to report “Running”, then rerun `cgc setup`. |
-| Server exits immediately with no log | Neo4j instance is offline | Check Docker container status or AuraDB dashboard; restart Neo4j and call `cgc start` again. |
+| Setup wizard fails while pulling Docker image | Docker Desktop not running or Docker permissions missing | Start Docker Desktop, wait for it to report “Running”, then rerun `cgc neo4j setup`. |
+| Server exits immediately with no log | Neo4j instance is offline | Check Docker container status or AuraDB dashboard; restart Neo4j and call `cgc mcp start` again. |
 
 ## 7. After the server is running
 

@@ -25,7 +25,7 @@ This is the official documentation for CodeGraphContext.
 
 
 
-A powerful **CLI tool** and **MCP server** that indexes local code into a graph database to provide context to AI assistants and developers. Use it as a standalone CLI for code analysis or connect it to your favorite AI IDE via MCP.
+A powerful **MCP server** and **CLI toolkit** that indexes local code into a graph database to provide context to AI assistants and developers. Use it as a standalone CLI for comprehensive code analysis or connect it to your favorite AI IDE via MCP for AI-powered code understanding.
 
 ### Indexing a codebase (CLI or MCP)
 ![Indexing using an MCP client](images/Indexing.gif)
@@ -48,6 +48,9 @@ A powerful **CLI tool** and **MCP server** that indexes local code into a graph 
 -   **Relationship Analysis:** Query for callers, callees, class hierarchies, call chains and more.
 -   **Live Updates:** Watches local files for changes and automatically updates the graph.
 -   **Interactive Setup:** A user-friendly command-line wizard for easy setup.
+-   **Dual Mode:** Works as a standalone **CLI toolkit** for developers and as an **MCP server** for AI agents.
+-   **Multi-Language Support:** Full support for 11 programming languages.
+-   **Flexible Database Backend:** FalkorDB Lite (default, inbuilt for Unix) or Neo4j (all platforms via Docker/WSL/native).
 -   **File Exclusion:** Supports `.cgcignore` files to exclude specific files and directories from indexing.
 
 ## Used By

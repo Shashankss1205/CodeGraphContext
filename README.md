@@ -20,7 +20,7 @@
 
 
 
-A powerful **MCP server** and **CLI tool** that indexes local code into a graph database to provide context to AI assistants and developers. Use it as a standalone CLI for code analysis or connect it to your favorite AI IDE via MCP.
+A powerful **MCP server** and **CLI toolkit** that indexes local code into a graph database to provide context to AI assistants and developers. Use it as a standalone CLI for comprehensive code analysis or connect it to your favorite AI IDE via MCP for AI-powered code understanding.
 
 ### Indexing a codebase
 ![Indexing using an MCP client](https://github.com/Shashankss1205/CodeGraphContext/blob/main/images/Indexing.gif)
@@ -43,9 +43,9 @@ A powerful **MCP server** and **CLI tool** that indexes local code into a graph 
 -   **Relationship Analysis:** Query for callers, callees, class hierarchies, call chains and more.
 -   **Live Updates:** Watches local files for changes and automatically updates the graph.
 -   **Interactive Setup:** A user-friendly command-line wizard for easy setup.
--   **Dual Mode:** Works as a standalone **CLI tool** for developers and as an **MCP server** for AI agents.
+-   **Dual Mode:** Works as a standalone **CLI toolkit** for developers and as an **MCP server** for AI agents.
 -   **Multi-Language Support:** Full support for 11 programming languages.
--   **Flexible Database Backend:** Choose between Neo4j or FalkorDB Lite.
+-   **Flexible Database Backend:** FalkorDB Lite (default, inbuilt for Unix and through WSL for Windows) or Neo4j (all platforms via Docker/native).
 
 ## Supported Programming Languages
 
@@ -69,27 +69,33 @@ Each language parser extracts functions, classes, methods, parameters, inheritan
 
 CodeGraphContext supports two graph database backends:
 
-### Neo4j (Default)
-- **Production-ready** and widely used graph database
-- Supports local instances (via Docker or native installation) and cloud hosting (Neo4j AuraDB)
-- Full Cypher query support for advanced graph analytics
-- Recommended for most use cases
-
-### FalkorDB Lite
+### FalkorDB Lite (Default for Unix/Linux/macOS)
 - **Lightweight** in-memory graph database
 - **No external dependencies** - runs entirely in-process
+- **Inbuilt and enabled by default** for Unix-based systems (Linux, macOS)
 - Available for **Python 3.12+** only
-- Perfect for quick testing and development
-- Automatically installed when using Python 3.12 or higher
+- Perfect for quick testing, development, and most use cases
+- Automatically installed and configured when using Python 3.12 or higher on Unix systems
+
 > ⚠️ **Windows Users:**  
 > FalkorDB Lite / redislite is **not supported on Windows**.  
-> You have two options:  
+> You have three options:  
 > 1. Run the project under **WSL (Windows Subsystem for Linux)**: [WSL Install](https://learn.microsoft.com/en-us/windows/wsl/install)  
-> 2. Skip FalkorDB and use **Neo4j** directly as your graph database.
+> 2. Use **Docker** to run the project in a containerized Linux environment  
+> 3. Use **Neo4j** directly as your graph database (see below)
 
+### Neo4j (Available for All Platforms)
+- **Production-ready** and widely used graph database
+- **Available on all operating systems**: Windows, Linux, macOS
+- Can be installed via:
+  - **Docker** (recommended, cross-platform)
+  - **WSL** (for Windows users)
+  - **Native installation** (dedicated command for each OS)
+- Supports local instances and cloud hosting (Neo4j AuraDB)
+- Full Cypher query support for advanced graph analytics
+- Recommended for Windows users and production deployments
 
-The `cgc neo4j setup` wizard helps you configure neo4j database backend while the falkordb database is
-supported inherently (enabled by default).
+The `cgc neo4j setup` wizard helps you configure the Neo4j database backend, while FalkorDB Lite is enabled by default on Unix systems with no configuration needed.
 
 ## Used By
 
@@ -122,9 +128,31 @@ If you’re using CodeGraphContext in your project, feel free to open a PR and a
 
 ## Getting Started
 
+### 📋 Understanding CodeGraphContext Modes
+
+CodeGraphContext operates in **two modes**, and you can use either or both:
+
+#### 🛠️ Mode 1: CLI Toolkit (Standalone)
+Use CodeGraphContext as a **powerful command-line toolkit** for code analysis:
+- Index and analyze codebases directly from your terminal
+- Query code relationships, find dead code, analyze complexity
+- Visualize code graphs and dependencies
+- Perfect for developers who want direct control via CLI commands
+
+#### 🤖 Mode 2: MCP Server (AI-Powered)
+Use CodeGraphContext as an **MCP server** for AI assistants:
+- Connect to AI IDEs (VS Code, Cursor, Windsurf, Claude, etc.)
+- Let AI agents query your codebase using natural language
+- Automatic code understanding and relationship analysis
+- Perfect for AI-assisted development workflows
+
+**You can use both modes!** Install once, then use CLI commands directly OR connect to your AI assistant.
+
+---
+
+### Installation (Both Modes)
+
 1.  **Install:** `pip install codegraphcontext`
-2.  **Setup:** `cgc mcp setup`
-    This command configures your IDE to work with CodeGraphContext. To configure a Neo4j database, use `cgc neo4j setup`.
 
     <details>
     <summary>⚙️ Troubleshooting: In case, command <code>cgc</code> not found</summary>
@@ -159,14 +187,52 @@ If you’re using CodeGraphContext in your project, feel free to open a PR and a
     ``` 
     </details>
 
+2.  **Database Setup (Automatic for Unix/WSL)**
     
-    **Database Configuration:**
-    *   **Local Setup (Docker Recommended):** Helps you set up a local Neo4j instance using Docker. Requires Docker and Docker Compose to be installed.
-    *   **Local Setup (Linux Binary):** For Debian-based Linux systems (like Ubuntu), `cgc neo4j setup` can automate the installation of Neo4j. Requires `sudo` privileges.
-    *   **Hosted Setup:** Allows you to connect to an existing remote Neo4j database (e.g., Neo4j AuraDB).
+    - **FalkorDB Lite (Default):** If you're on Unix/Linux/macOS/WSL with Python 3.12+, you're done! FalkorDB Lite is already configured.
+    - **Neo4j (Optional/Windows):** To use Neo4j instead, or if you're on Windows without WSL, run: `cgc neo4j setup`
 
-    **IDE/CLI Configuration:**
-    After setting up your database, the wizard will ask to configure your development environment. It can automatically detect and configure the following:
+---
+
+### 🛠️ For CLI Toolkit Mode
+
+**Start using immediately with CLI commands:**
+
+```bash
+# Index your current directory
+cgc index .
+
+# List all indexed repositories
+cgc list
+
+# Analyze who calls a function
+cgc analyze callers my_function
+
+# Find complex code
+cgc analyze complexity --threshold 10
+
+# Find dead code
+cgc analyze dead-code
+
+# See all commands
+cgc --help
+```
+
+**See the full [CLI Commands Guide](CLI_Commands.md) for all available commands and usage scenarios.**
+
+---
+
+### 🤖 For MCP Server Mode
+
+**Configure your AI assistant to use CodeGraphContext:**
+
+1.  **Setup:** Run the MCP setup wizard to configure your IDE/AI assistant:
+    
+    ```bash
+    cgc mcp setup
+    ```
+    
+    The wizard can automatically detect and configure:
     *   VS Code
     *   Cursor
     *   Windsurf
@@ -179,10 +245,16 @@ If you’re using CodeGraphContext in your project, feel free to open a PR and a
 
     Upon successful configuration, `cgc mcp setup` will generate and place the necessary configuration files:
     *   It creates an `mcp.json` file in your current directory for reference.
-    *   It stores your Neo4j credentials securely in `~/.codegraphcontext/.env`.
+    *   It stores your database credentials securely in `~/.codegraphcontext/.env`.
     *   It updates the settings file of your chosen IDE/CLI (e.g., `.claude.json` or VS Code's `settings.json`).
 
-3.  **Start:** `cgc mcp start`
+2.  **Start:** Launch the MCP server:
+    
+    ```bash
+    cgc mcp start
+    ```
+
+3.  **Use:** Now interact with your codebase through your AI assistant using natural language! See examples below.
 
 ## Ignoring Files (`.cgcignore`)
 
@@ -214,6 +286,7 @@ Add the following server configuration to your client's settings file (e.g., VS 
     "CodeGraphContext": {
       "command": "cgc",
       "args": [
+        "mcp",
         "start"
       ],
       "env": {

@@ -48,7 +48,7 @@ const InstallationSection = () => {
               Get Started in Minutes
             </h2>
             <p className="text-xl text-muted-foreground">
-              Simple installation with automated setup for your database configuration.
+              Simple installation with FalkorDB Lite as default (Unix and WSL) or automated Neo4j setup for all platforms.
             </p>
           </div>
 
@@ -83,8 +83,8 @@ const InstallationSection = () => {
           <div data-aos="fade-up" data-aos-delay="300">
             <Card className="bg-white/95 dark:bg-card/50">
               <CardHeader>
-                <CardTitle className="flex items-center gap-3"><Settings className="h-6 w-6 text-primary" />Setup Options</CardTitle>
-                <CardDescription>The setup wizard supports multiple Neo4j configurations.</CardDescription>
+                <CardTitle className="flex items-center gap-3"><Settings className="h-6 w-6 text-primary" />Database Setup Options</CardTitle>
+                <CardDescription>FalkorDB Lite is default (Unix). For Neo4j, the wizard supports multiple configurations:</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid md:grid-cols-3 gap-6">

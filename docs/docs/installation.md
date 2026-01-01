@@ -1,85 +1,244 @@
 ## 🧩 Installation Guide
 
-Welcome to **CodeGraphContext**! This guide provides a clear and seamless path to installing and configuring the tool, from prerequisites to launching your server.
+Welcome to **CodeGraphContext**! This guide provides a clear and seamless path to installing and configuring the tool.
+
+## 📋 Understanding CodeGraphContext Modes
+
+CodeGraphContext operates in **two modes**, and you can use either or both:
+
+### 🛠️ Mode 1: CLI Toolkit (Standalone)
+Use CodeGraphContext as a **powerful command-line toolkit** for code analysis:
+- Index and analyze codebases directly from your terminal
+- Query code relationships, find dead code, analyze complexity
+- Visualize code graphs and dependencies
+- Perfect for developers who want direct control via CLI commands
+
+### 🤖 Mode 2: MCP Server (AI-Powered)
+Use CodeGraphContext as an **MCP server** for AI assistants:
+- Connect to AI IDEs (VS Code, Cursor, Windsurf, Claude, etc.)
+- Let AI agents query your codebase using natural language
+- Automatic code understanding and relationship analysis
+- Perfect for AI-assisted development workflows
+
+**You can use both modes!** Install once, then use CLI commands directly OR connect to your AI assistant.
+
+---
 
 ## ⚙️ Prerequisites
 
 Ensure the following are installed before you begin:
 
-- **Python**: Version 3.8 or higher.
-- **AI Agentic Coding Tool**: An MCP-compatible AI assistant (e.g., Gemini, Claude) if you plan to use the MCP server.
+- **Python**: Version 3.10 or higher (3.12+ recommended for FalkorDB Lite support)
+- **AI Assistant** (optional): An MCP-compatible tool (e.g., VS Code, Cursor, Claude, Gemini CLI) if you plan to use Mode 2
 
-## 🚀 Getting Started
+---
 
-Follow these steps to set up **CodeGraphContext** effortlessly.
+## 🚀 Installation
 
-### 1. Install from PyPI
+### Step 1: Install from PyPI
 
-Install the `codegraphcontext` package directly from PyPI using pip:
+Install the `codegraphcontext` package using pip:
 
 ```bash
 pip install codegraphcontext
 ```
 
-### 2. Run the Setup Wizard for MCP Client
+### Step 2: Database Setup
 
-Launch the interactive setup wizard to configure your Neo4j database and development environment:
+CodeGraphContext uses a graph database to store code relationships. You have two options:
+
+#### Option A: FalkorDB Lite (Default - Recommended)
+- **Automatic** on Unix/Linux/macOS/WSL with Python 3.12+
+- **No configuration needed** - works out of the box
+- Lightweight, in-memory, perfect for most use cases
+
+If you're on Unix/Linux/macOS/WSL with Python 3.12+, **you're done!** Skip to Step 3.
+
+#### Option B: Neo4j (Alternative)
+- Available on **all platforms** (Windows, Linux, macOS)
+- Required if you're on Windows without WSL or prefer Neo4j
+- Can be installed via Docker, native installation, or cloud (AuraDB)
+
+To set up Neo4j, run:
+
+```bash
+cgc neo4j setup
+```
+
+The wizard will guide you through:
+- **Docker** (recommended): Automatically sets up a local Neo4j container
+- **Native Installation**: Installs Neo4j directly on Debian-based systems or macOS
+- **Hosted/AuraDB**: Connect to a remote Neo4j instance
+- **Existing Instance**: Use your own Neo4j server
+
+---
+
+## 🎯 Mode-Specific Setup
+
+### For CLI Toolkit Mode (Mode 1)
+
+You're ready to go! Start using CLI commands:
+
+```bash
+# Index your current directory
+cgc index .
+
+# List indexed repositories
+cgc list
+
+# Analyze code relationships
+cgc analyze callers my_function
+
+# Find complex functions
+cgc analyze complexity --threshold 10
+
+# See all available commands
+cgc --help
+```
+
+**See the [CLI Reference](cli.md) for all available commands.**
+
+---
+
+### For MCP Server Mode (Mode 2)
+
+Configure your AI assistant to connect to CodeGraphContext:
+
+#### Step 1: Run MCP Setup Wizard
 
 ```bash
 cgc mcp setup
 ```
 
-This ensures your IDE is configured. To configure a Neo4j database, use `cgc neo4j setup`.
+The wizard will:
+- Detect your installed AI tools (VS Code, Cursor, Claude, etc.)
+- Automatically configure the selected tool
+- Generate `mcp.json` configuration file
+- Store credentials securely in `~/.codegraphcontext/.env`
 
-The wizard guides you through a series of intuitive prompts to tailor your setup.
-
-## 🧭 "Step-by-Step Guide for the Setup Wizard"
-
-When you run `cgc neo4j setup`, the wizard offers a thoughtful journey through configuration. Follow these steps to complete your setup with ease:
-
-**1. Select Your Database Location**
-
-Choose where your Neo4j database will reside:
-
-- **Local (Recommended)**: Host Neo4j on your machine for simplicity.  
-  - **Docker**: With Docker installed, the wizard crafts a `docker-compose.yml` file and launches a Neo4j container seamlessly.  
-  - **Local Binary**: On Debian-based systems (e.g., Ubuntu) or Mac Systems, the wizard installs Neo4j directly with your permission.  
-- **Hosted**: Connect to a remote Neo4j instance, such as AuraDB, by providing your database URI, username, and password.  
-- **Existing Instance**: For an existing Neo4j server (local or remote), enter its connection credentials.
-
-
-**2. Configure Your Development Environment**
-
-Integrate CodeGraphContext with your preferred development tool for a harmonious workflow. Select from supported options:
-
+**Supported AI Tools:**
 - VS Code
 - Cursor
 - Windsurf
-- Claude
+- Claude Desktop
 - Gemini CLI
 - ChatGPT Codex
 - Cline
 - RooCode
 - Amazon Q Developer
 
-The wizard automatically updates configuration files to align with your choice.
-Upon completing the prompts, the wizard creates two essential files:
-
-- **`mcp.json`**: Placed in your working directory, this file configures the MCP server.  
-- **`.env`**: Stored securely in `~/.codegraphcontext`, this file safeguards your Neo4j credentials.
-
-These files ensure smooth communication between CodeGraphContext, your Neo4j instance, and your AI assistant.
-
-### 3. Start the Server
-
-Once configuration is complete, launch the MCP server with:
+#### Step 2: Start the MCP Server
 
 ```bash
 cgc mcp start
 ```
 
-Your **CodeGraphContext** server is now active, ready to power AI-assisted graph queries.
+Your MCP server is now running and ready to receive requests from your AI assistant!
 
-## Next Steps
+#### Manual Configuration (Optional)
 
-With **CodeGraphContext** installed and configured, you’re ready to explore its AI-powered capabilities. Happy coding ✨!
+If you prefer to configure manually or your tool isn't auto-detected, add this to your tool's settings file:
+
+```json
+{
+  "mcpServers": {
+    "CodeGraphContext": {
+      "command": "cgc",
+      "args": ["mcp", "start"],
+      "env": {
+        "NEO4J_URI": "bolt://localhost:7687",
+        "NEO4J_USERNAME": "neo4j",
+        "NEO4J_PASSWORD": "your-password"
+      }
+    }
+  }
+}
+```
+
+**Note:** If using FalkorDB Lite (default), you don't need to set NEO4J_* environment variables.
+
+---
+
+## 🧭 Quick Start Examples
+
+### CLI Toolkit Workflow
+```bash
+# Install
+pip install codegraphcontext
+
+# Index a project
+cgc index /path/to/my-project
+
+# Find all callers of a function
+cgc analyze callers process_payment
+
+# Find dead code
+cgc analyze dead-code
+
+# Check database stats
+cgc stats
+```
+
+### MCP Server Workflow
+```bash
+# Install
+pip install codegraphcontext
+
+# Configure your AI assistant
+cgc mcp setup
+
+# Start the server
+cgc mcp start
+
+# Now use natural language in your AI assistant:
+# "Index the code in /path/to/my-project"
+# "Find all functions that call process_payment"
+# "Show me the class hierarchy for UserController"
+```
+
+---
+
+## 🔧 Database Configuration Details
+
+### FalkorDB Lite (Default)
+- **Platform**: Unix/Linux/macOS/WSL
+- **Python**: 3.12+ required
+- **Setup**: Automatic, no configuration needed
+- **Storage**: In-memory
+- **Best for**: Most use cases, quick testing, development
+
+### Neo4j
+- **Platform**: All (Windows, Linux, macOS)
+- **Python**: 3.10+ supported
+- **Setup**: Via `cgc neo4j setup` wizard
+- **Storage**: Persistent disk storage
+- **Best for**: Windows users, production deployments, large codebases
+
+---
+
+## 📚 Next Steps
+
+### For CLI Users
+- Explore the [CLI Reference](cli.md) for all available commands
+- Check out the [Cookbook](cookbook.md) for common analysis patterns
+- Learn about [Code Analysis](core.md) capabilities
+
+### For MCP Users
+- See [MCP Tools Documentation](tools.md) for available AI tools
+- Review [Natural Language Examples](index.md#natural-language-interaction-examples)
+- Explore the [Use Cases](use_cases.md) guide
+
+---
+
+## 🆘 Troubleshooting
+
+If you encounter issues, see our [Troubleshooting Guide](troubleshooting.md) for common problems and solutions.
+
+**Common Issues:**
+- **"cgc: command not found"**: Run the PATH fix script (see main README)
+- **Database connection errors**: Ensure Neo4j is running (if using Neo4j) or Python 3.12+ (if using FalkorDB)
+- **MCP server won't start**: Check that your AI assistant is properly configured
+
+---
+
+With **CodeGraphContext** installed, you're ready to explore powerful code analysis capabilities! Happy coding ✨!
