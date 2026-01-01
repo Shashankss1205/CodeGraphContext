@@ -631,10 +631,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-run-the-setup-wizard-preferred" class="md-nav__link">
+  <a href="#3-run-the-neo4j-setup-wizard-optional-for-unix-required-for-windows" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Run the setup wizard (preferred)
+        3. Run the Neo4j setup wizard (optional for Unix, required for Windows)
       
     </span>
   </a>
@@ -796,10 +796,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-run-the-setup-wizard-preferred" class="md-nav__link">
+  <a href="#3-run-the-neo4j-setup-wizard-optional-for-unix-required-for-windows" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Run the setup wizard (preferred)
+        3. Run the Neo4j setup wizard (optional for Unix, required for Windows)
       
     </span>
   </a>
@@ -871,9 +871,11 @@
 <p>Use this checklist whenever <code>cgc mcp setup</code> or <code>cgc mcp start</code> doesn’t behave as expected. It keeps the happy path short, but includes the fallback steps when something goes wrong.</p>
 <h2 id="1-prerequisites-at-a-glance">1. Prerequisites at a glance</h2>
 <ul>
-<li><strong>Windows + PowerShell</strong> commands below assume the <code>py</code> launcher. Adapt to <code>python3</code> if you’re on macOS/Linux.</li>
-<li><strong>Python 3.11</strong> (recommended). Run <code>py -3.11 --version</code> to confirm.</li>
-<li><strong>Neo4j account</strong> (only required if you prefer Neo4j AuraDB instead of Docker).</li>
+<li><strong>Windows + PowerShell</strong> commands below assume the <code>py</code> launcher. Adapt to <code>python3</code> if you're on macOS/Linux.</li>
+<li><strong>Python 3.12+</strong> (recommended for FalkorDB Lite support). Run <code>py -3.12 --version</code> to confirm.</li>
+<li><strong>Database Options:</strong></li>
+<li><strong>FalkorDB Lite</strong> (default for Unix/Linux/macOS, Python 3.12+): No setup required, works out of the box.</li>
+<li><strong>Neo4j</strong> (required for Windows, optional for others): Requires Docker, WSL, or native installation. Setup via <code>cgc neo4j setup</code>.</li>
 </ul>
 <h2 id="2-create-and-activate-a-virtual-environment">2. Create and activate a virtual environment</h2>
 <p>From the repository root (<code>CodeGraphContext/</code>):</p>
@@ -885,16 +887,17 @@
   <code>powershell
   .\venv\Scripts\python.exe -m pip install "neo4j&lt;6"</code></li>
 </ul>
-<h2 id="3-run-the-setup-wizard-preferred">3. Run the setup wizard (preferred)</h2>
-<p>Launch the wizard:</p>
+<h2 id="3-run-the-neo4j-setup-wizard-optional-for-unix-required-for-windows">3. Run the Neo4j setup wizard (optional for Unix, required for Windows)</h2>
+<p><strong>Note:</strong> If you're on Unix/Linux/macOS with Python 3.12+, FalkorDB Lite is already your default database. You can skip this step unless you prefer Neo4j.</p>
+<p><strong>For Windows users or those preferring Neo4j</strong>, launch the wizard:</p>
 <pre><code class="language-powershell">.\venv\Scripts\cgc.exe neo4j setup
 </code></pre>
 <blockquote>
-<p><strong>Tip:</strong> If you want the wizard to spin up a local Neo4j instance for you, make sure <strong>Docker Desktop</strong> is installed and running before you launch <code>cgc neo4j setup</code>. If Docker isn’t running, the setup wizard will fail when it tries to install Neo4j locally.</p>
+<p><strong>Tip:</strong> If you want the wizard to spin up a local Neo4j instance for you, make sure <strong>Docker Desktop</strong> is installed and running before you launch <code>cgc neo4j setup</code>. If Docker isn't running, the setup wizard will fail when it tries to install Neo4j locally.</p>
 </blockquote>
 <p>What happens next:</p>
 <ul>
-<li>The wizard checks for Docker. If it’s running, it can auto-provision a local Neo4j instance for you.</li>
+<li>The wizard checks for Docker. If it's running, it can auto-provision a local Neo4j instance for you.</li>
 <li>Alternatively, you can supply credentials for an existing Neo4j AuraDB database.</li>
 <li>At the end, it generates:</li>
 <li><code>mcp.json</code> in your project directory (stores the MCP server command + env vars).</li>
@@ -966,12 +969,12 @@ MCP Server is running. Waiting for requests...
 <tr>
 <td>Setup wizard fails while pulling Docker image</td>
 <td>Docker Desktop not running or Docker permissions missing</td>
-<td>Start Docker Desktop, wait for it to report “Running”, then rerun <code>cgc setup</code>.</td>
+<td>Start Docker Desktop, wait for it to report “Running”, then rerun <code>cgc neo4j setup</code>.</td>
 </tr>
 <tr>
 <td>Server exits immediately with no log</td>
 <td>Neo4j instance is offline</td>
-<td>Check Docker container status or AuraDB dashboard; restart Neo4j and call <code>cgc start</code> again.</td>
+<td>Check Docker container status or AuraDB dashboard; restart Neo4j and call <code>cgc mcp start</code> again.</td>
 </tr>
 </tbody>
 </table>
