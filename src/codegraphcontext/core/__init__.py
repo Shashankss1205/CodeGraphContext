@@ -48,7 +48,7 @@ def get_database_manager() -> Union['DatabaseManager', 'FalkorDBManager']:
     5. Fallback: Neo4j (if configured)
     """
     from codegraphcontext.utils.debug_log import info_logger
-    
+    import sys
     # 1. Runtime Override (CLI flag) or Config/Env
     db_type = os.getenv('CGC_RUNTIME_DB_TYPE')
     if not db_type:
@@ -59,7 +59,6 @@ def get_database_manager() -> Union['DatabaseManager', 'FalkorDBManager']:
     if db_type:
         db_type = db_type.lower()
         if db_type == 'falkordb':
-            import sys
             if sys.platform == "win32":
                 raise ValueError(
                     "Database set to 'falkordb' but FalkorDB Lite is not supported on Windows.\n"
@@ -95,7 +94,6 @@ def get_database_manager() -> Union['DatabaseManager', 'FalkorDBManager']:
         info_logger("Using Neo4j Server (auto-detected)")
         return DatabaseManager()
 
-    import sys
     error_msg = "No database backend available.\n"
 
     if sys.platform == "win32":
