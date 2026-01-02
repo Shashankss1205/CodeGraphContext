@@ -805,8 +805,28 @@ class GraphBuilder:
             self.add_repository_to_graph(path, is_dependency)
             repo_name = path.name
 
-            cgcignore_path = path / ".cgcignore"
-            if cgcignore_path.exists():
+            # Search for .cgcignore upwards
+            cgcignore_path = None
+            ignore_root = path.resolve()
+            
+            # Start search from path (or parent if path is file)
+            curr = path.resolve()
+            if not curr.is_dir():
+                curr = curr.parent
+
+            # Walk up looking for .cgcignore
+            while True:
+                candidate = curr / ".cgcignore"
+                if candidate.exists():
+                    cgcignore_path = candidate
+                    ignore_root = curr
+                    debug_log(f"Found .cgcignore at {ignore_root}")
+                    break
+                if curr.parent == curr: # Root hit
+                    break
+                curr = curr.parent
+
+            if cgcignore_path:
                 with open(cgcignore_path) as f:
                     ignore_patterns = f.read().splitlines()
                 spec = pathspec.PathSpec.from_lines('gitwildmatch', ignore_patterns)
@@ -816,8 +836,21 @@ class GraphBuilder:
             supported_extensions = self.parsers.keys()
             all_files = path.rglob("*") if path.is_dir() else [path]
             files = [f for f in all_files if f.is_file() and f.suffix in supported_extensions]
+            
             if spec:
-                files = [f for f in files if not spec.match_file(str(f.relative_to(path)))]
+                filtered_files = []
+                for f in files:
+                    try:
+                        # Match relative to the directory containing .cgcignore
+                        rel_path = f.relative_to(ignore_root)
+                        if not spec.match_file(str(rel_path)):
+                            filtered_files.append(f)
+                        else:
+                            debug_log(f"Ignored file based on .cgcignore: {rel_path}")
+                    except ValueError:
+                        # Should not happen if ignore_root is a parent, but safety fallback
+                        filtered_files.append(f)
+                files = filtered_files
             if job_id:
                 self.job_manager.update_job(job_id, total_files=len(files))
             

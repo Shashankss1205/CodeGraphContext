@@ -29,7 +29,7 @@ A powerful **MCP server** and **CLI toolkit** that indexes local code into a gra
 ![Using the MCP server](https://github.com/Shashankss1205/CodeGraphContext/blob/main/images/Usecase.gif)
 
 ## Project Details
-- **Version:** 0.1.25
+- **Version:** 0.1.26
 - **Authors:** Shashank Shekhar Singh <shashankshekharsingh1205@gmail.com>
 - **License:** MIT License (See [LICENSE](LICENSE) for details)
 - **Website:** [CodeGraphContext](http://codegraphcontext.vercel.app/)
@@ -63,6 +63,7 @@ CodeGraphContext provides comprehensive parsing and analysis for the following l
 - **Rust** (`.rs`)
 - **Ruby** (`.rb`)
 - **PHP** (`.php`)
+- **Kotlin** (`.kt`) - Full support for classes, objects, companions, functions, and coroutines
 
 Each language parser extracts functions, classes, methods, parameters, inheritance relationships, function calls, and imports to build a comprehensive code graph.
 
