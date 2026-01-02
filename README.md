@@ -41,11 +41,12 @@ A powerful **MCP server** and **CLI toolkit** that indexes local code into a gra
 
 -   **Code Indexing:** Analyzes code and builds a knowledge graph of its components.
 -   **Relationship Analysis:** Query for callers, callees, class hierarchies, call chains and more.
--   **Live Updates:** Watches local files for changes and automatically updates the graph.
+-   **Live File Watching:** Watch directories for changes and automatically update the graph in real-time (`cgc watch`).
 -   **Interactive Setup:** A user-friendly command-line wizard for easy setup.
 -   **Dual Mode:** Works as a standalone **CLI toolkit** for developers and as an **MCP server** for AI agents.
 -   **Multi-Language Support:** Full support for 11 programming languages.
 -   **Flexible Database Backend:** FalkorDB Lite (default, inbuilt for Unix and through WSL for Windows) or Neo4j (all platforms via Docker/native).
+
 
 ## Supported Programming Languages
 
@@ -214,11 +215,15 @@ cgc analyze complexity --threshold 10
 # Find dead code
 cgc analyze dead-code
 
+# Watch for live changes (optional)
+cgc watch .
+
 # See all commands
 cgc --help
 ```
 
 **See the full [CLI Commands Guide](CLI_Commands.md) for all available commands and usage scenarios.**
+
 
 ---
 
