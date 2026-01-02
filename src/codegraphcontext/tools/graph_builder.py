@@ -525,7 +525,13 @@ class GraphBuilder:
                     MATCH (called) WHERE (called:Function OR called:Class)
                       AND called.name = $called_name 
                       AND called.file_path = $called_file_path
-                    MERGE (caller)-[:CALLS {line_number: $line_number, args: $args, full_call_name: $full_call_name}]->(called)
+                    
+                    WITH caller, called
+                    OPTIONAL MATCH (called)-[:CONTAINS]->(init:Function)
+                    WHERE called:Class AND init.name IN ["__init__", "constructor"]
+                    WITH caller, COALESCE(init, called) as final_target
+                    
+                    MERGE (caller)-[:CALLS {line_number: $line_number, args: $args, full_call_name: $full_call_name}]->(final_target)
                 """,
                 caller_name=caller_name,
                 caller_file_path=caller_file_path,
@@ -541,7 +547,13 @@ class GraphBuilder:
                     MATCH (called) WHERE (called:Function OR called:Class)
                       AND called.name = $called_name 
                       AND called.file_path = $called_file_path
-                    MERGE (caller)-[:CALLS {line_number: $line_number, args: $args, full_call_name: $full_call_name}]->(called)
+                    
+                    WITH caller, called
+                    OPTIONAL MATCH (called)-[:CONTAINS]->(init:Function)
+                    WHERE called:Class AND init.name IN ["__init__", "constructor"]
+                    WITH caller, COALESCE(init, called) as final_target
+
+                    MERGE (caller)-[:CALLS {line_number: $line_number, args: $args, full_call_name: $full_call_name}]->(final_target)
                 """,
                 caller_file_path=caller_file_path,
                 called_name=called_name,
