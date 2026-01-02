@@ -13,6 +13,7 @@ from ..utils.debug_log import debug_log, info_logger, error_logger, warning_logg
 # New imports for tree-sitter (using tree-sitter-language-pack)
 from tree_sitter import Language, Parser
 from ..utils.tree_sitter_manager import get_tree_sitter_manager
+from ..cli.config_manager import get_config_value
 
 class TreeSitterParser:
     """A generic parser wrapper for a specific language using tree-sitter."""
@@ -793,6 +794,21 @@ class GraphBuilder:
             else:
                 all_files = path.rglob("*")
                 files = [f for f in all_files if f.is_file() and f.suffix in supported_extensions]
+
+                # Filter default ignored directories
+                ignore_dirs_str = get_config_value("IGNORE_DIRS") or ""
+                if ignore_dirs_str:
+                    ignore_dirs = {d.strip().lower() for d in ignore_dirs_str.split(',') if d.strip()}
+                    if ignore_dirs:
+                        kept_files = []
+                        for f in files:
+                            try:
+                                parts = set(p.lower() for p in f.relative_to(path).parent.parts)
+                                if not parts.intersection(ignore_dirs):
+                                    kept_files.append(f)
+                            except ValueError:
+                                kept_files.append(f)
+                        files = kept_files
             
             total_files = len(files)
             estimated_time = total_files * 0.05 # tree-sitter is faster
@@ -843,6 +859,25 @@ class GraphBuilder:
             supported_extensions = self.parsers.keys()
             all_files = path.rglob("*") if path.is_dir() else [path]
             files = [f for f in all_files if f.is_file() and f.suffix in supported_extensions]
+
+            # Filter default ignored directories
+            ignore_dirs_str = get_config_value("IGNORE_DIRS") or ""
+            if ignore_dirs_str and path.is_dir():
+                ignore_dirs = {d.strip().lower() for d in ignore_dirs_str.split(',') if d.strip()}
+                if ignore_dirs:
+                    kept_files = []
+                    for f in files:
+                        try:
+                            # Check if any parent directory in the relative path is in ignore list
+                            parts = set(p.lower() for p in f.relative_to(path).parent.parts)
+                            if not parts.intersection(ignore_dirs):
+                                kept_files.append(f)
+                            else:
+                                # debug_log(f"Skipping default ignored file: {f}")
+                                pass
+                        except ValueError:
+                             kept_files.append(f)
+                    files = kept_files
             
             if spec:
                 filtered_files = []

@@ -33,6 +33,7 @@ DEFAULT_CONFIG = {
     "MAX_DEPTH": "unlimited",
     "PARALLEL_WORKERS": "4",
     "CACHE_ENABLED": "true",
+    "IGNORE_DIRS": "node_modules,venv,.venv,env,.env,dist,build,target,out,.git,.idea,.vscode,__pycache__",
 }
 
 # Configuration key descriptions
@@ -50,6 +51,7 @@ CONFIG_DESCRIPTIONS = {
     "MAX_DEPTH": "Maximum directory depth for indexing (unlimited or number)",
     "PARALLEL_WORKERS": "Number of parallel indexing workers",
     "CACHE_ENABLED": "Enable caching for faster re-indexing",
+    "IGNORE_DIRS": "Comma-separated list of directory names to ignore during indexing",
 }
 
 # Valid values for each config key
