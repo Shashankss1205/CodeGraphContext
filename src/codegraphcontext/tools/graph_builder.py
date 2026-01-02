@@ -417,10 +417,22 @@ class GraphBuilder:
             resolved_path = None
             full_call = call.get('full_name', called_name)
             base_obj = full_call.split('.')[0] if '.' in full_call else None
-            lookup_name = base_obj if base_obj else called_name
+            
+            # For chained calls like self.graph_builder.method(), we need to look up 'method'
+            # For direct calls like self.method(), we can use the caller's file
+            is_chained_call = full_call.count('.') > 1 if '.' in full_call else False
+            
+            # Determine the lookup name:
+            # - For chained calls (self.attr.method), use the actual method name
+            # - For direct calls (self.method or module.function), use the base object
+            if is_chained_call and base_obj in ('self', 'this', 'super', 'super()', 'cls', '@'):
+                lookup_name = called_name  # Use the actual method name for lookup
+            else:
+                lookup_name = base_obj if base_obj else called_name
 
             # 1. Check for local context keywords/direct local names
-            if base_obj in ('self', 'this', 'super', 'super()', 'cls', '@'):
+            # Only resolve to caller_file_path for DIRECT self/this calls, not chained ones
+            if base_obj in ('self', 'this', 'super', 'super()', 'cls', '@') and not is_chained_call:
                 resolved_path = caller_file_path
             elif lookup_name in local_names:
                 resolved_path = caller_file_path
