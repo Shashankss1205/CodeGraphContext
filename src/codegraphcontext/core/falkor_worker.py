@@ -5,15 +5,17 @@ import signal
 from pathlib import Path
 import logging
 
-# Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+from codegraphcontext.utils.logging_config import setup_logging
+
+# Configure logging for background worker context
+setup_logging(context="worker")
 logger = logging.getLogger("falkor_worker")
 
 # Global to handle shutdown
 db_instance = None
 
 def handle_signal(signum, frame):
-    logger.info(f"Received signal {signum}. Stopping FalkorDB worker...")
+    logger.debug(f"Received signal {signum}. Stopping FalkorDB worker...")
     sys.exit(0)
 
 def run_worker():
@@ -30,9 +32,9 @@ def run_worker():
     # Ensure dir exists
     Path(db_path).parent.mkdir(parents=True, exist_ok=True)
     
-    logger.info(f"Starting FalkorDB Lite worker...")
-    logger.info(f"DB Path: {db_path}")
-    logger.info(f"Socket: {socket_path}")
+    logger.debug(f"Starting FalkorDB Lite worker...")
+    logger.debug(f"DB Path: {db_path}")
+    logger.debug(f"Socket: {socket_path}")
     
     try:
         import platform
@@ -55,7 +57,7 @@ def run_worker():
                 pass
 
         db_instance = FalkorDB(db_path, unix_socket_path=socket_path)
-        logger.info("FalkorDB Lite is running.")
+        logger.debug("FalkorDB Lite is running.")
         
         # Keep alive loop
         while True:

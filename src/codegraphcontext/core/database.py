@@ -8,7 +8,7 @@ import threading
 from typing import Optional, Tuple
 from neo4j import GraphDatabase, Driver
 
-from codegraphcontext.utils.debug_log import debug_log, info_logger, error_logger, warning_logger
+from codegraphcontext.utils.debug_log import debug_log, debug_logger, error_logger, warning_logger
 
 class DatabaseManager:
     """
@@ -78,7 +78,7 @@ class DatabaseManager:
                         error_logger(f"Configuration validation failed: {validation_error}")
                         raise ValueError(validation_error)
 
-                    info_logger(f"Creating Neo4j driver connection to {self.neo4j_uri}")
+                    debug_logger(f"Creating Neo4j driver connection to {self.neo4j_uri}")
                     self._driver = GraphDatabase.driver(
                         self.neo4j_uri,
                         auth=(self.neo4j_username, self.neo4j_password)
@@ -87,7 +87,7 @@ class DatabaseManager:
                     try:
                         with self._driver.session() as session:
                             session.run("RETURN 1").consume()
-                        info_logger("Neo4j connection established successfully")
+                        debug_logger("Neo4j connection established successfully")
                     except Exception as e:
                         # Use detailed error messages from test_connection
                         _, detailed_error = self.test_connection(
@@ -107,7 +107,7 @@ class DatabaseManager:
         if self._driver is not None:
             with self._lock:
                 if self._driver is not None:
-                    info_logger("Closing Neo4j driver")
+                    debug_logger("Closing Neo4j driver")
                     self._driver.close()
                     self._driver = None
 

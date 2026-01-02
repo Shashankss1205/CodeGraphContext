@@ -24,6 +24,7 @@ from importlib.metadata import version as pkg_version, PackageNotFoundError
 
 from codegraphcontext.server import MCPServer
 from codegraphcontext.core.database import DatabaseManager
+from codegraphcontext.utils.logging_config import setup_logging
 from .setup_wizard import run_neo4j_setup_wizard, configure_mcp_client
 from . import config_manager
 # Import the new helper functions
@@ -40,10 +41,6 @@ from .cli_helpers import (
     _initialize_services,
 )
 
-# Set the log level for the noisy neo4j and asyncio logger to WARNING to keep the output clean.
-logging.getLogger("neo4j").setLevel(logging.WARNING)
-logging.getLogger("asyncio").setLevel(logging.WARNING)
-
 # Initialize the Typer app and Rich console for formatted output.
 app = typer.Typer(
     name="cgc",
@@ -52,8 +49,9 @@ app = typer.Typer(
 )
 console = Console(stderr=True)
 
-# Configure basic logging for the application.
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(name)s - %(message)s')
+# Configure logging for CLI context (quiet by default)
+# Users can enable verbose logging with: CGC_LOG_LEVEL=DEBUG cgc <command>
+setup_logging(context="cli")
 
 
 def get_version() -> str:
@@ -95,6 +93,8 @@ def mcp_start():
     Starts the server which listens for JSON-RPC requests from stdin.
     This is used by IDE integrations (VS Code, Cursor, etc.).
     """
+    # MCP server needs INFO logs for operational visibility
+    setup_logging(context="mcp")
     console.print("[bold green]Starting CodeGraphContext Server...[/bold green]")
     _load_credentials()
 
@@ -200,7 +200,7 @@ def _load_credentials():
             server_env = mcp_config.get("mcpServers", {}).get("CodeGraphContext", {}).get("env", {})
             for key, value in server_env.items():
                 os.environ[key] = value
-            console.print("[green]Loaded Neo4j credentials from local mcp.json.[/green]")
+            logging.debug("Loaded Neo4j credentials from local mcp.json.")
             return
         except Exception as e:
             console.print(f"[bold red]Error loading mcp.json:[/bold red] {e}")
@@ -210,7 +210,7 @@ def _load_credentials():
     if global_env_path.exists():
         try:
             load_dotenv(dotenv_path=global_env_path)
-            console.print(f"[green]Loaded Neo4j credentials from global .env file: {global_env_path}[/green]")
+            logging.debug(f"Loaded Neo4j credentials from global .env file: {global_env_path}")
             return
         except Exception as e:
             console.print(f"[bold red]Error loading global .env file from {global_env_path}:[/bold red] {e}")
@@ -220,9 +220,9 @@ def _load_credentials():
         dotenv_path = find_dotenv(usecwd=True, raise_error_if_not_found=False)
         if dotenv_path:
             load_dotenv(dotenv_path)
-            console.print(f"[green]Loaded Neo4j credentials from discovered .env file: {dotenv_path}[/green]")
+            logging.debug(f"Loaded Neo4j credentials from discovered .env file: {dotenv_path}")
         else:
-            console.print("[yellow]No local mcp.json or .env file found. Credentials may not be set.[/yellow]")
+            logging.debug("No local mcp.json or .env file found. Credentials may not be set.")
     except Exception as e:
         console.print(f"[bold red]Error loading .env file:[/bold red] {e}")
 
@@ -365,8 +365,14 @@ def doctor():
                 import falkordb
                 console.print(f"   [green]✓[/green] FalkorDB Lite is installed")
             except ImportError:
-                console.print(f"   [yellow]⚠[/yellow] FalkorDB Lite not installed (Python 3.12+ only)")
-                console.print(f"       Run: pip install falkordblite")
+                import platform
+                console.print(f"   [yellow]⚠[/yellow] FalkorDB Lite not installed")
+                if platform.system() == "Windows":
+                    console.print(f"       [dim]FalkorDB Lite doesn't support Windows[/dim]")
+                    console.print(f"       Use Neo4j instead: [cyan]cgc neo4j setup[/cyan]")
+                    console.print(f"       Or use WSL: [cyan]wsl --install[/cyan]")
+                else:
+                    console.print(f"       Run: [cyan]pip install falkordblite[/cyan] (Python 3.12+ only)")
     except Exception as e:
         console.print(f"   [red]✗[/red] Database check error: {e}")
         all_checks_passed = False
