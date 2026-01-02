@@ -44,6 +44,8 @@ LANGUAGE_ALIASES = {
     "java": "java",
     "ruby": "ruby",
     "rust": "rust",
+    "kt": "kotlin",
+    "kotlin": "kotlin",
 }
 
 

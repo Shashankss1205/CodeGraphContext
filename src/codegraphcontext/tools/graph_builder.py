@@ -60,6 +60,10 @@ class TreeSitterParser:
         elif self.language_name == 'php':
             from .languages.php import PhpTreeSitterParser
             self.language_specific_parser = PhpTreeSitterParser(self)
+        elif self.language_name == 'kotlin':
+            from .languages.kotlin import KotlinTreeSitterParser
+            self.language_specific_parser = KotlinTreeSitterParser(self)
+
 
 
     def parse(self, file_path: Path, is_dependency: bool = False, **kwargs) -> Dict:
@@ -98,7 +102,8 @@ class GraphBuilder:
             '.java': TreeSitterParser('java'),
             '.rb': TreeSitterParser('ruby'),
             '.cs': TreeSitterParser('c_sharp'),
-            '.php': TreeSitterParser('php')
+            '.php': TreeSitterParser('php'),
+            '.kt': TreeSitterParser('kotlin'),
         }
         self.create_schema()
 
@@ -204,6 +209,9 @@ class GraphBuilder:
         elif '.cs' in files_by_lang:
             from .languages import csharp as csharp_lang_module
             imports_map.update(csharp_lang_module.pre_scan_csharp(files_by_lang['.cs'], self.parsers['.cs']))
+        if '.kt' in files_by_lang:
+            from .languages import kotlin as kotlin_lang_module
+            imports_map.update(kotlin_lang_module.pre_scan_kotlin(files_by_lang['.kt'], self.parsers['.kt']))
             
         return imports_map
 
@@ -452,10 +460,18 @@ class GraphBuilder:
                 elif len(possible_paths) > 1:
                     if lookup_name in local_imports:
                         full_import_name = local_imports[lookup_name]
-                        for path in possible_paths:
-                            if full_import_name.replace('.', '/') in path:
-                                resolved_path = path
-                                break
+                        
+                        # Optimization: Check if the FQN is directly in imports_map (from pre-scan)
+                        if full_import_name in imports_map:
+                             direct_paths = imports_map[full_import_name]
+                             if direct_paths and len(direct_paths) == 1:
+                                 resolved_path = direct_paths[0]
+                        
+                        if not resolved_path:
+                            for path in possible_paths:
+                                if full_import_name.replace('.', '/') in path:
+                                    resolved_path = path
+                                    break
             
             if not resolved_path:
                  warning_logger(f"Could not resolve call {called_name} (lookup: {lookup_name}) in {caller_file_path}")
