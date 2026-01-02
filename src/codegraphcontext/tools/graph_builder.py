@@ -723,14 +723,21 @@ class GraphBuilder:
                     DETACH DELETE d
                 """, path=path)
 
-    def delete_repository_from_graph(self, repo_path: str):
-        """Deletes a repository and all its contents from the graph."""
+    def delete_repository_from_graph(self, repo_path: str) -> bool:
+        """Deletes a repository and all its contents from the graph. Returns True if deleted, False if not found."""
         repo_path_str = str(Path(repo_path).resolve())
         with self.driver.session() as session:
+            # Check if it exists
+            result = session.run("MATCH (r:Repository {path: $path}) RETURN count(r) as cnt", path=repo_path_str).single()
+            if not result or result["cnt"] == 0:
+                warning_logger(f"Attempted to delete non-existent repository: {repo_path_str}")
+                return False
+
             session.run("""MATCH (r:Repository {path: $path})
                           OPTIONAL MATCH (r)-[:CONTAINS*]->(e)
                           DETACH DELETE r, e""", path=repo_path_str)
             info_logger(f"Deleted repository and its contents from graph: {repo_path_str}")
+            return True
 
     def update_file_in_graph(self, file_path: Path, repo_path: Path, imports_map: dict):
         """Updates a single file's nodes in the graph."""

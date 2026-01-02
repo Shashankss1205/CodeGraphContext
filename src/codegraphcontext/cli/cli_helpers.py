@@ -159,8 +159,11 @@ def delete_helper(repo_path: str):
     db_manager, graph_builder, _ = services
     
     try:
-        graph_builder.delete_repository_from_graph(repo_path)
-        console.print(f"[green]Successfully deleted repository: {repo_path}[/green]")
+        if graph_builder.delete_repository_from_graph(repo_path):
+            console.print(f"[green]Successfully deleted repository: {repo_path}[/green]")
+        else:
+            console.print(f"[yellow]Repository not found in graph: {repo_path}[/yellow]")
+            console.print("[dim]Tip: Use 'cgc list' to see available repositories.[/dim]")
     except Exception as e:
         console.print(f"[bold red]An error occurred:[/bold red] {e}")
     finally:
