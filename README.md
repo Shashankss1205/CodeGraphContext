@@ -29,7 +29,7 @@ A powerful **MCP server** and **CLI toolkit** that indexes local code into a gra
 ![Using the MCP server](https://github.com/Shashankss1205/CodeGraphContext/blob/main/images/Usecase.gif)
 
 ## Project Details
-- **Version:** 0.1.24
+- **Version:** 0.1.25
 - **Authors:** Shashank Shekhar Singh <shashankshekharsingh1205@gmail.com>
 - **License:** MIT License (See [LICENSE](LICENSE) for details)
 - **Website:** [CodeGraphContext](http://codegraphcontext.vercel.app/)
@@ -219,7 +219,7 @@ cgc analyze dead-code
 cgc watch .
 
 # See all commands
-cgc --help
+cgc help
 ```
 
 **See the full [CLI Commands Guide](CLI_Commands.md) for all available commands and usage scenarios.**

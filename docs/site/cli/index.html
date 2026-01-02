@@ -12,7 +12,7 @@
         <link rel="prev" href="../architecture/">
       
       
-        <link rel="next" href="../server/">
+        <link rel="next" href="../watching/">
       
       
         
@@ -375,10 +375,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-code-analysis" class="md-nav__link">
+  <a href="#2-watching-monitoring" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Code Analysis
+        2. Watching &amp; Monitoring
       
     </span>
   </a>
@@ -386,10 +386,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-discovery-search" class="md-nav__link">
+  <a href="#3-code-analysis" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Discovery &amp; Search
+        3. Code Analysis
       
     </span>
   </a>
@@ -397,10 +397,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#4-configuration-setup" class="md-nav__link">
+  <a href="#4-discovery-search" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Configuration &amp; Setup
+        4. Discovery &amp; Search
       
     </span>
   </a>
@@ -408,10 +408,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#5-utilities-runtime" class="md-nav__link">
+  <a href="#5-configuration-setup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Utilities &amp; Runtime
+        5. Configuration &amp; Setup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-utilities-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Utilities &amp; Runtime
       
     </span>
   </a>
@@ -422,6 +433,33 @@
   
 </nav>
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../watching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live Watching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -549,10 +587,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
         
           
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
             
   
   
@@ -570,8 +608,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_10">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -763,10 +801,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-code-analysis" class="md-nav__link">
+  <a href="#2-watching-monitoring" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Code Analysis
+        2. Watching &amp; Monitoring
       
     </span>
   </a>
@@ -774,10 +812,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-discovery-search" class="md-nav__link">
+  <a href="#3-code-analysis" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Discovery &amp; Search
+        3. Code Analysis
       
     </span>
   </a>
@@ -785,10 +823,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#4-configuration-setup" class="md-nav__link">
+  <a href="#4-discovery-search" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Configuration &amp; Setup
+        4. Discovery &amp; Search
       
     </span>
   </a>
@@ -796,10 +834,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#5-utilities-runtime" class="md-nav__link">
+  <a href="#5-configuration-setup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Utilities &amp; Runtime
+        5. Configuration &amp; Setup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-utilities-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Utilities &amp; Runtime
       
     </span>
   </a>
@@ -868,7 +917,35 @@
 </tr>
 </tbody>
 </table>
-<h2 id="2-code-analysis">2. Code Analysis</h2>
+<h2 id="2-watching-monitoring">2. Watching &amp; Monitoring</h2>
+<p>Automatically track changes and keep your code graph up-to-date.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Command</th>
+<th style="text-align: left;">Arguments</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong><code>cgc watch</code></strong></td>
+<td style="text-align: left;"><code>[path]</code></td>
+<td style="text-align: left;">Watches a directory for file changes and automatically re-indexes. Runs in foreground. Default path is current directory. <br> <em>(Alias: <code>cgc w</code>)</em></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>cgc unwatch</code></strong></td>
+<td style="text-align: left;"><code>&lt;path&gt;</code></td>
+<td style="text-align: left;">Stops watching a previously watched directory. (Primarily for MCP mode)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>cgc watching</code></strong></td>
+<td style="text-align: left;">None</td>
+<td style="text-align: left;">Lists all directories currently being watched for changes. (Primarily for MCP mode)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-code-analysis">3. Code Analysis</h2>
 <p>Understand the structure, quality, and relationships of your code.</p>
 <table>
 <thead>
@@ -916,7 +993,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="3-discovery-search">3. Discovery &amp; Search</h2>
+<h2 id="4-discovery-search">4. Discovery &amp; Search</h2>
 <p>Find code elements when you don't know the exact structure.</p>
 <table>
 <thead>
@@ -944,7 +1021,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="4-configuration-setup">4. Configuration &amp; Setup</h2>
+<h2 id="5-configuration-setup">5. Configuration &amp; Setup</h2>
 <p>Manage your environment and database connections.</p>
 <table>
 <thead>
@@ -987,7 +1064,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="5-utilities-runtime">5. Utilities &amp; Runtime</h2>
+<h2 id="6-utilities-runtime">6. Utilities &amp; Runtime</h2>
 <p>Helper commands for developers and the MCP server.</p>
 <table>
 <thead>
