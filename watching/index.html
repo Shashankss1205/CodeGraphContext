@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../server/">
+        <link rel="prev" href="../cli/">
       
       
-        <link rel="next" href="../tools/">
+        <link rel="next" href="../server/">
       
       
         
@@ -23,7 +23,7 @@
     
     
       
-        <title>Core Concepts - CodeGraphContext</title>
+        <title>Live Watching - CodeGraphContext</title>
       
     
     
@@ -64,7 +64,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#core-concepts" class="md-skip">
+        <a href="#live-file-watching" class="md-skip">
           Skip to content
         </a>
       
@@ -100,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Core Concepts
+              Live Watching
             
           </span>
         </div>
@@ -328,10 +328,37 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../watching/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live Watching
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -347,6 +374,292 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Commands
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cgc-watch-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cgc watch [path]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cgc-watching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cgc watching
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cgc-unwatch-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cgc unwatch &lt;path&gt;
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#development-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Development Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Tips
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-watch-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use Watch Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#watcher-not-detecting-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Watcher not detecting changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#high-cpu-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High CPU usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changes-not-appearing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changes not appearing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#already-watching-message" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Already watching" message
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mcp-server-vs-cli-watch-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCP Server vs CLI Watch Mode
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MCP Server vs CLI Watch Mode">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cli-watch-mode-this-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI Watch Mode (This Guide)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mcp-server-watch-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCP Server Watch Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#technical-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Technical Details
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-with-ai-assistants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration with AI Assistants
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See Also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -382,37 +695,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Core Concepts
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../core/" class="md-nav__link">
         
   
   
@@ -428,143 +714,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#databasemanager" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        DatabaseManager
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="DatabaseManager">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#key-methods" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Key Methods
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#jobmanager" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        JobManager
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="JobManager">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#jobstatus" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        JobStatus
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#jobinfo" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        JobInfo
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#key-methods_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Key Methods
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#codewatcher" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CodeWatcher
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="CodeWatcher">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#repositoryeventhandler" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RepositoryEventHandler
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#key-methods_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Key Methods
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -841,22 +990,66 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#databasemanager" class="md-nav__link">
+  <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
       
-        DatabaseManager
+        Quick Start
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="DatabaseManager">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Commands
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Commands">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#key-methods" class="md-nav__link">
+  <a href="#cgc-watch-path" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Key Methods
+        cgc watch [path]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cgc-watching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cgc watching
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cgc-unwatch-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cgc unwatch &lt;path&gt;
       
     </span>
   </a>
@@ -869,22 +1062,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#jobmanager" class="md-nav__link">
+  <a href="#best-practices" class="md-nav__link">
     <span class="md-ellipsis">
       
-        JobManager
+        Best Practices
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="JobManager">
+    <nav class="md-nav" aria-label="Best Practices">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#jobstatus" class="md-nav__link">
+  <a href="#development-workflow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        JobStatus
+        Development Workflow
       
     </span>
   </a>
@@ -892,10 +1085,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#jobinfo" class="md-nav__link">
+  <a href="#performance-tips" class="md-nav__link">
     <span class="md-ellipsis">
       
-        JobInfo
+        Performance Tips
       
     </span>
   </a>
@@ -903,10 +1096,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#key-methods_1" class="md-nav__link">
+  <a href="#when-to-use-watch-mode" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Key Methods
+        When to Use Watch Mode
       
     </span>
   </a>
@@ -919,22 +1112,33 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#codewatcher" class="md-nav__link">
+  <a href="#example-workflow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        CodeWatcher
+        Example Workflow
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="CodeWatcher">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#repositoryeventhandler" class="md-nav__link">
+  <a href="#watcher-not-detecting-changes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        RepositoryEventHandler
+        Watcher not detecting changes
       
     </span>
   </a>
@@ -942,10 +1146,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#key-methods_2" class="md-nav__link">
+  <a href="#high-cpu-usage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Key Methods
+        High CPU usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changes-not-appearing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changes not appearing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#already-watching-message" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Already watching" message
       
     </span>
   </a>
@@ -954,6 +1180,78 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mcp-server-vs-cli-watch-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCP Server vs CLI Watch Mode
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MCP Server vs CLI Watch Mode">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cli-watch-mode-this-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI Watch Mode (This Guide)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mcp-server-watch-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCP Server Watch Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#technical-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Technical Details
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-with-ai-assistants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration with AI Assistants
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See Also
+      
+    </span>
+  </a>
   
 </li>
       
@@ -974,46 +1272,191 @@
 
 
 
-<h1 id="core-concepts">Core Concepts</h1>
-<p>The core of CodeGraphContext is built upon a few key components that manage the database connection, handle background tasks, and watch for file system changes.</p>
-<h2 id="databasemanager"><code>DatabaseManager</code></h2>
-<p>The <code>DatabaseManager</code> class in <code>database.py</code> is a thread-safe singleton responsible for managing the connection to the Neo4j database. This ensures that only one connection pool is created and shared across the application, which is crucial for performance and resource management.</p>
-<h3 id="key-methods">Key Methods</h3>
+<h1 id="live-file-watching">Live File Watching</h1>
+<p>CodeGraphContext can automatically monitor your codebase for changes and update the code graph in real-time as you develop.</p>
+<h2 id="quick-start">Quick Start</h2>
+<p>Start watching your project directory:</p>
+<pre><code class="language-bash">cgc watch .
+</code></pre>
+<p>You'll see:</p>
+<pre><code>🔍 Watching /path/to/your/project for changes...
+✓ Already indexed (no initial scan needed)
+👀 Monitoring for file changes... (Press Ctrl+C to stop)
+
+💡 Tip: Open a new terminal window to continue working
+</code></pre>
+<h2 id="how-it-works">How It Works</h2>
+<p>The watcher uses file system events to detect when you:</p>
 <ul>
-<li><code>get_driver()</code>: Returns the active Neo4j Driver instance, creating it if it doesn't exist.</li>
-<li><code>close_driver()</code>: Closes the Neo4j driver connection.</li>
-<li><code>is_connected()</code>: Checks if the database connection is currently active.</li>
+<li>Create new files</li>
+<li>Modify existing files</li>
+<li>Delete files</li>
+<li>Move/rename files</li>
 </ul>
-<h2 id="jobmanager"><code>JobManager</code></h2>
-<p>The <code>JobManager</code> class in <code>jobs.py</code> handles long-running, background jobs, such as code indexing. It stores job information in memory and provides a thread-safe way to create, update, and retrieve information about these jobs.</p>
-<h3 id="jobstatus"><code>JobStatus</code></h3>
-<p>An enumeration for the possible statuses of a background job:
-- <code>PENDING</code>
-- <code>RUNNING</code>
-- <code>COMPLETED</code>
-- <code>FAILED</code>
-- <code>CANCELLED</code></p>
-<h3 id="jobinfo"><code>JobInfo</code></h3>
-<p>A data class that holds all information about a single background job, including its ID, status, start/end times, progress, and any errors.</p>
-<h3 id="key-methods_1">Key Methods</h3>
+<p>When changes are detected, CodeGraphContext automatically:</p>
+<ol>
+<li>Re-parses the affected files</li>
+<li>Updates the code graph</li>
+<li>Maintains all relationships and dependencies</li>
+</ol>
+<h2 id="commands">Commands</h2>
+<h3 id="cgc-watch-path"><code>cgc watch [path]</code></h3>
+<p>Start watching a directory for changes.</p>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash">cgc watch .                    # Watch current directory
+cgc watch /path/to/project     # Watch specific directory
+cgc w .                        # Shortcut alias
+</code></pre>
+<p><strong>Behavior:</strong>
+- Runs in the foreground (blocking mode)
+- Performs initial scan if directory is not yet indexed
+- Monitors for all file system changes
+- Uses 2-second debouncing to batch rapid changes
+- Press <code>Ctrl+C</code> to stop</p>
+<h3 id="cgc-watching"><code>cgc watching</code></h3>
+<p>List all directories currently being watched.</p>
+<pre><code class="language-bash">cgc watching
+</code></pre>
+<p><strong>Note:</strong> This command is primarily for MCP server mode. For CLI watch mode, check the terminal where you ran <code>cgc watch</code>.</p>
+<h3 id="cgc-unwatch-path"><code>cgc unwatch &lt;path&gt;</code></h3>
+<p>Stop watching a directory.</p>
+<pre><code class="language-bash">cgc unwatch /path/to/project
+</code></pre>
+<p><strong>Note:</strong> This command is primarily for MCP server mode. For CLI watch mode, simply press <code>Ctrl+C</code> in the watch terminal.</p>
+<h2 id="best-practices">Best Practices</h2>
+<h3 id="development-workflow">Development Workflow</h3>
+<ol>
+<li>Start watching at the beginning of your coding session</li>
+<li>Open a new terminal tab/window for your actual work</li>
+<li>Code normally - changes are automatically tracked</li>
+<li>Stop watching (Ctrl+C) when you're done</li>
+</ol>
+<h3 id="performance-tips">Performance Tips</h3>
 <ul>
-<li><code>create_job()</code>: Creates a new job with a unique ID.</li>
-<li><code>update_job()</code>: Updates the information for a specific job.</li>
-<li><code>get_job()</code>: Retrieves the information for a single job.</li>
-<li><code>list_jobs()</code>: Returns a list of all jobs.</li>
-<li><code>cleanup_old_jobs()</code>: Removes old, completed jobs from memory.</li>
+<li>The watcher uses debouncing (2-second delay) to avoid excessive re-indexing</li>
+<li>Only modified files and their dependencies are re-processed</li>
+<li>Large projects may take a moment to process changes</li>
 </ul>
-<h2 id="codewatcher"><code>CodeWatcher</code></h2>
-<p>The <code>CodeWatcher</code> class in <code>watcher.py</code> implements the live file-watching functionality using the <code>watchdog</code> library. It observes directories for changes and triggers updates to the code graph.</p>
-<h3 id="repositoryeventhandler"><code>RepositoryEventHandler</code></h3>
-<p>A dedicated event handler for a single repository. It performs an initial scan and then uses a debouncing mechanism to efficiently handle file changes, creations, or deletions.</p>
-<h3 id="key-methods_2">Key Methods</h3>
+<h3 id="when-to-use-watch-mode">When to Use Watch Mode</h3>
+<p>✅ <strong>Good for:</strong></p>
 <ul>
-<li><code>watch_directory()</code>: Schedules a directory to be watched for changes.</li>
-<li><code>unwatch_directory()</code>: Stops watching a directory.</li>
-<li><code>list_watched_paths()</code>: Returns a list of all currently watched directory paths.</li>
-<li><code>start()</code>: Starts the observer thread.</li>
-<li><code>stop()</code>: Stops the observer thread gracefully.</li>
+<li>Active development sessions</li>
+<li>Refactoring work</li>
+<li>Keeping AI assistants up-to-date with latest code</li>
+<li>Live code analysis during development</li>
+</ul>
+<p>❌ <strong>Not needed for:</strong></p>
+<ul>
+<li>One-time indexing</li>
+<li>CI/CD pipelines</li>
+<li>Read-only code analysis</li>
+<li>Batch processing</li>
+</ul>
+<h2 id="example-workflow">Example Workflow</h2>
+<p>Here's a typical development session using watch mode:</p>
+<pre><code class="language-bash"># Terminal 1: Start the watcher
+$ cd ~/my-project
+$ cgc watch .
+🔍 Watching /home/user/my-project for changes...
+✓ Already indexed (no initial scan needed)
+👀 Monitoring for file changes... (Press Ctrl+C to stop)
+
+💡 Tip: Open a new terminal window to continue working
+
+# ... watcher runs and shows updates as you code ...
+[21:15:32] 📝 Modified: src/utils.py (re-indexing...)
+[21:15:32] ✓ Updated graph (3 nodes, 2 relationships)
+[21:16:45] 📝 Created: src/new_feature.py (re-indexing...)
+[21:16:45] ✓ Updated graph (8 nodes, 5 relationships)
+</code></pre>
+<pre><code class="language-bash"># Terminal 2: Do your development work
+$ cd ~/my-project
+$ code .                       # Open your editor
+$ git checkout -b new-feature  # Work normally
+$ # ... make changes, save files ...
+$ # The watcher in Terminal 1 automatically picks up changes!
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="watcher-not-detecting-changes">Watcher not detecting changes</h3>
+<ul>
+<li>Ensure the path is correct and accessible</li>
+<li>Check file permissions</li>
+<li>Some editors use atomic writes which may not trigger events</li>
+<li>Try restarting the watcher</li>
+</ul>
+<h3 id="high-cpu-usage">High CPU usage</h3>
+<ul>
+<li>The watcher may be processing too many files</li>
+<li>Consider watching a smaller directory</li>
+<li>Check for file loops or symlinks</li>
+<li>Verify you're not watching <code>node_modules</code> or similar large directories</li>
+</ul>
+<h3 id="changes-not-appearing">Changes not appearing</h3>
+<ul>
+<li>Wait for the debounce interval (2 seconds)</li>
+<li>Check the watcher output for errors</li>
+<li>Verify the file type is supported (Python, JavaScript, TypeScript, etc.)</li>
+<li>Ensure the file is within the watched directory</li>
+</ul>
+<h3 id="already-watching-message">"Already watching" message</h3>
+<p>If you see this message, it means the directory is already being watched. This can happen if:</p>
+<ul>
+<li>You're running multiple watch commands</li>
+<li>The MCP server is already watching this directory</li>
+<li>A previous watch session didn't terminate cleanly</li>
+</ul>
+<p><strong>Solution:</strong> Stop all watch processes and start fresh.</p>
+<h2 id="mcp-server-vs-cli-watch-mode">MCP Server vs CLI Watch Mode</h2>
+<p>CodeGraphContext supports two watch modes:</p>
+<h3 id="cli-watch-mode-this-guide">CLI Watch Mode (This Guide)</h3>
+<ul>
+<li><strong>Command:</strong> <code>cgc watch .</code></li>
+<li><strong>Runs:</strong> In foreground (blocking)</li>
+<li><strong>Use case:</strong> Active development sessions</li>
+<li><strong>Control:</strong> Press <code>Ctrl+C</code> to stop</li>
+<li><strong>Best for:</strong> Single project, focused development</li>
+</ul>
+<h3 id="mcp-server-watch-mode">MCP Server Watch Mode</h3>
+<ul>
+<li><strong>Command:</strong> Via MCP tools (<code>watch_directory</code>, <code>unwatch_directory</code>, <code>list_watched_paths</code>)</li>
+<li><strong>Runs:</strong> In background (as part of MCP server)</li>
+<li><strong>Use case:</strong> IDE integration, multiple projects</li>
+<li><strong>Control:</strong> MCP tool calls</li>
+<li><strong>Best for:</strong> AI assistant integration, persistent watching</li>
+</ul>
+<h2 id="technical-details">Technical Details</h2>
+<ul>
+<li><strong>Library</strong>: Uses <code>watchdog</code> for cross-platform file monitoring</li>
+<li><strong>Debouncing</strong>: 2-second delay to batch rapid changes</li>
+<li><strong>Scope</strong>: Watches recursively, respects <code>.gitignore</code></li>
+<li><strong>Performance</strong>: Only re-indexes changed files and affected relationships</li>
+<li><strong>Thread-safe</strong>: Uses background threads for file monitoring</li>
+<li><strong>Graceful shutdown</strong>: Properly cleans up on <code>Ctrl+C</code></li>
+</ul>
+<h2 id="integration-with-ai-assistants">Integration with AI Assistants</h2>
+<p>Watch mode is particularly powerful when combined with AI coding assistants:</p>
+<ol>
+<li>
+<p><strong>Start watching your project:</strong>
+   <code>bash
+   cgc watch .</code></p>
+</li>
+<li>
+<p><strong>Configure your AI assistant</strong> to use the CodeGraphContext MCP server</p>
+</li>
+<li>
+<p><strong>Code normally</strong> - your AI assistant always has the latest code context</p>
+</li>
+<li>
+<p><strong>Ask questions</strong> about your code, and the AI will have up-to-date information</p>
+</li>
+</ol>
+<p>This creates a seamless development experience where your AI assistant stays synchronized with your codebase in real-time!</p>
+<h2 id="see-also">See Also</h2>
+<ul>
+<li><a href="../cli/">CLI Reference</a> - Complete list of CLI commands</li>
+<li><a href="mcp-tools.md">MCP Tools</a> - MCP server tools including watch functionality</li>
+<li><a href="../installation/">Installation</a> - Getting started with CodeGraphContext</li>
 </ul>
 
 
