@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Copy, Terminal, Play, Settings } from "lucide-react";
+import { Copy, Terminal, Play, Settings, Bot } from "lucide-react";
 import { toast } from "sonner";
 import ShowStarGraph from "@/components/ShowStarGraph";
 
@@ -39,71 +39,241 @@ const copyToClipboard = (text: string) => {
 
 const InstallationSection = () => {
   return (
-    <>
-      <ShowStarGraph />
-      <section className="py-24 px-4 bg-muted/20" data-aos="fade-in">
-        <div className="container mx-auto max-w-5xl">
-          <div className="text-center mb-16" data-aos="fade-down">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent">
-              Get Started in Minutes
-            </h2>
-            <p className="text-xl text-muted-foreground">
-              Simple installation with FalkorDB Lite as default (Unix and WSL) or automated Neo4j setup for all platforms.
-            </p>
+    <section className="py-24 px-4 bg-muted/20">
+      <div className="container mx-auto max-w-5xl text-center">
+        <div className="text-center mb-6">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent">
+            Get Started in Minutes
+          </h2>
+        </div>
+        <div className="mb-12">
+          <div className="text-center mb-10">
+            <h3 className="text-xl text-muted-foreground max-w-3xl mx-auto">Understanding CodeGraphContext Modes</h3>
+          </div>
+          <div className="flex flex-col md:flex-row gap-8 mb-12">
+            {[
+              {
+                icon: Terminal,
+                title: "CLI Toolkit (Standalone)",
+                description: "Index and analyze codebases directly from your terminal. Perfect for developers who want direct control via CLI commands.",
+                color: "graph-node-1"
+              },
+              {
+                icon: Bot,
+                title: "MCP Server (AI-Powered)",
+                description: "Connect to AI IDEs (VS Code, Cursor, Windsurf, Claude, etc.). Let AI agents query your codebase using natural language. Perfect for AI-assisted development workflows.",
+                color: "graph-node-2"
+              }
+            ].map((mode, idx) => (
+              <Card
+                key={mode.title}
+                className={`flex-1 flex flex-col border-border/50 hover:border-primary/30 transition-smooth group hover:shadow-glow animate-float-up dark:bg-gradient-card dark:bg-card/50 dark:border-border/30 dark:hover:border-primary/40 bg-white/95 border-gray-200/50 hover:border-primary/50 shadow-sm h-full text-left min-h-[240px]`}
+                style={{ animationDelay: `${idx * 0.1}s` }}
+              >
+                <CardHeader className="flex-1 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className={`p-3 rounded-xl bg-${mode.color}/10 border border-${mode.color}/20 group-hover:bg-${mode.color}/20 transition-smooth dark:bg-${mode.color}/20 dark:border-${mode.color}/30 bg-${mode.color}/5 border-${mode.color}/15`}>
+                        <mode.icon className={`h-6 w-6 text-${mode.color}`} />
+                      </div>
+                      <CardTitle className="text-xl font-semibold dark:text-foreground text-gray-900">{mode.title}</CardTitle>
+                    </div>
+                    <CardDescription className="text-base text-muted-foreground leading-relaxed dark:text-muted-foreground text-gray-600">
+                      {mode.description}
+                    </CardDescription>
+                  </div>
+                </CardHeader>
+              </Card>
+            ))}
+          </div>
+              
+           
+          <Card className="mb-10">
+            <CardHeader>
+              <CardTitle className="text-xl font-semibold">Installation (Both Modes)</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex justify-center mb-2">
+                <pre className="bg-muted/80 px-4 py-2 rounded font-mono text-accent text-lg shadow-inner w-fit mx-auto">
+                  <code>$ pip install codegraphcontext</code>
+                </pre>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="mb-4">
+            <CardHeader>
+              <div className="flex items-center gap-3 mb-1">
+                <Settings className="h-6 w-6 text-primary" />
+                <CardTitle className="text-2xl font-bold">Database Setup Options</CardTitle>
+              </div>
+              <CardDescription className="text-base text-muted-foreground">
+                FalkorDB Lite is default (Unix). For Neo4j, the wizard supports multiple configurations:
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-3 gap-6">
+                {[
+                  {
+                    icon: Terminal,
+                    title: "Docker (Recommended)",
+                    description: "Automated Neo4j setup using Docker containers.",
+                    color: "graph-node-1"
+                  },
+                  {
+                    icon: Play,
+                    title: "Linux Binary",
+                    description: "Direct installation on Debian-based systems.",
+                    color: "graph-node-2"
+                  },
+                  {
+                    icon: Settings,
+                    title: "Hosted Database",
+                    description: "Connect to Neo4j AuraDB or an existing instance.",
+                    color: "graph-node-3"
+                  }
+                ].map((option, idx) => (
+                  <div key={option.title} className="text-center p-4 rounded-lg bg-muted/30">
+                    <div className={`w-12 h-12 bg-${option.color}/10 rounded-lg flex items-center justify-center mx-auto mb-3`}>
+                      <option.icon className={`h-6 w-6 text-${option.color}`} />
+                    </div>
+                    <h4 className="font-semibold mb-2 text-lg">{option.title}</h4>
+                    <p className="text-sm text-muted-foreground">{option.description}</p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          <div className="w-full my-10">
+            <div className="h-1 w-full rounded-full bg-gradient-to-r from-primary via-blue-500 to-green-400 opacity-80" />
           </div>
 
-          <div className="grid gap-6 mb-12">
-            {installSteps.map((step, index) => (
-              <div key={index} data-aos="fade-up" data-aos-delay={index * 100}>
-                <Card className="transition-shadow duration-300 hover:shadow-lg bg-white/95 dark:bg-card/50">
-                  <CardHeader className="pb-4">
-                    <div className="flex items-center gap-4">
-                      <Badge variant="secondary" className="text-lg font-bold w-9 h-9 flex items-center justify-center rounded-full bg-primary/10 text-primary">
-                        {step.step}
-                      </Badge>
-                      <div>
-                        <CardTitle className="text-xl">{step.title}</CardTitle>
-                        <CardDescription>{step.description}</CardDescription>
-                      </div>
-                    </div>
+
+        </div>
+        <div className="mb-12">
+          <div className="text-center mb-10">
+            <h3 className="text-xl text-muted-foreground max-w-3xl mx-auto">For CLI Toolkit Mode</h3>
+          </div>
+          <Card className="mb-4">
+            <CardHeader>
+              <div className="flex items-center gap-3 mb-1">
+                <Terminal className="h-6 w-6 text-primary" />
+                <CardTitle className="text-2xl font-bold">Start using immediately with CLI commands:</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col gap-4">
+                {/* Card 1 */}
+                <Card className="bg-muted/40">
+                  <CardHeader>
+                    <CardTitle className="text-base font-semibold text-left">Index your current directory</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="p-3 rounded-md bg-muted/40 flex items-center justify-between group border shadow-inner">
-                      <code className="text-accent font-mono text-sm">$ {step.command}</code>
-                      <Button variant="ghost" size="icon" onClick={() => copyToClipboard(step.command)} className="opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8">
-                        <Copy className="h-4 w-4" />
-                      </Button>
-                    </div>
+                    <pre className="bg-muted/80 px-3 py-1 rounded font-mono text-accent text-sm shadow-inner w-fit mx-auto mb-2">
+                      <code>cgc index .</code>
+                    </pre>
+                  </CardContent>
+                </Card>
+                {/* Card 2 */}
+                <Card className="bg-muted/40">
+                  <CardHeader>
+                    <CardTitle className="text-base font-semibold text-left">List all indexed repositories</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <pre className="bg-muted/80 px-3 py-1 rounded font-mono text-accent text-sm shadow-inner w-fit mx-auto mb-2">
+                      <code>cgc list</code>
+                    </pre>
+                  </CardContent>
+                </Card>
+                {/* Card 3 */}
+                <Card className="bg-muted/40">
+                  <CardHeader>
+                    <CardTitle className="text-base font-semibold text-left">See all commands</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <pre className="bg-muted/80 px-3 py-1 rounded font-mono text-accent text-sm shadow-inner w-fit mx-auto mb-2">
+                      <code>cgc help</code>
+                    </pre>
                   </CardContent>
                 </Card>
               </div>
-            ))}
+            </CardContent>
+            <div className="mt-4 text-left max-w-lg ml-8 mb-8">
+                  <span className="font-semibold text-muted-foreground">Ex:</span>
+                  <pre className="bg-muted/80 px-4 py-2 rounded font-mono text-accent text-base shadow-inner w-fit mt-2">
+    {`cgc analyze callers my_function`}
+                  </pre>
+                </div>
+
+            <div className="mt-3 mb-6">
+           
+                
+                 <a href="https://shashankss1205.github.io/CodeGraphContext/cli/" target="_blank" rel="noopener noreferrer" className="underline text-primary font-medium">
+              See the full CLI Commands Guide for all available commands and usage scenarios.
+            </a>
+          </div>
+          </Card>
+
+          
+        </div>
+
+          <div className="w-full my-10">
+            <div className="h-1 w-full rounded-full bg-gradient-to-r from-primary via-blue-500 to-green-400 opacity-80" />
           </div>
 
-          <div data-aos="fade-up" data-aos-delay="300">
-            <Card className="bg-white/95 dark:bg-card/50">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-3"><Settings className="h-6 w-6 text-primary" />Database Setup Options</CardTitle>
-                <CardDescription>FalkorDB Lite is default (Unix). For Neo4j, the wizard supports multiple configurations:</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid md:grid-cols-3 gap-6">
-                  {setupOptions.map((option, index) => (
-                    <div key={index} className="text-center p-4 rounded-lg bg-muted/30">
-                      <div className={`w-12 h-12 bg-${option.color}/10 rounded-lg flex items-center justify-center mx-auto mb-3`}>
-                        <option.icon className={`h-6 w-6 text-${option.color}`} />
-                      </div>
-                      <h4 className="font-semibold mb-2">{option.title}</h4>
-                      <p className="text-sm text-muted-foreground">{option.description}</p>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+          <div> 
+            <div className="mb-12">
+          <div className="text-center mb-10">
+            <h3 className="text-xl text-muted-foreground max-w-3xl mx-auto">For MCP Server Mode</h3>
           </div>
+          <Card className="mb-4">
+            <CardHeader>
+              <div className="flex items-center gap-3 mb-1">
+                <Bot className="h-6 w-6 text-primary" />
+                <CardTitle className="text-2xl font-bold">Configure your AI assistant to use CodeGraphContext:</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col gap-4">
+                {/* Card 1 */}
+                <Card className="bg-muted/40">
+                  <CardHeader>
+                    <CardTitle className="text-base font-semibold text-left"> Run the MCP setup wizard to configure:</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <pre className="bg-muted/80 px-3 py-1 rounded font-mono text-accent text-sm shadow-inner w-fit mx-auto mb-2">
+                      <code>cgc mcp setup</code>
+                    </pre>
+
+                  </CardContent>
+                </Card>
+                  
+                {/* Card 2 */}
+                <Card className="bg-muted/40">
+                  <CardHeader>
+                    <CardTitle className="text-base font-semibold text-left">Launch the MCP server:</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <pre className="bg-muted/80 px-3 py-1 rounded font-mono text-accent text-sm shadow-inner w-fit mx-auto mb-2">
+                      <code>cgc mcp start</code>
+                    </pre>
+                  </CardContent>
+                </Card>
+              </div>
+            </CardContent>
+            <div className="mt-3 mb-6">
+                 <a href="https://shashankss1205.github.io/CodeGraphContext/cookbook/" target="_blank" rel="noopener noreferrer" className="underline text-primary font-medium">
+              Now interact with your codebase through your AI assistant using natural language! See full cookbook.
+            </a>
+          </div>
+          </Card>
+           
         </div>
-      </section>
-    </>
+          </div>
+
+      </div>
+    </section>
   );
 };
 
