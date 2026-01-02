@@ -119,7 +119,7 @@ NEO4J_PASSWORD={password}
 
         print("--- Starting server ---")
         server_process = subprocess.Popen(
-            ["cgc", "start"],
+            ["cgc", "mcp", "start"],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -144,8 +144,8 @@ NEO4J_PASSWORD={password}
                 continue
 
         print("--- Calling tools ---")
-        delete_result = call_tool(server_process, "delete_repository", {"repo_path": SAMPLE_PROJECT_PATH})
-        assert delete_result.get("success") is True
+        # Try to delete in case it exists from a previous run, but don't fail if it doesn't
+        call_tool(server_process, "delete_repository", {"repo_path": SAMPLE_PROJECT_PATH})
 
         add_result = call_tool(server_process, "add_code_to_graph", {"path": SAMPLE_PROJECT_PATH})
         assert add_result.get("success") is True
