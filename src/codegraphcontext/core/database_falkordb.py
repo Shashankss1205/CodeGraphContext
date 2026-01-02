@@ -84,7 +84,7 @@ class FalkorDBManager:
                     if sys.path and sys.path[0]:
                         potential_shadow = os.path.join(sys.path[0], 'falkordb.so')
                         if os.path.exists(potential_shadow):
-                            info_logger("Detected 'falkordb.so' in sys.path[0]. Removing path to prevent import shadowing.")
+                            debug_logger("Detected 'falkordb.so' in sys.path[0]. Removing path to prevent import shadowing.")
                             sys.path.pop(0)
 
                     try:
@@ -93,7 +93,7 @@ class FalkorDBManager:
                         # Use Official FalkorDB Client to connect to the socket
                         from falkordb import FalkorDB
                         
-                        info_logger(f"Connecting to FalkorDB Lite at {self.socket_path}")
+                        debug_logger(f"Connecting to FalkorDB Lite at {self.socket_path}")
                         self._driver = FalkorDB(unix_socket_path=self.socket_path)
                         self._graph = self._driver.select_graph(self.graph_name)
                         
@@ -101,8 +101,8 @@ class FalkorDBManager:
                         try:
                             # Graph creation is lazy in some clients, force a query
                             self._graph.query("RETURN 1")
-                            info_logger(f"FalkorDB Lite connection established successfully")
-                            info_logger(f"Graph name: {self.graph_name}")
+                            debug_logger(f"FalkorDB Lite connection established successfully")
+                            debug_logger(f"Graph name: {self.graph_name}")
                         except Exception as e:
                             info_logger(f"Initial ping check: {e}")
                             
@@ -138,11 +138,11 @@ class FalkorDBManager:
                     d.execute_command("PING")
                 except AttributeError:
                     pass
-                info_logger("Connected to existing FalkorDB Lite process.")
+                debug_logger("Connected to existing FalkorDB Lite process.")
                 return
             except Exception:
                 # Stale socket or unresponsive
-                info_logger("Found stale socket, cleaning up...")
+                debug_logger("Found stale socket, cleaning up...")
                 try:
                     os.remove(self.socket_path)
                 except OSError:
@@ -159,7 +159,7 @@ class FalkorDBManager:
         # We assume codegraphcontext is installed or in python path
         cmd = [python_exe, '-m', 'codegraphcontext.core.falkor_worker']
         
-        info_logger("Starting FalkorDB Lite worker subprocess...")
+        debug_logger("Starting FalkorDB Lite worker subprocess...")
         self._process = subprocess.Popen(cmd, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         
         # 3. Wait for Readiness
@@ -191,7 +191,7 @@ class FalkorDBManager:
         """Kills the subprocess on exit."""
         if self._process:
             if self._process.poll() is None:
-                info_logger("Stopping FalkorDB subprocess...")
+                debug_logger("Stopping FalkorDB subprocess...")
                 self._process.terminate()
                 try:
                     self._process.wait(timeout=5)
@@ -285,7 +285,7 @@ class FalkorDBSessionWrapper:
             if "already exists" in error_msg or "already created" in error_msg:
                 return FalkorDBResultWrapper(None)
                 
-            error_logger(f"FalkorDB query failed: {query[:100]}... Error: {e}")
+            debug_logger(f"FalkorDB query failed: {query[:100]}... Error: {e}")
             raise
 
     def _translate_schema_query(self, query: str) -> str:

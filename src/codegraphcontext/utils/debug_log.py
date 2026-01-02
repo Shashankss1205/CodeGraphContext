@@ -4,28 +4,16 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-# Toggle this to True to enable debug file logging
-# For controlling console log visibility, use CGC_LOG_LEVEL environment variable
-debug_mode = True  # Set to True for dev/test, False for production
-
 
 def debug_log(message):
     """
-    Write debug message to a file if debug_mode is enabled.
+    Log debug message using standard logging.
     
-    This is separate from standard logging and writes to ~/mcp_debug.log.
-    Use this for detailed debugging that you want persisted to a file.
-    
-    For controlling console log visibility, use the CGC_LOG_LEVEL environment
-    variable instead (see codegraphcontext.utils.logging_config).
+    This replaces the old manual file logging implementation.
+    Visibility is controlled by the standard logging configuration
+    (CGC_LOG_LEVEL environment variable).
     """
-    if not debug_mode:
-        return
-    debug_file = os.path.expanduser("~/mcp_debug.log")
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    with open(debug_file, "a") as f:
-        f.write(f"[{timestamp}] {message}\n")
-        f.flush()
+    logger.debug(message)
 
 
 def info_logger(msg):

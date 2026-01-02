@@ -191,7 +191,7 @@ class DatabaseManager:
                         f"  • Try: docker compose up -d (if using Docker)"
                     )
             except Exception as e:
-                return False, f"Error parsing URI or checking connectivity: {str(e)}"
+                return False, f"Connection failed - Error parsing URI or checking connectivity: {str(e)}"
             
             # Now test Neo4j authentication
             driver = GraphDatabase.driver(uri, auth=(username, password))

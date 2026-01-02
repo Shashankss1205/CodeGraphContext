@@ -137,7 +137,7 @@ class GraphBuilder:
                 
                 debug_logger("Database schema verified/created successfully")
             except Exception as e:
-                warning_logger(f"Schema creation warning: {e}")
+                debug_logger(f"Schema creation warning: {e}")
 
 
     def _pre_scan_for_imports(self, files: list[Path]) -> dict:
@@ -435,7 +435,7 @@ class GraphBuilder:
                                 break
             
             if not resolved_path:
-                 warning_logger(f"Could not resolve call {called_name} (lookup: {lookup_name}) in {caller_file_path}")
+                debug_logger(f"Could not resolve call {called_name} (lookup: {lookup_name}) in {caller_file_path}")
             # else:
             #      info_logger(f"Resolved call {called_name} -> {resolved_path}")
             
@@ -716,7 +716,7 @@ class GraphBuilder:
         """Parses a file with the appropriate language parser and extracts code elements."""
         parser = self.parsers.get(file_path.suffix)
         if not parser:
-            warning_logger(f"No parser found for file extension {file_path.suffix}. Skipping {file_path}")
+            debug_logger(f"No parser found for file extension {file_path.suffix}. Skipping {file_path}")
             return {"file_path": str(file_path), "error": f"No parser for {file_path.suffix}"}
 
         debug_log(f"[parse_file] Starting parsing for: {file_path} with {parser.language_name} parser")
