@@ -338,10 +338,12 @@ class GraphBuilder:
                     module_name = imp.get('source')
                     if not module_name: continue
 
-                    # Use a map for relationship properties to handle optional alias
+                    # Use a map for relationship properties to handle optional alias and line_number
                     rel_props = {'imported_name': imp.get('name', '*')}
                     if imp.get('alias'):
                         rel_props['alias'] = imp.get('alias')
+                    if imp.get('line_number'):
+                        rel_props['line_number'] = imp.get('line_number')
 
                     session.run("""
                         MATCH (f:File {path: $file_path})
@@ -356,12 +358,21 @@ class GraphBuilder:
                         set_clauses.append("m.full_import_name = $full_import_name")
                     set_clause_str = ", ".join(set_clauses)
 
+                    # Build relationship properties
+                    rel_props = {}
+                    if imp.get('line_number'):
+                        rel_props['line_number'] = imp.get('line_number')
+                    if imp.get('alias'):
+                        rel_props['alias'] = imp.get('alias')
+
                     session.run(f"""
                         MATCH (f:File {{path: $file_path}})
                         MERGE (m:Module {{name: $name}})
                         SET {set_clause_str}
-                        MERGE (f)-[:IMPORTS]->(m)
-                    """, file_path=file_path_str, **imp)
+                        MERGE (f)-[r:IMPORTS]->(m)
+                        SET r += $rel_props
+                    """, file_path=file_path_str, rel_props=rel_props, **imp)
+
 
             # Handle CONTAINS relationship between class to their children like variables
             for func in file_data.get('functions', []):
