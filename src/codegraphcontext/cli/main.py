@@ -39,6 +39,9 @@ from .cli_helpers import (
     clean_helper,
     stats_helper,
     _initialize_services,
+    watch_helper,
+    unwatch_helper,
+    list_watching_helper,
 )
 
 # Initialize the Typer app and Rich console for formatted output.
@@ -615,6 +618,68 @@ def add_package(package_name: str = typer.Argument(..., help="Name of the packag
     """
     _load_credentials()
     add_package_helper(package_name, language)
+
+# ============================================================================
+# WATCH COMMAND GROUP - Live File Monitoring
+# ============================================================================
+
+@app.command()
+def watch(
+    path: str = typer.Argument(".", help="Path to the directory to watch. Defaults to current directory.")
+):
+    """
+    Watch a directory for file changes and automatically update the code graph.
+    
+    This command runs in the foreground and monitors the specified directory
+    for any file changes. When changes are detected, the code graph is
+    automatically updated.
+    
+    The watcher will:
+    - Perform an initial scan if the directory is not yet indexed
+    - Monitor for file creation, modification, deletion, and moves
+    - Automatically re-index affected files and update relationships
+    
+    Press Ctrl+C to stop watching.
+    
+    Examples:
+        cgc watch .                    # Watch current directory
+        cgc watch /path/to/project     # Watch specific directory
+        cgc w .                        # Using shortcut alias
+    """
+    _load_credentials()
+    watch_helper(path)
+
+@app.command()
+def unwatch(
+    path: str = typer.Argument(..., help="Path to stop watching")
+):
+    """
+    Stop watching a directory for changes.
+    
+    Note: This command is primarily for MCP server mode.
+    For CLI watch mode, simply press Ctrl+C in the watch terminal.
+    
+    Examples:
+        cgc unwatch /path/to/project
+    """
+    _load_credentials()
+    unwatch_helper(path)
+
+@app.command()
+def watching():
+    """
+    List all directories currently being watched for changes.
+    
+    Note: This command is primarily for MCP server mode.
+    For CLI watch mode, check the terminal where you ran 'cgc watch'.
+    
+    Examples:
+        cgc watching
+    """
+    _load_credentials()
+    list_watching_helper()
+
+
 
 # ============================================================================
 # FIND COMMAND GROUP - Code Search & Discovery
@@ -1225,6 +1290,12 @@ def delete_abbrev(
 def visualize_abbrev(query: Optional[str] = typer.Argument(None, help="Cypher query")):
     """Shortcut for 'cgc visualize'"""
     visualize(query)
+
+@app.command("w", rich_help_panel="Shortcuts")
+def watch_abbrev(path: str = typer.Argument(".", help="Path to watch")):
+    """Shortcut for 'cgc watch'"""
+    watch(path)
+
 
 # ============================================================================
 

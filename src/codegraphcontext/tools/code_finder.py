@@ -588,34 +588,36 @@ class CodeFinder:
     def find_module_dependencies(self, module_name: str) -> Dict[str, Any]:
         """Find all dependencies and dependents of a module"""
         with self.driver.session() as session:
+            # Find files that import this module (who imports this module)
             importers_result = session.run("""
-                MATCH (file:File)-[:IMPORTS]->(module:Module {name: $module_name})
+                MATCH (file:File)-[imp:IMPORTS]->(module:Module {name: $module_name})
                 OPTIONAL MATCH (repo:Repository)-[:CONTAINS]->(file)
                 RETURN DISTINCT
-                    file.name as file_name,
-                    file.path as file_path,
+                    file.path as importer_file_path,
+                    imp.line_number as import_line_number,
                     file.is_dependency as file_is_dependency,
                     repo.name as repository_name
                 ORDER BY file.is_dependency ASC, file.path
-                LIMIT 20
+                LIMIT 50
             """, module_name=module_name)
             
-            related_imports_result = session.run("""
+            # Find modules that are imported by files that also import the target module
+            # This helps understand what this module is typically used with
+            imports_result = session.run("""
                 MATCH (file:File)-[:IMPORTS]->(target_module:Module {name: $module_name})
-                MATCH (file)-[:IMPORTS]->(other_module:Module)
+                MATCH (file)-[imp:IMPORTS]->(other_module:Module)
                 WHERE other_module <> target_module
                 RETURN DISTINCT
-                    other_module.name as related_module,
-                    other_module.alias as module_alias,
-                    count(file) as usage_count
-                ORDER BY usage_count DESC
-                LIMIT 20
+                    other_module.name as imported_module,
+                    imp.alias as import_alias
+                ORDER BY other_module.name
+                LIMIT 50
             """, module_name=module_name)
             
             return {
                 "module_name": module_name,
-                "imported_by_files": [dict(record) for record in importers_result],
-                "frequently_used_with": [dict(record) for record in related_imports_result]
+                "importers": [dict(record) for record in importers_result],
+                "imports": [dict(record) for record in imports_result]
             }
     
     def find_variable_usage_scope(self, variable_name: str) -> Dict[str, Any]:

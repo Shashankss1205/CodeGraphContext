@@ -23,3 +23,13 @@ class Meta(type):
 
 class WithMeta(metaclass=Meta):
     pass
+
+class WithMeta2(metaclass=Meta):
+    def __init__(self):
+        self.value = 42
+
+    def __str__(self):
+        return f"WithMeta2(value={self.value})"
+
+    def change_value(self, new_value):
+        self.value = new_value

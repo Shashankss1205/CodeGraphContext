@@ -159,8 +159,11 @@ def delete_helper(repo_path: str):
     db_manager, graph_builder, _ = services
     
     try:
-        graph_builder.delete_repository_from_graph(repo_path)
-        console.print(f"[green]Successfully deleted repository: {repo_path}[/green]")
+        if graph_builder.delete_repository_from_graph(repo_path):
+            console.print(f"[green]Successfully deleted repository: {repo_path}[/green]")
+        else:
+            console.print(f"[yellow]Repository not found in graph: {repo_path}[/yellow]")
+            console.print("[dim]Tip: Use 'cgc list' to see available repositories.[/dim]")
     except Exception as e:
         console.print(f"[bold red]An error occurred:[/bold red] {e}")
     finally:
@@ -512,3 +515,94 @@ def stats_helper(path: str = None):
         console.print(f"[bold red]An error occurred:[/bold red] {e}")
     finally:
         db_manager.close_driver()
+
+
+def watch_helper(path: str):
+    """Watch a directory for changes and auto-update the graph (blocking mode)."""
+    from ..core.watcher import CodeWatcher
+    
+    services = _initialize_services()
+    if not all(services):
+        return
+
+    db_manager, graph_builder, code_finder = services
+    path_obj = Path(path).resolve()
+
+    if not path_obj.exists():
+        console.print(f"[red]Error: Path does not exist: {path_obj}[/red]")
+        db_manager.close_driver()
+        return
+    
+    if not path_obj.is_dir():
+        console.print(f"[red]Error: Path must be a directory: {path_obj}[/red]")
+        db_manager.close_driver()
+        return
+
+    console.print(f"[bold cyan]🔍 Watching {path_obj} for changes...[/bold cyan]")
+    
+    # Check if already indexed
+    indexed_repos = code_finder.list_indexed_repositories()
+    is_indexed = any(Path(repo["path"]).resolve() == path_obj for repo in indexed_repos)
+    
+    # Create watcher instance
+    job_manager = JobManager()
+    watcher = CodeWatcher(graph_builder, job_manager)
+    
+    try:
+        # Start the observer thread
+        watcher.start()
+        
+        # Add the directory to watch
+        if is_indexed:
+            console.print("[green]✓[/green] Already indexed (no initial scan needed)")
+            watcher.watch_directory(str(path_obj), perform_initial_scan=False)
+        else:
+            console.print("[yellow]⚠[/yellow]  Not indexed yet. Performing initial scan...")
+            
+            # Index the repository first (like MCP does)
+            async def do_index():
+                await graph_builder.build_graph_from_path_async(path_obj, is_dependency=False)
+            
+            asyncio.run(do_index())
+            console.print("[green]✓[/green] Initial scan complete")
+            
+            # Now start watching (without another scan)
+            watcher.watch_directory(str(path_obj), perform_initial_scan=False)
+        
+        console.print("[bold green]👀 Monitoring for file changes...[/bold green] (Press Ctrl+C to stop)")
+        console.print("[dim]💡 Tip: Open a new terminal window to continue working[/dim]\n")
+        
+        # Block here and keep the watcher running
+        import threading
+        stop_event = threading.Event()
+        
+        try:
+            stop_event.wait()  # Wait indefinitely until interrupted
+        except KeyboardInterrupt:
+            console.print("\n[yellow]🛑 Stopping watcher...[/yellow]")
+            
+    except KeyboardInterrupt:
+        console.print("\n[yellow]🛑 Stopping watcher...[/yellow]")
+    except Exception as e:
+        console.print(f"[bold red]An error occurred:[/bold red] {e}")
+    finally:
+        watcher.stop()
+        db_manager.close_driver()
+        console.print("[green]✓[/green] Watcher stopped. Graph is up to date.")
+
+
+
+def unwatch_helper(path: str):
+    """Stop watching a directory."""
+    console.print(f"[yellow]⚠️  Note: 'cgc unwatch' only works when the watcher is running via MCP server.[/yellow]")
+    console.print(f"[dim]For CLI watch mode, simply press Ctrl+C in the watch terminal.[/dim]")
+    console.print(f"\n[cyan]Path specified:[/cyan] {Path(path).resolve()}")
+
+
+def list_watching_helper():
+    """List all directories currently being watched."""
+    console.print(f"[yellow]⚠️  Note: 'cgc watching' only works when the watcher is running via MCP server.[/yellow]")
+    console.print(f"[dim]For CLI watch mode, check the terminal where you ran 'cgc watch'.[/dim]")
+    console.print(f"\n[cyan]To see watched directories in MCP mode:[/cyan]")
+    console.print(f"  1. Start the MCP server: cgc mcp start")
+    console.print(f"  2. Use the 'list_watched_paths' MCP tool from your IDE")

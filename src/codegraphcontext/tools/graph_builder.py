@@ -13,6 +13,7 @@ from ..utils.debug_log import debug_log, debug_logger, error_logger, warning_log
 # New imports for tree-sitter (using tree-sitter-language-pack)
 from tree_sitter import Language, Parser
 from ..utils.tree_sitter_manager import get_tree_sitter_manager
+from ..cli.config_manager import get_config_value
 
 class TreeSitterParser:
     """A generic parser wrapper for a specific language using tree-sitter."""
@@ -60,6 +61,10 @@ class TreeSitterParser:
         elif self.language_name == 'php':
             from .languages.php import PhpTreeSitterParser
             self.language_specific_parser = PhpTreeSitterParser(self)
+        elif self.language_name == 'kotlin':
+            from .languages.kotlin import KotlinTreeSitterParser
+            self.language_specific_parser = KotlinTreeSitterParser(self)
+
 
 
     def parse(self, file_path: Path, is_dependency: bool = False, **kwargs) -> Dict:
@@ -98,7 +103,8 @@ class GraphBuilder:
             '.java': TreeSitterParser('java'),
             '.rb': TreeSitterParser('ruby'),
             '.cs': TreeSitterParser('c_sharp'),
-            '.php': TreeSitterParser('php')
+            '.php': TreeSitterParser('php'),
+            '.kt': TreeSitterParser('kotlin'),
         }
         self.create_schema()
 
@@ -204,6 +210,9 @@ class GraphBuilder:
         elif '.cs' in files_by_lang:
             from .languages import csharp as csharp_lang_module
             imports_map.update(csharp_lang_module.pre_scan_csharp(files_by_lang['.cs'], self.parsers['.cs']))
+        if '.kt' in files_by_lang:
+            from .languages import kotlin as kotlin_lang_module
+            imports_map.update(kotlin_lang_module.pre_scan_kotlin(files_by_lang['.kt'], self.parsers['.kt']))
             
         return imports_map
 
@@ -338,10 +347,12 @@ class GraphBuilder:
                     module_name = imp.get('source')
                     if not module_name: continue
 
-                    # Use a map for relationship properties to handle optional alias
+                    # Use a map for relationship properties to handle optional alias and line_number
                     rel_props = {'imported_name': imp.get('name', '*')}
                     if imp.get('alias'):
                         rel_props['alias'] = imp.get('alias')
+                    if imp.get('line_number'):
+                        rel_props['line_number'] = imp.get('line_number')
 
                     session.run("""
                         MATCH (f:File {path: $file_path})
@@ -356,12 +367,21 @@ class GraphBuilder:
                         set_clauses.append("m.full_import_name = $full_import_name")
                     set_clause_str = ", ".join(set_clauses)
 
+                    # Build relationship properties
+                    rel_props = {}
+                    if imp.get('line_number'):
+                        rel_props['line_number'] = imp.get('line_number')
+                    if imp.get('alias'):
+                        rel_props['alias'] = imp.get('alias')
+
                     session.run(f"""
                         MATCH (f:File {{path: $file_path}})
                         MERGE (m:Module {{name: $name}})
                         SET {set_clause_str}
-                        MERGE (f)-[:IMPORTS]->(m)
-                    """, file_path=file_path_str, **imp)
+                        MERGE (f)-[r:IMPORTS]->(m)
+                        SET r += $rel_props
+                    """, file_path=file_path_str, rel_props=rel_props, **imp)
+
 
             # Handle CONTAINS relationship between class to their children like variables
             for func in file_data.get('functions', []):
@@ -406,10 +426,22 @@ class GraphBuilder:
             resolved_path = None
             full_call = call.get('full_name', called_name)
             base_obj = full_call.split('.')[0] if '.' in full_call else None
-            lookup_name = base_obj if base_obj else called_name
+            
+            # For chained calls like self.graph_builder.method(), we need to look up 'method'
+            # For direct calls like self.method(), we can use the caller's file
+            is_chained_call = full_call.count('.') > 1 if '.' in full_call else False
+            
+            # Determine the lookup name:
+            # - For chained calls (self.attr.method), use the actual method name
+            # - For direct calls (self.method or module.function), use the base object
+            if is_chained_call and base_obj in ('self', 'this', 'super', 'super()', 'cls', '@'):
+                lookup_name = called_name  # Use the actual method name for lookup
+            else:
+                lookup_name = base_obj if base_obj else called_name
 
             # 1. Check for local context keywords/direct local names
-            if base_obj in ('self', 'this', 'super', 'super()', 'cls', '@'):
+            # Only resolve to caller_file_path for DIRECT self/this calls, not chained ones
+            if base_obj in ('self', 'this', 'super', 'super()', 'cls', '@') and not is_chained_call:
                 resolved_path = caller_file_path
             elif lookup_name in local_names:
                 resolved_path = caller_file_path
@@ -429,10 +461,18 @@ class GraphBuilder:
                 elif len(possible_paths) > 1:
                     if lookup_name in local_imports:
                         full_import_name = local_imports[lookup_name]
-                        for path in possible_paths:
-                            if full_import_name.replace('.', '/') in path:
-                                resolved_path = path
-                                break
+                        
+                        # Optimization: Check if the FQN is directly in imports_map (from pre-scan)
+                        if full_import_name in imports_map:
+                             direct_paths = imports_map[full_import_name]
+                             if direct_paths and len(direct_paths) == 1:
+                                 resolved_path = direct_paths[0]
+                        
+                        if not resolved_path:
+                            for path in possible_paths:
+                                if full_import_name.replace('.', '/') in path:
+                                    resolved_path = path
+                                    break
             
             if not resolved_path:
                 debug_logger(f"Could not resolve call {called_name} (lookup: {lookup_name}) in {caller_file_path}")
@@ -485,7 +525,13 @@ class GraphBuilder:
                     MATCH (called) WHERE (called:Function OR called:Class)
                       AND called.name = $called_name 
                       AND called.file_path = $called_file_path
-                    MERGE (caller)-[:CALLS {line_number: $line_number, args: $args, full_call_name: $full_call_name}]->(called)
+                    
+                    WITH caller, called
+                    OPTIONAL MATCH (called)-[:CONTAINS]->(init:Function)
+                    WHERE called:Class AND init.name IN ["__init__", "constructor"]
+                    WITH caller, COALESCE(init, called) as final_target
+                    
+                    MERGE (caller)-[:CALLS {line_number: $line_number, args: $args, full_call_name: $full_call_name}]->(final_target)
                 """,
                 caller_name=caller_name,
                 caller_file_path=caller_file_path,
@@ -501,7 +547,13 @@ class GraphBuilder:
                     MATCH (called) WHERE (called:Function OR called:Class)
                       AND called.name = $called_name 
                       AND called.file_path = $called_file_path
-                    MERGE (caller)-[:CALLS {line_number: $line_number, args: $args, full_call_name: $full_call_name}]->(called)
+                    
+                    WITH caller, called
+                    OPTIONAL MATCH (called)-[:CONTAINS]->(init:Function)
+                    WHERE called:Class AND init.name IN ["__init__", "constructor"]
+                    WITH caller, COALESCE(init, called) as final_target
+
+                    MERGE (caller)-[:CALLS {line_number: $line_number, args: $args, full_call_name: $full_call_name}]->(final_target)
                 """,
                 caller_file_path=caller_file_path,
                 called_name=called_name,
@@ -684,10 +736,16 @@ class GraphBuilder:
                     DETACH DELETE d
                 """, path=path)
 
-    def delete_repository_from_graph(self, repo_path: str):
-        """Deletes a repository and all its contents from the graph."""
+    def delete_repository_from_graph(self, repo_path: str) -> bool:
+        """Deletes a repository and all its contents from the graph. Returns True if deleted, False if not found."""
         repo_path_str = str(Path(repo_path).resolve())
         with self.driver.session() as session:
+            # Check if it exists
+            result = session.run("MATCH (r:Repository {path: $path}) RETURN count(r) as cnt", path=repo_path_str).single()
+            if not result or result["cnt"] == 0:
+                warning_logger(f"Attempted to delete non-existent repository: {repo_path_str}")
+                return False
+
             session.run("""MATCH (r:Repository {path: $path})
                           OPTIONAL MATCH (r)-[:CONTAINS*]->(e)
                           DETACH DELETE r, e""", path=repo_path_str)
@@ -747,6 +805,21 @@ class GraphBuilder:
             else:
                 all_files = path.rglob("*")
                 files = [f for f in all_files if f.is_file() and f.suffix in supported_extensions]
+
+                # Filter default ignored directories
+                ignore_dirs_str = get_config_value("IGNORE_DIRS") or ""
+                if ignore_dirs_str:
+                    ignore_dirs = {d.strip().lower() for d in ignore_dirs_str.split(',') if d.strip()}
+                    if ignore_dirs:
+                        kept_files = []
+                        for f in files:
+                            try:
+                                parts = set(p.lower() for p in f.relative_to(path).parent.parts)
+                                if not parts.intersection(ignore_dirs):
+                                    kept_files.append(f)
+                            except ValueError:
+                                kept_files.append(f)
+                        files = kept_files
             
             total_files = len(files)
             estimated_time = total_files * 0.05 # tree-sitter is faster
@@ -766,8 +839,28 @@ class GraphBuilder:
             self.add_repository_to_graph(path, is_dependency)
             repo_name = path.name
 
-            cgcignore_path = path / ".cgcignore"
-            if cgcignore_path.exists():
+            # Search for .cgcignore upwards
+            cgcignore_path = None
+            ignore_root = path.resolve()
+            
+            # Start search from path (or parent if path is file)
+            curr = path.resolve()
+            if not curr.is_dir():
+                curr = curr.parent
+
+            # Walk up looking for .cgcignore
+            while True:
+                candidate = curr / ".cgcignore"
+                if candidate.exists():
+                    cgcignore_path = candidate
+                    ignore_root = curr
+                    debug_log(f"Found .cgcignore at {ignore_root}")
+                    break
+                if curr.parent == curr: # Root hit
+                    break
+                curr = curr.parent
+
+            if cgcignore_path:
                 with open(cgcignore_path) as f:
                     ignore_patterns = f.read().splitlines()
                 spec = pathspec.PathSpec.from_lines('gitwildmatch', ignore_patterns)
@@ -777,8 +870,40 @@ class GraphBuilder:
             supported_extensions = self.parsers.keys()
             all_files = path.rglob("*") if path.is_dir() else [path]
             files = [f for f in all_files if f.is_file() and f.suffix in supported_extensions]
+
+            # Filter default ignored directories
+            ignore_dirs_str = get_config_value("IGNORE_DIRS") or ""
+            if ignore_dirs_str and path.is_dir():
+                ignore_dirs = {d.strip().lower() for d in ignore_dirs_str.split(',') if d.strip()}
+                if ignore_dirs:
+                    kept_files = []
+                    for f in files:
+                        try:
+                            # Check if any parent directory in the relative path is in ignore list
+                            parts = set(p.lower() for p in f.relative_to(path).parent.parts)
+                            if not parts.intersection(ignore_dirs):
+                                kept_files.append(f)
+                            else:
+                                # debug_log(f"Skipping default ignored file: {f}")
+                                pass
+                        except ValueError:
+                             kept_files.append(f)
+                    files = kept_files
+            
             if spec:
-                files = [f for f in files if not spec.match_file(str(f.relative_to(path)))]
+                filtered_files = []
+                for f in files:
+                    try:
+                        # Match relative to the directory containing .cgcignore
+                        rel_path = f.relative_to(ignore_root)
+                        if not spec.match_file(str(rel_path)):
+                            filtered_files.append(f)
+                        else:
+                            debug_log(f"Ignored file based on .cgcignore: {rel_path}")
+                    except ValueError:
+                        # Should not happen if ignore_root is a parent, but safety fallback
+                        filtered_files.append(f)
+                files = filtered_files
             if job_id:
                 self.job_manager.update_job(job_id, total_files=len(files))
             

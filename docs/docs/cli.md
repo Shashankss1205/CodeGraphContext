@@ -14,7 +14,16 @@ Use these commands to manage the repositories in your code graph.
 | **`cgc clean`** | None | Removes orphaned nodes and cleans up the database. |
 | **`cgc add-package`** | `<name> <lang>` | Manually adds an external package node (e.g., `cgc add-package requests python`). |
 
-## 2. Code Analysis
+## 2. Watching & Monitoring
+Automatically track changes and keep your code graph up-to-date.
+
+| Command | Arguments | Description |
+| :--- | :--- | :--- |
+| **`cgc watch`** | `[path]` | Watches a directory for file changes and automatically re-indexes. Runs in foreground. Default path is current directory. <br> *(Alias: `cgc w`)* |
+| **`cgc unwatch`** | `<path>` | Stops watching a previously watched directory. (Primarily for MCP mode) |
+| **`cgc watching`** | None | Lists all directories currently being watched for changes. (Primarily for MCP mode) |
+
+## 3. Code Analysis
 Understand the structure, quality, and relationships of your code.
 
 | Command | Arguments | Description |
@@ -27,7 +36,7 @@ Understand the structure, quality, and relationships of your code.
 | **`cgc analyze complexity`**| `[path]` <br> `--threshold` <br> `--limit` | Lists functions with high Cyclomatic Complexity. Default threshold: 10. |
 | **`cgc analyze dead-code`** | `--exclude` | Finds potentially unused functions (0 callers). Use `--exclude` for decorators. |
 
-## 3. Discovery & Search
+## 4. Discovery & Search
 Find code elements when you don't know the exact structure.
 
 | Command | Arguments | Description |
@@ -36,7 +45,7 @@ Find code elements when you don't know the exact structure.
 | **`cgc find pattern`** | `<pattern>` <br> `--case-sensitive` | Finds elements using fuzzy substring matching (e.g. "User" finds "UserHelper"). |
 | **`cgc find type`** | `<type>` <br> `--limit` | Lists all nodes of a specific type (e.g. `function`, `class`, `module`). |
 
-## 4. Configuration & Setup
+## 5. Configuration & Setup
 Manage your environment and database connections.
 
 | Command | Arguments | Description |
@@ -48,7 +57,7 @@ Manage your environment and database connections.
 | **`cgc config reset`** | None | Resets configuration to defaults. |
 | **`cgc config db`** | `<backend>` | Quick switch between `neo4j` and `falkordb`. |
 
-## 5. Utilities & Runtime
+## 6. Utilities & Runtime
 Helper commands for developers and the MCP server.
 
 | Command | Arguments | Description |

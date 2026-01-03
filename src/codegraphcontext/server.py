@@ -374,11 +374,16 @@ class MCPServer:
         repo_path = args.get("repo_path")
         try:
             debug_log(f"Deleting repository: {repo_path}")
-            self.graph_builder.delete_repository_from_graph(repo_path)
-            return {
-                "success": True,
-                "message": f"Repository '{repo_path}' deleted successfully."
-            }
+            if self.graph_builder.delete_repository_from_graph(repo_path):
+                return {
+                    "success": True,
+                    "message": f"Repository '{repo_path}' deleted successfully."
+                }
+            else:
+                 return {
+                    "success": False,
+                    "message": f"Repository '{repo_path}' not found in the graph."
+                }
         except Exception as e:
             debug_log(f"Error deleting repository: {str(e)}")
             return {"error": f"Failed to delete repository: {str(e)}"}
