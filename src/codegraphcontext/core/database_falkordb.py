@@ -42,15 +42,33 @@ class FalkorDBManager:
         if hasattr(self, '_initialized'):
             return
 
-        # Default database path in user's home directory
+        # Configuration priority:
+        # 1. Environment variable (highest priority)
+        # 2. Config manager (supports project-local .env)
+        # 3. Default path (lowest priority)
+        
+        # Try to load from config manager
+        try:
+            from codegraphcontext.cli.config_manager import get_config_value
+            config_db_path = get_config_value('FALKORDB_PATH')
+            config_socket_path = get_config_value('FALKORDB_SOCKET_PATH')
+        except Exception:
+            # Config manager not available or error loading
+            config_db_path = None
+            config_socket_path = None
+        
+        # Database path with fallback chain
         self.db_path = os.getenv(
             'FALKORDB_PATH',
-            str(Path.home() / '.codegraphcontext' / 'falkordb.db')
+            config_db_path or str(Path.home() / '.codegraphcontext' / 'falkordb.db')
         )
+        
+        # Socket path with fallback chain
         self.socket_path = os.getenv(
             'FALKORDB_SOCKET_PATH',
-            str(Path.home() / '.codegraphcontext' / 'falkordb.sock')
+            config_socket_path or str(Path.home() / '.codegraphcontext' / 'falkordb.sock')
         )
+        
         self.graph_name = os.getenv('FALKORDB_GRAPH_NAME', 'codegraph')
         self._initialized = True
         

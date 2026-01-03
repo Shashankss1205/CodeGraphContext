@@ -21,6 +21,8 @@ DATABASE_CREDENTIAL_KEYS = {"NEO4J_URI", "NEO4J_USERNAME", "NEO4J_PASSWORD"}
 # Default configuration values
 DEFAULT_CONFIG = {
     "DEFAULT_DATABASE": "falkordb",
+    "FALKORDB_PATH": str(CONFIG_DIR / "falkordb.db"),
+    "FALKORDB_SOCKET_PATH": str(CONFIG_DIR / "falkordb.sock"),
     "INDEX_VARIABLES": "true",
     "ALLOW_DB_DELETION": "false",
     "DEBUG_LOGS": "false",
@@ -39,6 +41,8 @@ DEFAULT_CONFIG = {
 # Configuration key descriptions
 CONFIG_DESCRIPTIONS = {
     "DEFAULT_DATABASE": "Default database backend (neo4j|falkordb)",
+    "FALKORDB_PATH": "Path to FalkorDB database file",
+    "FALKORDB_SOCKET_PATH": "Path to FalkorDB Unix socket",
     "INDEX_VARIABLES": "Index variable nodes in the graph (lighter graph if false)",
     "ALLOW_DB_DELETION": "Allow full database deletion commands",
     "DEBUG_LOGS": "Enable debug logging",
@@ -74,32 +78,74 @@ def ensure_config_dir():
 
 
 def load_config() -> Dict[str, str]:
-    """Load configuration from file, creating with defaults if not exists."""
+    """
+    Load configuration with priority support.
+    Priority order (highest to lowest):
+    1. Environment variables
+    2. Local .env file (in current or parent directories)
+    3. Global ~/.codegraphcontext/.env
+    """
     ensure_config_dir()
     
-    if not CONFIG_FILE.exists():
-        # Create with defaults
-        save_config(DEFAULT_CONFIG)
-        return DEFAULT_CONFIG.copy()
+    # Start with defaults
+    config = DEFAULT_CONFIG.copy()
     
-    config = {}
-    try:
-        with open(CONFIG_FILE, "r") as f:
-            for line in f:
-                line = line.strip()
-                if line and not line.startswith("#") and "=" in line:
-                    key, value = line.split("=", 1)
-                    config[key.strip()] = value.strip()
-    except Exception as e:
-        console.print(f"[red]Error loading config: {e}[/red]")
-        return DEFAULT_CONFIG.copy()
+    # Load global config
+    if CONFIG_FILE.exists():
+        try:
+            with open(CONFIG_FILE, "r") as f:
+                for line in f:
+                    line = line.strip()
+                    if line and not line.startswith("#") and "=" in line:
+                        key, value = line.split("=", 1)
+                        config[key.strip()] = value.strip()
+        except Exception as e:
+            console.print(f"[red]Error loading global config: {e}[/red]")
     
-    # Merge with defaults for any missing keys
-    for key, default_value in DEFAULT_CONFIG.items():
-        if key not in config:
-            config[key] = default_value
+    # Load local .env file if it exists (overrides global)
+    local_env = find_local_env()
+    if local_env and local_env.exists():
+        try:
+            with open(local_env, "r") as f:
+                for line in f:
+                    line = line.strip()
+                    if line and not line.startswith("#") and "=" in line:
+                        key, value = line.split("=", 1)
+                        key = key.strip()
+                        # Only override if it's a config key (not database credentials in local file)
+                        if key in DEFAULT_CONFIG or key in DATABASE_CREDENTIAL_KEYS:
+                            config[key] = value.strip()
+        except Exception as e:
+            console.print(f"[yellow]Warning: Error loading local .env: {e}[/yellow]")
+    
+    # Environment variables have highest priority
+    for key in DEFAULT_CONFIG.keys():
+        env_value = os.getenv(key)
+        if env_value is not None:
+            config[key] = env_value
     
     return config
+
+
+def find_local_env() -> Optional[Path]:
+    """
+    Find a local .env file by searching current directory and parents.
+    Returns the first .env file found, or None.
+    """
+    current = Path.cwd()
+    
+    # Search up to 5 levels up
+    for _ in range(5):
+        env_file = current / ".env"
+        if env_file.exists() and env_file != CONFIG_FILE:
+            return env_file
+        
+        # Stop at root
+        if current.parent == current:
+            break
+        current = current.parent
+    
+    return None
 
 
 def save_config(config: Dict[str, str], preserve_db_credentials: bool = True):
@@ -218,6 +264,18 @@ def validate_config_value(key: str, value: str) -> tuple[bool, Optional[str]]:
             log_path.parent.mkdir(parents=True, exist_ok=True)
         except Exception as e:
             return False, f"Cannot create log directory: {e}"
+    
+    if key in ("FALKORDB_PATH", "FALKORDB_SOCKET_PATH"):
+        # Validate path is writable
+        db_path = Path(value)
+        try:
+            db_path.parent.mkdir(parents=True, exist_ok=True)
+        except Exception as e:
+            return False, f"Cannot create directory for {key}: {e}"
+        
+        # Check if parent directory is writable
+        if not os.access(db_path.parent, os.W_OK):
+            return False, f"Directory {db_path.parent} is not writable"
     
     return True, None
 
