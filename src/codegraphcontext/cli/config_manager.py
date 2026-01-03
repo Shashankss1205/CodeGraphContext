@@ -27,7 +27,7 @@ DEFAULT_CONFIG = {
     "ALLOW_DB_DELETION": "false",
     "DEBUG_LOGS": "false",
     "DEBUG_LOG_PATH": str(Path.home() / "mcp_debug.log"),
-    "ENABLE_APP_LOGS": "INFO",
+    "ENABLE_APP_LOGS": "CRITICAL",
     "LOG_FILE_PATH": str(CONFIG_DIR / "logs" / "cgc.log"),
     "MAX_FILE_SIZE_MB": "10",
     "IGNORE_TEST_FILES": "false",
