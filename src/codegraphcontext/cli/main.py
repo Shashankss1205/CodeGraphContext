@@ -1648,16 +1648,18 @@ def main(
 
     if ctx.invoked_subcommand is None:
         console.print("[bold green]👋 Welcome to CodeGraphContext (cgc)![/bold green]\n")
-        console.print("� [bold]Quick Start (with FalkorDB):[/bold]")
+        console.print("CodeGraphContext is both an [bold cyan]MCP server[/bold cyan] and a [bold cyan]CLI toolkit[/bold cyan] for code analysis.\n")
+        console.print("🤖 [bold]For MCP Server Mode (AI assistants):[/bold]")
         console.print("   1. Run [cyan]cgc mcp setup[/cyan] (or [cyan]cgc m[/cyan]) to configure your IDE")
-        console.print("   2. Run [cyan]cgc start[/cyan] to launch the server\n")
-        console.print("📊 [bold]Using Neo4j instead?[/bold]")
-        console.print("   1. Run [cyan]cgc neo4j setup[/cyan] (or [cyan]cgc n[/cyan]) to configure Neo4j")
-        console.print("   2. Run [cyan]cgc mcp setup[/cyan] to configure your IDE")
-        console.print("   3. Run [cyan]cgc start[/cyan] to launch the server\n")
+        console.print("   2. Run [cyan]cgc mcp start[/cyan] to launch the server\n")
+        console.print("🛠️  [bold]For CLI Toolkit Mode (direct usage):[/bold]")
+        console.print("   • [cyan]cgc index .[/cyan] - Index your current directory")
+        console.print("   • [cyan]cgc list[/cyan] - List indexed repositories\n")
+        console.print("📊 [bold]Using Neo4j instead of FalkorDB?[/bold]")
+        console.print("     Run [cyan]cgc neo4j setup[/cyan] (or [cyan]cgc n[/cyan]) to configure Neo4j\n")
         console.print("👉 Run [cyan]cgc help[/cyan] to see all available commands")
         console.print("👉 Run [cyan]cgc --version[/cyan] to check the version\n")
-        console.print("👉 Running [green]codegraphcontext [white]works the same as using [green]cgc[/white]")
+        console.print("👉 Running [green]codegraphcontext[/green] works the same as using [green]cgc[/green]")
 
 
 if __name__ == "__main__":

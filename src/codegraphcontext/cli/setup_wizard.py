@@ -326,10 +326,10 @@ def configure_mcp_client():
     if "python" in Path(cgc_path).name:
         # fallback to running as module if no cgc binary is found
         command = cgc_path
-        args = ["-m", "cgc", "start"]
+        args = ["-m", "cgc", "mcp", "start"]
     else:
         command = cgc_path
-        args = ["start"]
+        args = ["mcp", "start"]
 
     # Create MCP config without Neo4j env vars (uses FalkorDB by default)
     mcp_config = {
@@ -369,7 +369,7 @@ def configure_mcp_client():
     _configure_ide(mcp_config)
     
     console.print("\n[bold green]✅ MCP Client configuration complete![/bold green]")
-    console.print("[cyan]You can now run 'cgc start' to launch the server with FalkorDB.[/cyan]")
+    console.print("[cyan]You can now run 'cgc mcp start' to launch the server with FalkorDB.[/cyan]")
     console.print("[yellow]Note: If you want to use Neo4j instead, run 'cgc neo4j setup' first.[/yellow]\n")
 
 
