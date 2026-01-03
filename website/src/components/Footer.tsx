@@ -202,7 +202,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <a
-                    href="https://github.com/AnimeshRajwar/CodeGraphContext/blob/main/docs/docs/cookbook.md"
+                    href="https://github.com/Shashankss1205/CodeGraphContext/blob/main/docs/docs/cookbook.md"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:text-foreground transition-smooth"
