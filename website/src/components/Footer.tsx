@@ -202,7 +202,9 @@ const Footer = () => {
                 </li>
                 <li>
                   <a
-                    href="https://github.com/Shashankss1205/CodeGraphContext/blob/main/docs/cookbook.md"
+                    href="https://github.com/Shashankss1205/CodeGraphContext/blob/main/docs/docs/cookbook.md"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="hover:text-foreground transition-smooth"
                   >
                     Cookbook
@@ -211,6 +213,8 @@ const Footer = () => {
                 <li>
                   <a
                     href="https://github.com/Shashankss1205/CodeGraphContext/blob/main/CONTRIBUTING.md"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="hover:text-foreground transition-smooth"
                   >
                     Contributing
@@ -220,6 +224,8 @@ const Footer = () => {
                   <a
                     href="https://github.com/Shashankss1205/CodeGraphContext/issues"
                     className="hover:text-foreground transition-smooth"
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     Issues
                   </a>
