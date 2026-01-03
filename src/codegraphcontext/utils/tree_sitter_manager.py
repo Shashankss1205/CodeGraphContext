@@ -48,6 +48,8 @@ LANGUAGE_ALIASES = {
     "kotlin": "kotlin",
     "scala": "scala",
     ".scala": "scala",
+    "swift": "swift",
+    ".swift": "swift",
 }
 
 
