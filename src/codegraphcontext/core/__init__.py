@@ -43,7 +43,7 @@ def get_database_manager() -> Union['DatabaseManager', 'FalkorDBManager']:
     4. Implicit Default: FalkorDB (if available)
     5. Fallback: Neo4j (if configured)
     """
-    from codegraphcontext.utils.debug_log import info_logger
+    from codegraphcontext.utils.debug_log import debug_logger
     
     # 1. Runtime Override (CLI flag) or Config/Env
     db_type = os.getenv('CGC_RUNTIME_DB_TYPE')
@@ -58,14 +58,14 @@ def get_database_manager() -> Union['DatabaseManager', 'FalkorDBManager']:
             if not _is_falkordb_available():
                  raise ValueError("Database set to 'falkordb' but FalkorDB Lite is not installed.\nRun 'pip install falkordblite'")
             from .database_falkordb import FalkorDBManager
-            info_logger("Using FalkorDB Lite (explicit)")
+            debug_logger("Using FalkorDB Lite (explicit)")
             return FalkorDBManager()
             
         elif db_type == 'neo4j':
             if not _is_neo4j_configured():
                  raise ValueError("Database set to 'neo4j' but it is not configured.\nRun 'cgc setup' to configure Neo4j.")
             from .database import DatabaseManager
-            info_logger("Using Neo4j Server (explicit)")
+            debug_logger("Using Neo4j Server (explicit)")
             return DatabaseManager()
         else:
             raise ValueError(f"Unknown database type: '{db_type}'. Use 'falkordb' or 'neo4j'.")
@@ -73,13 +73,13 @@ def get_database_manager() -> Union['DatabaseManager', 'FalkorDBManager']:
     # 4. Implicit Default -> FalkorDB (Zero Config)
     if _is_falkordb_available():
         from .database_falkordb import FalkorDBManager
-        info_logger("Using FalkorDB Lite (default)")
+        debug_logger("Using FalkorDB Lite (default)")
         return FalkorDBManager()
         
     # 5. Fallback if FalkorDB missing but Neo4j is ready
     if _is_neo4j_configured():
         from .database import DatabaseManager
-        info_logger("Using Neo4j Server (auto-detected)")
+        debug_logger("Using Neo4j Server (auto-detected)")
         return DatabaseManager()
 
     import sys

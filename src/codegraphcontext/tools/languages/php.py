@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 import re
-from codegraphcontext.utils.debug_log import debug_log, info_logger, error_logger, warning_logger
+from codegraphcontext.utils.debug_log import debug_log, info_logger, error_logger, warning_logger, debug_logger
 from codegraphcontext.utils.tree_sitter_manager import execute_query
 
 # Reference: https://github.com/tree-sitter/tree-sitter-php/blob/master/queries/tags.scm
@@ -69,7 +69,7 @@ class PhpTreeSitterParser:
                 source_code = f.read()
 
             if not source_code.strip():
-                warning_logger(f"Empty or whitespace-only file: {file_path}")
+                debug_logger(f"Empty or whitespace-only file: {file_path}")
                 return {
                     "file_path": str(file_path),
                     "functions": [],
