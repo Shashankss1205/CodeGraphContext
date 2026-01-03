@@ -26,6 +26,8 @@ DEFAULT_CONFIG = {
     "INDEX_VARIABLES": "true",
     "ALLOW_DB_DELETION": "false",
     "DEBUG_LOGS": "false",
+    "DEBUG_LOG_PATH": str(Path.home() / "mcp_debug.log"),
+    "ENABLE_APP_LOGS": "INFO",
     "LOG_FILE_PATH": str(CONFIG_DIR / "logs" / "cgc.log"),
     "MAX_FILE_SIZE_MB": "10",
     "IGNORE_TEST_FILES": "false",
@@ -45,8 +47,10 @@ CONFIG_DESCRIPTIONS = {
     "FALKORDB_SOCKET_PATH": "Path to FalkorDB Unix socket",
     "INDEX_VARIABLES": "Index variable nodes in the graph (lighter graph if false)",
     "ALLOW_DB_DELETION": "Allow full database deletion commands",
-    "DEBUG_LOGS": "Enable debug logging",
-    "LOG_FILE_PATH": "Path to save log files",
+    "DEBUG_LOGS": "Enable debug logging (for development/troubleshooting)",
+    "DEBUG_LOG_PATH": "Path to debug log file",
+    "ENABLE_APP_LOGS": "Application log level (DEBUG|INFO|WARNING|ERROR|CRITICAL|DISABLED)",
+    "LOG_FILE_PATH": "Path to application log file",
     "MAX_FILE_SIZE_MB": "Maximum file size to index (in MB)",
     "IGNORE_TEST_FILES": "Skip test files during indexing",
     "IGNORE_HIDDEN_FILES": "Skip hidden files/directories",
@@ -64,6 +68,7 @@ CONFIG_VALIDATORS = {
     "INDEX_VARIABLES": ["true", "false"],
     "ALLOW_DB_DELETION": ["true", "false"],
     "DEBUG_LOGS": ["true", "false"],
+    "ENABLE_APP_LOGS": ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL", "DISABLED"],
     "IGNORE_TEST_FILES": ["true", "false"],
     "IGNORE_HIDDEN_FILES": ["true", "false"],
     "ENABLE_AUTO_WATCH": ["true", "false"],
@@ -257,7 +262,7 @@ def validate_config_value(key: str, value: str) -> tuple[bool, Optional[str]]:
             except ValueError:
                 return False, "MAX_DEPTH must be 'unlimited' or a number"
     
-    if key == "LOG_FILE_PATH":
+    if key in ("LOG_FILE_PATH", "DEBUG_LOG_PATH"):
         # Validate path is writable
         log_path = Path(value)
         try:
