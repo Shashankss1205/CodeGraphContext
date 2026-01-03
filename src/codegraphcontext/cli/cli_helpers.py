@@ -61,10 +61,28 @@ def index_helper(path: str):
         return
 
     indexed_repos = code_finder.list_indexed_repositories()
-    if any(Path(repo["path"]).resolve() == path_obj for repo in indexed_repos):
-        console.print(f"[yellow]Repository '{path}' is already indexed. Skipping.[/yellow]")
-        db_manager.close_driver()
-        return
+    repo_exists = any(Path(repo["path"]).resolve() == path_obj for repo in indexed_repos)
+    
+    if repo_exists:
+        # Check if the repository actually has files (not just an empty node from interrupted indexing)
+        try:
+            with db_manager.get_driver().session() as session:
+                result = session.run(
+                    "MATCH (r:Repository {path: $path})-[:CONTAINS]->(f:File) RETURN count(f) as file_count",
+                    path=str(path_obj)
+                )
+                record = result.single()
+                file_count = record["file_count"] if record else 0
+                
+                if file_count > 0:
+                    console.print(f"[yellow]Repository '{path}' is already indexed with {file_count} files. Skipping.[/yellow]")
+                    console.print("[dim]💡 Tip: Use 'cgc index --force' to re-index[/dim]")
+                    db_manager.close_driver()
+                    return
+                else:
+                    console.print(f"[yellow]Repository '{path}' exists but has no files (likely interrupted). Re-indexing...[/yellow]")
+        except Exception as e:
+            console.print(f"[yellow]Warning: Could not check file count: {e}. Proceeding with indexing...[/yellow]")
 
     console.print(f"Starting indexing for: {path_obj}")
     console.print("[yellow]This may take a few minutes for large repositories...[/yellow]")

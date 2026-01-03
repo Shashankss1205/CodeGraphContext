@@ -5,8 +5,17 @@ from nbconvert import PythonExporter
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 import ast
+import logging
+import warnings
 from codegraphcontext.utils.debug_log import debug_log, info_logger, error_logger, warning_logger, debug_logger
 from codegraphcontext.utils.tree_sitter_manager import execute_query
+
+# Suppress verbose traitlets/nbconvert DEBUG logs
+logging.getLogger('traitlets').setLevel(logging.WARNING)
+logging.getLogger('nbconvert').setLevel(logging.WARNING)
+
+# Suppress IPython UserWarning from nbconvert
+warnings.filterwarnings('ignore', message='.*IPython is needed to transform IPython syntax.*')
 
 
 PY_QUERIES = {
