@@ -77,6 +77,19 @@ def index_helper(path: str):
         time_end = time.time()
         elapsed = time_end - time_start
         console.print(f"[green]Successfully finished indexing: {path} in {elapsed:.2f} seconds[/green]")
+        
+        # Check if auto-watch is enabled
+        try:
+            from codegraphcontext.cli.config_manager import get_config_value
+            auto_watch = get_config_value('ENABLE_AUTO_WATCH')
+            if auto_watch and str(auto_watch).lower() == 'true':
+                console.print("\n[cyan]🔍 ENABLE_AUTO_WATCH is enabled. Starting watcher...[/cyan]")
+                db_manager.close_driver()  # Close before starting watcher
+                watch_helper(path)  # This will block the terminal
+                return  # watch_helper handles its own cleanup
+        except Exception as e:
+            console.print(f"[yellow]Warning: Could not check ENABLE_AUTO_WATCH: {e}[/yellow]")
+            
     except Exception as e:
         console.print(f"[bold red]An error occurred during indexing:[/bold red] {e}")
     finally:
@@ -519,7 +532,13 @@ def stats_helper(path: str = None):
 
 def watch_helper(path: str):
     """Watch a directory for changes and auto-update the graph (blocking mode)."""
+    import logging
     from ..core.watcher import CodeWatcher
+    
+    # Suppress verbose watchdog DEBUG logs
+    logging.getLogger('watchdog').setLevel(logging.WARNING)
+    logging.getLogger('watchdog.observers').setLevel(logging.WARNING)
+    logging.getLogger('watchdog.observers.inotify_buffer').setLevel(logging.WARNING)
     
     services = _initialize_services()
     if not all(services):
