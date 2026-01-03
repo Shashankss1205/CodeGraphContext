@@ -68,12 +68,12 @@ class CodeFinder:
         with self.driver.session() as session:
             result = session.run("""
                 MATCH (v:Variable)
-                WHERE v.name CONTAINS $search_term OR v.name =~ $regex_pattern
+                WHERE v.name CONTAINS $search_term
                 RETURN v.name as name, v.file_path as file_path, v.line_number as line_number,
                        v.value as value, v.context as context, v.is_dependency as is_dependency
                 ORDER BY v.is_dependency ASC, v.name
                 LIMIT 20
-            """, search_term=search_term, regex_pattern=f"(?i).*{re.escape(search_term)}.*")
+            """, search_term=search_term)
             
             return result.data()
 

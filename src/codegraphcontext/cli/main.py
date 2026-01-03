@@ -708,12 +708,15 @@ def find_by_name(
             # Search all
             funcs = code_finder.find_by_function_name(name, fuzzy_search=False)
             classes = code_finder.find_by_class_name(name, fuzzy_search=False)
+            variables = code_finder.find_by_variable_name(name)
             
             for f in funcs: f['type'] = 'Function'
             for c in classes: c['type'] = 'Class'
+            for v in variables: v['type'] = 'Variable'
             
             results.extend(funcs)
             results.extend(classes)
+            results.extend(variables)
         
         elif type.lower() == 'function':
             results = code_finder.find_by_function_name(name, fuzzy_search=False)
@@ -722,6 +725,10 @@ def find_by_name(
         elif type.lower() == 'class':
             results = code_finder.find_by_class_name(name, fuzzy_search=False)
             for r in results: r['type'] = 'Class'
+            
+        elif type.lower() == 'variable':
+            results = code_finder.find_by_variable_name(name)
+            for r in results: r['type'] = 'Variable'
             
         elif type.lower() == 'file':
             # Quick query for file
@@ -780,7 +787,7 @@ def find_by_pattern(
             if not case_sensitive:
                 query = """
                     MATCH (n)
-                    WHERE (n:Function OR n:Class OR n:Module) AND toLower(n.name) CONTAINS toLower($pattern)
+                    WHERE (n:Function OR n:Class OR n:Module OR n:Variable) AND toLower(n.name) CONTAINS toLower($pattern)
                     RETURN 
                         labels(n)[0] as type,
                         n.name as name,
@@ -793,7 +800,7 @@ def find_by_pattern(
             else:
                  query = """
                     MATCH (n)
-                    WHERE (n:Function OR n:Class OR n:Module) AND n.name CONTAINS $pattern
+                    WHERE (n:Function OR n:Class OR n:Module OR n:Variable) AND n.name CONTAINS $pattern
                     RETURN 
                         labels(n)[0] as type,
                         n.name as name,
@@ -878,6 +885,194 @@ def find_by_type(
             )
             
         console.print(f"[cyan]Found {len(results)} {element_type}s:[/cyan]")
+        console.print(table)
+    finally:
+        db_manager.close_driver()
+
+@find_app.command("variable")
+def find_by_variable(
+    name: str = typer.Argument(..., help="Variable name to search for")
+):
+    """
+    Find variables by name.
+    
+    Examples:
+        cgc find variable MAX_RETRIES
+        cgc find variable config
+    """
+    _load_credentials()
+    services = _initialize_services()
+    if not all(services):
+        return
+    db_manager, graph_builder, code_finder = services
+    
+    try:
+        results = code_finder.find_by_variable_name(name)
+        
+        if not results:
+            console.print(f"[yellow]No variables found with name '{name}'[/yellow]")
+            return
+            
+        table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
+        table.add_column("Name", style="cyan")
+        table.add_column("File", style="dim", overflow="fold")
+        table.add_column("Line", style="green", justify="right")
+        table.add_column("Context", style="yellow")
+        
+        for res in results:
+            table.add_row(
+                res.get('name', ''),
+                res.get('file_path', ''),
+                str(res.get('line_number', '')),
+                res.get('context', '') or 'module'
+            )
+            
+        console.print(f"[cyan]Found {len(results)} variable(s) named '{name}':[/cyan]")
+        console.print(table)
+    finally:
+        db_manager.close_driver()
+
+@find_app.command("content")
+def find_by_content_search(
+    query: str = typer.Argument(..., help="Text to search for in source code and docstrings")
+):
+    """
+    Search code content (source and docstrings) using full-text index.
+    
+    Examples:
+        cgc find content "error 503"
+        cgc find content "TODO: refactor"
+    """
+    _load_credentials()
+    services = _initialize_services()
+    if not all(services):
+        return
+    db_manager, graph_builder, code_finder = services
+    
+    try:
+        try:
+            results = code_finder.find_by_content(query)
+        except Exception as e:
+            error_msg = str(e).lower()
+            if 'fulltext' in error_msg or 'db.index.fulltext' in error_msg:
+                console.print("\n[bold red]❌ Full-text search is not supported on FalkorDB[/bold red]\n")
+                console.print("[yellow]💡 You have two options:[/yellow]\n")
+                console.print("  1. [cyan]Switch to Neo4j:[/cyan]")
+                console.print(f"     [dim]cgc --database neo4j find content \"{query}\"[/dim]\n")
+                console.print("  2. [cyan]Use pattern search instead:[/cyan]")
+                console.print(f"     [dim]cgc find pattern \"{query}\"[/dim]")
+                console.print("     [dim](searches in names only, not source code)[/dim]\n")
+                return
+            else:
+                # Re-raise if it's a different error
+                raise
+        
+        if not results:
+            console.print(f"[yellow]No content matches found for '{query}'[/yellow]")
+            return
+            
+        table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
+        table.add_column("Name", style="cyan")
+        table.add_column("Type", style="blue")
+        table.add_column("File", style="dim", overflow="fold")
+        table.add_column("Line", style="green", justify="right")
+        
+        for res in results:
+            table.add_row(
+                res.get('name', ''),
+                res.get('type', 'Unknown'),
+                res.get('file_path', ''),
+                str(res.get('line_number', ''))
+            )
+            
+        console.print(f"[cyan]Found {len(results)} content match(es) for '{query}':[/cyan]")
+        console.print(table)
+    finally:
+        db_manager.close_driver()
+
+@find_app.command("decorator")
+def find_by_decorator_search(
+    decorator: str = typer.Argument(..., help="Decorator name to search for"),
+    file: Optional[str] = typer.Option(None, "--file", "-f", help="Specific file path")
+):
+    """
+    Find functions with a specific decorator.
+    
+    Examples:
+        cgc find decorator app.route
+        cgc find decorator test --file tests/test_main.py
+    """
+    _load_credentials()
+    services = _initialize_services()
+    if not all(services):
+        return
+    db_manager, graph_builder, code_finder = services
+    
+    try:
+        results = code_finder.find_functions_by_decorator(decorator, file)
+        
+        if not results:
+            console.print(f"[yellow]No functions found with decorator '@{decorator}'[/yellow]")
+            return
+            
+        table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
+        table.add_column("Function", style="cyan")
+        table.add_column("File", style="dim", overflow="fold")
+        table.add_column("Line", style="green", justify="right")
+        table.add_column("Decorators", style="yellow")
+        
+        for res in results:
+            decorators_str = ", ".join(res.get('decorators', []))
+            table.add_row(
+                res.get('function_name', ''),
+                res.get('file_path', ''),
+                str(res.get('line_number', '')),
+                decorators_str
+            )
+            
+        console.print(f"[cyan]Found {len(results)} function(s) with decorator '@{decorator}':[/cyan]")
+        console.print(table)
+    finally:
+        db_manager.close_driver()
+
+@find_app.command("argument")
+def find_by_argument_search(
+    argument: str = typer.Argument(..., help="Argument/parameter name to search for"),
+    file: Optional[str] = typer.Option(None, "--file", "-f", help="Specific file path")
+):
+    """
+    Find functions that take a specific argument/parameter.
+    
+    Examples:
+        cgc find argument password
+        cgc find argument user_id --file src/auth.py
+    """
+    _load_credentials()
+    services = _initialize_services()
+    if not all(services):
+        return
+    db_manager, graph_builder, code_finder = services
+    
+    try:
+        results = code_finder.find_functions_by_argument(argument, file)
+        
+        if not results:
+            console.print(f"[yellow]No functions found with argument '{argument}'[/yellow]")
+            return
+            
+        table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
+        table.add_column("Function", style="cyan")
+        table.add_column("File", style="dim", overflow="fold")
+        table.add_column("Line", style="green", justify="right")
+        
+        for res in results:
+            table.add_row(
+                res.get('function_name', ''),
+                res.get('file_path', ''),
+                str(res.get('line_number', ''))
+            )
+            
+        console.print(f"[cyan]Found {len(results)} function(s) with argument '{argument}':[/cyan]")
         console.print(table)
     finally:
         db_manager.close_driver()
@@ -1229,6 +1424,114 @@ def analyze_dead_code(
         console.print(table)
         console.print(f"\n[dim]Total: {len(unused_funcs)} function(s)[/dim]")
         console.print(f"[dim]Note: {results.get('note', '')}[/dim]")
+    finally:
+        db_manager.close_driver()
+
+@analyze_app.command("overrides")
+def analyze_overrides(
+    function_name: str = typer.Argument(..., help="Function/method name to find implementations of")
+):
+    """
+    Find all implementations of a function across different classes.
+    
+    Useful for finding polymorphic implementations and method overrides.
+    
+    Example:
+        cgc analyze overrides area
+        cgc analyze overrides process
+    """
+    _load_credentials()
+    services = _initialize_services()
+    if not all(services):
+        return
+    db_manager, graph_builder, code_finder = services
+    
+    try:
+        results = code_finder.find_function_overrides(function_name)
+        
+        if not results:
+            console.print(f"[yellow]No implementations found for function '{function_name}'[/yellow]")
+            return
+        
+        table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
+        table.add_column("Class", style="cyan")
+        table.add_column("Function", style="green")
+        table.add_column("File", style="dim", overflow="fold")
+        table.add_column("Line", style="yellow", justify="right")
+        
+        for res in results:
+            table.add_row(
+                res.get('class_name', ''),
+                res.get('function_name', ''),
+                res.get('class_file_path', ''),
+                str(res.get('function_line_number', ''))
+            )
+        
+        console.print(f"\n[bold cyan]Found {len(results)} implementation(s) of '{function_name}':[/bold cyan]")
+        console.print(table)
+    finally:
+        db_manager.close_driver()
+
+@analyze_app.command("variable")
+def analyze_variable_usage(
+    variable_name: str = typer.Argument(..., help="Variable name to analyze")
+):
+    """
+    Analyze where a variable is defined and used across the codebase.
+    
+    Shows all instances of the variable and their scope (function, class, module).
+    
+    Example:
+        cgc analyze variable MAX_RETRIES
+        cgc analyze variable config
+    """
+    _load_credentials()
+    services = _initialize_services()
+    if not all(services):
+        return
+    db_manager, graph_builder, code_finder = services
+    
+    try:
+        # Get variable usage scope
+        scope_results = code_finder.find_variable_usage_scope(variable_name)
+        instances = scope_results.get('instances', [])
+        
+        if not instances:
+            console.print(f"[yellow]No instances found for variable '{variable_name}'[/yellow]")
+            return
+        
+        console.print(f"\n[bold cyan]Variable '{variable_name}' Usage Analysis:[/bold cyan]\n")
+        
+        # Group by scope type
+        by_scope = {}
+        for inst in instances:
+            scope_type = inst.get('scope_type', 'unknown')
+            if scope_type not in by_scope:
+                by_scope[scope_type] = []
+            by_scope[scope_type].append(inst)
+        
+        # Display by scope
+        for scope_type, items in by_scope.items():
+            console.print(f"[bold yellow]{scope_type.upper()} Scope ({len(items)} instance(s)):[/bold yellow]")
+            
+            table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
+            table.add_column("Scope Name", style="cyan")
+            table.add_column("File", style="dim", overflow="fold")
+            table.add_column("Line", style="green", justify="right")
+            table.add_column("Value", style="yellow")
+            
+            for item in items:
+                table.add_row(
+                    item.get('scope_name', ''),
+                    item.get('file_path', ''),
+                    str(item.get('line_number', '')),
+                    str(item.get('variable_value', ''))[:50] if item.get('variable_value') else '-'
+                )
+            
+            console.print(table)
+            console.print()
+        
+        console.print(f"[dim]Total: {len(instances)} instance(s) across {len(by_scope)} scope type(s)[/dim]")
     finally:
         db_manager.close_driver()
 
