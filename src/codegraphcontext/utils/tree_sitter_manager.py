@@ -46,6 +46,8 @@ LANGUAGE_ALIASES = {
     "rust": "rust",
     "kt": "kotlin",
     "kotlin": "kotlin",
+    "scala": "scala",
+    ".scala": "scala",
 }
 
 
