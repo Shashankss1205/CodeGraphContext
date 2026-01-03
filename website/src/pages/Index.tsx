@@ -6,6 +6,7 @@ import ExamplesSection from "../components/ExamplesSection";
 import CookbookSection from "../components/CookbookSection";
 import Footer from "../components/Footer";
 import TestimonialSection from "../components/TestimonialSection";
+import SocialMentionsTimeline from "../components/SocialMentionsTimeline";
 import ComparisonTable from "../components/ComparisonTable";
 
 const Index = () => {
@@ -34,6 +35,9 @@ const Index = () => {
       </div>
       <div data-aos="fade-up">
         <CookbookSection />
+      </div>
+      <div data-aos="fade-up">
+        <SocialMentionsTimeline />
       </div>
       <div data-aos="fade-up" data-aos-anchor-placement="top-bottom">
         <Footer />
