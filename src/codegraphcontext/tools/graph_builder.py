@@ -264,7 +264,8 @@ class GraphBuilder:
                 try:
                     relative_path_to_file = file_path_obj.relative_to(repo_path_obj)
                 except Exception:
-                    relative_path_to_file = file_path_obj.parts[-1:]
+                    # Fallback to a single-component Path using the file name
+                    relative_path_to_file = Path(file_path_obj.name)
 
                 parent_path = str(repo_path_obj)
                 parent_label = 'Repository'
