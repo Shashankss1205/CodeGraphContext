@@ -113,6 +113,7 @@ volumes:
 NEO4J_URI=neo4j://localhost:7687
 NEO4J_USERNAME=neo4j
 NEO4J_PASSWORD={password}
+DEFAULT_DATABASE=neo4j
 """
         with open(env_path, "w") as f:
             f.write(env_content)
