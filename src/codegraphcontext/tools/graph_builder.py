@@ -83,7 +83,6 @@ class GraphBuilder:
         self.job_manager = job_manager
         self.loop = loop
         self.driver = self.db_manager.get_driver()
-        from .languages.typescriptjsx import TypescriptJSXTreeSitterParser
         self.parsers = {
             '.py': TreeSitterParser('python'),
             '.ipynb': TreeSitterParser('python'),
