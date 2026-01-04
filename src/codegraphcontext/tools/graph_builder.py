@@ -35,8 +35,8 @@ class TreeSitterParser:
             from .languages.javascript import JavascriptTreeSitterParser
             self.language_specific_parser = JavascriptTreeSitterParser(self)
         elif self.language_name == 'go':
-             from .languages.go import GoTreeSitterParser
-             self.language_specific_parser = GoTreeSitterParser(self)
+            from .languages.go import GoTreeSitterParser
+            self.language_specific_parser = GoTreeSitterParser(self)
         elif self.language_name == 'typescript':
             from .languages.typescript import TypescriptTreeSitterParser
             self.language_specific_parser = TypescriptTreeSitterParser(self)
@@ -193,8 +193,8 @@ class GraphBuilder:
             from .languages import typescript as ts_lang_module
             imports_map.update(ts_lang_module.pre_scan_typescript(files_by_lang['.ts'], self.parsers['.ts']))
         if '.tsx' in files_by_lang:
-            from .languages import typescript as ts_lang_module
-            imports_map.update(ts_lang_module.pre_scan_typescript(files_by_lang['.tsx'], self.parsers['.tsx']))
+            from .languages import typescriptjsx as tsx_lang_module
+            imports_map.update(tsx_lang_module.pre_scan_typescript(files_by_lang['.tsx'], self.parsers['.tsx']))
         if '.cpp' in files_by_lang:
             from .languages import cpp as cpp_lang_module
             imports_map.update(cpp_lang_module.pre_scan_cpp(files_by_lang['.cpp'], self.parsers['.cpp']))
