@@ -64,7 +64,7 @@ def pre_scan_typescript(files: list[Path], parser_wrapper) -> dict:
 from typing import Dict
 from codegraphcontext.utils.debug_log import warning_logger
 from codegraphcontext.utils.tree_sitter_manager import execute_query
-from .typescript import TS_QUERIES, TypescriptTreeSitterParser
+from .typescript import TypescriptTreeSitterParser
 
 class TypescriptJSXTreeSitterParser(TypescriptTreeSitterParser):
     """
