@@ -64,6 +64,12 @@ class TreeSitterParser:
         elif self.language_name == 'kotlin':
             from .languages.kotlin import KotlinTreeSitterParser
             self.language_specific_parser = KotlinTreeSitterParser(self)
+        elif self.language_name == 'scala':
+            from .languages.scala import ScalaTreeSitterParser
+            self.language_specific_parser = ScalaTreeSitterParser(self)
+        elif self.language_name == 'swift':
+            from .languages.swift import SwiftTreeSitterParser
+            self.language_specific_parser = SwiftTreeSitterParser(self)
 
 
 
@@ -105,6 +111,9 @@ class GraphBuilder:
             '.cs': TreeSitterParser('c_sharp'),
             '.php': TreeSitterParser('php'),
             '.kt': TreeSitterParser('kotlin'),
+            '.scala': TreeSitterParser('scala'),
+            '.sc': TreeSitterParser('scala'),
+            '.swift': TreeSitterParser('swift'),
         }
         self.create_schema()
 
@@ -178,8 +187,8 @@ class GraphBuilder:
             from .languages import javascript as js_lang_module
             imports_map.update(js_lang_module.pre_scan_javascript(files_by_lang['.cjs'], self.parsers['.cjs']))
         if '.go' in files_by_lang:
-            from .languages import go as go_lang_module
-            imports_map.update(go_lang_module.pre_scan_go(files_by_lang['.go'], self.parsers['.go']))
+             from .languages import go as go_lang_module
+             imports_map.update(go_lang_module.pre_scan_go(files_by_lang['.go'], self.parsers['.go']))
         if '.ts' in files_by_lang:
             from .languages import typescript as ts_lang_module
             imports_map.update(ts_lang_module.pre_scan_typescript(files_by_lang['.ts'], self.parsers['.ts']))
@@ -213,6 +222,15 @@ class GraphBuilder:
         if '.kt' in files_by_lang:
             from .languages import kotlin as kotlin_lang_module
             imports_map.update(kotlin_lang_module.pre_scan_kotlin(files_by_lang['.kt'], self.parsers['.kt']))
+        if '.scala' in files_by_lang:
+            from .languages import scala as scala_lang_module
+            imports_map.update(scala_lang_module.pre_scan_scala(files_by_lang['.scala'], self.parsers['.scala']))
+        if '.sc' in files_by_lang:
+            from .languages import scala as scala_lang_module
+            imports_map.update(scala_lang_module.pre_scan_scala(files_by_lang['.sc'], self.parsers['.sc']))
+        if '.swift' in files_by_lang:
+            from .languages import swift as swift_lang_module
+            imports_map.update(swift_lang_module.pre_scan_swift(files_by_lang['.swift'], self.parsers['.swift']))
             
         return imports_map
 
@@ -241,14 +259,11 @@ class GraphBuilder:
         is_dependency = file_data.get('is_dependency', False)
 
         with self.driver.session() as session:
-            repo_path_value = file_data.get('repo_path')
-            if repo_path_value:
-                try:
-                    repo_result = session.run("MATCH (r:Repository {path: $repo_path}) RETURN r.path as path", repo_path=str(Path(repo_path_value).resolve())).single()
-                    relative_path = str(Path(file_path_str).relative_to(Path(repo_result['path']))) if repo_result else file_name
-                except ValueError:
-                    relative_path = file_name
-            else:
+            try:
+                # Match repository by path, not name, to avoid conflicts with same-named folders at different locations
+                repo_result = session.run("MATCH (r:Repository {path: $repo_path}) RETURN r.path as path", repo_path=str(Path(file_data['repo_path']).resolve())).single()
+                relative_path = str(Path(file_path_str).relative_to(Path(repo_result['path']))) if repo_result else file_name
+            except ValueError:
                 relative_path = file_name
 
             session.run("""
@@ -256,37 +271,33 @@ class GraphBuilder:
                 SET f.name = $name, f.relative_path = $relative_path, f.is_dependency = $is_dependency
             """, path=file_path_str, name=file_name, relative_path=relative_path, is_dependency=is_dependency)
 
+            file_path_obj = Path(file_path_str)
+            repo_path_obj = Path(repo_result['path'])
+            
+            relative_path_to_file = file_path_obj.relative_to(repo_path_obj)
+            
+            parent_path = str(repo_path_obj)
+            parent_label = 'Repository'
 
-            # Only create directory/file relationships if repo_result is available
-            if repo_path_value and repo_result:
-                file_path_obj = Path(file_path_str)
-                repo_path_obj = Path(repo_result['path'])
-                try:
-                    relative_path_to_file = file_path_obj.relative_to(repo_path_obj)
-                except Exception:
-                    # Fallback to a single-component Path using the file name
-                    relative_path_to_file = Path(file_path_obj.name)
-
-                parent_path = str(repo_path_obj)
-                parent_label = 'Repository'
-
-                for part in relative_path_to_file.parts[:-1]:
-                    current_path = Path(parent_path) / part
-                    current_path_str = str(current_path)
-                    session.run(f"""
-                        MATCH (p:{parent_label} {{path: $parent_path}})
-                        MERGE (d:Directory {{path: $current_path}})
-                        SET d.name = $part
-                        MERGE (p)-[:CONTAINS]->(d)
-                    """, parent_path=parent_path, current_path=current_path_str, part=part)
-                    parent_path = current_path_str
-                    parent_label = 'Directory'
-
+            for part in relative_path_to_file.parts[:-1]:
+                current_path = Path(parent_path) / part
+                current_path_str = str(current_path)
+                
                 session.run(f"""
                     MATCH (p:{parent_label} {{path: $parent_path}})
-                    MATCH (f:File {{path: $file_path}})
-                    MERGE (p)-[:CONTAINS]->(f)
-                """, parent_path=parent_path, file_path=file_path_str)
+                    MERGE (d:Directory {{path: $current_path}})
+                    SET d.name = $part
+                    MERGE (p)-[:CONTAINS]->(d)
+                """, parent_path=parent_path, current_path=current_path_str, part=part)
+
+                parent_path = current_path_str
+                parent_label = 'Directory'
+
+            session.run(f"""
+                MATCH (p:{parent_label} {{path: $parent_path}})
+                MATCH (f:File {{path: $file_path}})
+                MERGE (p)-[:CONTAINS]->(f)
+            """, parent_path=parent_path, file_path=file_path_str)
 
             # CONTAINS relationships for functions, classes, and variables
             # To add a new language-specific node type (e.g., 'Trait' for Rust):
@@ -294,22 +305,20 @@ class GraphBuilder:
             # 2. Add a new constraint for the new label in the `create_schema` method.
             # 3. Add a new entry to the `item_mappings` list below (e.g., (file_data.get('traits', []), 'Trait') ).
             item_mappings = [
-                (file_data.get('functions') or [], 'Function'),
-                (file_data.get('classes') or [], 'Class'),
-                (file_data.get('traits') or [], 'Trait'),
-                (file_data.get('variables') or [], 'Variable'),
-                (file_data.get('interfaces') or [], 'Interface'),
-                (file_data.get('macros') or [], 'Macro'),
-                (file_data.get('structs') or [], 'Struct'),
-                (file_data.get('enums') or [], 'Enum'),
-                (file_data.get('unions') or [], 'Union'),
-                (file_data.get('records') or [], 'Record'),
-                (file_data.get('properties') or [], 'Property'),
+                (file_data.get('functions', []), 'Function'),
+                (file_data.get('classes', []), 'Class'),
+                (file_data.get('traits', []), 'Trait'), # <-- Added trait mapping
+                (file_data.get('variables', []), 'Variable'),
+                (file_data.get('interfaces', []), 'Interface'),
+                (file_data.get('macros', []), 'Macro'),
+                (file_data.get('structs',[]), 'Struct'),
+                (file_data.get('enums',[]), 'Enum'),
+                (file_data.get('unions',[]), 'Union'),
+                (file_data.get('records',[]), 'Record'),
+                (file_data.get('properties',[]), 'Property'),
             ]
             for item_data, label in item_mappings:
                 for item in item_data:
-                    if not isinstance(item, dict):
-                        continue
                     # Ensure cyclomatic_complexity is set for functions
                     if label == 'Function' and 'cyclomatic_complexity' not in item:
                         item['cyclomatic_complexity'] = 1 # Default value
@@ -320,15 +329,15 @@ class GraphBuilder:
                         SET n += $props
                         MERGE (f)-[:CONTAINS]->(n)
                     """
-                    session.run(query, file_path=file_path_str, name=item.get('name', ''), line_number=item.get('line_number', 0), props=item)
+                    session.run(query, file_path=file_path_str, name=item['name'], line_number=item['line_number'], props=item)
                     
                     if label == 'Function':
-                        for arg_name in item.get('args', []) or []:
+                        for arg_name in item.get('args', []):
                             session.run("""
                                 MATCH (fn:Function {name: $func_name, file_path: $file_path, line_number: $line_number})
                                 MERGE (p:Parameter {name: $arg_name, file_path: $file_path, function_line_number: $line_number})
                                 MERGE (fn)-[:HAS_PARAMETER]->(p)
-                            """, func_name=item.get('name', ''), file_path=file_path_str, line_number=item.get('line_number', 0), arg_name=arg_name)
+                            """, func_name=item['name'], file_path=file_path_str, line_number=item['line_number'], arg_name=arg_name)
 
             # --- NEW: persist Ruby Modules ---
             for m in file_data.get('modules', []):
