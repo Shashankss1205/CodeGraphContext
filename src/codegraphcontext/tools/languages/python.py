@@ -5,8 +5,17 @@ from nbconvert import PythonExporter
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 import ast
+import logging
+import warnings
 from codegraphcontext.utils.debug_log import debug_log, info_logger, error_logger, warning_logger, debug_logger
 from codegraphcontext.utils.tree_sitter_manager import execute_query
+
+# Suppress verbose traitlets/nbconvert DEBUG logs
+logging.getLogger('traitlets').setLevel(logging.WARNING)
+logging.getLogger('nbconvert').setLevel(logging.WARNING)
+
+# Suppress IPython UserWarning from nbconvert
+warnings.filterwarnings('ignore', message='.*IPython is needed to transform IPython syntax.*')
 
 
 PY_QUERIES = {
@@ -209,11 +218,27 @@ class PythonTreeSitterParser:
                     for p in params_node.children:
                         arg_text = None
                         if p.type == 'identifier':
+                            # Simple parameter: def foo(x)
                             arg_text = self._get_node_text(p)
                         elif p.type == 'default_parameter':
+                            # Parameter with default: def foo(x=5)
                             name_node = p.child_by_field_name('name')
                             if name_node:
                                 arg_text = self._get_node_text(name_node)
+                        elif p.type == 'typed_parameter':
+                            # Typed parameter: def foo(x: int)
+                            name_node = p.child_by_field_name('name')
+                            if name_node:
+                                arg_text = self._get_node_text(name_node)
+                        elif p.type == 'typed_default_parameter':
+                            # Typed parameter with default: def foo(x: int = 5) or def foo(x: str = typer.Argument(...))
+                            name_node = p.child_by_field_name('name')
+                            if name_node:
+                                arg_text = self._get_node_text(name_node)
+                        elif p.type == 'list_splat_pattern' or p.type == 'dictionary_splat_pattern':
+                            # *args or **kwargs
+                            arg_text = self._get_node_text(p)
+                        
                         if arg_text:
                             args.append(arg_text)
 

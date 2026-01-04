@@ -64,6 +64,12 @@ class TreeSitterParser:
         elif self.language_name == 'kotlin':
             from .languages.kotlin import KotlinTreeSitterParser
             self.language_specific_parser = KotlinTreeSitterParser(self)
+        elif self.language_name == 'scala':
+            from .languages.scala import ScalaTreeSitterParser
+            self.language_specific_parser = ScalaTreeSitterParser(self)
+        elif self.language_name == 'swift':
+            from .languages.swift import SwiftTreeSitterParser
+            self.language_specific_parser = SwiftTreeSitterParser(self)
 
 
 
@@ -105,6 +111,9 @@ class GraphBuilder:
             '.cs': TreeSitterParser('c_sharp'),
             '.php': TreeSitterParser('php'),
             '.kt': TreeSitterParser('kotlin'),
+            '.scala': TreeSitterParser('scala'),
+            '.sc': TreeSitterParser('scala'),
+            '.swift': TreeSitterParser('swift'),
         }
         self.create_schema()
 
@@ -213,6 +222,15 @@ class GraphBuilder:
         if '.kt' in files_by_lang:
             from .languages import kotlin as kotlin_lang_module
             imports_map.update(kotlin_lang_module.pre_scan_kotlin(files_by_lang['.kt'], self.parsers['.kt']))
+        if '.scala' in files_by_lang:
+            from .languages import scala as scala_lang_module
+            imports_map.update(scala_lang_module.pre_scan_scala(files_by_lang['.scala'], self.parsers['.scala']))
+        if '.sc' in files_by_lang:
+            from .languages import scala as scala_lang_module
+            imports_map.update(scala_lang_module.pre_scan_scala(files_by_lang['.sc'], self.parsers['.sc']))
+        if '.swift' in files_by_lang:
+            from .languages import swift as swift_lang_module
+            imports_map.update(swift_lang_module.pre_scan_swift(files_by_lang['.swift'], self.parsers['.swift']))
             
         return imports_map
 

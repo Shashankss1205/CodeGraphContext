@@ -58,7 +58,7 @@ This file is auto-generated. Do not edit manually.
 | Rank | Contributor | Commits | Lines Added | Lines Deleted | Link to Contributions |
 |---|---|---|---|---|---|
 | 1 | Shashankss1205 | 4 | 488 | 34 | [python.py](https://github.com/Shashankss1205/CodeGraphContext/commits/main/src/codegraphcontext/tools/languages/python.py?author=shashankshekharsingh1205@gmail.com) |
-| 2 | Shashank Shekhar Singh | 1 | 15 | 20 | [python.py](https://github.com/Shashankss1205/CodeGraphContext/commits/main/src/codegraphcontext/tools/languages/python.py?author=Shashankshekharsingh1205@gmail.com) |
+| 2 | Shashank Shekhar Singh | 3 | 40 | 20 | [python.py](https://github.com/Shashankss1205/CodeGraphContext/commits/main/src/codegraphcontext/tools/languages/python.py?author=Shashankshekharsingh1205@gmail.com) |
 
 
 ## Ruby Contributors

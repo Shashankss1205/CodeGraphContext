@@ -29,7 +29,7 @@ A powerful **MCP server** and **CLI toolkit** that indexes local code into a gra
 ![Using the MCP server](https://github.com/Shashankss1205/CodeGraphContext/blob/main/images/Usecase.gif)
 
 ## Project Details
-- **Version:** 0.1.27
+- **Version:** 0.1.31
 - **Authors:** Shashank Shekhar Singh <shashankshekharsingh1205@gmail.com>
 - **License:** MIT License (See [LICENSE](LICENSE) for details)
 - **Website:** [CodeGraphContext](http://codegraphcontext.vercel.app/)
@@ -44,7 +44,7 @@ A powerful **MCP server** and **CLI toolkit** that indexes local code into a gra
 -   **Live File Watching:** Watch directories for changes and automatically update the graph in real-time (`cgc watch`).
 -   **Interactive Setup:** A user-friendly command-line wizard for easy setup.
 -   **Dual Mode:** Works as a standalone **CLI toolkit** for developers and as an **MCP server** for AI agents.
--   **Multi-Language Support:** Full support for 11 programming languages.
+-   **Multi-Language Support:** Full support for 12 programming languages.
 -   **Flexible Database Backend:** FalkorDB Lite (default, inbuilt for Unix and through WSL for Windows) or Neo4j (all platforms via Docker/native).
 
 
@@ -64,6 +64,7 @@ CodeGraphContext provides comprehensive parsing and analysis for the following l
 - **Ruby** (`.rb`)
 - **PHP** (`.php`)
 - **Kotlin** (`.kt`) - Full support for classes, objects, companions, functions, and coroutines
+- **Swift** (`.swift`) - Full support for classes, structs, protocols, enums, and generics
 
 Each language parser extracts functions, classes, methods, parameters, inheritance relationships, function calls, and imports to build a comprehensive code graph.
 

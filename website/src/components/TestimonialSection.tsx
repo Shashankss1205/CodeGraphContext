@@ -16,10 +16,12 @@ const avatars = [
 
 export default function TestimonialSection() {
   const reviews = useMemo(() => [
-    { quote: "We’ve cut our task completion time in half since adopting CodeGraphContext. The DX is phenomenal.", author: "Sarah L.", role: "Operations Manager" },
-    { quote: "Querying code relationships is finally effortless. Our team relies on it daily.", author: "Miguel A.", role: "Tech Lead" },
-    { quote: "The visual graph helps new engineers onboard dramatically faster.", author: "Priya K.", role: "Engineering Manager" },
-    { quote: "Rock‑solid performance, great documentation, and fantastic support.", author: "Daniel W.", role: "Staff Engineer" },
+    { quote: "Seems an interesting solution to the context problem in large codebases🤩", author: "Stunning-Worth-5022", role: "Reddit User" },
+    { quote: "As a person with aphantasia you just made me realize how badly I really needed to be able to visualize my code base this way. Thanks boss!", author: "jphree", role: "Reddit User" },
+    { quote: "Very cool and smart idea.A lot of codebases are messy.", author: "qa_anaaq", role: "Reddit User" },
+    { quote: "Love this idea - and perfect timing. Keen to track and follow the outcomes based on real user experience.", author: "future-coder84", role: "Reddit User" },
+    { quote: "Sounds amazing. I’ll spin it up.", author: "stormthulu", role: "Reddit User" },
+    { quote: "Awesome work!", author: "martijnvann", role: "Reddit User" },
   ], []);
 
   const [index, setIndex] = useState(0);

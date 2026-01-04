@@ -313,30 +313,71 @@ def run_neo4j_setup_wizard():
 def configure_mcp_client():
     """
     Configure MCP client (IDE/CLI) integration.
-    This function sets up the MCP server configuration for the user's IDE without requiring Neo4j credentials.
-    Works with FalkorDB by default.
+    This function sets up the MCP server configuration for the user's IDE.
+    Includes all current configuration values in the env section.
     """
     console.print("[bold cyan]MCP Client Configuration[/bold cyan]\n")
     console.print("This will configure CodeGraphContext integration with your IDE or CLI tool.")
     console.print("CodeGraphContext works with FalkorDB by default (no database setup needed).\n")
     
-    # Generate MCP configuration without Neo4j credentials (for FalkorDB use)
+    # Load current configuration (includes project-local .env if present)
+    try:
+        from codegraphcontext.cli.config_manager import load_config
+        config = load_config()
+    except Exception as e:
+        console.print(f"[yellow]Warning: Could not load configuration: {e}[/yellow]")
+        config = {}
+    
+    # Build env section with all configuration values
+    env_vars = {}
+    
+    # Add database credentials if they exist
+    env_file = Path.home() / ".codegraphcontext" / ".env"
+    if env_file.exists():
+        try:
+            with open(env_file, "r") as f:
+                for line in f:
+                    line = line.strip()
+                    if line and not line.startswith("#") and "=" in line:
+                        key, value = line.split("=", 1)
+                        key = key.strip()
+                        if key in ["NEO4J_URI", "NEO4J_USERNAME", "NEO4J_PASSWORD"]:
+                            env_vars[key] = value.strip()
+        except Exception:
+            pass
+    
+    # Add all configuration values, converting relative paths to absolute
+    for key, value in config.items():
+        # Skip database credentials (already added above)
+        if key in ["NEO4J_URI", "NEO4J_USERNAME", "NEO4J_PASSWORD"]:
+            continue
+        
+        # Convert relative paths to absolute for path-related configs
+        if "PATH" in key and value:
+            path_obj = Path(value)
+            if not path_obj.is_absolute():
+                value = str(path_obj.resolve())
+        
+        env_vars[key] = value
+    
+    # Generate MCP configuration
     cgc_path = shutil.which("cgc") or sys.executable
 
     if "python" in Path(cgc_path).name:
         # fallback to running as module if no cgc binary is found
         command = cgc_path
-        args = ["-m", "cgc", "start"]
+        args = ["-m", "cgc", "mcp", "start"]
     else:
         command = cgc_path
-        args = ["start"]
+        args = ["mcp", "start"]
 
-    # Create MCP config without Neo4j env vars (uses FalkorDB by default)
+    # Create MCP config with complete env section
     mcp_config = {
         "mcpServers": {
             "CodeGraphContext": {
                 "command": command,
                 "args": args,
+                "env": env_vars,
                 "tools": {
                     "alwaysAllow": [
                         "add_code_to_graph", "add_package_to_graph",
@@ -369,8 +410,8 @@ def configure_mcp_client():
     _configure_ide(mcp_config)
     
     console.print("\n[bold green]✅ MCP Client configuration complete![/bold green]")
-    console.print("[cyan]You can now run 'cgc start' to launch the server with FalkorDB.[/cyan]")
-    console.print("[yellow]Note: If you want to use Neo4j instead, run 'cgc neo4j setup' first.[/yellow]\n")
+    console.print("[cyan]You can now run 'cgc mcp start' to launch the server.[/cyan]")
+    console.print("[yellow]💡 Tip: To update MCP config after changing settings, re-run 'cgc mcp setup'[/yellow]\n")
 
 
 def find_latest_neo4j_creds_file():
