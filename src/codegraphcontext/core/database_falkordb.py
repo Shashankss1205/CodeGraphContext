@@ -13,7 +13,7 @@ import re
 from pathlib import Path
 from typing import Optional, Tuple
 
-from codegraphcontext.utils.debug_log import debug_log, info_logger, error_logger, warning_logger
+from codegraphcontext.utils.debug_log import debug_log, info_logger, error_logger, warning_logger, debug_logger
 
 class FalkorDBManager:
     """
