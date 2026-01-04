@@ -39,7 +39,6 @@ class TreeSitterParser:
             self.language_specific_parser = GoTreeSitterParser(self)
         elif self.language_name == 'typescript':
             from .languages.typescript import TypescriptTreeSitterParser
-            from .languages.typescriptjsx import TypescriptJSXTreeSitterParser
             self.language_specific_parser = TypescriptTreeSitterParser(self)
         elif self.language_name == 'cpp':
             from .languages.cpp import CppTreeSitterParser
