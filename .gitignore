@@ -54,3 +54,4 @@ src/codegraphcontext/cli/nl.py
 *.log
 temporaryFiles
 codegraph_viz.html
+Temp
