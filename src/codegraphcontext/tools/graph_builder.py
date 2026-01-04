@@ -307,8 +307,6 @@ class GraphBuilder:
                 (file_data.get('properties') or [], 'Property'),
             ]
             for item_data, label in item_mappings:
-                if item_data is None:
-                    continue
                 for item in item_data:
                     if not isinstance(item, dict):
                         continue
