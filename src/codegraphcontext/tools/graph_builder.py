@@ -178,8 +178,8 @@ class GraphBuilder:
             from .languages import javascript as js_lang_module
             imports_map.update(js_lang_module.pre_scan_javascript(files_by_lang['.cjs'], self.parsers['.cjs']))
         if '.go' in files_by_lang:
-             from .languages import go as go_lang_module
-             imports_map.update(go_lang_module.pre_scan_go(files_by_lang['.go'], self.parsers['.go']))
+            from .languages import go as go_lang_module
+            imports_map.update(go_lang_module.pre_scan_go(files_by_lang['.go'], self.parsers['.go']))
         if '.ts' in files_by_lang:
             from .languages import typescript as ts_lang_module
             imports_map.update(ts_lang_module.pre_scan_typescript(files_by_lang['.ts'], self.parsers['.ts']))
