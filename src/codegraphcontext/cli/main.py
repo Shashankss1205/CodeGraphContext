@@ -188,13 +188,13 @@ def neo4j_setup_alias():
 
 def _load_credentials():
     """
-    Loads Neo4j credentials from various sources into environment variables.
+    Loads configuration and credentials from various sources into environment variables.
     Priority order:
     1. Local `mcp.json`
     2. Global `~/.codegraphcontext/.env`
     3. Any `.env` file found in the directory tree.
     """
-    # 1. Prefer loading from mcp.json
+    # 1. Prefer loading from mcp.json (always uses Neo4j when present)
     mcp_file_path = Path.cwd() / "mcp.json"
     if mcp_file_path.exists():
         try:
@@ -203,7 +203,8 @@ def _load_credentials():
             server_env = mcp_config.get("mcpServers", {}).get("CodeGraphContext", {}).get("env", {})
             for key, value in server_env.items():
                 os.environ[key] = value
-            console.print("[green]Loaded Neo4j credentials from local mcp.json.[/green]")
+            console.print("[dim]Loaded configuration from local mcp.json[/dim]")
+            console.print("[cyan]Using database: Neo4j[/cyan]")
             return
         except Exception as e:
             console.print(f"[bold red]Error loading mcp.json:[/bold red] {e}")
@@ -213,7 +214,22 @@ def _load_credentials():
     if global_env_path.exists():
         try:
             load_dotenv(dotenv_path=global_env_path)
-            console.print(f"[green]Loaded Neo4j credentials from global .env file: {global_env_path}[/green]")
+            console.print(f"[dim]Loaded configuration from: {global_env_path}[/dim]")
+            
+            # Show which database is actually being used
+            default_db = os.environ.get("DEFAULT_DATABASE", "falkordb").lower()
+            if default_db == "neo4j":
+                has_neo4j_creds = all([
+                    os.environ.get("NEO4J_URI"),
+                    os.environ.get("NEO4J_USERNAME"),
+                    os.environ.get("NEO4J_PASSWORD")
+                ])
+                if has_neo4j_creds:
+                    console.print("[cyan]Using database: Neo4j[/cyan]")
+                else:
+                    console.print("[yellow]⚠ DEFAULT_DATABASE=neo4j but credentials not found. Falling back to FalkorDB.[/yellow]")
+            else:
+                console.print("[cyan]Using database: FalkorDB[/cyan]")
             return
         except Exception as e:
             console.print(f"[bold red]Error loading global .env file from {global_env_path}:[/bold red] {e}")
@@ -223,9 +239,25 @@ def _load_credentials():
         dotenv_path = find_dotenv(usecwd=True, raise_error_if_not_found=False)
         if dotenv_path:
             load_dotenv(dotenv_path)
-            console.print(f"[green]Loaded Neo4j credentials from discovered .env file: {dotenv_path}[/green]")
+            console.print(f"[dim]Loaded configuration from: {dotenv_path}[/dim]")
+            
+            # Show which database is actually being used
+            default_db = os.environ.get("DEFAULT_DATABASE", "falkordb").lower()
+            if default_db == "neo4j":
+                has_neo4j_creds = all([
+                    os.environ.get("NEO4J_URI"),
+                    os.environ.get("NEO4J_USERNAME"),
+                    os.environ.get("NEO4J_PASSWORD")
+                ])
+                if has_neo4j_creds:
+                    console.print("[cyan]Using database: Neo4j[/cyan]")
+                else:
+                    console.print("[yellow]⚠ DEFAULT_DATABASE=neo4j but credentials not found. Falling back to FalkorDB.[/yellow]")
+            else:
+                console.print("[cyan]Using database: FalkorDB[/cyan]")
         else:
-            console.print("[yellow]No local mcp.json or .env file found. Credentials may not be set.[/yellow]")
+            console.print("[yellow]No configuration file found. Using defaults.[/yellow]")
+            console.print("[cyan]Using database: FalkorDB (default)[/cyan]")
     except Exception as e:
         console.print(f"[bold red]Error loading .env file:[/bold red] {e}")
 
