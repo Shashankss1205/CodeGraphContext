@@ -62,7 +62,7 @@ def pre_scan_typescript(files: list[Path], parser_wrapper) -> dict:
             warning_logger(f"Tree-sitter pre-scan failed for {file_path}: {e}")
     return imports_map
 from typing import Dict
-from codegraphcontext.utils.debug_log import debug_log, info_logger, error_logger, warning_logger, debug_logger
+from codegraphcontext.utils.debug_log import warning_logger
 from codegraphcontext.utils.tree_sitter_manager import execute_query
 from .typescript import TS_QUERIES, TypescriptTreeSitterParser
 
