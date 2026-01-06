@@ -137,7 +137,7 @@ else
         # Check again
         if check_cgc; then
             echo "✅ cgc command (CodeGraphContext) is now available to use!"
-            echo "You can now run: cgc setup"
+            echo "You can now run: cgc neo4j setup"
         else
             if [[ "$OS" == "Windows_NT" ]]; then
                 echo "⚠️ Please restart PowerShell or run: . \$PROFILE"
