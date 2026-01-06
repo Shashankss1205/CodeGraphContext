@@ -1194,17 +1194,21 @@ def analyze_callers(
         
         table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
         table.add_column("Caller Function", style="cyan")
-        table.add_column("File", style="dim", overflow="fold")
-        table.add_column("Line", style="green", justify="right")
+        table.add_column("Location", style="green")
         table.add_column("Call Type", style="yellow")
+
         
         for result in results:
+            file_path = result.get("caller_file_path", "")
+            line_number = result.get("caller_line_number")
+
+            location = f"{file_path}:{line_number}" if line_number else file_path
+
             table.add_row(
                 result.get("caller_function", ""),
-                result.get("caller_file_path", ""),  # No truncation
-                str(result.get("caller_line_number", "")),
+                location,
                 "📦 Dependency" if result.get("caller_is_dependency") else "📝 Project"
-            )
+                )
         
         console.print(f"\n[bold cyan]Functions that call '{function}':[/bold cyan]")
         console.print(table)
