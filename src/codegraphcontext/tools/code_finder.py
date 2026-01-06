@@ -97,6 +97,35 @@ class CodeFinder:
                 LIMIT 20
             """, search_term=search_term)
             return result.data()
+    
+    def find_by_module_name(self, search_term: str) -> List[Dict]:
+        """Find modules by name matching"""
+        with self.driver.session() as session:
+            result = session.run("""
+                MATCH (m:Module)
+                WHERE m.name CONTAINS $search_term
+                RETURN m.name as name, m.lang as lang
+                ORDER BY m.name
+                LIMIT 20
+            """, search_term=search_term)
+            return result.data()
+
+    def find_imports(self, search_term: str) -> List[Dict]:
+        """Find imported symbols (aliases or original names)."""
+        with self.driver.session() as session:
+            result = session.run("""
+                MATCH (f:File)-[r:IMPORTS]->(m:Module)
+                WHERE r.alias = $search_term OR r.imported_name = $search_term
+                RETURN 
+                    r.alias as alias, 
+                    r.imported_name as imported_name, 
+                    m.name as module_name, 
+                    f.path as file_path, 
+                    r.line_number as line_number
+                ORDER BY f.path
+                LIMIT 20
+            """, search_term=search_term)
+            return result.data()
 
     def find_related_code(self, user_query: str, fuzzy_search: bool, edit_distance: int) -> Dict[str, Any]:
         """Find code related to a query using multiple search strategies"""

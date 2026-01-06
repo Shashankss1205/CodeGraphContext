@@ -741,19 +741,26 @@ def find_by_name(
         results = []
         
         # Search based on type filter
-        if not type:
-            # Search all
+        if type is None or type.lower() == 'all':
             funcs = code_finder.find_by_function_name(name, fuzzy_search=False)
             classes = code_finder.find_by_class_name(name, fuzzy_search=False)
             variables = code_finder.find_by_variable_name(name)
-            
+            modules = code_finder.find_by_module_name(name)
+            imports = code_finder.find_imports(name)
+
             for f in funcs: f['type'] = 'Function'
             for c in classes: c['type'] = 'Class'
             for v in variables: v['type'] = 'Variable'
+            for m in modules: m['type'] = 'Module'; m['file_path'] = m.get('name', 'External') # Modules might differ
+            for i in imports: 
+                i['type'] = 'Import'
+                i['name'] = i.get('alias') or i.get('imported_name')
             
             results.extend(funcs)
             results.extend(classes)
             results.extend(variables)
+            results.extend(modules)
+            results.extend(imports)
         
         elif type.lower() == 'function':
             results = code_finder.find_by_function_name(name, fuzzy_search=False)
@@ -766,6 +773,12 @@ def find_by_name(
         elif type.lower() == 'variable':
             results = code_finder.find_by_variable_name(name)
             for r in results: r['type'] = 'Variable'
+
+        elif type.lower() == 'module':
+            results = code_finder.find_by_module_name(name)
+            for r in results: 
+                r['type'] = 'Module'
+                r['file_path'] = r.get('name')
             
         elif type.lower() == 'file':
             # Quick query for file
