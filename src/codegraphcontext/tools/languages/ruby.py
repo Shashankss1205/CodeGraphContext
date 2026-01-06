@@ -91,7 +91,7 @@ class RubyTreeSitterParser:
                         "line_number": node.start_point[0] + 1,
                         "end_line": node.end_point[0] + 1,
                         "source": self._get_node_text(node),
-                        "source_code": self._get_node_text(node),
+
                         "lang": self.language_name,
                         "is_dependency": False,
                     })
@@ -251,7 +251,7 @@ class RubyTreeSitterParser:
                     "end_line": func_node.end_point[0] + 1,
                     "args": args,
                     "source": self._get_node_text(func_node),
-                    "source_code": self._get_node_text(func_node),
+
                     "docstring": docstring,
                     "cyclomatic_complexity": self._calculate_complexity(func_node),
                     "context": context,
@@ -308,7 +308,7 @@ class RubyTreeSitterParser:
                     "end_line": class_node.end_point[0] + 1,
                     "bases": bases,
                     "source": self._get_node_text(class_node),
-                    "source_code": self._get_node_text(class_node),
+
                     "docstring": docstring,
                     "context": None,
                     "decorators": [],

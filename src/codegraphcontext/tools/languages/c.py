@@ -244,7 +244,7 @@ class CTreeSitterParser:
                     "end_line": func_node.end_point[0] + 1,
                     "args": [arg["name"] for arg in args if arg["name"]],  # Simplified args for compatibility
                     "source": self._get_node_text(func_node),
-                    "source_code": self._get_node_text(func_node),
+
                     "docstring": self._get_docstring(func_node),
                     "cyclomatic_complexity": self._calculate_complexity(func_node),
                     "context": context,

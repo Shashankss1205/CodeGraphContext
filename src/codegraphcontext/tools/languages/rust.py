@@ -140,7 +140,7 @@ class RustTreeSitterParser:
                     "name": name,
                     "line_number": name_node.start_point[0] + 1,
                     "end_line": func_node.end_point[0] + 1,
-                    "source_code": self._get_node_text(func_node),
+                    "source": self._get_node_text(func_node),
                     "params": params, # Renamed to params to match other languages
                     "args": params,   # Keep args for compatibility
                 })
@@ -171,7 +171,7 @@ class RustTreeSitterParser:
                     "name": name,
                     "line_number": name_node.start_point[0] + 1,
                     "end_line": item_node.end_point[0] + 1,
-                    "source_code": self._get_node_text(item_node),
+                    "source": self._get_node_text(item_node),
                     "bases": [],
                 })
         return structs
@@ -191,7 +191,7 @@ class RustTreeSitterParser:
                             "name": name,
                             "line_number": name_node.start_point[0] + 1,
                             "end_line": trait_node.end_point[0] + 1,
-                            "source_code": self._get_node_text(trait_node),
+                            "source": self._get_node_text(trait_node),
                         }
                     )
         return traits
