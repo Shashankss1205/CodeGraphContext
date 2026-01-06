@@ -1233,13 +1233,16 @@ def analyze_callers(
 def analyze_chain(
     from_func: str = typer.Argument(..., help="Starting function"),
     to_func: str = typer.Argument(..., help="Target function"),
-    max_depth: int = typer.Option(5, "--depth", "-d", help="Maximum call chain depth")
+    max_depth: int = typer.Option(5, "--depth", "-d", help="Maximum call chain depth"),
+    from_file: Optional[str] = typer.Option(None, "--from-file", help="File for starting function"),
+    to_file: Optional[str] = typer.Option(None, "--to-file", help="File for target function")
 ):
     """
     Show call chain between two functions.
     
     Example:
         cgc analyze chain main process_data --depth 10
+        cgc analyze chain main process --from-file main.py --to-file utils.py
     """
     _load_credentials()
     services = _initialize_services()
@@ -1248,7 +1251,7 @@ def analyze_chain(
     db_manager, graph_builder, code_finder = services
     
     try:
-        results = code_finder.find_function_call_chain(from_func, to_func, max_depth)
+        results = code_finder.find_function_call_chain(from_func, to_func, max_depth, from_file, to_file)
         
         if not results:
             console.print(f"[yellow]No call chain found between '{from_func}' and '{to_func}' within depth {max_depth}[/yellow]")
@@ -1379,7 +1382,8 @@ def analyze_inheritance_tree(
 def analyze_complexity(
     path: Optional[str] = typer.Argument(None, help="Specific function name to analyze"),
     threshold: int = typer.Option(10, "--threshold", "-t", help="Complexity threshold for warnings"),
-    limit: int = typer.Option(20, "--limit", "-l", help="Maximum results to show")
+    limit: int = typer.Option(20, "--limit", "-l", help="Maximum results to show"),
+    file: Optional[str] = typer.Option(None, "--file", "-f", help="Specific file path (only used when function name is provided)")
 ):
     """
     Show cyclomatic complexity for functions.
@@ -1388,6 +1392,7 @@ def analyze_complexity(
         cgc analyze complexity                    # Most complex functions
         cgc analyze complexity --threshold 15     # Functions over threshold
         cgc analyze complexity my_function        # Specific function
+        cgc analyze complexity my_function -f file.py # Specific function in file
     """
     _load_credentials()
     services = _initialize_services()
@@ -1398,7 +1403,7 @@ def analyze_complexity(
     try:
         if path:
             # Specific function
-            result = code_finder.get_cyclomatic_complexity(path)
+            result = code_finder.get_cyclomatic_complexity(path, file)
             if result:
                 console.print(f"\n[bold cyan]Complexity for '{path}':[/bold cyan]")
                 console.print(f"  Cyclomatic Complexity: [yellow]{result.get('complexity', 'N/A')}[/yellow]")
@@ -1536,7 +1541,8 @@ def analyze_overrides(
 
 @analyze_app.command("variable")
 def analyze_variable_usage(
-    variable_name: str = typer.Argument(..., help="Variable name to analyze")
+    variable_name: str = typer.Argument(..., help="Variable name to analyze"),
+    file: Optional[str] = typer.Option(None, "--file", "-f", help="Specific file path")
 ):
     """
     Analyze where a variable is defined and used across the codebase.
@@ -1546,6 +1552,7 @@ def analyze_variable_usage(
     Example:
         cgc analyze variable MAX_RETRIES
         cgc analyze variable config
+        cgc analyze variable x --file math_utils.py
     """
     _load_credentials()
     services = _initialize_services()
@@ -1555,7 +1562,7 @@ def analyze_variable_usage(
     
     try:
         # Get variable usage scope
-        scope_results = code_finder.find_variable_usage_scope(variable_name)
+        scope_results = code_finder.find_variable_usage_scope(variable_name, file)
         instances = scope_results.get('instances', [])
         
         if not instances:

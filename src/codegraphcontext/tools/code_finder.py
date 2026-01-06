@@ -517,13 +517,17 @@ class CodeFinder:
                 result = session.run(query, function_name=function_name)
             return result.data()
 
-    def find_function_call_chain(self, start_function: str, end_function: str, max_depth: int = 5) -> List[Dict]:
+    def find_function_call_chain(self, start_function: str, end_function: str, max_depth: int = 5, start_file: str = None, end_file: str = None) -> List[Dict]:
         """Find call chains between two functions"""
         with self.driver.session() as session:
-            # FalkorDB requires shortestPath in WITH/RETURN clause
-            result = session.run(f"""
-                MATCH (start:Function {{name: $start_function}}), (end:Function {{name: $end_function}})
-                WITH shortestPath((start)-[:CALLS*1..{max_depth}]->(end)) as path
+            # Build match clauses based on whether files are specified
+            start_props = "{name: $start_function" + (", file_path: $start_file}" if start_file else "}")
+            end_props = "{name: $end_function" + (", file_path: $end_file}" if end_file else "}")
+
+            query = f"""
+                MATCH (start:Function {start_props}), (end:Function {end_props})
+                WITH start, end
+                MATCH path = shortestPath((start)-[:CALLS*1..{max_depth}]->(end))
                 WHERE path IS NOT NULL
                 WITH path, nodes(path) as func_nodes, relationships(path) as call_rels
                 RETURN 
@@ -541,8 +545,17 @@ class CodeFinder:
                     length(path) as chain_length
                 ORDER BY chain_length ASC
                 LIMIT 10
-            """, start_function=start_function, end_function=end_function)
+            """
             
+            # Prepare parameters
+            params = {
+                "start_function": start_function,
+                "end_function": end_function,
+                "start_file": start_file,
+                "end_file": end_file
+            }
+            
+            result = session.run(query, **params)
             return result.data()
 
     def find_by_type(self, element_type: str, limit: int = 50) -> List[Dict]:
@@ -620,21 +633,23 @@ class CodeFinder:
                 "imports": [dict(record) for record in imports_result]
             }
     
-    def find_variable_usage_scope(self, variable_name: str) -> Dict[str, Any]:
-        """Find the scope and usage patterns of a variable"""
+    def find_variable_usage_scope(self, variable_name: str, file_path: str = None) -> Dict[str, Any]:
+        """Find the scope and usage patterns of a variable, optional file path filtering"""
         with self.driver.session() as session:
-            variable_instances = session.run("""
-                MATCH (var:Variable {name: $variable_name})
-                OPTIONAL MATCH (container)-[:CONTAINS]->(var)
-                WHERE container:Function OR container:Class OR container:File
-                OPTIONAL MATCH (file:File)-[:CONTAINS]->(var)
-                RETURN DISTINCT
-                    var.name as variable_name,
-                    var.value as variable_value,
-                    var.line_number as line_number,
-                    var.context as context,
-                    COALESCE(var.file_path, file.path) as file_path,
-                    CASE 
+            if file_path:
+                variable_instances = session.run("""
+                    MATCH (var:Variable {name: $variable_name})
+                    WHERE var.file_path ENDS WITH $file_path OR var.file_path = $file_path
+                    OPTIONAL MATCH (container)-[:CONTAINS]->(var)
+                    WHERE container:Function OR container:Class OR container:File
+                    OPTIONAL MATCH (file:File)-[:CONTAINS]->(var)
+                    RETURN DISTINCT
+                        var.name as variable_name,
+                        var.value as variable_value,
+                        var.line_number as line_number,
+                        var.context as context,
+                        COALESCE(var.file_path, file.path) as file_path,
+                        CASE 
                         WHEN container:Function THEN 'function'
                         WHEN container:Class THEN 'class'
                         ELSE 'module'
@@ -646,7 +661,32 @@ class CodeFinder:
                     END as scope_name,
                     var.is_dependency as is_dependency
                 ORDER BY var.is_dependency ASC, file_path, line_number
-            """, variable_name=variable_name)
+            """, variable_name=variable_name, file_path=file_path)
+            else:
+                variable_instances = session.run("""
+                    MATCH (var:Variable {name: $variable_name})
+                    OPTIONAL MATCH (container)-[:CONTAINS]->(var)
+                    WHERE container:Function OR container:Class OR container:File
+                    OPTIONAL MATCH (file:File)-[:CONTAINS]->(var)
+                    RETURN DISTINCT
+                        var.name as variable_name,
+                        var.value as variable_value,
+                        var.line_number as line_number,
+                        var.context as context,
+                        COALESCE(var.file_path, file.path) as file_path,
+                        CASE 
+                            WHEN container:Function THEN 'function'
+                            WHEN container:Class THEN 'class'
+                            ELSE 'module'
+                        END as scope_type,
+                        CASE 
+                            WHEN container:Function THEN container.name
+                            WHEN container:Class THEN container.name
+                            ELSE 'module_level'
+                        END as scope_name,
+                        var.is_dependency as is_dependency
+                    ORDER BY var.is_dependency ASC, file_path, line_number
+                """, variable_name=variable_name)
             
             return {
                 "variable_name": variable_name,
@@ -790,25 +830,30 @@ class CodeFinder:
                 "target": target
             }
 
-    def get_cyclomatic_complexity(self, function_name: str, file_path: str = None) -> List[Dict]:
+    def get_cyclomatic_complexity(self, function_name: str, file_path: str = None) -> Optional[Dict]:
         """Get the cyclomatic complexity of a function."""
         with self.driver.session() as session:
             if file_path:
-                # Use ENDS WITH for flexible path matching
+                # Use ENDS WITH for flexible path matching, or exact match
                 query = """
                     MATCH (f:Function {name: $function_name})
-                    WHERE f.file_path ENDS WITH $file_path
-                    RETURN f.name as function_name, f.file_path as file_path, f.cyclomatic_complexity as complexity
+                    WHERE f.file_path ENDS WITH $file_path OR f.file_path = $file_path
+                    RETURN f.name as function_name, f.cyclomatic_complexity as complexity,
+                           f.file_path as file_path, f.line_number as line_number
                 """
                 result = session.run(query, function_name=function_name, file_path=file_path)
             else:
                 query = """
                     MATCH (f:Function {name: $function_name})
-                    RETURN f.name as function_name, f.file_path as file_path, f.cyclomatic_complexity as complexity
+                    RETURN f.name as function_name, f.cyclomatic_complexity as complexity,
+                           f.file_path as file_path, f.line_number as line_number
                 """
                 result = session.run(query, function_name=function_name)
             
-            return result.data()
+            result_data = result.data()
+            if result_data:
+                return result_data[0]
+            return None
 
     def find_most_complex_functions(self, limit: int = 10) -> List[Dict]:
         """Find the most complex functions based on cyclomatic complexity."""
