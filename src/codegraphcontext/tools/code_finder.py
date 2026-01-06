@@ -1,7 +1,7 @@
 # src/codegraphcontext/tools/code_finder.py
 import logging
 import re
-from typing import Any, Dict, List, Literal
+from typing import Any, Dict, List, Literal, Optional
 from pathlib import Path
 
 from ..core.database import DatabaseManager
@@ -527,7 +527,7 @@ class CodeFinder:
             query = f"""
                 MATCH (start:Function {start_props}), (end:Function {end_props})
                 WITH start, end
-                MATCH path = shortestPath((start)-[:CALLS*1..{max_depth}]->(end))
+                MATCH path = (start)-[:CALLS*1..{max_depth}]->(end)
                 WHERE path IS NOT NULL
                 WITH path, nodes(path) as func_nodes, relationships(path) as call_rels
                 RETURN 
@@ -544,7 +544,7 @@ class CodeFinder:
                     }}] as call_details,
                     length(path) as chain_length
                 ORDER BY chain_length ASC
-                LIMIT 10
+                LIMIT 20
             """
             
             # Prepare parameters

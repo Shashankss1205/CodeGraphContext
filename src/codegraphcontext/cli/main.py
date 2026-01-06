@@ -1261,10 +1261,36 @@ def analyze_chain(
             console.print(f"\n[bold cyan]Call Chain #{idx} (length: {chain.get('chain_length', 0)}):[/bold cyan]")
             
             functions = chain.get('function_chain', [])
+            call_details = chain.get('call_details', [])
+            
             for i, func in enumerate(functions):
                 indent = "  " * i
-                arrow = "→ " if i < len(functions) - 1 else ""
-                console.print(f"{indent}{arrow}[cyan]{func.get('name', 'Unknown')}[/cyan] [dim]({func.get('file_path', '')}:{func.get('line_number', '')})[/dim]")
+                
+                # Print function
+                console.print(f"{indent}[cyan]{func.get('name', 'Unknown')}[/cyan] [dim]({func.get('file_path', '')}:{func.get('line_number', '')})[/dim]")
+                
+                # If there is a next step, print the connecting call detail
+                if i < len(functions) - 1 and i < len(call_details):
+                    detail = call_details[i]
+                    line = detail.get('call_line', '?')
+                    
+                    # Format args for display
+                    args_info = ""
+                    args_val = detail.get('args', [])
+                    if args_val:
+                        if isinstance(args_val, list):
+                            # Filter legacy punctuation just in case
+                            clean_args = [str(a) for a in args_val if str(a) not in ('(', ')', ',')]
+                            args_str = ", ".join(clean_args)
+                        else:
+                            args_str = str(args_val)
+                            
+                        # Truncate if too long
+                        if len(args_str) > 50:
+                            args_str = args_str[:47] + "..."
+                        args_info = f" [dim]({args_str})[/dim]"
+                    
+                    console.print(f"{indent}  ⬇ [dim]calls at line {line}[/dim]{args_info}")
     finally:
         db_manager.close_driver()
 

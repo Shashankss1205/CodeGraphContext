@@ -379,7 +379,7 @@ class PythonTreeSitterParser:
                 if arguments_node:
                     for arg in arguments_node.children:
                         arg_text = self._get_node_text(arg)
-                        if arg_text is not None:
+                        if arg_text and arg_text not in ('(', ')', ','):
                             args.append(arg_text)
 
                 call_data = {
