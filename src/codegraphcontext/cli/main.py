@@ -1262,94 +1262,127 @@ def analyze_dependencies(
     db_manager, graph_builder, code_finder = services
     
     try:
-        results = code_finder.find_module_dependencies(target)
-        
-        if not results.get('importers') and not results.get('imports'):
-            console.print(f"[yellow]No dependency information found for '{target}'[/yellow]")
-            return
-        
-        # Show who imports this module
-        if results.get('importers'):
-            console.print(f"\n[bold cyan]Files that import '{target}':[/bold cyan]")
-            table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
-            table.add_column("File", style="cyan", overflow="fold")
-            table.add_column("Line", style="green", justify="right")
-            
-            for imp in results['importers']:
-                table.add_row(
-                    imp.get('importer_file_path', ''),
-                    str(imp.get('import_line_number', ''))
-                )
-            console.print(table)
-        
-        # Show what this module imports
-        if results.get('imports'):
-            console.print(f"\n[bold cyan]Modules imported by '{target}':[/bold cyan]")
-            table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
-            table.add_column("Module", style="cyan")
-            table.add_column("Alias", style="yellow")
-            
-            for imp in results['imports']:
-                table.add_row(
-                    imp.get('imported_module', ''),
-                    imp.get('import_alias', '') or "-"
-                )
-            console.print(table)
+      results = code_finder.find_module_dependencies(target)
+
+      if not results.get('importers') and not results.get('imports'):
+          console.print(f"[yellow]No dependency information found for '{target}'[/yellow]")
+          return
+
+      if results.get('importers'):
+        console.print(f"\n[bold cyan]Files that import '{target}':[/bold cyan]")
+        table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
+        table.add_column("File", style="cyan", overflow="fold")
+        table.add_column("Line", style="green", justify="right")
+
+        for imp in results['importers']:
+            table.add_row(
+                imp.get('importer_file_path', ''),
+                str(imp.get('import_line_number', ''))
+            )
+
+        console.print(table)
+
+      if results.get('imports'):
+        console.print(f"\n[bold cyan]Modules imported by '{target}':[/bold cyan]")
+        table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
+        table.add_column("Module", style="cyan")
+        table.add_column("Alias", style="yellow")
+
+        for imp in results['imports']:
+            table.add_row(
+                imp.get('imported_module', ''),
+                imp.get('import_alias', '') or "-"
+            )
+
+        console.print(table)
+
     finally:
         db_manager.close_driver()
 
-@analyze_app.command("tree")
-def analyze_inheritance_tree(
-    class_name: str = typer.Argument(..., help="Class name"),
-    file: Optional[str] = typer.Option(None, "--file", "-f", help="Specific file path")
+@analyze_app.command("deps")
+def analyze_dependencies(
+    target: str = typer.Argument(..., help="Module name"),
+    show_external: bool = typer.Option(True, "--external/--no-external", help="Show external dependencies")
 ):
     """
-    Show inheritance hierarchy for a class.
-    
-    Example:
-        cgc analyze tree MyClass
-        cgc analyze tree MyClass --file src/models.py
+    Show dependencies and imports for a module.
     """
     _load_credentials()
     services = _initialize_services()
     if not all(services):
         return
     db_manager, graph_builder, code_finder = services
-    
+
     try:
-        results = code_finder.find_class_hierarchy(class_name, file)
+        results = code_finder.find_module_dependencies(target)
+
+        if not results.get('importers') and not results.get('imports'):
+            console.print(f"[yellow]No dependency information found for '{target}'[/yellow]")
+            return
         
-        console.print(f"\n[bold cyan]Class Hierarchy for '{class_name}':[/bold cyan]\n")
-        
-        # Show parent classes
-        if results.get('parent_classes'):
-            console.print("[bold yellow]Parents (inherits from):[/bold yellow]")
-            for parent in results['parent_classes']:
-                console.print(f"  ⬆ [cyan]{parent.get('parent_class', '')}[/cyan] [dim]({parent.get('parent_file_path', '')}:{parent.get('parent_line_number', '')})[/dim]")
-        else:
-            console.print("[dim]No parent classes found[/dim]")
-        
-        console.print()
-        
-        # Show child classes
-        if results.get('child_classes'):
-            console.print("[bold yellow]Children (classes that inherit from this):[/bold yellow]")
-            for child in results['child_classes']:
-                console.print(f"  ⬇ [cyan]{child.get('child_class', '')}[/cyan] [dim]({child.get('child_file_path', '')}:{child.get('child_line_number', '')})[/dim]")
-        else:
-            console.print("[dim]No child classes found[/dim]")
-        
-        console.print()
-        
-        # Show methods
-        if results.get('methods'):
-            console.print(f"[bold yellow]Methods ({len(results['methods'])}):[/bold yellow]")
-            for method in results['methods'][:10]:  # Limit to 10
-                console.print(f"  • [green]{method.get('method_name', '')}[/green]({method.get('method_args', '')})")
-            if len(results['methods']) > 10:
-                console.print(f"  [dim]... and {len(results['methods']) - 10} more[/dim]")
+        if results.get('importers'):
+            console.print(f"\n[bold cyan]Files that import '{target}':[/bold cyan]")
+            table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
+            table.add_column("File", style="cyan", overflow="fold")
+            table.add_column("Line", style="green", justify="right")
+
+            for imp in results['importers']:
+                table.add_row(
+                    imp.get('importer_file_path', ''),
+                    str(imp.get('import_line_number', ''))
+                )
+
+            console.print(table)
+
+        if results.get('imports'):
+            console.print(f"\n[bold cyan]Modules imported by '{target}':[/bold cyan]")
+            table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
+            table.add_column("Module", style="cyan")
+            table.add_column("Alias", style="yellow")
+
+            for imp in results['imports']:
+                table.add_row(
+                    imp.get('imported_module', ''),
+                    imp.get('import_alias', '') or "-"
+                )
+
+            console.print(table)
+
     finally:
         db_manager.close_driver()
+
+        
+    try:
+    # Show child classes
+         if results.get('child_classes'):
+            console.print("[bold yellow]Children (classes that inherit from this):[/bold yellow]")
+            for child in results['child_classes']:
+               console.print(
+                f"  ⬇ [cyan]{child.get('child_class', '')}[/cyan] "
+                f"[dim]({child.get('child_file_path', '')}:{child.get('child_line_number', '')})[/dim]"
+            )
+         else:
+           console.print("[dim]No child classes found[/dim]")
+
+         console.print()
+
+    # Show methods
+         if results.get('methods'):
+           console.print(f"[bold yellow]Methods ({len(results['methods'])}):[/bold yellow]")
+           for method in results['methods'][:10]:  # Limit to 10
+             console.print(
+                f"  • [green]{method.get('method_name', '')}[/green]"
+                f"({method.get('method_args', '')})"
+            )
+
+         if len(results['methods']) > 10:
+            console.print(
+                f"  [dim]... and {len(results['methods']) - 10} more[/dim]"
+            )
+
+    finally:
+       db_manager.close_driver()
+
 
 @analyze_app.command("complexity")
 def analyze_complexity(

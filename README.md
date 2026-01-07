@@ -110,6 +110,18 @@ CodeGraphContext is already being explored by developers and projects for:
 
 If you’re using CodeGraphContext in your project, feel free to open a PR and add it here! 🚀
 
+##Examples of Natural Language Queries
+
+- Index /my-project.
+
+- Analyze callers of my_function.
+
+- Show inheritance for BaseController.
+
+- Find dead code.
+
+- Trace dependencies of DatabaseManager module.
+
 ## Dependencies
 
 - `neo4j>=5.15.0`
