@@ -54,6 +54,12 @@ PY_QUERIES = {
     "docstrings": """
         (expression_statement (string) @docstring)
     """,
+    "dict_method_refs": """
+        (dictionary
+            (pair
+                key: (_) @key
+                value: (attribute) @method_ref))
+    """,
 }
 
 class PythonTreeSitterParser:
@@ -368,6 +374,8 @@ class PythonTreeSitterParser:
 
     def _find_calls(self, root_node):
         calls = []
+        
+        # First, find all direct function calls
         query_str = PY_QUERIES['calls']
         for node, capture_name in execute_query(self.language, query_str, root_node):
             if capture_name == 'name':
@@ -387,13 +395,101 @@ class PythonTreeSitterParser:
                     "full_name": self._get_node_text(full_call_node),
                     "line_number": node.start_point[0] + 1,
                     "args": args,
-                    "inferred_obj_type": None, # Type inference is a complex topic to be added
+                    "inferred_obj_type": None,
                     "context": self._get_parent_context(node),
                     "class_context": self._get_parent_context(node, types=('class_definition',))[:2],
                     "lang": self.language_name,
                     "is_dependency": False,
                 }
                 calls.append(call_data)
+        
+        # Second, find dictionary-based method references (indirect calls)
+        # This handles patterns like: tool_map = {"name": self.method, ...}
+        # followed by: handler = tool_map.get(name); handler()
+        dict_method_calls = self._find_dict_method_references(root_node)
+        calls.extend(dict_method_calls)
+        
+        return calls
+    
+    def _find_dict_method_references(self, root_node):
+        """
+        Detects indirect function calls through dictionary mappings.
+        
+        Example pattern:
+            tool_map = {
+                "add_code": self.add_code_to_graph_tool,
+                "find_code": self.find_code_tool,
+            }
+            handler = tool_map.get(tool_name)
+            if handler:
+                handler(**args)
+        
+        This creates CALLS relationships from the context function to all
+        methods referenced in the dictionary.
+        """
+        calls = []
+        query_str = PY_QUERIES.get('dict_method_refs')
+        if not query_str:
+            return calls
+        
+        # Track dictionaries that contain method references
+        dict_assignments = {}  # dict_var_name -> list of method references
+        
+        for node, capture_name in execute_query(self.language, query_str, root_node):
+            if capture_name == 'method_ref':
+                # Found a method reference in a dictionary value
+                # Navigate up to find the assignment
+                dict_node = node.parent  # pair node
+                while dict_node and dict_node.type != 'dictionary':
+                    dict_node = dict_node.parent
+                
+                if dict_node:
+                    # Find the assignment node
+                    assignment_node = dict_node.parent
+                    if assignment_node and assignment_node.type == 'assignment':
+                        # Get the variable name being assigned
+                        left_node = assignment_node.child_by_field_name('left')
+                        if left_node:
+                            var_name = self._get_node_text(left_node)
+                            method_ref = self._get_node_text(node)
+                            
+                            # Extract just the method name (remove 'self.')
+                            method_name = method_ref.split('.')[-1] if '.' in method_ref else method_ref
+                            
+                            if var_name not in dict_assignments:
+                                dict_assignments[var_name] = {
+                                    'methods': [],
+                                    'context': self._get_parent_context(assignment_node),
+                                    'line_number': assignment_node.start_point[0] + 1
+                                }
+                            
+                            dict_assignments[var_name]['methods'].append({
+                                'name': method_name,
+                                'full_name': method_ref,
+                                'line_number': node.start_point[0] + 1
+                            })
+        
+        # Now create call relationships for each method in the dictionaries
+        # The context is the function where the dictionary is defined
+        for dict_var, data in dict_assignments.items():
+            context, context_type, context_line = data['context']
+            class_context, _, _ = (None, None, None)
+            
+            for method_info in data['methods']:
+                call_data = {
+                    "name": method_info['name'],
+                    "full_name": method_info['full_name'],
+                    "line_number": method_info['line_number'],
+                    "args": [],  # We don't know the args at this point
+                    "inferred_obj_type": None,
+                    "context": (context, context_type, context_line),
+                    "class_context": (class_context, None),
+                    "lang": self.language_name,
+                    "is_dependency": False,
+                    "is_indirect_call": True,  # Mark as indirect for debugging
+                }
+                calls.append(call_data)
+        
         return calls
 
     def _find_variables(self, root_node):
