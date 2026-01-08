@@ -251,8 +251,15 @@ def _load_credentials():
     else:
         console.print("[yellow]No configuration file found. Using defaults.[/yellow]")
     
+    
     # Show which database is actually being used
-    default_db = os.environ.get("DEFAULT_DATABASE", "falkordb").lower()
+    # Check for runtime override first (from -db/--database flag)
+    runtime_db = os.environ.get("CGC_RUNTIME_DB_TYPE")
+    if runtime_db:
+        default_db = runtime_db.lower()
+    else:
+        default_db = os.environ.get("DEFAULT_DATABASE", "falkordb").lower()
+    
     if default_db == "neo4j":
         has_neo4j_creds = all([
             os.environ.get("NEO4J_URI"),
@@ -265,6 +272,7 @@ def _load_credentials():
             console.print("[yellow]⚠ DEFAULT_DATABASE=neo4j but credentials not found. Falling back to FalkorDB.[/yellow]")
     else:
         console.print("[cyan]Using database: FalkorDB[/cyan]")
+
 
 
 # ============================================================================
@@ -1713,7 +1721,7 @@ def main(
     database: Optional[str] = typer.Option(
         None, 
         "--database", 
-        "-d", 
+        "-db", 
         help="[Global] Temporarily override database backend (falkordb or neo4j) for any command"
     ),
     version_: bool = typer.Option(
