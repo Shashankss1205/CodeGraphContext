@@ -6,22 +6,33 @@
         "role": "maintainer",
         "name": "Shashank Shekhar Singh",
         "email": "codegraphcontext@gmail.com",
-        "webpageUrl": "https://www.linkedin.com/in/shashank-shekhar-singh-121128254/"
+        "phone": "",
+        "description": "Maintainer of CodeGraphContext, an open-source developer tooling project focused on graph-based code understanding for AI and large-scale software systems.",
+        "webpageUrl": {
+            "url": "https://www.linkedin.com/in/shashank-shekhar-singh-121128254"
+        }
     },
     "projects": [
         {
             "guid": "codegraphcontext",
             "name": "CodeGraphContext",
-            "description": "Open-source developer tooling that builds a live code knowledge graph for AI-assisted software development.",
-            "webpageUrl": "https://codegraphcontext.vercel.app/",
-            "repositoryUrl": "https://github.com/Shashankss1205/CodeGraphContext",
+            "description": "CodeGraphContext is an open-source developer infrastructure tool that indexes source code into a continuously updated graph, enabling AI assistants and engineering teams to understand real-world codebases with accuracy and context.",
+            "webpageUrl": {
+                "url": "https://codegraphcontext.vercel.app/"
+            },
+            "repositoryUrl": {
+                "url": "https://github.com/Shashankss1205/CodeGraphContext"
+            },
             "licenses": [
                 "spdx:MIT"
             ],
             "tags": [
                 "developer-tools",
                 "industry-tooling",
-                "ai",
+                "ai-infrastructure",
+                "code-analysis",
+                "knowledge-graph",
+                "mcp",
                 "open-source"
             ]
         }
@@ -29,23 +40,59 @@
     "funding": {
         "channels": [
             {
-                "guid": "contact-email",
-                "type": "email",
-                "address": "codegraphcontext@gmail.com"
+                "guid": "bank-transfer",
+                "type": "bank",
+                "address": "shashankshekharsingh1205@gmail.com",
+                "description": "Will accept direct bank transfers. Please e-mail me for details."
+            },
+            {
+                "guid": "github-sponsors",
+                "type": "payment-provider",
+                "address": "https://github.com/sponsors/Shashankss1205",
+                "description": "Project maintainer will accept payments through GitHub Sponsors."
             }
         ],
         "plans": [
             {
-                "guid": "foss-united-grant",
+                "guid": "hosting",
                 "status": "active",
-                "name": "Industry Tooling Development",
-                "description": "Grant support to improve usability, reliability, and adoption of CodeGraphContext as an open-source developer tool.",
+                "name": "Open Source Infrastructure & Industry Tooling Deployment",
+                "description": "This will cover the monthly server hosting costs for the projects.",
+                "amount": 10000,
+                "currency": "INR",
+                "frequency": "monthly",
+                "channels": [
+                    "bank-transfer",
+                    "github-sponsors"
+                ]
+            },
+            {
+                "guid": "development",
+                "status": "active",
+                "name": "Open Source Infrastructure & Industry Tooling Development",
+                "description": "Funding to improve usability, reliability, performance, and ecosystem readiness of CodeGraphContext as an industry-grade open-source developer tool.",
+                "amount": 50000,
                 "currency": "INR",
                 "frequency": "one-time",
                 "channels": [
-                    "contact-email"
+                    "bank-transfer",
+                    "github-sponsors"
+                ]
+            },
+            {
+                "guid": "developer-time",
+                "status": "active",
+                "name": "Developer compensation",
+                "description": "This will cover the cost of one developer working part-time on the projects.",
+                "amount": 40000,
+                "currency": "INR",
+                "frequency": "monthly",
+                "channels": [
+                    "bank-transfer",
+                    "github-sponsors"
                 ]
             }
-        ]
+        ],
+        "history": null
     }
 }
