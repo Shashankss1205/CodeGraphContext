@@ -1347,20 +1347,6 @@ def analyze_dependencies(
                     location_str
                 )
             console.print(table)
-        
-        # Show what this module imports
-        if results.get('imports'):
-            console.print(f"\n[bold cyan]Modules imported by '{target}':[/bold cyan]")
-            table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
-            table.add_column("Module", style="cyan")
-            table.add_column("Alias", style="yellow")
-            
-            for imp in results['imports']:
-                table.add_row(
-                    imp.get('imported_module', ''),
-                    imp.get('import_alias', '') or "-"
-                )
-            console.print(table)
     finally:
         db_manager.close_driver()
 
