@@ -6,26 +6,23 @@
         "role": "maintainer",
         "name": "Shashank Shekhar Singh",
         "email": "codegraphcontext@gmail.com",
-        "webpageUrl": {
-            "url": "https://github.com/Shashankss1205"
-        }
+        "webpageUrl": "https://www.linkedin.com/in/shashank-shekhar-singh-121128254/"
     },
     "projects": [
         {
             "guid": "codegraphcontext",
             "name": "CodeGraphContext",
             "description": "Open-source developer tooling that builds a live code knowledge graph for AI-assisted software development.",
-            "repositoryUrl": {
-                "url": "https://github.com/Shashankss1205/CodeGraphContext"
-            },
+            "webpageUrl": "https://codegraphcontext.vercel.app/",
+            "repositoryUrl": "https://github.com/Shashankss1205/CodeGraphContext",
             "licenses": [
                 "spdx:MIT"
             ],
             "tags": [
                 "developer-tools",
                 "industry-tooling",
-                "open-source",
-                "ai"
+                "ai",
+                "open-source"
             ]
         }
     ],
