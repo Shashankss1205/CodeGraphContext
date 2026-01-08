@@ -182,7 +182,7 @@ class PythonTreeSitterParser:
                     "end_line": assignment_node.end_point[0] + 1,
                     "args": [p for p in [self._get_node_text(p) for p in params_node.children if p.type == 'identifier'] if p] if params_node else [],
                     "source": self._get_node_text(assignment_node),
-                    "source_code": self._get_node_text(assignment_node),
+
                     "docstring": None,
                     "cyclomatic_complexity": 1,
                     "context": context,
@@ -248,7 +248,7 @@ class PythonTreeSitterParser:
                     "end_line": func_node.end_point[0] + 1,
                     "args": args,
                     "source": self._get_node_text(func_node),
-                    "source_code": self._get_node_text(func_node),
+
                     "docstring": self._get_docstring(body_node),
                     "cyclomatic_complexity": self._calculate_complexity(func_node),
                     "context": context,
@@ -379,7 +379,7 @@ class PythonTreeSitterParser:
                 if arguments_node:
                     for arg in arguments_node.children:
                         arg_text = self._get_node_text(arg)
-                        if arg_text is not None:
+                        if arg_text and arg_text not in ('(', ')', ','):
                             args.append(arg_text)
 
                 call_data = {

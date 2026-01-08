@@ -189,10 +189,11 @@ def neo4j_setup_alias():
 def _load_credentials():
     """
     Loads configuration and credentials from various sources into environment variables.
-    Priority order:
-    1. Local `mcp.json`
-    2. Global `~/.codegraphcontext/.env`
-    3. Any `.env` file found in the directory tree.
+    Uses per-variable precedence - each variable is loaded from the highest priority source.
+    Priority order (highest to lowest):
+    1. Local `mcp.json` env vars (highest - explicit MCP server config)
+    2. Local `.env` in project directory (high - project-specific overrides)
+    3. Global `~/.codegraphcontext/.env` (lowest - user defaults)
     """
     # 1. Prefer loading from mcp.json (always uses Neo4j when present)
     mcp_file_path = Path.cwd() / "mcp.json"
@@ -208,7 +209,7 @@ def _load_credentials():
         except Exception as e:
             console.print(f"[bold red]Error loading mcp.json:[/bold red] {e}")
     
-    # 2. Try global .env file
+    # 3. Global .env file (lowest priority - user defaults)
     global_env_path = Path.home() / ".codegraphcontext" / ".env"
     if global_env_path.exists():
         try:
@@ -216,9 +217,9 @@ def _load_credentials():
             logging.debug(f"Loaded Neo4j credentials from global .env file: {global_env_path}")
             return
         except Exception as e:
-            console.print(f"[bold red]Error loading global .env file from {global_env_path}:[/bold red] {e}")
-
-    # 3. Fallback to any discovered .env
+            console.print(f"[yellow]Warning: Could not load global .env: {e}[/yellow]")
+    
+    # 2. Local project .env (higher priority - project-specific overrides)
     try:
         dotenv_path = find_dotenv(usecwd=True, raise_error_if_not_found=False)
         if dotenv_path:
@@ -227,7 +228,54 @@ def _load_credentials():
         else:
             logging.debug("No local mcp.json or .env file found. Credentials may not be set.")
     except Exception as e:
-        console.print(f"[bold red]Error loading .env file:[/bold red] {e}")
+        console.print(f"[yellow]Warning: Could not load .env from current directory: {e}[/yellow]")
+    
+    # 1. Local mcp.json (highest priority - explicit MCP server config)
+    mcp_file_path = Path.cwd() / "mcp.json"
+    if mcp_file_path.exists():
+        try:
+            with open(mcp_file_path, "r") as f:
+                mcp_config = json.load(f)
+            server_env = mcp_config.get("mcpServers", {}).get("CodeGraphContext", {}).get("env", {})
+            if server_env:
+                config_sources.append(server_env)
+                config_source_names.append("mcp.json")
+        except Exception as e:
+            console.print(f"[yellow]Warning: Could not load mcp.json: {e}[/yellow]")
+    
+    # Merge all configs with proper precedence (later sources override earlier ones)
+    merged_config = {}
+    for config in config_sources:
+        merged_config.update(config)
+    
+    # Apply merged config to environment
+    for key, value in merged_config.items():
+        if value is not None:  # Only set non-None values
+            os.environ[key] = str(value)
+    
+    # Report what was loaded
+    if config_source_names:
+        if len(config_source_names) == 1:
+            console.print(f"[dim]Loaded configuration from: {config_source_names[-1]}[/dim]")
+        else:
+            console.print(f"[dim]Loaded configuration from: {', '.join(config_source_names)} (highest priority: {config_source_names[-1]})[/dim]")
+    else:
+        console.print("[yellow]No configuration file found. Using defaults.[/yellow]")
+    
+    # Show which database is actually being used
+    default_db = os.environ.get("DEFAULT_DATABASE", "falkordb").lower()
+    if default_db == "neo4j":
+        has_neo4j_creds = all([
+            os.environ.get("NEO4J_URI"),
+            os.environ.get("NEO4J_USERNAME"),
+            os.environ.get("NEO4J_PASSWORD")
+        ])
+        if has_neo4j_creds:
+            console.print("[cyan]Using database: Neo4j[/cyan]")
+        else:
+            console.print("[yellow]⚠ DEFAULT_DATABASE=neo4j but credentials not found. Falling back to FalkorDB.[/yellow]")
+    else:
+        console.print("[cyan]Using database: FalkorDB[/cyan]")
 
 
 # ============================================================================
@@ -710,19 +758,26 @@ def find_by_name(
         results = []
         
         # Search based on type filter
-        if not type:
-            # Search all
+        if type is None or type.lower() == 'all':
             funcs = code_finder.find_by_function_name(name, fuzzy_search=False)
             classes = code_finder.find_by_class_name(name, fuzzy_search=False)
             variables = code_finder.find_by_variable_name(name)
-            
+            modules = code_finder.find_by_module_name(name)
+            imports = code_finder.find_imports(name)
+
             for f in funcs: f['type'] = 'Function'
             for c in classes: c['type'] = 'Class'
             for v in variables: v['type'] = 'Variable'
+            for m in modules: m['type'] = 'Module'; m['file_path'] = m.get('name', 'External') # Modules might differ
+            for i in imports: 
+                i['type'] = 'Import'
+                i['name'] = i.get('alias') or i.get('imported_name')
             
             results.extend(funcs)
             results.extend(classes)
             results.extend(variables)
+            results.extend(modules)
+            results.extend(imports)
         
         elif type.lower() == 'function':
             results = code_finder.find_by_function_name(name, fuzzy_search=False)
@@ -735,6 +790,12 @@ def find_by_name(
         elif type.lower() == 'variable':
             results = code_finder.find_by_variable_name(name)
             for r in results: r['type'] = 'Variable'
+
+        elif type.lower() == 'module':
+            results = code_finder.find_by_module_name(name)
+            for r in results: 
+                r['type'] = 'Module'
+                r['file_path'] = r.get('name')
             
         elif type.lower() == 'file':
             # Quick query for file
@@ -750,16 +811,17 @@ def find_by_name(
         table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
         table.add_column("Name", style="cyan")
         table.add_column("Type", style="bold blue")
-        table.add_column("File", style="dim", overflow="fold")
-        table.add_column("Line", style="green", justify="right")
+        table.add_column("Location", style="dim", overflow="fold")
         
         for res in results:
             file_path = res.get('file_path', '') or ''
+            line_str = str(res.get('line_number', ''))
+            location_str = f"{file_path}:{line_str}" if line_str else file_path
+
             table.add_row(
                 res.get('name', ''),
                 res.get('type', 'Unknown'),
-                file_path,  # No truncation
-                str(res.get('line_number', ''))
+                location_str
             )
             
         console.print(f"[cyan]Found {len(results)} matches for '{name}':[/cyan]")
@@ -831,17 +893,18 @@ def find_by_pattern(
         table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
         table.add_column("Name", style="cyan")
         table.add_column("Type", style="blue")
-        table.add_column("File", style="dim", overflow="fold")
-        table.add_column("Line", style="green", justify="right")
-        table.add_column("Location", style="yellow")
+        table.add_column("Location", style="dim", overflow="fold")
+        table.add_column("Source", style="yellow")
         
         for res in results:
             file_path = res.get('file_path', '') or ''
+            line_str = str(res.get('line_number', '') if res.get('line_number') is not None else '')
+            location_str = f"{file_path}:{line_str}" if line_str else file_path
+
             table.add_row(
                 res.get('name', ''),
                 res.get('type', 'Unknown'),
-                file_path,  # No truncation
-                str(res.get('line_number', '') if res.get('line_number') is not None else ''),
+                location_str,
                 "📦 Dependency" if res.get('is_dependency') else "📝 Project"
             )
             
@@ -877,16 +940,17 @@ def find_by_type(
             
         table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
         table.add_column("Name", style="cyan")
-        table.add_column("File", style="dim", overflow="fold")
-        table.add_column("Line", style="green", justify="right")
-        table.add_column("Location", style="yellow")
+        table.add_column("Location", style="dim", overflow="fold")
+        table.add_column("Source", style="yellow")
         
         for res in results:
             file_path = res.get('file_path', '') or ''
+            line_str = str(res.get('line_number', ''))
+            location_str = f"{file_path}:{line_str}" if line_str else file_path
+            
             table.add_row(
                 res.get('name', ''),
-                file_path,  # No truncation
-                str(res.get('line_number', '')),
+                location_str,
                 "📦 Dependency" if res.get('is_dependency') else "📝 Project"
             )
             
@@ -921,15 +985,17 @@ def find_by_variable(
             
         table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
         table.add_column("Name", style="cyan")
-        table.add_column("File", style="dim", overflow="fold")
-        table.add_column("Line", style="green", justify="right")
+        table.add_column("Location", style="dim", overflow="fold")
         table.add_column("Context", style="yellow")
         
         for res in results:
+            file_path = res.get('file_path', '') or ''
+            line_str = str(res.get('line_number', ''))
+            location_str = f"{file_path}:{line_str}" if line_str else file_path
+
             table.add_row(
                 res.get('name', ''),
-                res.get('file_path', ''),
-                str(res.get('line_number', '')),
+                location_str,
                 res.get('context', '') or 'module'
             )
             
@@ -980,15 +1046,17 @@ def find_by_content_search(
         table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
         table.add_column("Name", style="cyan")
         table.add_column("Type", style="blue")
-        table.add_column("File", style="dim", overflow="fold")
-        table.add_column("Line", style="green", justify="right")
+        table.add_column("Location", style="dim", overflow="fold")
         
         for res in results:
+            file_path = res.get('file_path', '') or ''
+            line_str = str(res.get('line_number', ''))
+            location_str = f"{file_path}:{line_str}" if line_str else file_path
+
             table.add_row(
                 res.get('name', ''),
                 res.get('type', 'Unknown'),
-                res.get('file_path', ''),
-                str(res.get('line_number', ''))
+                location_str
             )
             
         console.print(f"[cyan]Found {len(results)} content match(es) for '{query}':[/cyan]")
@@ -1023,16 +1091,18 @@ def find_by_decorator_search(
             
         table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
         table.add_column("Function", style="cyan")
-        table.add_column("File", style="dim", overflow="fold")
-        table.add_column("Line", style="green", justify="right")
+        table.add_column("Location", style="dim", overflow="fold")
         table.add_column("Decorators", style="yellow")
         
         for res in results:
             decorators_str = ", ".join(res.get('decorators', []))
+            file_path = res.get('file_path', '') or ''
+            line_str = str(res.get('line_number', ''))
+            location_str = f"{file_path}:{line_str}" if line_str else file_path
+
             table.add_row(
                 res.get('function_name', ''),
-                res.get('file_path', ''),
-                str(res.get('line_number', '')),
+                location_str,
                 decorators_str
             )
             
@@ -1068,14 +1138,16 @@ def find_by_argument_search(
             
         table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
         table.add_column("Function", style="cyan")
-        table.add_column("File", style="dim", overflow="fold")
-        table.add_column("Line", style="green", justify="right")
+        table.add_column("Location", style="dim", overflow="fold")
         
         for res in results:
+            file_path = res.get('file_path', '') or ''
+            line_str = str(res.get('line_number', ''))
+            location_str = f"{file_path}:{line_str}" if line_str else file_path
+
             table.add_row(
                 res.get('function_name', ''),
-                res.get('file_path', ''),
-                str(res.get('line_number', ''))
+                location_str
             )
             
         console.print(f"[cyan]Found {len(results)} function(s) with argument '{argument}':[/cyan]")
@@ -1118,15 +1190,17 @@ def analyze_calls(
         
         table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
         table.add_column("Called Function", style="cyan")
-        table.add_column("File", style="dim", overflow="fold")
-        table.add_column("Line", style="green", justify="right")
+        table.add_column("Location", style="dim", overflow="fold")
         table.add_column("Type", style="yellow")
         
         for result in results:
+            file_path = result.get("called_file_path", "")
+            line_str = str(result.get("called_line_number", ""))
+            location_str = f"{file_path}:{line_str}" if line_str else file_path
+
             table.add_row(
                 result.get("called_function", ""),
-                result.get("called_file_path", ""),  # No truncation
-                str(result.get("called_line_number", "")),
+                location_str,
                 "📦 Dependency" if result.get("called_is_dependency") else "📝 Project"
             )
         
@@ -1163,17 +1237,21 @@ def analyze_callers(
         
         table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
         table.add_column("Caller Function", style="cyan")
-        table.add_column("File", style="dim", overflow="fold")
-        table.add_column("Line", style="green", justify="right")
+        table.add_column("Location", style="green")
         table.add_column("Call Type", style="yellow")
+
         
         for result in results:
+            file_path = result.get("caller_file_path", "")
+            line_number = result.get("caller_line_number")
+
+            location = f"{file_path}:{line_number}" if line_number else file_path
+
             table.add_row(
                 result.get("caller_function", ""),
-                result.get("caller_file_path", ""),  # No truncation
-                str(result.get("caller_line_number", "")),
+                location,
                 "📦 Dependency" if result.get("caller_is_dependency") else "📝 Project"
-            )
+                )
         
         console.print(f"\n[bold cyan]Functions that call '{function}':[/bold cyan]")
         console.print(table)
@@ -1185,13 +1263,16 @@ def analyze_callers(
 def analyze_chain(
     from_func: str = typer.Argument(..., help="Starting function"),
     to_func: str = typer.Argument(..., help="Target function"),
-    max_depth: int = typer.Option(5, "--depth", "-d", help="Maximum call chain depth")
+    max_depth: int = typer.Option(5, "--depth", "-d", help="Maximum call chain depth"),
+    from_file: Optional[str] = typer.Option(None, "--from-file", help="File for starting function"),
+    to_file: Optional[str] = typer.Option(None, "--to-file", help="File for target function")
 ):
     """
     Show call chain between two functions.
     
     Example:
         cgc analyze chain main process_data --depth 10
+        cgc analyze chain main process --from-file main.py --to-file utils.py
     """
     _load_credentials()
     services = _initialize_services()
@@ -1200,7 +1281,7 @@ def analyze_chain(
     db_manager, graph_builder, code_finder = services
     
     try:
-        results = code_finder.find_function_call_chain(from_func, to_func, max_depth)
+        results = code_finder.find_function_call_chain(from_func, to_func, max_depth, from_file, to_file)
         
         if not results:
             console.print(f"[yellow]No call chain found between '{from_func}' and '{to_func}' within depth {max_depth}[/yellow]")
@@ -1210,10 +1291,36 @@ def analyze_chain(
             console.print(f"\n[bold cyan]Call Chain #{idx} (length: {chain.get('chain_length', 0)}):[/bold cyan]")
             
             functions = chain.get('function_chain', [])
+            call_details = chain.get('call_details', [])
+            
             for i, func in enumerate(functions):
                 indent = "  " * i
-                arrow = "→ " if i < len(functions) - 1 else ""
-                console.print(f"{indent}{arrow}[cyan]{func.get('name', 'Unknown')}[/cyan] [dim]({func.get('file_path', '')}:{func.get('line_number', '')})[/dim]")
+                
+                # Print function
+                console.print(f"{indent}[cyan]{func.get('name', 'Unknown')}[/cyan] [dim]({func.get('file_path', '')}:{func.get('line_number', '')})[/dim]")
+                
+                # If there is a next step, print the connecting call detail
+                if i < len(functions) - 1 and i < len(call_details):
+                    detail = call_details[i]
+                    line = detail.get('call_line', '?')
+                    
+                    # Format args for display
+                    args_info = ""
+                    args_val = detail.get('args', [])
+                    if args_val:
+                        if isinstance(args_val, list):
+                            # Filter legacy punctuation just in case
+                            clean_args = [str(a) for a in args_val if str(a) not in ('(', ')', ',')]
+                            args_str = ", ".join(clean_args)
+                        else:
+                            args_str = str(args_val)
+                            
+                        # Truncate if too long
+                        if len(args_str) > 50:
+                            args_str = args_str[:47] + "..."
+                        args_info = f" [dim]({args_str})[/dim]"
+                    
+                    console.print(f"{indent}  ⬇ [dim]calls at line {line}[/dim]{args_info}")
     finally:
         db_manager.close_driver()
 
@@ -1246,13 +1353,15 @@ def analyze_dependencies(
         if results.get('importers'):
             console.print(f"\n[bold cyan]Files that import '{target}':[/bold cyan]")
             table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
-            table.add_column("File", style="cyan", overflow="fold")
-            table.add_column("Line", style="green", justify="right")
+            table.add_column("Location", style="cyan", overflow="fold")
             
             for imp in results['importers']:
+                file_path = imp.get('importer_file_path', '')
+                line_str = str(imp.get('import_line_number', ''))
+                location_str = f"{file_path}:{line_str}" if line_str else file_path
+
                 table.add_row(
-                    imp.get('importer_file_path', ''),
-                    str(imp.get('import_line_number', ''))
+                    location_str
                 )
             console.print(table)
         
@@ -1329,7 +1438,8 @@ def analyze_inheritance_tree(
 def analyze_complexity(
     path: Optional[str] = typer.Argument(None, help="Specific function name to analyze"),
     threshold: int = typer.Option(10, "--threshold", "-t", help="Complexity threshold for warnings"),
-    limit: int = typer.Option(20, "--limit", "-l", help="Maximum results to show")
+    limit: int = typer.Option(20, "--limit", "-l", help="Maximum results to show"),
+    file: Optional[str] = typer.Option(None, "--file", "-f", help="Specific file path (only used when function name is provided)")
 ):
     """
     Show cyclomatic complexity for functions.
@@ -1338,6 +1448,7 @@ def analyze_complexity(
         cgc analyze complexity                    # Most complex functions
         cgc analyze complexity --threshold 15     # Functions over threshold
         cgc analyze complexity my_function        # Specific function
+        cgc analyze complexity my_function -f file.py # Specific function in file
     """
     _load_credentials()
     services = _initialize_services()
@@ -1348,7 +1459,7 @@ def analyze_complexity(
     try:
         if path:
             # Specific function
-            result = code_finder.get_cyclomatic_complexity(path)
+            result = code_finder.get_cyclomatic_complexity(path, file)
             if result:
                 console.print(f"\n[bold cyan]Complexity for '{path}':[/bold cyan]")
                 console.print(f"  Cyclomatic Complexity: [yellow]{result.get('complexity', 'N/A')}[/yellow]")
@@ -1367,17 +1478,19 @@ def analyze_complexity(
             table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
             table.add_column("Function", style="cyan")
             table.add_column("Complexity", style="yellow", justify="right")
-            table.add_column("File", style="dim", overflow="fold")
-            table.add_column("Line", style="green", justify="right")
+            table.add_column("Location", style="dim", overflow="fold")
             
             for func in results:
                 complexity = func.get('complexity', 0)
                 color = "red" if complexity > threshold else "yellow" if complexity > threshold/2 else "green"
+                file_path = func.get('file_path', '')
+                line_str = str(func.get('line_number', ''))
+                location_str = f"{file_path}:{line_str}" if line_str else file_path
+
                 table.add_row(
                     func.get('function_name', ''),
                     f"[{color}]{complexity}[/{color}]",
-                    func.get('file_path', ''),  # No truncation
-                    str(func.get('line_number', ''))
+                    location_str
                 )
             
             console.print(f"\n[bold cyan]Most Complex Functions (threshold: {threshold}):[/bold cyan]")
@@ -1416,14 +1529,16 @@ def analyze_dead_code(
         
         table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
         table.add_column("Function", style="cyan")
-        table.add_column("File", style="dim", overflow="fold")
-        table.add_column("Line", style="green", justify="right")
+        table.add_column("Location", style="dim", overflow="fold")
         
         for func in unused_funcs:
+            file_path = func.get('file_path', '')
+            line_str = str(func.get('line_number', ''))
+            location_str = f"{file_path}:{line_str}" if line_str else file_path
+
             table.add_row(
                 func.get('function_name', ''),
-                func.get('file_path', ''),  # No truncation
-                str(func.get('line_number', ''))
+                location_str
             )
         
         console.print(f"\n[bold yellow]⚠️  Potentially Unused Functions:[/bold yellow]")
@@ -1462,15 +1577,17 @@ def analyze_overrides(
         table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
         table.add_column("Class", style="cyan")
         table.add_column("Function", style="green")
-        table.add_column("File", style="dim", overflow="fold")
-        table.add_column("Line", style="yellow", justify="right")
+        table.add_column("Location", style="dim", overflow="fold")
         
         for res in results:
+            file_path = res.get('class_file_path', '')
+            line_str = str(res.get('function_line_number', ''))
+            location_str = f"{file_path}:{line_str}" if line_str else file_path
+
             table.add_row(
                 res.get('class_name', ''),
                 res.get('function_name', ''),
-                res.get('class_file_path', ''),
-                str(res.get('function_line_number', ''))
+                location_str
             )
         
         console.print(f"\n[bold cyan]Found {len(results)} implementation(s) of '{function_name}':[/bold cyan]")
@@ -1480,7 +1597,8 @@ def analyze_overrides(
 
 @analyze_app.command("variable")
 def analyze_variable_usage(
-    variable_name: str = typer.Argument(..., help="Variable name to analyze")
+    variable_name: str = typer.Argument(..., help="Variable name to analyze"),
+    file: Optional[str] = typer.Option(None, "--file", "-f", help="Specific file path")
 ):
     """
     Analyze where a variable is defined and used across the codebase.
@@ -1490,6 +1608,7 @@ def analyze_variable_usage(
     Example:
         cgc analyze variable MAX_RETRIES
         cgc analyze variable config
+        cgc analyze variable x --file math_utils.py
     """
     _load_credentials()
     services = _initialize_services()
@@ -1499,7 +1618,7 @@ def analyze_variable_usage(
     
     try:
         # Get variable usage scope
-        scope_results = code_finder.find_variable_usage_scope(variable_name)
+        scope_results = code_finder.find_variable_usage_scope(variable_name, file)
         instances = scope_results.get('instances', [])
         
         if not instances:
@@ -1522,15 +1641,17 @@ def analyze_variable_usage(
             
             table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
             table.add_column("Scope Name", style="cyan")
-            table.add_column("File", style="dim", overflow="fold")
-            table.add_column("Line", style="green", justify="right")
+            table.add_column("Location", style="dim", overflow="fold")
             table.add_column("Value", style="yellow")
             
             for item in items:
+                file_path = item.get('file_path', '')
+                line_str = str(item.get('line_number', ''))
+                location_str = f"{file_path}:{line_str}" if line_str else file_path
+
                 table.add_row(
                     item.get('scope_name', ''),
-                    item.get('file_path', ''),
-                    str(item.get('line_number', '')),
+                    location_str,
                     str(item.get('variable_value', ''))[:50] if item.get('variable_value') else '-'
                 )
             

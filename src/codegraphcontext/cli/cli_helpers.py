@@ -423,9 +423,13 @@ def clean_helper():
     try:
         with db_manager.get_driver().session() as session:
             # Find and delete orphaned nodes (nodes not connected to any repository)
+            # Using OPTIONAL MATCH for FalkorDB compatibility
             query = """
             MATCH (n)
-            WHERE NOT (n:Repository) AND NOT EXISTS((n)-[]-(:Repository))
+            WHERE NOT (n:Repository)
+            OPTIONAL MATCH path = (n)-[*]-(r:Repository)
+            WITH n, path
+            WHERE path IS NULL
             WITH n LIMIT 1000
             DETACH DELETE n
             RETURN count(n) as deleted

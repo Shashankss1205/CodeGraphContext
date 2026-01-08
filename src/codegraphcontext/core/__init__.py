@@ -63,7 +63,7 @@ def get_database_manager() -> Union['DatabaseManager', 'FalkorDBManager']:
             
         elif db_type == 'neo4j':
             if not _is_neo4j_configured():
-                 raise ValueError("Database set to 'neo4j' but it is not configured.\nRun 'cgc setup' to configure Neo4j.")
+                 raise ValueError("Database set to 'neo4j' but it is not configured.\nRun 'cgc neo4j setup' to configure Neo4j.")
             from .database import DatabaseManager
             debug_logger("Using Neo4j Server (explicit)")
             return DatabaseManager()
@@ -90,12 +90,12 @@ def get_database_manager() -> Union['DatabaseManager', 'FalkorDBManager']:
             "FalkorDB Lite is not supported on Python < 3.12.\n"
             "You are running Python " + str(sys.version_info.major) + "." + str(sys.version_info.minor) + ".\n"
             "Please upgrade to Python 3.12+ to use the embedded database,\n"
-            "OR run 'cgc setup' to configure an external Neo4j database."
+            "OR run 'cgc neo4j setup' to configure an external Neo4j database."
         )
     else:
         error_msg += (
             "Recommended: Install FalkorDB Lite ('pip install falkordblite')\n"
-            "Alternative: Run 'cgc setup' to configure Neo4j."
+            "Alternative: Run 'cgc neo4j setup' to configure Neo4j."
         )
             
     raise ValueError(error_msg)

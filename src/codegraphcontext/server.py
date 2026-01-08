@@ -861,7 +861,8 @@ class MCPServer:
         requests, and routes them to the appropriate handlers (e.g., initialize,
         tools/list, tools/call). The response is then printed to stdout.
         """
-        debug_logger("MCP Server is running. Waiting for requests...")
+        # info_logger("MCP Server is running. Waiting for requests...")
+        print("MCP Server is running. Waiting for requests...", file=sys.stderr, flush=True)
         self.code_watcher.start()
         
         loop = asyncio.get_event_loop()

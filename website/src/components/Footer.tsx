@@ -309,14 +309,14 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="border-t border-border/50 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-muted-foreground text-sm">
-            © 2025 CodeGraphContext. Released under the MIT License.
+            © 2026 CodeGraphContext. Released under the MIT License.
           </p>
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
             <span>Version {version}</span>
             <div className="w-1 h-1 bg-muted-foreground rounded-full" />
-            <span>Python 3.8+</span>
+            <span>Python 3.10+</span>
             <div className="w-1 h-1 bg-muted-foreground rounded-full" />
-            <span>Neo4j 5.15+</span>
+            <span>Falkordb or Neo4j</span>
           </div>
         </div>
       </div>

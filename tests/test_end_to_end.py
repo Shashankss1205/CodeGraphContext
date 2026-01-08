@@ -113,6 +113,7 @@ volumes:
 NEO4J_URI=neo4j://localhost:7687
 NEO4J_USERNAME=neo4j
 NEO4J_PASSWORD={password}
+DEFAULT_DATABASE=neo4j
 """
         with open(env_path, "w") as f:
             f.write(env_content)
@@ -126,10 +127,29 @@ NEO4J_PASSWORD={password}
             text=True,
             cwd=os.path.join(os.path.dirname(__file__), "..")
         )
-        for line in iter(server_process.stderr.readline, ''):
+        start_time = time.time()
+        timeout_seconds = 60
+        server_ready = False
+        
+        while time.time() - start_time < timeout_seconds:
+            line = server_process.stderr.readline()
+            if not line:
+                # Process might have exited
+                if server_process.poll() is not None:
+                    break
+                time.sleep(0.1)
+                continue
+                
             print(f"STDERR: {line.strip()}")
             if "MCP Server is running" in line:
+                server_ready = True
                 break
+        
+        if not server_ready:
+            # If we timed out or process exited without ready message
+            if server_process.poll() is not None:
+                print(f"Server exited with code {server_process.returncode}")
+            pytest.fail(f"Server did not become ready within {timeout_seconds} seconds")
         
         init_request = {"jsonrpc": "2.0", "id": 0, "method": "initialize", "params": {}}
         server_process.stdin.write(json.dumps(init_request) + "\n")

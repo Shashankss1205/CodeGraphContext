@@ -181,7 +181,7 @@ class CppTreeSitterParser:
                     "name": name,
                     "line_number": node.start_point[0] + 1,
                     "end_line": func_node.end_point[0] + 1,
-                    "source_code": self._get_node_text(func_node),
+                    "source": self._get_node_text(func_node),
                     "args": params,
                 })
         return functions
@@ -237,7 +237,7 @@ class CppTreeSitterParser:
                     "name": name,
                     "line_number": node.start_point[0] + 1,
                     "end_line": class_node.end_point[0] + 1,
-                    "source_code": self._get_node_text(class_node),
+                    "source": self._get_node_text(class_node),
                     "bases": [], # Placeholder
                 })
         return classes
@@ -269,7 +269,7 @@ class CppTreeSitterParser:
                     "name": name,
                     "line_number": node.start_point[0] + 1,
                     "end_line": enum_node.end_point[0] + 1,
-                    "source_code": self._get_node_text(enum_node),
+                    "source": self._get_node_text(enum_node),
                 })
         return enums
  
@@ -284,7 +284,7 @@ class CppTreeSitterParser:
                     "name": name,
                     "line_number": node.start_point[0] + 1,
                     "end_line": struct_node.end_point[0] + 1,
-                    "source_code": self._get_node_text(struct_node),
+                    "source": self._get_node_text(struct_node),
                 })
         return structs
 
@@ -299,7 +299,7 @@ class CppTreeSitterParser:
                     "name": name,
                     "line_number": node.start_point[0] + 1,
                     "end_line": union_node.end_point[0] + 1,
-                    "source_code": self._get_node_text(union_node),
+                    "source": self._get_node_text(union_node),
                 })
         return unions
 
@@ -316,7 +316,7 @@ class CppTreeSitterParser:
                     "name": name,
                     "line_number": node.start_point[0] + 1,
                     "end_line": macro_node.end_point[0] + 1,
-                    "source_code": self._get_node_text(macro_node),
+                    "source": self._get_node_text(macro_node),
                 })
         return macros
     
@@ -350,7 +350,7 @@ class CppTreeSitterParser:
                     "end_line": assignment_node.end_point[0] + 1,
                     "args": [p for p in [self._get_node_text(p) for p in params_node.children if p.type == 'identifier'] if p] if params_node else [],
                     "source": self._get_node_text(assignment_node),
-                    "source_code": self._get_node_text(assignment_node),
+
                     "docstring": None,
                     "cyclomatic_complexity": 1,
                     "context": context,

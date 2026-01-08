@@ -236,7 +236,7 @@ class GoTreeSitterParser:
                     "end_line": func_node.end_point[0] + 1,
                     "args": args,
                     "source": self._get_node_text(func_node),
-                    "source_code": self._get_node_text(func_node),
+
                     "docstring": docstring,
                     "cyclomatic_complexity": self._calculate_complexity(func_node),
                     "context": context,
