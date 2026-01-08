@@ -33,6 +33,7 @@ from .cli_helpers import (
     list_repos_helper,
     delete_helper,
     cypher_helper,
+    cypher_helper_visual,
     visualize_helper,
     reindex_helper,
     clean_helper,
@@ -46,6 +47,18 @@ from .cli_helpers import (
 # Set the log level for the noisy neo4j and asyncio logger to WARNING to keep the output clean.
 logging.getLogger("neo4j").setLevel(logging.WARNING)
 logging.getLogger("asyncio").setLevel(logging.WARNING)
+
+# Import visualization module
+from .visualizer import (
+    visualize_call_graph,
+    visualize_call_chain,
+    visualize_dependencies,
+    visualize_inheritance_tree,
+    visualize_overrides,
+    visualize_search_results,
+    visualize_cypher_results,
+    check_visual_flag,
+)
 
 # Initialize the Typer app and Rich console for formatted output.
 app = typer.Typer(
@@ -721,8 +734,10 @@ app.add_typer(find_app, name="find")
 
 @find_app.command("name")
 def find_by_name(
+    ctx: typer.Context,
     name: str = typer.Argument(..., help="Exact name to search for"),
-    type: Optional[str] = typer.Option(None, "--type", "-t", help="Filter by type (function, class, file, module)")
+    type: Optional[str] = typer.Option(None, "--type", "-t", help="Filter by type (function, class, file, module)"),
+    visual: bool = typer.Option(False, "--visual", "--viz", "-V", help="Show results as interactive graph visualization")
 ):
     """
     Find code elements by exact name.
@@ -730,6 +745,7 @@ def find_by_name(
     Examples:
         cgc find name MyClass
         cgc find name calculate --type function
+        cgc find name MyClass --visual
     """
     _load_credentials()
     services = _initialize_services()
@@ -790,6 +806,11 @@ def find_by_name(
         if not results:
             console.print(f"[yellow]No code elements found with name '{name}'[/yellow]")
             return
+        
+        # Check if visual mode is enabled
+        if check_visual_flag(ctx, visual):
+            visualize_search_results(results, name, search_type="name")
+            return
             
         table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
         table.add_column("Name", style="cyan")
@@ -814,8 +835,10 @@ def find_by_name(
 
 @find_app.command("pattern")
 def find_by_pattern(
+    ctx: typer.Context,
     pattern: str = typer.Argument(..., help="Substring pattern to search (fuzzy search fallback)"),
-    case_sensitive: bool = typer.Option(False, "--case-sensitive", "-c", help="Case-sensitive search")
+    case_sensitive: bool = typer.Option(False, "--case-sensitive", "-c", help="Case-sensitive search"),
+    visual: bool = typer.Option(False, "--visual", "--viz", "-V", help="Show results as interactive graph visualization")
 ):
     """
     Find code elements using substring matching.
@@ -823,6 +846,7 @@ def find_by_pattern(
     Examples:
         cgc find pattern "Auth"       # Finds Auth, Authentication, Authorize...
         cgc find pattern "process_"   # Finds process_data, process_request...
+        cgc find pattern "Auth" --visual
     """
     _load_credentials()
     services = _initialize_services()
@@ -869,6 +893,11 @@ def find_by_pattern(
         if not results:
             console.print(f"[yellow]No matches found for pattern '{pattern}'[/yellow]")
             return
+        
+        # Check if visual mode is enabled
+        if check_visual_flag(ctx, visual):
+            visualize_search_results(results, pattern, search_type="pattern")
+            return
             
         if not case_sensitive and any(c in pattern for c in "*?["):
              console.print("[yellow]Note: Wildcards/Regex are not fully supported in this mode. Performing substring search.[/yellow]")
@@ -898,8 +927,10 @@ def find_by_pattern(
 
 @find_app.command("type")
 def find_by_type(
+    ctx: typer.Context,
     element_type: str = typer.Argument(..., help="Type to search for (function, class, file, module)"),
-    limit: int = typer.Option(50, "--limit", "-l", help="Maximum results to return")
+    limit: int = typer.Option(50, "--limit", "-l", help="Maximum results to return"),
+    visual: bool = typer.Option(False, "--visual", "--viz", "-V", help="Show results as interactive graph visualization")
 ):
     """
     Find all elements of a specific type.
@@ -907,6 +938,7 @@ def find_by_type(
     Examples:
         cgc find type class
         cgc find type function --limit 100
+        cgc find type class --visual
     """
     _load_credentials()
     services = _initialize_services()
@@ -919,6 +951,15 @@ def find_by_type(
         
         if not results:
             console.print(f"[yellow]No elements found of type '{element_type}'[/yellow]")
+            return
+        
+        # Add type to results for visualization
+        for r in results:
+            r['type'] = element_type.capitalize()
+        
+        # Check if visual mode is enabled
+        if check_visual_flag(ctx, visual):
+            visualize_search_results(results, element_type, search_type="type")
             return
             
         table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
@@ -1148,8 +1189,10 @@ app.add_typer(analyze_app, name="analyze")
 
 @analyze_app.command("calls")
 def analyze_calls(
+    ctx: typer.Context,
     function: str = typer.Argument(..., help="Function name to analyze"),
-    file: Optional[str] = typer.Option(None, "--file", "-f", help="Specific file path")
+    file: Optional[str] = typer.Option(None, "--file", "-f", help="Specific file path"),
+    visual: bool = typer.Option(False, "--visual", "--viz", "-V", help="Show results as interactive graph visualization")
 ):
     """
     Show what functions this function calls (callees).
@@ -1157,6 +1200,7 @@ def analyze_calls(
     Example:
         cgc analyze calls process_data
         cgc analyze calls process_data --file src/main.py
+        cgc analyze calls process_data --visual
     """
     _load_credentials()
     services = _initialize_services()
@@ -1169,6 +1213,11 @@ def analyze_calls(
         
         if not results:
             console.print(f"[yellow]No function calls found for '{function}'[/yellow]")
+            return
+        
+        # Check if visual mode is enabled
+        if check_visual_flag(ctx, visual):
+            visualize_call_graph(results, function, direction="outgoing")
             return
         
         table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
@@ -1195,8 +1244,10 @@ def analyze_calls(
 
 @analyze_app.command("callers")
 def analyze_callers(
+    ctx: typer.Context,
     function: str = typer.Argument(..., help="Function name to analyze"),
-    file: Optional[str] = typer.Option(None, "--file", "-f", help="Specific file path")
+    file: Optional[str] = typer.Option(None, "--file", "-f", help="Specific file path"),
+    visual: bool = typer.Option(False, "--visual", "--viz", "-V", help="Show results as interactive graph visualization")
 ):
     """
     Show what functions call this function.
@@ -1204,6 +1255,7 @@ def analyze_callers(
     Example:
         cgc analyze callers process_data
         cgc analyze callers process_data --file src/main.py
+        cgc analyze callers process_data --visual
     """
     _load_credentials()
     services = _initialize_services()
@@ -1216,6 +1268,11 @@ def analyze_callers(
         
         if not results:
             console.print(f"[yellow]No callers found for '{function}'[/yellow]")
+            return
+        
+        # Check if visual mode is enabled
+        if check_visual_flag(ctx, visual):
+            visualize_call_graph(results, function, direction="incoming")
             return
         
         table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
@@ -1244,11 +1301,13 @@ def analyze_callers(
 
 @analyze_app.command("chain")
 def analyze_chain(
+    ctx: typer.Context,
     from_func: str = typer.Argument(..., help="Starting function"),
     to_func: str = typer.Argument(..., help="Target function"),
     max_depth: int = typer.Option(5, "--depth", "-d", help="Maximum call chain depth"),
     from_file: Optional[str] = typer.Option(None, "--from-file", help="File for starting function"),
-    to_file: Optional[str] = typer.Option(None, "--to-file", help="File for target function")
+    to_file: Optional[str] = typer.Option(None, "--to-file", help="File for target function"),
+    visual: bool = typer.Option(False, "--visual", "--viz", "-V", help="Show results as interactive graph visualization")
 ):
     """
     Show call chain between two functions.
@@ -1256,6 +1315,7 @@ def analyze_chain(
     Example:
         cgc analyze chain main process_data --depth 10
         cgc analyze chain main process --from-file main.py --to-file utils.py
+        cgc analyze chain main process_data --visual
     """
     _load_credentials()
     services = _initialize_services()
@@ -1268,6 +1328,11 @@ def analyze_chain(
         
         if not results:
             console.print(f"[yellow]No call chain found between '{from_func}' and '{to_func}' within depth {max_depth}[/yellow]")
+            return
+        
+        # Check if visual mode is enabled
+        if check_visual_flag(ctx, visual):
+            visualize_call_chain(results, from_func, to_func)
             return
         
         for idx, chain in enumerate(results, 1):
@@ -1309,8 +1374,10 @@ def analyze_chain(
 
 @analyze_app.command("deps")
 def analyze_dependencies(
+    ctx: typer.Context,
     target: str = typer.Argument(..., help="Module name"),
-    show_external: bool = typer.Option(True, "--external/--no-external", help="Show external dependencies")
+    show_external: bool = typer.Option(True, "--external/--no-external", help="Show external dependencies"),
+    visual: bool = typer.Option(False, "--visual", "--viz", "-V", help="Show results as interactive graph visualization")
 ):
     """
     Show dependencies and imports for a module.
@@ -1318,6 +1385,7 @@ def analyze_dependencies(
     Example:
         cgc analyze deps numpy
         cgc analyze deps mymodule --no-external
+        cgc analyze deps mymodule --visual
     """
     _load_credentials()
     services = _initialize_services()
@@ -1330,6 +1398,11 @@ def analyze_dependencies(
         
         if not results.get('importers') and not results.get('imports'):
             console.print(f"[yellow]No dependency information found for '{target}'[/yellow]")
+            return
+        
+        # Check if visual mode is enabled
+        if check_visual_flag(ctx, visual):
+            visualize_dependencies(results, target)
             return
         
         # Show who imports this module
@@ -1366,8 +1439,10 @@ def analyze_dependencies(
 
 @analyze_app.command("tree")
 def analyze_inheritance_tree(
+    ctx: typer.Context,
     class_name: str = typer.Argument(..., help="Class name"),
-    file: Optional[str] = typer.Option(None, "--file", "-f", help="Specific file path")
+    file: Optional[str] = typer.Option(None, "--file", "-f", help="Specific file path"),
+    visual: bool = typer.Option(False, "--visual", "--viz", "-V", help="Show results as interactive graph visualization")
 ):
     """
     Show inheritance hierarchy for a class.
@@ -1375,6 +1450,7 @@ def analyze_inheritance_tree(
     Example:
         cgc analyze tree MyClass
         cgc analyze tree MyClass --file src/models.py
+        cgc analyze tree MyClass --visual
     """
     _load_credentials()
     services = _initialize_services()
@@ -1384,6 +1460,15 @@ def analyze_inheritance_tree(
     
     try:
         results = code_finder.find_class_hierarchy(class_name, file)
+        
+        # Check if visual mode is enabled (check for any hierarchy data)
+        has_hierarchy = results.get('parent_classes') or results.get('child_classes')
+        if check_visual_flag(ctx, visual):
+            if has_hierarchy:
+                visualize_inheritance_tree(results, class_name)
+            else:
+                console.print(f"[yellow]No inheritance hierarchy to visualize for '{class_name}'[/yellow]")
+            return
         
         console.print(f"\n[bold cyan]Class Hierarchy for '{class_name}':[/bold cyan]\n")
         
@@ -1533,7 +1618,9 @@ def analyze_dead_code(
 
 @analyze_app.command("overrides")
 def analyze_overrides(
-    function_name: str = typer.Argument(..., help="Function/method name to find implementations of")
+    ctx: typer.Context,
+    function_name: str = typer.Argument(..., help="Function/method name to find implementations of"),
+    visual: bool = typer.Option(False, "--visual", "--viz", "-V", help="Show results as interactive graph visualization")
 ):
     """
     Find all implementations of a function across different classes.
@@ -1543,6 +1630,7 @@ def analyze_overrides(
     Example:
         cgc analyze overrides area
         cgc analyze overrides process
+        cgc analyze overrides area --visual
     """
     _load_credentials()
     services = _initialize_services()
@@ -1555,6 +1643,11 @@ def analyze_overrides(
         
         if not results:
             console.print(f"[yellow]No implementations found for function '{function_name}'[/yellow]")
+            return
+        
+        # Check if visual mode is enabled
+        if check_visual_flag(ctx, visual):
+            visualize_overrides(results, function_name)
             return
         
         table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
@@ -1651,16 +1744,26 @@ def analyze_variable_usage(
 # ============================================================================
 
 @app.command("query")
-def query_graph(query: str = typer.Argument(..., help="Cypher query to execute (read-only)")):
+def query_graph(
+    ctx: typer.Context,
+    query: str = typer.Argument(..., help="Cypher query to execute (read-only)"),
+    visual: bool = typer.Option(False, "--visual", "--viz", "-V", help="Show results as interactive graph visualization")
+):
     """
     Execute a custom Cypher query on the code graph.
     
     Examples:
         cgc query "MATCH (f:Function) RETURN f.name LIMIT 10"
         cgc query "MATCH (c:Class)-[:CONTAINS]->(m) RETURN c.name, count(m)"
+        cgc query "MATCH (n)-[r]->(m) RETURN n,r,m LIMIT 50" --visual
     """
     _load_credentials()
-    cypher_helper(query)
+    
+    # Check if visual mode is enabled
+    if check_visual_flag(ctx, visual):
+        cypher_helper_visual(query)
+    else:
+        cypher_helper(query)
 
 # Keep old 'cypher' as alias for backward compatibility
 @app.command("cypher", hidden=True)
@@ -1730,6 +1833,13 @@ def main(
         "-d", 
         help="[Global] Temporarily override database backend (falkordb or neo4j) for any command"
     ),
+    visual: bool = typer.Option(
+        False,
+        "--visual",
+        "--viz",
+        "-V",
+        help="[Global] Show results as interactive graph visualization in browser"
+    ),
     version_: bool = typer.Option(
         None,
         "--version",
@@ -1749,8 +1859,15 @@ def main(
     Main entry point for the cgc CLI application.
     If no subcommand is provided, it displays a welcome message with instructions.
     """
+    # Initialize context object for sharing state with subcommands
+    ctx.ensure_object(dict)
+    
     if database:
         os.environ["CGC_RUNTIME_DB_TYPE"] = database
+
+    # Store visual flag in context for subcommands to access
+    if visual:
+        ctx.obj["visual"] = True
 
     if version_:
         console.print(f"CodeGraphContext [bold cyan]{get_version()}[/bold cyan]")
@@ -1767,6 +1884,8 @@ def main(
         console.print("   • [cyan]cgc list[/cyan] - List indexed repositories\n")
         console.print("📊 [bold]Using Neo4j instead of FalkorDB?[/bold]")
         console.print("     Run [cyan]cgc neo4j setup[/cyan] (or [cyan]cgc n[/cyan]) to configure Neo4j\n")
+        console.print("📈 [bold]Want visual graph output?[/bold]")
+        console.print("     Add [cyan]-V[/cyan] or [cyan]--visual[/cyan] to any analyze/find command\n")
         console.print("👉 Run [cyan]cgc help[/cyan] to see all available commands")
         console.print("👉 Run [cyan]cgc --version[/cyan] to check the version\n")
         console.print("👉 Running [green]codegraphcontext[/green] works the same as using [green]cgc[/green]")
