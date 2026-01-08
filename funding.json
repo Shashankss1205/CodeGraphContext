@@ -1,0 +1,54 @@
+{
+    "$schema": "https://fundingjson.org/schema/v1.1.0.json",
+    "version": "v1.1.0",
+    "entity": {
+        "type": "individual",
+        "role": "maintainer",
+        "name": "Shashank Shekhar Singh",
+        "email": "codegraphcontext@gmail.com",
+        "webpageUrl": {
+            "url": "https://github.com/Shashankss1205"
+        }
+    },
+    "projects": [
+        {
+            "guid": "codegraphcontext",
+            "name": "CodeGraphContext",
+            "description": "Open-source developer tooling that builds a live code knowledge graph for AI-assisted software development.",
+            "repositoryUrl": {
+                "url": "https://github.com/Shashankss1205/CodeGraphContext"
+            },
+            "licenses": [
+                "spdx:MIT"
+            ],
+            "tags": [
+                "developer-tools",
+                "industry-tooling",
+                "open-source",
+                "ai"
+            ]
+        }
+    ],
+    "funding": {
+        "channels": [
+            {
+                "guid": "contact-email",
+                "type": "email",
+                "address": "codegraphcontext@gmail.com"
+            }
+        ],
+        "plans": [
+            {
+                "guid": "foss-united-grant",
+                "status": "active",
+                "name": "Industry Tooling Development",
+                "description": "Grant support to improve usability, reliability, and adoption of CodeGraphContext as an open-source developer tool.",
+                "currency": "INR",
+                "frequency": "one-time",
+                "channels": [
+                    "contact-email"
+                ]
+            }
+        ]
+    }
+}
