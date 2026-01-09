@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeGraphContext Visualizer</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <script src="https://unpkg.com/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- 1. Left Slim Activity Bar -->
+        <div class="activity-bar">
+            <div class="activity-icon brand-icon" title="CodeGraphContext">C</div>
+            <div class="activity-icon active" data-view="view-overview" title="Database Overview">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
+                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+                    <path d="M21 5c0 1.66-4 3-9 3s-9-1.34-9-3 9-1.34 9-3" />
+                </svg>
+            </div>
+            <div class="activity-icon" data-view="view-analysis" title="Analysis Tools">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+            </div>
+            <div class="spacer" style="flex:1"></div>
+            <div class="activity-icon" id="settingsBtn" title="Settings">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path
+                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+                    </path>
+                </svg>
+            </div>
+        </div>
+
+        <!-- 1.5 Side Panel (Expandable) -->
+        <div class="side-panel" id="sidePanel">
+            <div class="panel-view" id="view-overview">
+                <div class="panel-header">Database Overview</div>
+                <div class="panel-content">
+                    <div class="panel-card">
+                        <div class="stat-big" id="totalNodes">...</div>
+                        <div class="stat-label">Total Nodes</div>
+                    </div>
+
+                    <button class="action-btn primary" data-query="MATCH (n) RETURN n LIMIT 1000">
+                        <span>Show Entire Graph</span>
+                    </button>
+
+                    <div class="panel-section">
+                        <div class="section-title">Quick Actions</div>
+                        <button class="action-btn" data-query="MATCH (f:Function) RETURN f LIMIT 100">Show
+                            Functions</button>
+                        <button class="action-btn" data-query="MATCH (c:Class) RETURN c LIMIT 100">Show Classes</button>
+                        <button class="action-btn" data-query="MATCH (f:File) RETURN f LIMIT 100">Show Files</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-view hidden" id="view-analysis">
+                <div class="panel-header">Analysis Tools</div>
+                <div class="panel-content">
+                    <div class="panel-section">
+                        <div class="section-title">Graph Structure</div>
+                        <button class="action-btn warning"
+                            data-query="MATCH path = (n)-[:CALLS|:IMPORTS*]->(n) RETURN path LIMIT 10">
+                            🚨 Find Circular Deps
+                        </button>
+                        <button class="action-btn" data-query="MATCH (n) WHERE size((n)--()) = 0 RETURN n LIMIT 50">
+                            👻 Orphaned Code
+                        </button>
+                    </div>
+
+                    <div class="panel-section">
+                        <div class="section-title">Complexity</div>
+                        <button class="action-btn"
+                            data-query="MATCH (f:Function)<-[:CALLS]-(caller) RETURN f, count(caller) as incoming ORDER BY incoming DESC LIMIT 10">
+                            🔥 Top Called Functions
+                        </button>
+                        <button class="action-btn" data-query="MATCH (c:Class)-[:INHERITS*]->(p) RETURN c, p LIMIT 50">
+                            🧬 Deep Inheritance
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Main Content Area -->
+        <div class="main-content">
+
+            <!-- A. Query Editor Card (Fixed Top) -->
+            <div class="query-card">
+                <div class="query-wrapper">
+                    <div class="query-prompt">neo4j$</div>
+                    <textarea id="queryInput" placeholder="MATCH (n) RETURN n LIMIT 25"
+                        spellcheck="false">{{INITIAL_QUERY}}</textarea>
+                    <div class="query-controls">
+                        <button class="mini-btn" id="clearBtn" title="Clear">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path
+                                    d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                </path>
+                            </svg>
+                        </button>
+                        <button class="play-btn" id="runQueryBtn" title="Execute">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- B. Graph Result Stream -->
+            <div class="graph-wrapper">
+
+                <!-- Floating Legend -->
+                <div class="overlay-panel legend-panel">
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background:var(--color-func)"></div>Function
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background:var(--color-class)"></div>Class
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background:var(--color-file)"></div>File
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background:var(--color-module)"></div>Module
+                    </div>
+                </div>
+
+                <!-- Cytoscape Container -->
+                <div id="cy" class="graph-canvas"></div>
+
+                <!-- Floating Inspector (Right Drawer) -->
+                <div class="overlay-panel inspector-panel" id="inspectorPanel">
+                    <div class="inspector-header">
+                        <span id="inspectorTitle">Details</span>
+                        <button class="mini-btn" id="closeInspectorBtn">✕</button>
+                    </div>
+                    <div class="properties-list" id="inspectorContent">
+                        <!-- Properties injected here -->
+                    </div>
+                </div>
+
+                <!-- Bottom Stats Bar -->
+                <div class="stats-bar">
+                    <span id="nodeCount">0 Nodes</span>
+                    <span id="edgeCount">0 Relationships</span>
+                    <span style="flex:1"></span>
+                    <span>Completed in <span id="queryTime">0ms</span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/graph.js?v=8"></script>
+    <script src="/static/js/query.js?v=8"></script>
+    <script src="/static/js/app.js?v=8"></script>
+</body>

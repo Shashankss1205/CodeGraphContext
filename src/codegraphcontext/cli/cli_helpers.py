@@ -219,8 +219,56 @@ def cypher_helper(query: str):
     try:
         with db_manager.get_driver().session() as session:
             result = session.run(query)
-            records = [record.data() for record in result]
-            console.print(json.dumps(records, indent=2))
+            
+            # Helper for serialization
+            def _serialize_graph_types(obj):
+                # Handle Nodes
+                if hasattr(obj, 'labels'):
+                    return {
+                        "id": obj.id,
+                        "labels": list(obj.labels),
+                        "properties": getattr(obj, 'properties', {}) or {}
+                    }
+                # Handle Relationships
+                if hasattr(obj, 'type'):
+                    # Handle varying driver implementations for type
+                    rel_type = "RELATED"
+                    if hasattr(obj, 'type'): rel_type = obj.type
+                    elif hasattr(obj, 'relation'): rel_type = obj.relation
+                    elif hasattr(obj, 'label'): rel_type = obj.label
+                    
+                    return {
+                        "id": obj.id,
+                        "type": rel_type,
+                        "start_node_id": obj.start_node.id,
+                        "end_node_id": obj.end_node.id,
+                        "properties": getattr(obj, 'properties', {}) or {}
+                    }
+                # Handle Paths
+                if hasattr(obj, 'nodes') and hasattr(obj, 'relationships'):
+                    return {
+                        "nodes": [_serialize_graph_types(n) for n in obj.nodes],
+                        "relationships": [_serialize_graph_types(r) for r in obj.relationships]
+                    }
+                # Fallback
+                return str(obj)
+
+            # Manually process records if .data() is not available or insufficient
+            records = []
+            for record in result:
+                # If record is dict-like (Neo4j)
+                if hasattr(record, 'data'):
+                    records.append(record.data())
+                # If record is key-value based but not a standard Record object
+                elif hasattr(record, 'keys') and callable(record.keys):
+                     records.append(dict(record.items()))
+                # Fallback for list-like records (RedisGraph/FalkorDB default)
+                else:
+                    # Try to map if keys are available in result object?
+                    # Some drivers don't attach keys to records easily.
+                    records.append(list(record))
+
+            console.print(json.dumps(records, indent=2, default=_serialize_graph_types))
     except Exception as e:
         console.print(f"[bold red]An error occurred while executing query:[/bold red] {e}")
     finally:
@@ -239,7 +287,7 @@ def visualize_helper(query: str):
     
     # Check if FalkorDB
     if "FalkorDB" in db_manager.__class__.__name__:
-        _visualize_falkordb(db_manager)
+        _visualize_falkordb(db_manager, query)
     else:
         try:
             encoded_query = urllib.parse.quote(query)
@@ -252,110 +300,30 @@ def visualize_helper(query: str):
         finally:
             db_manager.close_driver()
 
-def _visualize_falkordb(db_manager):
-    console.print("[dim]Generating FalkorDB visualization (showing up to 500 relationships)...[/dim]")
+def _visualize_falkordb(db_manager, query: str = None):
+    """
+    Starts the live visualization server for FalkorDB.
+    """
     try:
-        data_nodes = []
-        data_edges = []
+        from ..viz import start_viz_server
+        console.print("[green]Starting live visualization server...[/green]")
+        console.print("[dim]This provides an interactive Neo4j Browser-like interface for FalkorDB.[/dim]")
         
-        with db_manager.get_driver().session() as session:
-            # Fetch nodes and edges
-            q = "MATCH (n)-[r]->(m) RETURN n, r, m LIMIT 500"
-            result = session.run(q)
-            
-            seen_nodes = set()
-            
-            for record in result:
-                # record values are Node/Relationship objects from falkordb client
-                n = record['n']
-                r = record['r']
-                m = record['m']
-                
-                # Process Node helper
-                def process_node(node):
-                    nid = getattr(node, 'id', -1)
-                    labels = getattr(node, 'labels', [])
-                    lbl = list(labels)[0] if labels else "Node"
-                    props = getattr(node, 'properties', {})
-                    name = props.get('name', str(nid))
-                    
-                    if nid not in seen_nodes:
-                        seen_nodes.add(nid)
-                        color = "#97c2fc" # Default blue
-                        if "Repository" in labels: color = "#ffb3ba" # Red
-                        elif "File" in labels: color = "#baffc9" # Green
-                        elif "Class" in labels: color = "#bae1ff" # Light Blue
-                        elif "Function" in labels: color = "#ffffba" # Yellow
-                        elif "Package" in labels: color = "#ffdfba" # Orange
-                        
-                        data_nodes.append({
-                            "id": nid, 
-                            "label": name, 
-                            "group": lbl, 
-                            "title": str(props),
-                            "color": color
-                        })
-                    return nid
-
-                nid = process_node(n)
-                mid = process_node(m)
-                
-                # Check Edge
-                e_type = getattr(r, 'relation', '') or getattr(r, 'type', 'REL')
-                data_edges.append({
-                    "from": nid,
-                    "to": mid,
-                    "label": e_type,
-                    "arrows": "to"
-                })
+        # This blocks until the server is stopped (Ctrl+C)
+        start_viz_server(db_manager, query)
         
-        filename = "codegraph_viz.html"
-        html_content = f"""
-<!DOCTYPE html>
-<html>
-<head>
-  <title>CodeGraphContext Visualization</title>
-  <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
-  <style type="text/css">
-    #mynetwork {{
-      width: 100%;
-      height: 100vh;
-      border: 1px solid lightgray;
-    }}
-  </style>
-</head>
-<body>
-  <div id="mynetwork"></div>
-  <script type="text/javascript">
-    var nodes = new vis.DataSet({json.dumps(data_nodes)});
-    var edges = new vis.DataSet({json.dumps(data_edges)});
-    var container = document.getElementById('mynetwork');
-    var data = {{ nodes: nodes, edges: edges }};
-    var options = {{
-        nodes: {{ shape: 'dot', size: 16 }},
-        physics: {{ stabilization: false }},
-        layout: {{ improvedLayout: false }}
-    }};
-    var network = new vis.Network(container, data, options);
-  </script>
-</body>
-</html>
-"""
-        
-        out_path = Path(filename).resolve()
-        with open(out_path, "w") as f:
-            f.write(html_content)
-            
-        console.print(f"[green]Visualization generated at:[/green] {out_path}")
-        console.print("Opening in default browser...")
-        webbrowser.open(f"file://{out_path}")
-
+    except ImportError as e:
+        console.print(f"[bold red]Visualization Error:[/bold red] Could not import visualization module: {e}")
+        console.print("Please ensure fastapi and uvicorn are installed: pip install fastapi uvicorn")
     except Exception as e:
         console.print(f"[bold red]Visualization failed:[/bold red] {e}")
-        import traceback
-        traceback.print_exc()
     finally:
-        db_manager.close_driver()
+        # The db_manager is closed by visualize_helper, but if start_viz_server handles it,
+        # we should be careful. Actually visualize_helper has a finally block calling close_driver.
+        # However, start_viz_server needs the driver open.
+        # Since start_viz_server blocks, when it returns (Ctrl+C), we can let visualize_helper close it.
+        pass
+
 
 
 def reindex_helper(path: str):

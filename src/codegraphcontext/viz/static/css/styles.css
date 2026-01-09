@@ -1,0 +1,407 @@
+/* Neo4j Browser-inspired Theme */
+:root {
+    --bg-app: #1D2125;
+    /* Main background */
+    --bg-panel: #22262A;
+    /* Panel/Card background */
+    --bg-input: #2D3238;
+    /* Input background */
+    --border-color: #383C41;
+    /* Subtle borders */
+    --text-primary: #F0F0F0;
+    --text-secondary: #8B9095;
+    --accent: #008CC1;
+    /* Neo4j Blue */
+    --accent-hover: #0077A3;
+
+    /* Neo4j Node Colors */
+    --color-func: #33C6FF;
+    /* Blue */
+    --color-class: #F1C40F;
+    /* Yellow */
+    --color-file: #2ECC71;
+    /* Green */
+    --color-module: #E74C3C;
+    /* Red */
+    --color-repo: #E67E22;
+    /* Orange */
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg-app);
+    color: var(--text-primary);
+    overflow: hidden;
+    font-size: 13px;
+}
+
+.app-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Side Panel for Tools */
+.side-panel {
+    width: 280px;
+    background-color: #22262A;
+    border-right: 1px solid #3B424C;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    transition: width 0.3s;
+    z-index: 50;
+}
+
+.panel-view {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.panel-view.hidden {
+    display: none;
+}
+
+.panel-header {
+    padding: 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #F0F0F0;
+    border-bottom: 1px solid #3B424C;
+    background: #1D2125;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.panel-content {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.panel-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.section-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: #8B9095;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+/* Stats Card */
+.panel-card {
+    background: #2C3239;
+    padding: 16px;
+    border-radius: 6px;
+    text-align: center;
+    border: 1px solid #3B424C;
+}
+
+.stat-big {
+    font-size: 24px;
+    font-weight: 700;
+    color: #33C6FF;
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    font-size: 11px;
+    color: #A5ABB6;
+}
+
+/* Action Buttons */
+.action-btn {
+    background: #2C3239;
+    border: 1px solid #3B424C;
+    color: #F0F0F0;
+    padding: 10px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: inherit;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.action-btn:hover {
+    background: #3B424C;
+    border-color: #555;
+}
+
+.action-btn.primary {
+    background: #008CC1;
+    border-color: #008CC1;
+    color: white;
+    justify-content: center;
+    font-weight: 600;
+}
+
+.action-btn.primary:hover {
+    background: #0077A3;
+}
+
+.action-btn.warning {
+    border-left: 3px solid #E74C3C;
+}
+
+/* 1. Slim Activity Bar (Left) */
+.activity-bar {
+    width: 50px;
+    background: var(--bg-panel);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 15px;
+    z-index: 100;
+}
+
+.activity-icon {
+    width: 32px;
+    height: 32px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+    font-size: 16px;
+}
+
+.activity-icon:hover,
+.activity-icon.active {
+    background: var(--bg-input);
+    color: var(--text-primary);
+}
+
+.brand-icon {
+    color: var(--accent);
+    font-weight: bold;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+}
+
+/* 2. Main Stream Area */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background: var(--bg-app);
+}
+
+/* Query Input Card */
+.query-card {
+    background: var(--bg-panel);
+    border-bottom: 1px solid var(--border-color);
+    padding: 10px 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+}
+
+.query-wrapper {
+    display: flex;
+    gap: 10px;
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 2px;
+}
+
+.query-prompt {
+    padding: 10px 0 10px 12px;
+    color: var(--accent);
+    font-family: monospace;
+    font-weight: bold;
+    user-select: none;
+}
+
+#queryInput {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-family: 'Fira Code', 'Consolas', monospace;
+    font-size: 14px;
+    padding: 10px;
+    outline: none;
+    resize: none;
+    height: 42px;
+    /* Single line initially */
+    line-height: 20px;
+}
+
+.query-controls {
+    display: flex;
+    align-items: center;
+    padding-right: 5px;
+}
+
+.mini-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 3px;
+}
+
+.mini-btn:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.play-btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 3px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-left: 8px;
+}
+
+.play-btn:hover {
+    background: var(--accent-hover);
+}
+
+/* Graph Result Area (The "Frame") */
+.graph-wrapper {
+    flex: 1;
+    position: relative;
+    background: var(--bg-app);
+    overflow: hidden;
+}
+
+/* Subtle background pattern instead of heavy grid */
+.graph-canvas {
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(var(--border-color) 1px, transparent 1px);
+    background-size: 30px 30px;
+    opacity: 0.8;
+}
+
+/* Floating Overlay Panels */
+.overlay-panel {
+    position: absolute;
+    background: rgba(34, 38, 42, 0.95);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    backdrop-filter: blur(4px);
+    z-index: 20;
+}
+
+/* Legend Overlay (Left) */
+.legend-panel {
+    top: 20px;
+    left: 20px;
+    padding: 10px;
+    width: auto;
+    min-width: 120px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    font-size: 11px;
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+.legend-item:hover {
+    opacity: 1;
+}
+
+.legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+/* Info/Inspector Panel (Right Draw) */
+.inspector-panel {
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 100%;
+    border-left: 1px solid var(--border-color);
+    background: var(--bg-panel);
+    transform: translateX(100%);
+    transition: transform 0.2s;
+    display: flex;
+    flex-direction: column;
+}
+
+.inspector-panel.open {
+    transform: translateX(0);
+}
+
+.inspector-header {
+    padding: 15px;
+    border-bottom: 1px solid var(--border-color);
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+}
+
+.properties-list {
+    padding: 15px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.prop-row {
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 5px;
+}
+
+.prop-key {
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.prop-value {
+    color: var(--text-primary);
+    font-family: monospace;
+    font-size: 12px;
+    word-break: break-all;
+}
+
+/* Stats Footer */
+.stats-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg-panel);
+    border-top: 1px solid var(--border-color);
+    padding: 5px 15px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    display: flex;
+    gap: 20px;
+    z-index: 20;
+}
