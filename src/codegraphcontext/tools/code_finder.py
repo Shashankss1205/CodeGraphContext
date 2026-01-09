@@ -326,6 +326,44 @@ class CodeFinder:
             
             return result.data()
     
+    def what_does_function_call_indirect(self, function_name: str, file_path: str = None, max_depth: int = 3) -> List[Dict]:
+        """Find what functions a specific function calls, including indirect calls up to max_depth"""
+        with self.driver.session() as session:
+            if file_path:
+                # Convert file_path to absolute path
+                absolute_file_path = str(Path(file_path).resolve())
+                result = session.run(f"""
+                    MATCH (caller:Function {{name: $function_name, file_path: $absolute_file_path}})
+                    MATCH path = (caller)-[:CALLS*1..{max_depth}]->(called:Function)
+                    WITH called, length(path) as depth
+                    ORDER BY depth ASC, called.is_dependency ASC, called.name
+                    RETURN DISTINCT
+                        called.name as called_function,
+                        called.file_path as called_file_path,
+                        called.line_number as called_line_number,
+                        called.docstring as called_docstring,
+                        called.is_dependency as called_is_dependency,
+                        depth
+                    LIMIT 100
+                """, function_name=function_name, absolute_file_path=absolute_file_path)
+            else:
+                result = session.run(f"""
+                    MATCH (caller:Function {{name: $function_name}})
+                    MATCH path = (caller)-[:CALLS*1..{max_depth}]->(called:Function)
+                    WITH called, length(path) as depth
+                    ORDER BY depth ASC, called.is_dependency ASC, called.name
+                    RETURN DISTINCT
+                        called.name as called_function,
+                        called.file_path as called_file_path,
+                        called.line_number as called_line_number,
+                        called.docstring as called_docstring,
+                        called.is_dependency as called_is_dependency,
+                        depth
+                    LIMIT 100
+                """, function_name=function_name)
+            
+            return result.data()
+    
     def who_imports_module(self, module_name: str) -> List[Dict]:
         """Find what files import a specific module using IMPORTS relationships"""
         with self.driver.session() as session:

@@ -1,0 +1,27 @@
+digraph CodeGraph {
+    // Layout settings for better spacing
+    rankdir=TB;
+    ranksep=1.5;        // Vertical spacing between ranks
+    nodesep=0.8;        // Horizontal spacing between nodes
+    splines=ortho;      // Orthogonal edges for cleaner look
+    
+    // Node styling
+    node [
+        shape=box,
+        style="filled,rounded",
+        fillcolor=lightblue,
+        fontname="Arial",
+        fontsize=12,
+        margin=0.3,
+        height=0.6
+    ];
+    
+    // Edge styling
+    edge [
+        color=gray,
+        arrowsize=0.8,
+        penwidth=1.5
+    ];
+
+
+}

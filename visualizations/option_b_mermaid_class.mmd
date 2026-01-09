@@ -1,0 +1,312 @@
+```mermaid
+classDiagram
+    class FalkorDBResultWrapper {
+        +__init__()
+        +consume()
+        +single()
+        +data()
+        +__iter__()
+    }
+    class TypescriptTreeSitterParser {
+        +__init__()
+        +_get_node_text()
+        +_get_parent_context()
+        +traverse()
+        +_calculate_complexity()
+        +_get_docstring()
+        +parse()
+        +_fn_for_name()
+    }
+    class RustTreeSitterParser {
+        +__init__()
+        +_get_node_text()
+        +parse()
+        +_get_parent_context()
+        +_parse_function_args()
+        +_find_functions()
+        +_find_structs()
+        +_find_traits()
+    }
+    class JobStatus {
+    }
+    class JobInfo {
+        +__post_init__()
+        +progress_percentage()
+        +estimated_time_remaining()
+    }
+    class CppTreeSitterParser {
+        +__init__()
+        +_get_node_text()
+        +parse()
+        +_find_functions()
+        +_extract_function_params()
+        +_find_classes()
+        +_find_imports()
+        +_find_enums()
+    }
+    class ScalaTreeSitterParser {
+        +__init__()
+        +parse()
+        +_get_parent_context()
+        +_get_node_text()
+        +_parse_functions()
+        +_parse_classes()
+        +_parse_variables()
+        +_parse_imports()
+    }
+    class MCPServer {
+        +__init__()
+        +_init_tools()
+        +get_database_status()
+        +execute_cypher_query_tool()
+        +find_dead_code_tool()
+        +calculate_cyclomatic_complexity_tool()
+        +find_most_complex_functions_tool()
+        +list_indexed_repositories_tool()
+    }
+    class PhpTreeSitterParser {
+        +__init__()
+        +parse()
+        +_get_parent_context()
+        +_get_node_text()
+        +_parse_functions()
+        +_parse_types()
+        +_parse_variables()
+        +_parse_imports()
+    }
+    class FalkorDBManager {
+        +__new__()
+        +__init__()
+        +get_driver()
+        +_ensure_server_running()
+        +close_driver()
+        +shutdown()
+        +is_connected()
+        +validate_config()
+    }
+    class FalkorDBRecord {
+        +data()
+    }
+    class JobManager {
+        +__init__()
+        +create_job()
+        +update_job()
+        +get_job()
+        +list_jobs()
+        +find_active_job_by_path()
+        +cleanup_old_jobs()
+    }
+    class PythonTreeSitterParser {
+        +__init__()
+        +_get_node_text()
+        +_get_parent_context()
+        +traverse()
+        +_calculate_complexity()
+        +_get_docstring()
+        +parse()
+        +_find_lambda_assignments()
+    }
+    class CTreeSitterParser {
+        +__init__()
+        +_get_node_text()
+        +parse()
+        +_get_parent_context()
+        +traverse()
+        +_calculate_complexity()
+        +_get_docstring()
+        +_parse_function_args()
+    }
+    class CToolkit {
+        +get_cypher_query()
+    }
+    class KotlinTreeSitterParser {
+        +__init__()
+        +parse()
+        +_get_parent_context()
+        +_get_node_text()
+        +_parse_functions()
+        +_parse_classes()
+        +_parse_variables()
+        +_parse_imports()
+    }
+    class JavaTreeSitterParser {
+        +__init__()
+        +parse()
+        +_get_parent_context()
+        +_get_node_text()
+        +_parse_functions()
+        +_parse_classes()
+        +_parse_variables()
+        +_parse_imports()
+    }
+    class RubyTreeSitterParser {
+        +__init__()
+        +_get_node_text()
+        +_enclosing_class_name()
+        +_find_modules()
+        +_find_module_inclusions()
+        +_get_parent_context()
+        +traverse()
+        +_calculate_complexity()
+    }
+    class GoTreeSitterParser {
+        +__init__()
+        +_get_node_text()
+        +_get_parent_context()
+        +traverse()
+        +_calculate_complexity()
+        +_get_docstring()
+        +parse()
+        +_find_functions()
+    }
+    class CodeWatcher {
+        +__init__()
+        +watch_directory()
+        +unwatch_directory()
+        +list_watched_paths()
+        +start()
+        +stop()
+    }
+    class RubyToolkit {
+        +get_cypher_query()
+    }
+    class TypescriptToolkit {
+        +get_cypher_query()
+    }
+    class CSharpToolkit {
+        +get_cypher_query()
+    }
+    class JavascriptTreeSitterParser {
+        +__init__()
+        +_get_node_text()
+        +_get_parent_context()
+        +traverse()
+        +_calculate_complexity()
+        +_get_docstring()
+        +parse()
+        +_fn_for_name()
+    }
+    class CSharpTreeSitterParser {
+        +__init__()
+        +parse()
+        +_parse_functions()
+        +_parse_type_declarations()
+        +_parse_imports()
+        +_get_parent_context()
+        +_get_node_text()
+        +_parse_calls()
+    }
+    class TypescriptJSXTreeSitterParser {
+        +__init__()
+        +parse()
+        +_find_react_components()
+    }
+    class RepositoryEventHandler {
+        +__init__()
+        +_initial_scan()
+        +_debounce()
+        +_handle_modification()
+        +on_created()
+        +on_modified()
+        +on_deleted()
+        +on_moved()
+    }
+    class SwiftTreeSitterParser {
+        +__init__()
+        +parse()
+        +_get_parent_context()
+        +_get_node_text()
+        +_parse_functions()
+        +_parse_classes()
+        +_parse_variables()
+        +_parse_imports()
+    }
+    class Advanced_language_query {
+        +__init__()
+        +advanced_language_query()
+    }
+    class ScalaToolkit {
+        +get_cypher_query()
+    }
+    class DatabaseManager {
+        +__new__()
+        +__init__()
+        +get_driver()
+        +close_driver()
+        +is_connected()
+        +validate_config()
+        +test_connection()
+    }
+    class FalkorDBDriverWrapper {
+        +__init__()
+        +session()
+        +close()
+    }
+    class FalkorDBSessionWrapper {
+        +__init__()
+        +run()
+        +_translate_schema_query()
+        +__enter__()
+        +__exit__()
+    }
+    class TreeSitterParser {
+        +__init__()
+        +parse()
+    }
+    class SwiftToolkit {
+        +get_cypher_query()
+    }
+    class CodeFinder {
+        +__init__()
+        +format_query()
+        +find_by_function_name()
+        +find_by_class_name()
+        +find_by_variable_name()
+        +find_by_content()
+        +find_by_module_name()
+        +find_imports()
+    }
+    class GraphBuilder {
+        +__init__()
+        +create_schema()
+        +_pre_scan_for_imports()
+        +add_repository_to_graph()
+        +add_file_to_graph()
+        +_create_function_calls()
+        +_create_all_function_calls()
+        +_create_inheritance_links()
+    }
+    class JavascriptToolkit {
+        +get_cypher_query()
+    }
+    class TreeSitterManager {
+        +__init__()
+        +_normalize_language_name()
+        +get_language_safe()
+        +create_parser()
+        +is_language_available()
+        +get_supported_languages()
+    }
+    class RustToolkit {
+        +get_cypher_query()
+    }
+    class PythonToolkit {
+        +get_cypher_query()
+    }
+    class SystemTools {
+        +__init__()
+        +check_job_status_tool()
+        +list_jobs_tool()
+        +execute_cypher_query_tool()
+        +find_dead_code_tool()
+    }
+    class JavaToolkit {
+        +get_cypher_query()
+    }
+    class CppToolkit {
+        +get_cypher_query()
+    }
+    class GoToolkit {
+        +get_cypher_query()
+    }
+```

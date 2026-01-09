@@ -1,0 +1,406 @@
+@startuml
+!theme vibrant
+skinparam classAttributeIconSize 0
+
+class PythonToolkit {
+  +get_cypher_query()
+}
+
+class JobStatus {
+}
+
+class GraphBuilder {
+  +__init__()
+  +create_schema()
+  +_pre_scan_for_imports()
+  +add_repository_to_graph()
+  +add_file_to_graph()
+  +_create_function_calls()
+  +_create_all_function_calls()
+  +_create_inheritance_links()
+  +_create_csharp_inheritance_and_interfaces()
+  +_create_all_inheritance_links()
+  ... (6 more methods)
+}
+
+class RepositoryEventHandler {
+  +__init__()
+  +_initial_scan()
+  +_debounce()
+  +_handle_modification()
+  +on_created()
+  +on_modified()
+  +on_deleted()
+  +on_moved()
+}
+
+class RustToolkit {
+  +get_cypher_query()
+}
+
+class CTreeSitterParser {
+  +__init__()
+  +_get_node_text()
+  +parse()
+  +_get_parent_context()
+  +traverse()
+  +_calculate_complexity()
+  +_get_docstring()
+  +_parse_function_args()
+  +_find_functions()
+  +_find_structs_unions_enums()
+  ... (4 more methods)
+}
+
+class SystemTools {
+  +__init__()
+  +check_job_status_tool()
+  +list_jobs_tool()
+  +execute_cypher_query_tool()
+  +find_dead_code_tool()
+}
+
+class FalkorDBResultWrapper {
+  +__init__()
+  +consume()
+  +single()
+  +data()
+  +__iter__()
+}
+
+class RubyToolkit {
+  +get_cypher_query()
+}
+
+class CodeWatcher {
+  +__init__()
+  +watch_directory()
+  +unwatch_directory()
+  +list_watched_paths()
+  +start()
+  +stop()
+}
+
+class RustTreeSitterParser {
+  +__init__()
+  +_get_node_text()
+  +parse()
+  +_get_parent_context()
+  +_parse_function_args()
+  +_find_functions()
+  +_find_structs()
+  +_find_traits()
+  +_find_imports()
+  +_find_calls()
+}
+
+class CppToolkit {
+  +get_cypher_query()
+}
+
+class JobInfo {
+  +__post_init__()
+  +progress_percentage()
+  +estimated_time_remaining()
+}
+
+class FalkorDBRecord {
+  +data()
+}
+
+class TypescriptToolkit {
+  +get_cypher_query()
+}
+
+class FalkorDBManager {
+  +__new__()
+  +__init__()
+  +get_driver()
+  +_ensure_server_running()
+  +close_driver()
+  +shutdown()
+  +is_connected()
+  +validate_config()
+  +test_connection()
+}
+
+class ScalaTreeSitterParser {
+  +__init__()
+  +parse()
+  +_get_parent_context()
+  +_get_node_text()
+  +_parse_functions()
+  +_parse_classes()
+  +_parse_variables()
+  +_parse_imports()
+  +_parse_calls()
+  +_extract_parameter_names()
+}
+
+class PythonTreeSitterParser {
+  +__init__()
+  +_get_node_text()
+  +_get_parent_context()
+  +traverse()
+  +_calculate_complexity()
+  +_get_docstring()
+  +parse()
+  +_find_lambda_assignments()
+  +_find_functions()
+  +_find_classes()
+  ... (4 more methods)
+}
+
+class SwiftTreeSitterParser {
+  +__init__()
+  +parse()
+  +_get_parent_context()
+  +_get_node_text()
+  +_parse_functions()
+  +_parse_classes()
+  +_parse_variables()
+  +_parse_imports()
+  +_parse_calls()
+  +_extract_parameter_name()
+}
+
+class TypescriptTreeSitterParser {
+  +__init__()
+  +_get_node_text()
+  +_get_parent_context()
+  +traverse()
+  +_calculate_complexity()
+  +_get_docstring()
+  +parse()
+  +_fn_for_name()
+  +_fn_for_params()
+  +_key()
+  ... (9 more methods)
+}
+
+class KotlinTreeSitterParser {
+  +__init__()
+  +parse()
+  +_get_parent_context()
+  +_get_node_text()
+  +_parse_functions()
+  +_parse_classes()
+  +_parse_variables()
+  +_parse_imports()
+  +_parse_calls()
+  +_extract_parameter_names()
+}
+
+class SwiftToolkit {
+  +get_cypher_query()
+}
+
+class JobManager {
+  +__init__()
+  +create_job()
+  +update_job()
+  +get_job()
+  +list_jobs()
+  +find_active_job_by_path()
+  +cleanup_old_jobs()
+}
+
+class DatabaseManager {
+  +__new__()
+  +__init__()
+  +get_driver()
+  +close_driver()
+  +is_connected()
+  +validate_config()
+  +test_connection()
+}
+
+class ScalaToolkit {
+  +get_cypher_query()
+}
+
+class JavaTreeSitterParser {
+  +__init__()
+  +parse()
+  +_get_parent_context()
+  +_get_node_text()
+  +_parse_functions()
+  +_parse_classes()
+  +_parse_variables()
+  +_parse_imports()
+  +_parse_calls()
+  +_extract_parameter_names()
+}
+
+class TreeSitterParser {
+  +__init__()
+  +parse()
+}
+
+class JavascriptTreeSitterParser {
+  +__init__()
+  +_get_node_text()
+  +_get_parent_context()
+  +traverse()
+  +_calculate_complexity()
+  +_get_docstring()
+  +parse()
+  +_fn_for_name()
+  +_fn_for_params()
+  +_key()
+  ... (10 more methods)
+}
+
+class JavaToolkit {
+  +get_cypher_query()
+}
+
+class CppTreeSitterParser {
+  +__init__()
+  +_get_node_text()
+  +parse()
+  +_find_functions()
+  +_extract_function_params()
+  +_find_classes()
+  +_find_imports()
+  +_find_enums()
+  +_find_structs()
+  +_find_unions()
+  ... (6 more methods)
+}
+
+class CSharpTreeSitterParser {
+  +__init__()
+  +parse()
+  +_parse_functions()
+  +_parse_type_declarations()
+  +_parse_imports()
+  +_get_parent_context()
+  +_get_node_text()
+  +_parse_calls()
+  +_extract_parameters()
+  +_find_containing_type()
+  ... (1 more methods)
+}
+
+class CSharpToolkit {
+  +get_cypher_query()
+}
+
+class TreeSitterManager {
+  +__init__()
+  +_normalize_language_name()
+  +get_language_safe()
+  +create_parser()
+  +is_language_available()
+  +get_supported_languages()
+}
+
+class JavascriptToolkit {
+  +get_cypher_query()
+}
+
+class FalkorDBDriverWrapper {
+  +__init__()
+  +session()
+  +close()
+}
+
+class CodeFinder {
+  +__init__()
+  +format_query()
+  +find_by_function_name()
+  +find_by_class_name()
+  +find_by_variable_name()
+  +find_by_content()
+  +find_by_module_name()
+  +find_imports()
+  +find_related_code()
+  +find_functions_by_argument()
+  ... (19 more methods)
+}
+
+class GoToolkit {
+  +get_cypher_query()
+}
+
+class GoTreeSitterParser {
+  +__init__()
+  +_get_node_text()
+  +_get_parent_context()
+  +traverse()
+  +_calculate_complexity()
+  +_get_docstring()
+  +parse()
+  +_find_functions()
+  +_find_function_node_for_name()
+  +_find_function_node_for_params()
+  ... (8 more methods)
+}
+
+class CToolkit {
+  +get_cypher_query()
+}
+
+class FalkorDBSessionWrapper {
+  +__init__()
+  +run()
+  +_translate_schema_query()
+  +__enter__()
+  +__exit__()
+}
+
+class MCPServer {
+  +__init__()
+  +_init_tools()
+  +get_database_status()
+  +execute_cypher_query_tool()
+  +find_dead_code_tool()
+  +calculate_cyclomatic_complexity_tool()
+  +find_most_complex_functions_tool()
+  +list_indexed_repositories_tool()
+  +delete_repository_tool()
+  +visualize_graph_query_tool()
+  ... (13 more methods)
+}
+
+class PhpTreeSitterParser {
+  +__init__()
+  +parse()
+  +_get_parent_context()
+  +_get_node_text()
+  +_parse_functions()
+  +_parse_types()
+  +_parse_variables()
+  +_parse_imports()
+  +_parse_calls()
+}
+
+class RubyTreeSitterParser {
+  +__init__()
+  +_get_node_text()
+  +_enclosing_class_name()
+  +_find_modules()
+  +_find_module_inclusions()
+  +_get_parent_context()
+  +traverse()
+  +_calculate_complexity()
+  +_get_docstring()
+  +_parse_method_parameters()
+  ... (6 more methods)
+}
+
+class TypescriptJSXTreeSitterParser {
+  +__init__()
+  +parse()
+  +_find_react_components()
+}
+
+class Advanced_language_query {
+  +__init__()
+  +advanced_language_query()
+}
+
+' Inheritance relationships
+
+@enduml

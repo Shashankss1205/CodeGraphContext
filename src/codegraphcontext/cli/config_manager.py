@@ -24,6 +24,7 @@ DEFAULT_CONFIG = {
     "FALKORDB_PATH": str(CONFIG_DIR / "falkordb.db"),
     "FALKORDB_SOCKET_PATH": str(CONFIG_DIR / "falkordb.sock"),
     "INDEX_VARIABLES": "true",
+    "INDEX_PARAMETERS": "true",
     "ALLOW_DB_DELETION": "false",
     "DEBUG_LOGS": "false",
     "DEBUG_LOG_PATH": str(Path.home() / "mcp_debug.log"),
@@ -46,6 +47,7 @@ CONFIG_DESCRIPTIONS = {
     "FALKORDB_PATH": "Path to FalkorDB database file",
     "FALKORDB_SOCKET_PATH": "Path to FalkorDB Unix socket",
     "INDEX_VARIABLES": "Index variable nodes in the graph (lighter graph if false)",
+    "INDEX_PARAMETERS": "Index parameter nodes in the graph (lighter graph if false)",
     "ALLOW_DB_DELETION": "Allow full database deletion commands",
     "DEBUG_LOGS": "Enable debug logging (for development/troubleshooting)",
     "DEBUG_LOG_PATH": "Path to debug log file",
@@ -66,6 +68,7 @@ CONFIG_DESCRIPTIONS = {
 CONFIG_VALIDATORS = {
     "DEFAULT_DATABASE": ["neo4j", "falkordb"],
     "INDEX_VARIABLES": ["true", "false"],
+    "INDEX_PARAMETERS": ["true", "false"],
     "ALLOW_DB_DELETION": ["true", "false"],
     "DEBUG_LOGS": ["true", "false"],
     "ENABLE_APP_LOGS": ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL", "DISABLED"],

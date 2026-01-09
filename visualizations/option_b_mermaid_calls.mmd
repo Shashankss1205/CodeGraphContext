@@ -1,0 +1,93 @@
+```mermaid
+graph TD
+    __init__[__init__]
+    _init_tools[_init_tools]
+    add_code_to_graph_tool[add_code_to_graph_tool]
+    add_package_to_graph_tool[add_package_to_graph_tool]
+    build_graph_from_path_async[build_graph_from_path_async]
+    calculate_cyclomatic_complexity_tool[calculate_cyclomatic_complexity_tool]
+    check_job_status_tool[check_job_status_tool]
+    create_job[create_job]
+    data[data]
+    debug_log[debug_log]
+    delete_repository_from_graph[delete_repository_from_graph]
+    delete_repository_tool[delete_repository_tool]
+    error_logger[error_logger]
+    estimate_processing_time[estimate_processing_time]
+    execute_cypher_query_tool[execute_cypher_query_tool]
+    find_dead_code[find_dead_code]
+    find_dead_code_tool[find_dead_code_tool]
+    find_most_complex_functions[find_most_complex_functions]
+    find_most_complex_functions_tool[find_most_complex_functions_tool]
+    get_cyclomatic_complexity[get_cyclomatic_complexity]
+    get_database_manager[get_database_manager]
+    get_database_status[get_database_status]
+    get_driver[get_driver]
+    get_job[get_job]
+    get_local_package_path[get_local_package_path]
+    is_connected[is_connected]
+    list_indexed_repositories[list_indexed_repositories]
+    list_indexed_repositories_tool[list_indexed_repositories_tool]
+    list_jobs[list_jobs]
+    list_jobs_tool[list_jobs_tool]
+    list_watched_paths[list_watched_paths]
+    list_watched_paths_tool[list_watched_paths_tool]
+    run[run]
+    session[session]
+    unwatch_directory[unwatch_directory]
+    unwatch_directory_tool[unwatch_directory_tool]
+    update_job[update_job]
+    visualize_graph_query_tool[visualize_graph_query_tool]
+    watch_directory[watch_directory]
+    watch_directory_tool[watch_directory_tool]
+    __init__ --> _init_tools
+    __init__ --> get_driver
+    __init__ --> __init__
+    __init__ --> __init__
+    __init__ --> get_database_manager
+    __init__ --> __init__
+    __init__ --> __init__
+    get_database_status --> is_connected
+    execute_cypher_query_tool --> get_driver
+    execute_cypher_query_tool --> session
+    execute_cypher_query_tool --> run
+    execute_cypher_query_tool --> data
+    execute_cypher_query_tool --> data
+    execute_cypher_query_tool --> debug_log
+    find_dead_code_tool --> debug_log
+    find_dead_code_tool --> find_dead_code
+    calculate_cyclomatic_complexity_tool --> debug_log
+    calculate_cyclomatic_complexity_tool --> get_cyclomatic_complexity
+    find_most_complex_functions_tool --> debug_log
+    find_most_complex_functions_tool --> find_most_complex_functions
+    list_indexed_repositories_tool --> debug_log
+    list_indexed_repositories_tool --> list_indexed_repositories
+    delete_repository_tool --> debug_log
+    delete_repository_tool --> delete_repository_from_graph
+    visualize_graph_query_tool --> get_driver
+    visualize_graph_query_tool --> session
+    visualize_graph_query_tool --> run
+    visualize_graph_query_tool --> debug_log
+    list_watched_paths_tool --> list_watched_paths
+    unwatch_directory_tool --> unwatch_directory
+    watch_directory_tool --> list_indexed_repositories_tool
+    watch_directory_tool --> add_code_to_graph_tool
+    watch_directory_tool --> watch_directory
+    watch_directory_tool --> error_logger
+    add_code_to_graph_tool --> list_indexed_repositories_tool
+    add_code_to_graph_tool --> create_job
+    add_code_to_graph_tool --> update_job
+    add_code_to_graph_tool --> debug_log
+    add_code_to_graph_tool --> estimate_processing_time
+    add_code_to_graph_tool --> build_graph_from_path_async
+    add_package_to_graph_tool --> list_indexed_repositories_tool
+    add_package_to_graph_tool --> create_job
+    add_package_to_graph_tool --> update_job
+    add_package_to_graph_tool --> debug_log
+    add_package_to_graph_tool --> get_local_package_path
+    add_package_to_graph_tool --> estimate_processing_time
+    add_package_to_graph_tool --> build_graph_from_path_async
+    check_job_status_tool --> get_job
+    check_job_status_tool --> debug_log
+    list_jobs_tool --> list_jobs
+```

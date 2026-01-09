@@ -29,7 +29,7 @@ Understand the structure, quality, and relationships of your code.
 
 | Command | Arguments | Description |
 | :--- | :--- | :--- |
-| **`cgc analyze calls`** | `<func_name>` <br> `--file` | Shows **outgoing** calls: what functions does this function call? |
+| **`cgc analyze calls`** | `<func_name>` <br> `--file` <br> `--indirect` <br> `--depth` | Shows **outgoing** calls: what functions does this function call? Use `--indirect` to include transitive calls. |
 | **`cgc analyze callers`** | `<func_name>` <br> `--file` | Shows **incoming** calls: who calls this function? |
 | **`cgc analyze chain`** | `<start> <end>` <br> `--depth` | Finds the call path between two functions. Default depth is 5. |
 | **`cgc analyze deps`** | `<module>` <br> `--no-external` | Inspects dependencies (imports and importers) for a module. |

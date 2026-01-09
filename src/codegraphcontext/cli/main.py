@@ -303,6 +303,7 @@ def config_set(
     Examples:
         cgc config set DEFAULT_DATABASE neo4j
         cgc config set INDEX_VARIABLES false
+        cgc config set INDEX_PARAMETERS false
         cgc config set MAX_FILE_SIZE_MB 20
         cgc config set DEBUG_LOGS true
     """
@@ -1157,7 +1158,9 @@ app.add_typer(analyze_app, name="analyze")
 @analyze_app.command("calls")
 def analyze_calls(
     function: str = typer.Argument(..., help="Function name to analyze"),
-    file: Optional[str] = typer.Option(None, "--file", "-f", help="Specific file path")
+    file: Optional[str] = typer.Option(None, "--file", "-f", help="Specific file path"),
+    indirect: bool = typer.Option(False, "--indirect", "-i", help="Show indirect (transitive) calls"),
+    depth: int = typer.Option(3, "--depth", "-d", help="Maximum depth for indirect calls (only used with --indirect)")
 ):
     """
     Show what functions this function calls (callees).
@@ -1165,6 +1168,7 @@ def analyze_calls(
     Example:
         cgc analyze calls process_data
         cgc analyze calls process_data --file src/main.py
+        cgc analyze calls process_data --indirect --depth 5
     """
     _load_credentials()
     services = _initialize_services()
@@ -1173,7 +1177,12 @@ def analyze_calls(
     db_manager, graph_builder, code_finder = services
     
     try:
-        results = code_finder.what_does_function_call(function, file)
+        if indirect:
+            # Use indirect calls with depth
+            results = code_finder.what_does_function_call_indirect(function, file, depth)
+        else:
+            # Use direct calls only
+            results = code_finder.what_does_function_call(function, file)
         
         if not results:
             console.print(f"[yellow]No function calls found for '{function}'[/yellow]")
@@ -1182,6 +1191,8 @@ def analyze_calls(
         table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
         table.add_column("Called Function", style="cyan")
         table.add_column("Location", style="dim", overflow="fold")
+        if indirect:
+            table.add_column("Depth", style="yellow", justify="center")
         table.add_column("Type", style="yellow")
         
         for result in results:
@@ -1189,13 +1200,20 @@ def analyze_calls(
             line_str = str(result.get("called_line_number", ""))
             location_str = f"{file_path}:{line_str}" if line_str else file_path
 
-            table.add_row(
+            row_data = [
                 result.get("called_function", ""),
                 location_str,
-                "📦 Dependency" if result.get("called_is_dependency") else "📝 Project"
-            )
+            ]
+            
+            if indirect:
+                row_data.append(str(result.get("depth", 1)))
+            
+            row_data.append("📦 Dependency" if result.get("called_is_dependency") else "📝 Project")
+            
+            table.add_row(*row_data)
         
-        console.print(f"\n[bold cyan]Function '{function}' calls:[/bold cyan]")
+        mode_str = f" (indirect, depth ≤ {depth})" if indirect else ""
+        console.print(f"\n[bold cyan]Function '{function}' calls{mode_str}:[/bold cyan]")
         console.print(table)
         console.print(f"\n[dim]Total: {len(results)} function(s)[/dim]")
     finally:

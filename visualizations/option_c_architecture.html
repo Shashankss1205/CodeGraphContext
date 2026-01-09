@@ -1,0 +1,276 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Architectural Diagram - CodeGraphContext</title>
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+        
+        #network {
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        .info-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid #4ecdc4;
+            box-shadow: 0 10px 40px rgba(78, 205, 196, 0.4);
+            max-width: 400px;
+        }
+        
+        h1 {
+            margin: 0 0 10px 0;
+            font-size: 1.6em;
+            color: #4ecdc4;
+            text-shadow: 0 0 15px rgba(78, 205, 196, 0.6);
+        }
+        
+        .subtitle {
+            font-size: 0.9em;
+            color: #95e1d3;
+            margin-bottom: 20px;
+        }
+        
+        .stats {
+            background: rgba(78, 205, 196, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #4ecdc4;
+        }
+        
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            font-size: 0.9em;
+        }
+        
+        .stat-label {
+            color: #95e1d3;
+        }
+        
+        .stat-value {
+            color: #fff;
+            font-weight: bold;
+        }
+        
+        .legend {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+        }
+        
+        .legend-title {
+            font-size: 0.85em;
+            color: #4ecdc4;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            font-size: 0.8em;
+        }
+        
+        .legend-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+            background: #4ecdc4;
+        }
+        
+        .help-text {
+            font-size: 0.75em;
+            color: #888;
+            margin-top: 15px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="info-panel">
+        <h1>🏗️ Architecture View</h1>
+        <div class="subtitle">High-Level Module Dependencies</div>
+        
+        <div class="stats">
+            <div class="stat-row">
+                <span class="stat-label">📦 Modules:</span>
+                <span class="stat-value">7</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">🔗 Dependencies:</span>
+                <span class="stat-value">197</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">📄 Total Files:</span>
+                <span class="stat-value">51</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">⚡ Functions:</span>
+                <span class="stat-value">1179</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">🎯 Classes:</span>
+                <span class="stat-value">128</span>
+            </div>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-title">💡 Understanding the View</div>
+            <div class="legend-item">
+                <div class="legend-circle"></div>
+                <span>Node size = complexity (functions + classes)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-circle"></div>
+                <span>Edge thickness = number of imports</span>
+            </div>
+        </div>
+        
+        <div class="help-text">
+            💡 Drag to move • Scroll to zoom • Click for details
+        </div>
+    </div>
+    
+    <div id="network"></div>
+
+    <script type="text/javascript">
+        const nodes = new vis.DataSet([{'id': 0, 'label': 'codegraphcontext', 'title': 'Module: codegraphcontext\\nFiles: 4\\nFunctions: 484\\nClasses: 45', 'value': 1078, 'group': 'module'}, {'id': 1, 'label': 'core', 'title': 'Module: core\\nFiles: 6\\nFunctions: 59\\nClasses: 11', 'value': 160, 'group': 'module'}, {'id': 2, 'label': 'utils', 'title': 'Module: utils\\nFiles: 2\\nFunctions: 17\\nClasses: 1', 'value': 56, 'group': 'module'}, {'id': 3, 'label': 'cli', 'title': 'Module: cli\\nFiles: 6\\nFunctions: 98\\nClasses: 0', 'value': 216, 'group': 'module'}, {'id': 4, 'label': 'tools', 'title': 'Module: tools\\nFiles: 6\\nFunctions: 287\\nClasses: 32', 'value': 658, 'group': 'module'}, {'id': 5, 'label': 'languages', 'title': 'Module: languages\\nFiles: 15\\nFunctions: 222\\nClasses: 27', 'value': 518, 'group': 'module'}, {'id': 6, 'label': 'query_tool_languages', 'title': 'Module: query_tool_languages\\nFiles: 12\\nFunctions: 12\\nClasses: 12', 'value': 68, 'group': 'module'}]);
+        const edges = new vis.DataSet([]);
+        
+        const container = document.getElementById('network');
+        const data = {
+            nodes: nodes,
+            edges: edges
+        };
+        
+        const options = {
+            nodes: {
+                shape: 'box',
+                margin: 10,
+                widthConstraint: {
+                    minimum: 100,
+                    maximum: 200
+                },
+                font: {
+                    color: '#ffffff',
+                    size: 14,
+                    face: 'Segoe UI'
+                },
+                color: {
+                    background: '#4ecdc4',
+                    border: '#2c9a8f',
+                    highlight: {
+                        background: '#95e1d3',
+                        border: '#4ecdc4'
+                    }
+                },
+                borderWidth: 3,
+                shadow: {
+                    enabled: true,
+                    color: 'rgba(78, 205, 196, 0.5)',
+                    size: 10
+                }
+            },
+            edges: {
+                color: {
+                    color: 'rgba(149, 225, 211, 0.6)',
+                    highlight: '#4ecdc4'
+                },
+                width: 2,
+                arrows: {
+                    to: {
+                        enabled: true,
+                        scaleFactor: 0.5
+                    }
+                },
+                smooth: {
+                    type: 'cubicBezier',
+                    forceDirection: 'horizontal',
+                    roundness: 0.4
+                },
+                scaling: {
+                    min: 1,
+                    max: 5
+                }
+            },
+            layout: {
+                // Use force-directed layout instead of hierarchical for better edge visibility
+                randomSeed: 42  // Consistent layout
+            },
+            physics: {
+                enabled: true,
+                forceAtlas2Based: {
+                    gravitationalConstant: -50,
+                    centralGravity: 0.01,
+                    springLength: 200,
+                    springConstant: 0.08,
+                    avoidOverlap: 1
+                },
+                maxVelocity: 50,
+                solver: 'forceAtlas2Based',
+                timestep: 0.35,
+                stabilization: {
+                    enabled: true,
+                    iterations: 200,
+                    updateInterval: 25
+                }
+            },
+            interaction: {
+                hover: true,
+                tooltipDelay: 100,
+                navigationButtons: true,
+                keyboard: true
+            }
+        };
+        
+        const network = new vis.Network(container, data, options);
+        
+        // Debug: Log edges to console
+        console.log('Modules (nodes):', nodes.get());
+        console.log('Dependencies (edges):', edges.get());
+        console.log('Total edges:', edges.length);
+        
+        // Event handlers
+        network.on('click', function(params) {
+            if (params.nodes.length > 0) {
+                const nodeId = params.nodes[0];
+                const node = nodes.get(nodeId);
+                console.log('Selected module:', node);
+                
+                // Highlight connected edges
+                const connectedEdges = network.getConnectedEdges(nodeId);
+                console.log('Connected edges:', connectedEdges);
+            }
+        });
+        
+        network.on('stabilizationIterationsDone', function() {
+            console.log('Network stabilized');
+            // Keep physics enabled for dragging
+            network.setOptions({ physics: { enabled: true, stabilization: false } });
+        });
+    </script>
+</body>
+</html>
+        

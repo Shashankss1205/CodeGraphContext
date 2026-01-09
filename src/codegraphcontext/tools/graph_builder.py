@@ -331,13 +331,17 @@ class GraphBuilder:
                     """
                     session.run(query, file_path=file_path_str, name=item['name'], line_number=item['line_number'], props=item)
                     
+                    # Only create parameter nodes if INDEX_PARAMETERS is enabled
                     if label == 'Function':
-                        for arg_name in item.get('args', []):
-                            session.run("""
-                                MATCH (fn:Function {name: $func_name, file_path: $file_path, line_number: $line_number})
-                                MERGE (p:Parameter {name: $arg_name, file_path: $file_path, function_line_number: $line_number})
-                                MERGE (fn)-[:HAS_PARAMETER]->(p)
-                            """, func_name=item['name'], file_path=file_path_str, line_number=item['line_number'], arg_name=arg_name)
+                        index_parameters = get_config_value('INDEX_PARAMETERS')
+                        if index_parameters and index_parameters.lower() == 'true':
+                            for arg_name in item.get('args', []):
+                                session.run("""
+                                    MATCH (fn:Function {name: $func_name, file_path: $file_path, line_number: $line_number})
+                                    MERGE (p:Parameter {name: $arg_name, file_path: $file_path, function_line_number: $line_number})
+                                    MERGE (fn)-[:HAS_PARAMETER]->(p)
+                                """, func_name=item['name'], file_path=file_path_str, line_number=item['line_number'], arg_name=arg_name)
+
 
             # --- NEW: persist Ruby Modules ---
             for m in file_data.get('modules', []):
