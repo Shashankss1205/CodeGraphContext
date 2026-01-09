@@ -10,7 +10,7 @@ The visualizations are standalone HTML files that can be opened in any browser.
 
 import html
 import json
-import os
+import uuid
 import webbrowser
 from datetime import datetime
 from pathlib import Path
@@ -19,11 +19,8 @@ from rich.console import Console
 
 console = Console(stderr=True)
 
-# Visualization types
-VizType = Literal["call_graph", "call_chain", "dependency", "inheritance_tree", "override_tree", "generic"]
 
-
-def escape_html(text: str) -> str:
+def escape_html(text: Any) -> str:
     """Safely escape HTML special characters to prevent XSS."""
     if text is None:
         return ""
@@ -39,8 +36,27 @@ def get_visualization_dir() -> Path:
 
 def generate_filename(prefix: str = "cgc_viz") -> str:
     """Generate a unique filename with timestamp."""
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    return f"{prefix}_{timestamp}.html"
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+    unique = uuid.uuid4().hex[:8]
+    return f"{prefix}_{timestamp}_{unique}.html"
+
+
+def _json_for_inline_script(data: Any) -> str:
+    """Serialize to JSON safe to embed directly inside a <script> tag.
+
+    Prevents script-breaking sequences like </script> from terminating the script.
+    """
+    raw = json.dumps(
+        data,
+        ensure_ascii=False,
+        separators=(",", ":"),
+        default=str,
+    )
+    # Mitigate XSS via breaking out of script context.
+    raw = raw.replace("</", "<\\/")
+    raw = raw.replace("<!--", "<\\!--")
+    raw = raw.replace("\u2028", "\\u2028").replace("\u2029", "\\u2029")
+    return raw
 
 
 def get_node_color(node_type: str) -> Dict[str, str]:
@@ -149,6 +165,15 @@ def generate_html_template(
     # Escape user-provided content to prevent XSS
     safe_title = escape_html(title)
     safe_description = escape_html(description)
+
+    # Escape tooltip HTML (vis-network treats title as HTML)
+    safe_nodes: List[Dict[str, Any]] = []
+    for node in nodes:
+        node_copy = dict(node)
+        if "title" in node_copy:
+            node_copy["title"] = escape_html(node_copy.get("title", ""))
+        safe_nodes.append(node_copy)
+    safe_edges: List[Dict[str, Any]] = [dict(edge) for edge in edges]
     
     html_content = f"""<!DOCTYPE html>
 <html>
@@ -297,8 +322,8 @@ def generate_html_template(
     </div>
 
     <script type="text/javascript">
-        var nodesData = {json.dumps(nodes)};
-        var edgesData = {json.dumps(edges)};
+        var nodesData = {_json_for_inline_script(safe_nodes)};
+        var edgesData = {_json_for_inline_script(safe_edges)};
 
         var nodes = new vis.DataSet(nodesData);
         var edges = new vis.DataSet(edgesData);
@@ -369,7 +394,18 @@ def generate_html_template(
             var color = node && node.color ? node.color.background : '#97c2fc';
             var item = document.createElement('div');
             item.className = 'legend-item';
-            item.innerHTML = '<div class="legend-color" style="background:' + color + '"></div><span>' + group + '</span>';
+
+            var colorBox = document.createElement('div');
+            colorBox.className = 'legend-color';
+            if (color) {{
+                colorBox.style.background = color;
+            }}
+
+            var label = document.createElement('span');
+            label.textContent = String(group);
+
+            item.appendChild(colorBox);
+            item.appendChild(label);
             legendContainer.appendChild(item);
         }});
 
@@ -979,15 +1015,9 @@ def visualize_cypher_results(
                             })
                             seen_nodes.add(str(node_id))
 
-    # If we have few nodes, try to infer edges from paths
-    if len(nodes) > 1:
-        node_ids = [n["id"] for n in nodes]
-        for i in range(len(node_ids) - 1):
-            edges.append({
-                "from": node_ids[i],
-                "to": node_ids[i + 1],
-                "arrows": "to"
-            })
+    # NOTE: We intentionally do not infer edges when the Cypher query doesn't
+    # explicitly return relationships. Auto-linking sequential nodes can be
+    # misleading when the result set contains unrelated nodes.
 
     title = "Cypher Query Results"
     # Truncate query for description

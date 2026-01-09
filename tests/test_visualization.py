@@ -9,10 +9,6 @@ These tests verify that:
 - Edge cases are handled gracefully
 """
 
-import pytest
-import os
-import json
-import tempfile
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 from typer.testing import CliRunner
@@ -85,11 +81,11 @@ class TestVisualizerUtilities:
     
     def test_escape_html_none(self):
         """Test escape_html handles None."""
-        assert escape_html(None) == ""
+        assert escape_html(None) == ""  # type: ignore[arg-type]
     
     def test_escape_html_non_string(self):
         """Test escape_html handles non-string types."""
-        assert escape_html(123) == "123"
+        assert escape_html(123) == "123"  # type: ignore[arg-type]
     
     def test_safe_json_dumps_basic(self):
         """Test _safe_json_dumps handles normal dicts."""
@@ -514,6 +510,17 @@ class TestHtmlOutputValidation:
         assert "<!DOCTYPE html>" in html
         # JSON encoding should handle special chars
         assert "nodesData" in html
+
+    def test_html_xss_protection_in_nodesdata_script_breakout(self):
+        """Test that </script> in node labels cannot break out of inline script."""
+        malicious = "</script><script>alert('XSS')</script>"
+        nodes = [{"id": "1", "label": malicious, "group": "Function"}]
+        html = generate_html_template(nodes, [], "XSS Nodes Test")
+        # Exact breakout payload should never appear in generated HTML.
+        assert malicious not in html
+        # Ensure we actually applied the inline-script JSON escaping.
+        assert "<\\/script>" in html
+
     def test_html_xss_protection_in_title(self):
         """Test that title is properly escaped to prevent XSS attacks."""
         nodes = [{"id": "1", "label": "test", "group": "Test"}]

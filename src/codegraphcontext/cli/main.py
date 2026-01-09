@@ -56,7 +56,6 @@ from .visualizer import (
     visualize_inheritance_tree,
     visualize_overrides,
     visualize_search_results,
-    visualize_cypher_results,
     check_visual_flag,
 )
 
