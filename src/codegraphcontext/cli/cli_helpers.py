@@ -227,6 +227,39 @@ def cypher_helper(query: str):
         db_manager.close_driver()
 
 
+def cypher_helper_visual(query: str):
+    """Executes a read-only Cypher query and visualizes the results."""
+    from .visualizer import visualize_cypher_results
+    
+    services = _initialize_services()
+    if not all(services):
+        return
+
+    db_manager, _, _ = services
+    
+    # Replicating safety checks from MCPServer
+    forbidden_keywords = ['CREATE', 'MERGE', 'DELETE', 'SET', 'REMOVE', 'DROP', 'CALL apoc']
+    if any(keyword in query.upper() for keyword in forbidden_keywords):
+        console.print("[bold red]Error: This command only supports read-only queries.[/bold red]")
+        db_manager.close_driver()
+        return
+
+    try:
+        with db_manager.get_driver().session() as session:
+            result = session.run(query)
+            records = [record.data() for record in result]
+            
+            if not records:
+                console.print("[yellow]No results to visualize.[/yellow]")
+                return  # finally block will close driver
+            
+            visualize_cypher_results(records, query)
+    except Exception as e:
+        console.print(f"[bold red]An error occurred while executing query:[/bold red] {e}")
+    finally:
+        db_manager.close_driver()
+
+
 import webbrowser
 
 def visualize_helper(query: str):
