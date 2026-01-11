@@ -1,8 +1,18 @@
+html,
+body {
+  width: 100%;
+  overflow-x: hidden;
+}
+#root {
+  width: 100%;
+  overflow-x: hidden;
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* CodeGraphContext Design System - Dark theme with graph-inspired colors */
+
 
 @layer base {
   :root {
