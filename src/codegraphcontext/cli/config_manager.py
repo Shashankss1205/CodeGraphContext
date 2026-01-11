@@ -315,8 +315,29 @@ def reset_config():
     console.print("[cyan]Note: Database credentials were preserved[/cyan]")
 
 
+
+def ensure_config_file():
+    """
+    Create default .env config file on first run if it does not exist.
+    """
+    ensure_config_dir()
+
+    if CONFIG_FILE.exists():
+        return False  # file already exists
+
+    save_config(DEFAULT_CONFIG.copy(), preserve_db_credentials=False)
+    return True  # file was created
+
+
+
+
 def show_config():
     """Display current configuration in a nice table."""
+    created = ensure_config_file()
+    if created:
+        console.print(
+            f"[green]🆕 Created default configuration at {CONFIG_FILE}[/green]\n"
+        )
     config = load_config()
     
     # Separate database credentials from configuration
