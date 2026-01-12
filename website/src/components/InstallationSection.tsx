@@ -1,3 +1,13 @@
+const CommandBlock = ({ children }: { children: string }) => {
+  return (
+    <pre className="bg-muted/80 px-4 py-2 rounded font-mono text-accent shadow-inner max-w-full overflow-x-auto">
+      <code className="whitespace-pre-wrap break-words">
+        {children}
+      </code>
+    </pre>
+  );
+};
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -94,9 +104,9 @@ const InstallationSection = () => {
             </CardHeader>
             <CardContent>
               <div className="flex justify-center mb-2">
-                <pre className="bg-muted/80 px-4 py-2 rounded font-mono text-accent text-lg shadow-inner w-fit mx-auto">
-                  <code>$ pip install codegraphcontext</code>
-                </pre>
+                <CommandBlock>$ pip install codegraphcontext</CommandBlock>
+
+
               </div>
             </CardContent>
           </Card>
@@ -170,9 +180,8 @@ const InstallationSection = () => {
                     <CardTitle className="text-base font-semibold text-left">Index your current directory</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <pre className="bg-muted/80 px-3 py-1 rounded font-mono text-accent text-sm shadow-inner w-fit mx-auto mb-2">
-                      <code>cgc index .</code>
-                    </pre>
+                    <CommandBlock>cgc index .</CommandBlock>
+
                   </CardContent>
                 </Card>
                 {/* Card 2 */}
@@ -181,9 +190,8 @@ const InstallationSection = () => {
                     <CardTitle className="text-base font-semibold text-left">List all indexed repositories</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <pre className="bg-muted/80 px-3 py-1 rounded font-mono text-accent text-sm shadow-inner w-fit mx-auto mb-2">
-                      <code>cgc list</code>
-                    </pre>
+                    <CommandBlock>cgc list</CommandBlock>
+
                   </CardContent>
                 </Card>
                 {/* Card 3 */}
@@ -192,18 +200,16 @@ const InstallationSection = () => {
                     <CardTitle className="text-base font-semibold text-left">See all commands</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <pre className="bg-muted/80 px-3 py-1 rounded font-mono text-accent text-sm shadow-inner w-fit mx-auto mb-2">
-                      <code>cgc help</code>
-                    </pre>
+                   <CommandBlock>cgc help</CommandBlock>
+
                   </CardContent>
                 </Card>
               </div>
             </CardContent>
             <div className="mt-4 text-left max-w-lg ml-8 mb-8">
                   <span className="font-semibold text-muted-foreground">Ex:</span>
-                  <pre className="bg-muted/80 px-4 py-2 rounded font-mono text-accent text-base shadow-inner w-fit mt-2">
-    {`cgc analyze callers my_function`}
-                  </pre>
+                  <CommandBlock>cgc analyze callers my_function</CommandBlock>
+
                 </div>
 
             <div className="mt-3 mb-6">
@@ -242,9 +248,8 @@ const InstallationSection = () => {
                     <CardTitle className="text-base font-semibold text-left"> Run the MCP setup wizard to configure:</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <pre className="bg-muted/80 px-3 py-1 rounded font-mono text-accent text-sm shadow-inner w-fit mx-auto mb-2">
-                      <code>cgc mcp setup</code>
-                    </pre>
+                    <CommandBlock>cgc mcp setup</CommandBlock>
+
 
                   </CardContent>
                 </Card>
@@ -255,9 +260,8 @@ const InstallationSection = () => {
                     <CardTitle className="text-base font-semibold text-left">Launch the MCP server:</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <pre className="bg-muted/80 px-3 py-1 rounded font-mono text-accent text-sm shadow-inner w-fit mx-auto mb-2">
-                      <code>cgc mcp start</code>
-                    </pre>
+                    <CommandBlock>cgc mcp start</CommandBlock>
+
                   </CardContent>
                 </Card>
               </div>
