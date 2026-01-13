@@ -50,7 +50,7 @@ logging.getLogger("asyncio").setLevel(logging.WARNING)
 # Initialize the Typer app and Rich console for formatted output.
 app = typer.Typer(
     name="cgc",
-    help="CodeGraphContext: An MCP server for AI-powered code analysis.",
+    help="CodeGraphContext: An MCP server for AI-powered code analysis.\n\n[DEPRECATED] 'cgc start' is deprecated. Use 'cgc mcp start' instead.",
     add_completion=True,
 )
 console = Console(stderr=True)
@@ -493,10 +493,7 @@ def doctor():
 @app.command()
 def start():
     """
-    Start the MCP server.
-    
-    [yellow]⚠️  Deprecated: Use 'cgc mcp start' instead.[/yellow]
-    This command will be removed in a future version.
+    [DEPRECATED] Use 'cgc mcp start' instead. This command will be removed in a future version.
     """
     console.print("[yellow]⚠️  'cgc start' is deprecated. Use 'cgc mcp start' instead.[/yellow]")
     mcp_start()
