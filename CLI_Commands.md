@@ -58,7 +58,16 @@ Manage your environment and database connections.
 | **`cgc config reset`** | None | Resets configuration to defaults. |
 | **`cgc config db`** | `<backend>` | Quick switch between `neo4j` and `falkordb`. |
 
-## 6. Utilities & Runtime
+## 6. Bundle Management
+Create and load pre-indexed graph snapshots for instant context.
+
+| Command | Arguments | Description |
+| :--- | :--- | :--- |
+| **`cgc bundle export`** | `<output>` <br> `--repo` <br> `--no-stats` | Exports the graph to a portable .cgc bundle file. Use `--repo` to export a specific repository. <br> *(Alias: `cgc export`)* |
+| **`cgc bundle import`** | `<bundle>` <br> `--clear` | Imports a .cgc bundle into the database. Use `--clear` to replace existing data. |
+| **`cgc bundle load`** | `<bundle>` <br> `--clear` | Loads a bundle (downloads if needed). <br> *(Alias: `cgc load`)* |
+
+## 7. Utilities & Runtime
 Helper commands for developers and the MCP server.
 
 | Command | Arguments | Description |
@@ -171,3 +180,39 @@ cgc index .      # Start indexing
     - Press `Ctrl+C` in the watch terminal
     
 **💡 Tip:** This is perfect for active development sessions where you want your AI assistant to always have the latest code context!
+
+### Scenario G: Using Pre-indexed Bundles
+1.  **Download a pre-indexed bundle:**
+    ```bash
+    # Download from GitHub Releases
+    wget https://github.com/Shashankss1205/CodeGraphContext/releases/latest/download/numpy-1.26.4.cgc
+    ```
+2.  **Load it instantly:**
+    ```bash
+    cgc load numpy-1.26.4.cgc
+    ```
+3.  **Start querying immediately:**
+    ```bash
+    cgc find name linalg
+    cgc analyze deps numpy.linalg
+    ```
+
+**💡 Tip:** Bundles let you skip the indexing step entirely! Perfect for exploring famous libraries or sharing pre-analyzed codebases.
+
+### Scenario H: Creating Your Own Bundle
+1.  **Index your project:**
+    ```bash
+    cgc index /path/to/my-project
+    ```
+2.  **Export to bundle:**
+    ```bash
+    cgc export my-project.cgc --repo /path/to/my-project
+    ```
+3.  **Share with your team:**
+    ```bash
+    # Upload to GitHub Releases, S3, or share directly
+    # Others can load it with:
+    cgc load my-project.cgc
+    ```
+
+**💡 Tip:** Great for onboarding new team members or sharing analysis results!
