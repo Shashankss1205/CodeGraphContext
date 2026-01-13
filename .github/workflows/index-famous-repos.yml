@@ -11,6 +11,9 @@ on:
     # Run weekly on Sunday at 00:00 UTC
     - cron: '0 0 * * 0'
 
+permissions:
+  contents: write  # Required to create releases
+
 jobs:
   index-and-release:
     runs-on: ubuntu-latest
@@ -169,6 +172,15 @@ jobs:
         id: date
         run: echo "date=$(date +%Y%m%d)" >> $GITHUB_OUTPUT
       
+      - name: Prepare bundle files
+        run: |
+          echo "Downloaded artifacts:"
+          ls -la bundles/
+          echo "Moving .cgc files to bundles root..."
+          find bundles -name "*.cgc" -exec mv {} bundles/ \;
+          echo "Final bundle files:"
+          ls -la bundles/*.cgc || echo "No .cgc files found!"
+      
       - name: Create release
         uses: softprops/action-gh-release@v1
         with:
@@ -221,7 +233,7 @@ jobs:
             
             Generated: ${{ steps.date.outputs.date }}
             Commit: ${{ github.sha }}
-          files: bundles/**/*.cgc
+          files: bundles/*.cgc
           draft: false
           prerelease: false
         env:
