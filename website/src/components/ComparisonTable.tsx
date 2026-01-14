@@ -99,7 +99,7 @@ const StatusBadge = ({ status, text }: { status: string; text: string }) => {
       <Badge
         className={`
           ${getStatusStyles()}
-          border-2 font-medium text-[0.6rem] sm:text-[0.65rem] px-2.5 sm:px-3 py-1.5 sm:py-1 
+          border-2 font-medium text-[0.6rem] sm:text-[0.65rem] px-2.5 sm:px-3 py-1 sm:py-1.5 
           backdrop-blur-sm relative overflow-hidden
           transition-all duration-300 hover:shadow-xl whitespace-nowrap
         `}
@@ -199,7 +199,7 @@ export default function ComparisonTable() {
             {/* Scrollable table wrapper */}
             <div className="overflow-x-auto rounded-3xl -mx-1 sm:mx-0">
               <div className="inline-block min-w-full align-middle">
-                <table className="w-full min-w-[640px] md:min-w-full table-auto">
+                <table className="w-full min-w-[600px] md:min-w-full table-auto">
                   <thead>
                     <tr className="border-b border-border/20 bg-gradient-to-r from-secondary/10 via-secondary/5 to-secondary/10 backdrop-blur-sm">
                       <th className="p-3 sm:p-4 text-left font-bold text-foreground text-xs sm:text-sm">
