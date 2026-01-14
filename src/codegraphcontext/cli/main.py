@@ -62,7 +62,7 @@ from .visualizer import (
 # Initialize the Typer app and Rich console for formatted output.
 app = typer.Typer(
     name="cgc",
-    help="CodeGraphContext: An MCP server for AI-powered code analysis.",
+    help="CodeGraphContext: An MCP server for AI-powered code analysis.\n\n[DEPRECATED] 'cgc start' is deprecated. Use 'cgc mcp start' instead.",
     add_completion=True,
 )
 console = Console(stderr=True)
@@ -263,8 +263,15 @@ def _load_credentials():
     else:
         console.print("[yellow]No configuration file found. Using defaults.[/yellow]")
     
+    
     # Show which database is actually being used
-    default_db = os.environ.get("DEFAULT_DATABASE", "falkordb").lower()
+    # Check for runtime override first (from -db/--database flag)
+    runtime_db = os.environ.get("CGC_RUNTIME_DB_TYPE")
+    if runtime_db:
+        default_db = runtime_db.lower()
+    else:
+        default_db = os.environ.get("DEFAULT_DATABASE", "falkordb").lower()
+    
     if default_db == "neo4j":
         has_neo4j_creds = all([
             os.environ.get("NEO4J_URI"),
@@ -277,6 +284,7 @@ def _load_credentials():
             console.print("[yellow]⚠ DEFAULT_DATABASE=neo4j but credentials not found. Falling back to FalkorDB.[/yellow]")
     else:
         console.print("[cyan]Using database: FalkorDB[/cyan]")
+
 
 
 # ============================================================================
@@ -344,6 +352,169 @@ def config_db(backend: str = typer.Argument(..., help="Database backend: 'neo4j'
     
     config_manager.set_config_value("DEFAULT_DATABASE", backend)
     console.print(f"[green]✔ Default database switched to {backend}[/green]")
+
+# ============================================================================
+# BUNDLE COMMAND GROUP - Pre-indexed Graph Snapshots
+# ============================================================================
+
+bundle_app = typer.Typer(help="Create and load pre-indexed graph bundles")
+app.add_typer(bundle_app, name="bundle")
+
+@bundle_app.command("export")
+def bundle_export(
+    output: str = typer.Argument(..., help="Output path for the .cgc bundle file"),
+    repo: Optional[str] = typer.Option(None, "--repo", "-r", help="Specific repository path to export (default: export all)"),
+    no_stats: bool = typer.Option(False, "--no-stats", help="Skip statistics generation")
+):
+    """
+    Export the current graph to a portable .cgc bundle.
+    
+    Creates a pre-indexed graph snapshot that can be distributed and loaded
+    instantly without re-indexing. Perfect for sharing famous repositories.
+    
+    Examples:
+        cgc bundle export numpy.cgc --repo /path/to/numpy
+        cgc bundle export my-project.cgc
+        cgc bundle export all-repos.cgc --no-stats
+    """
+    _load_credentials()
+    from codegraphcontext.core.cgc_bundle import CGCBundle
+    
+    services = _initialize_services()
+    if not all(services):
+        return
+    db_manager, graph_builder, code_finder = services
+    
+    try:
+        output_path = Path(output)
+        repo_path = Path(repo).resolve() if repo else None
+        
+        console.print(f"[cyan]Exporting graph to {output_path}...[/cyan]")
+        if repo_path:
+            console.print(f"[dim]Repository: {repo_path}[/dim]")
+        else:
+            console.print(f"[dim]Exporting all repositories[/dim]")
+        
+        bundle = CGCBundle(db_manager)
+        success, message = bundle.export_to_bundle(
+            output_path,
+            repo_path=repo_path,
+            include_stats=not no_stats
+        )
+        
+        if success:
+            console.print(f"[bold green]{message}[/bold green]")
+        else:
+            console.print(f"[bold red]Export failed: {message}[/bold red]")
+            raise typer.Exit(code=1)
+    
+    finally:
+        db_manager.close_driver()
+
+@bundle_app.command("import")
+def bundle_import(
+    bundle_file: str = typer.Argument(..., help="Path to the .cgc bundle file to import"),
+    clear: bool = typer.Option(False, "--clear", help="Clear existing graph data before importing")
+):
+    """
+    Import a .cgc bundle into the current database.
+    
+    Loads a pre-indexed graph snapshot into your database. Use --clear to
+    replace all existing data with the bundle contents.
+    
+    Examples:
+        cgc bundle import numpy.cgc
+        cgc bundle import my-project.cgc --clear
+    """
+    _load_credentials()
+    from codegraphcontext.core.cgc_bundle import CGCBundle
+    
+    services = _initialize_services()
+    if not all(services):
+        return
+    db_manager, graph_builder, code_finder = services
+    
+    try:
+        bundle_path = Path(bundle_file)
+        
+        if not bundle_path.exists():
+            console.print(f"[bold red]Bundle file not found: {bundle_path}[/bold red]")
+            raise typer.Exit(code=1)
+        
+        if clear:
+            console.print("[yellow]⚠️  Warning: This will clear all existing graph data![/yellow]")
+            if not typer.confirm("Are you sure you want to continue?", default=False):
+                console.print("[yellow]Import cancelled[/yellow]")
+                return
+        
+        console.print(f"[cyan]Importing bundle from {bundle_path}...[/cyan]")
+        
+        bundle = CGCBundle(db_manager)
+        success, message = bundle.import_from_bundle(
+            bundle_path,
+            clear_existing=clear
+        )
+        
+        if success:
+            console.print(f"[bold green]{message}[/bold green]")
+        else:
+            console.print(f"[bold red]Import failed: {message}[/bold red]")
+            raise typer.Exit(code=1)
+    
+    finally:
+        db_manager.close_driver()
+
+@bundle_app.command("load")
+def bundle_load(
+    bundle_name: str = typer.Argument(..., help="Bundle name or path to load (e.g., 'numpy' or 'numpy.cgc')"),
+    clear: bool = typer.Option(False, "--clear", help="Clear existing graph data before loading")
+):
+    """
+    Load a pre-indexed bundle (download if needed, then import).
+    
+    This is a convenience command that will:
+    1. Check if the bundle exists locally
+    2. Download from registry if not found (future feature)
+    3. Import the bundle into the database
+    
+    Examples:
+        cgc load numpy
+        cgc load numpy.cgc --clear
+    """
+    _load_credentials()
+    
+    # For now, this is just an alias for import
+    # In the future, this will support downloading from a registry
+    
+    bundle_path = Path(bundle_name)
+    if not bundle_path.suffix:
+        bundle_path = Path(f"{bundle_name}.cgc")
+    
+    if not bundle_path.exists():
+        console.print(f"[yellow]Bundle '{bundle_name}' not found locally.[/yellow]")
+        console.print("[dim]Registry download not yet implemented. Please provide a local .cgc file.[/dim]")
+        console.print(f"[dim]Usage: cgc bundle load /path/to/{bundle_path.name}[/dim]")
+        raise typer.Exit(code=1)
+    
+    # Call import
+    bundle_import(str(bundle_path), clear=clear)
+
+# Shortcut commands at root level
+@app.command("export", rich_help_panel="Bundle Shortcuts")
+def export_shortcut(
+    output: str = typer.Argument(..., help="Output path for the .cgc bundle file"),
+    repo: Optional[str] = typer.Option(None, "--repo", "-r", help="Specific repository path to export")
+):
+    """Shortcut for 'cgc bundle export'"""
+    bundle_export(output, repo, False)
+
+@app.command("load", rich_help_panel="Bundle Shortcuts")
+def load_shortcut(
+    bundle_name: str = typer.Argument(..., help="Bundle name or path to load"),
+    clear: bool = typer.Option(False, "--clear", help="Clear existing graph data before loading")
+):
+    """Shortcut for 'cgc bundle load'"""
+    bundle_load(bundle_name, clear)
 
 # ============================================================================
 # DOCTOR DIAGNOSTIC COMMAND
@@ -497,10 +668,7 @@ def doctor():
 @app.command()
 def start():
     """
-    Start the MCP server.
-    
-    [yellow]⚠️  Deprecated: Use 'cgc mcp start' instead.[/yellow]
-    This command will be removed in a future version.
+    [DEPRECATED] Use 'cgc mcp start' instead. This command will be removed in a future version.
     """
     console.print("[yellow]⚠️  'cgc start' is deprecated. Use 'cgc mcp start' instead.[/yellow]")
     mcp_start()
@@ -1419,20 +1587,6 @@ def analyze_dependencies(
                     location_str
                 )
             console.print(table)
-        
-        # Show what this module imports
-        if results.get('imports'):
-            console.print(f"\n[bold cyan]Modules imported by '{target}':[/bold cyan]")
-            table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
-            table.add_column("Module", style="cyan")
-            table.add_column("Alias", style="yellow")
-            
-            for imp in results['imports']:
-                table.add_row(
-                    imp.get('imported_module', ''),
-                    imp.get('import_alias', '') or "-"
-                )
-            console.print(table)
     finally:
         db_manager.close_driver()
 
@@ -1829,7 +1983,7 @@ def main(
     database: Optional[str] = typer.Option(
         None, 
         "--database", 
-        "-d", 
+        "-db", 
         help="[Global] Temporarily override database backend (falkordb or neo4j) for any command"
     ),
     visual: bool = typer.Option(

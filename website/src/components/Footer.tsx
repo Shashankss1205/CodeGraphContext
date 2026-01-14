@@ -237,14 +237,14 @@ const Footer = () => {
           {/* Right Side: Contact + Newsletter */}
           <div className="flex-1 flex flex-col sm:flex-row gap-12">
             {/* Contact */}
-            <div className="w-56">
+            <div className="w-full sm:w-64 lg:w-72">
               <h4 className="font-semibold mb-4">Contact</h4>
               <div className="space-y-5 text-muted-foreground">
-                <div className="flex items-start gap-3">
-                  <Mail className="h-5 w-5 mt-1 text-primary" />
+                <div className="flex items-center gap-3">
+                  <Mail className="h-5 w-5 text-primary shrink-0" />
                   <a
                     href="mailto:shashankshekharsingh1205@gmail.com"
-                    className="hover:text-foreground transition-smooth text-sm break-all"
+                    className="hover:text-foreground transition-smooth text-sm whitespace-nowrap"
                   >
                     shashankshekharsingh1205@gmail.com
                   </a>

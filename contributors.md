@@ -57,7 +57,7 @@ This file is auto-generated. Do not edit manually.
 
 | Rank | Contributor | Commits | Lines Added | Lines Deleted | Link to Contributions |
 |---|---|---|---|---|---|
-| 1 | Shashank Shekhar Singh | 5 | 43 | 23 | [python.py](https://github.com/Shashankss1205/CodeGraphContext/commits/main/src/codegraphcontext/tools/languages/python.py?author=Shashankshekharsingh1205@gmail.com) |
+| 1 | Shashank Shekhar Singh | 6 | 140 | 24 | [python.py](https://github.com/Shashankss1205/CodeGraphContext/commits/main/src/codegraphcontext/tools/languages/python.py?author=Shashankshekharsingh1205@gmail.com) |
 | 2 | Shashankss1205 | 4 | 488 | 34 | [python.py](https://github.com/Shashankss1205/CodeGraphContext/commits/main/src/codegraphcontext/tools/languages/python.py?author=shashankshekharsingh1205@gmail.com) |
 
 

@@ -16,9 +16,9 @@ export default function SocialMentionsTimeline() {
     { name: "MCPHunt", url: "https://mcp-hunt.com/mcp/server/codegraphcontext", icon: <FaRegNewspaper />, color: "#6366F1", button: "See on MCPHunt" },
     { name: "StackerNews", url: "https://stacker.news/items/1227191", icon: <FaStackOverflow />, color: "#F48024", button: "See on StackerNews" },
     { name: "Glama.ai", url: "https://glama.ai/mcp/servers/@Shashankss1205/CodeGraphContext/blob/a346d340d8f705ce93626b4b322dd0e2823ba46b/src/codegraphcontext/core/jobs.py", icon: <FaGlobe />, color: "#00B6F0", button: "See on Glama.ai" },
-    { name: "Github", url: "https://github.com/punkpeye/awesome-mcp-servers?tab=readme-ov-file#coding-agents", icon: <FaGithub />, color: "#FFFFFF", button: "See on GitHub" },
+    { name: "Github", url: "https://github.com/punkpeye/awesome-mcp-servers?tab=readme-ov-file#coding-agents", icon: <FaGithub />, button: "See on GitHub" },
     { name: "Mcpservers.org", url: "https://mcpservers.org/servers/shashankss1205/codegraphcontext", icon: <FaGlobe />, color: "#00B6F0", button: "See on Mcpservers.org" },
-    { name: "Skyworks", url: "https://skywork.ai/skypage/en/codegraph-smart-code-companion/1978349276941164544", icon: <SiVercel />, color: "#FFFFFF", button: "See on Skyworks" },
+    { name: "Skyworks", url: "https://skywork.ai/skypage/en/codegraph-smart-code-companion/1978349276941164544", icon: <SiVercel />, button: "See on Skyworks" },
     { name: "Reddit Announcement", url: "https://www.reddit.com/r/mcp/comments/1o22gc5/i_built_codegraphcontext_an_mcp_server_that/", icon: <FaReddit />, color: "#FF5700", button: "See Reddit post" },
   ];
   return (
@@ -49,7 +49,7 @@ export default function SocialMentionsTimeline() {
                     style={{ textDecoration: 'none' }}
                   >
                     <div className="flex items-center gap-3 mb-2">
-                      <span className="text-2xl transition-colors" style={{ color: rowLinks[0].color }}>{rowLinks[0].icon}</span>
+                      <span className={`text-2xl transition-colors ${rowLinks[0].name === "Github" || rowLinks[0].name === "Skyworks"? "text-black dark:text-white": ""}`}style={rowLinks[0].name !== "Github" && rowLinks[0].name !== "Skyworks"? { color: rowLinks[0].color }: {}}>{rowLinks[0].icon}</span>
                       <span className="font-semibold text-lg text-foreground group-hover:text-primary transition-colors">{rowLinks[0].name}</span>
                     </div>
                     <div className="flex justify-center mt-4">
@@ -75,7 +75,7 @@ export default function SocialMentionsTimeline() {
                     style={{ textDecoration: 'none' }}
                   >
                     <div className="flex items-center gap-3 mb-2">
-                      <span className="text-2xl transition-colors" style={{ color: rowLinks[1].color }}>{rowLinks[1].icon}</span>
+                      <span className={`text-2xl transition-colors ${rowLinks[1].name === "Github" || rowLinks[1].name === "Skyworks"? "text-black dark:text-white": ""}`}style={rowLinks[1].name !== "Github" && rowLinks[1].name !== "Skyworks"? { color: rowLinks[1].color }: {}}>{rowLinks[1].icon}</span>
                       <span className="font-semibold text-lg text-foreground group-hover:text-primary transition-colors">{rowLinks[1].name}</span>
                     </div>
                     <div className="flex justify-center mt-4">
@@ -103,7 +103,7 @@ export default function SocialMentionsTimeline() {
                       style={{ textDecoration: 'none' }}
                     >
                       <div className="flex items-center gap-3 mb-2">
-                        <span className="text-2xl transition-colors" style={{ color: link.color }}>{link.icon}</span>
+                        <span className={`text-2xl transition-colors ${link.name === "Github" || link.name === "Skyworks"? "text-black dark:text-white": ""}`}style={link.name !== "Github" && link.name !== "Skyworks"? { color: link.color }: {}}>{link.icon}</span>
                         <span className="font-semibold text-lg text-foreground group-hover:text-primary transition-colors">{link.name}</span>
                       </div>
                       <div className="flex justify-center mt-4">
@@ -132,7 +132,7 @@ export default function SocialMentionsTimeline() {
                       style={{ textDecoration: 'none' }}
                     >
                       <div className="flex items-center gap-3 mb-2">
-                        <span className="text-2xl transition-colors" style={{ color: link.color }}>{link.icon}</span>
+                        <span className={`text-2xl transition-colors ${link.name === "Github" || link.name === "Skyworks"? "text-black dark:text-white": ""}`}style={link.name !== "Github" && link.name !== "Skyworks"? { color: link.color }: {}}>{link.icon}</span>
                         <span className="font-semibold text-lg text-foreground group-hover:text-primary transition-colors">{link.name}</span>
                       </div>
                       <div className="flex justify-center mt-4">

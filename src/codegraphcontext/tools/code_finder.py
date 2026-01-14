@@ -237,7 +237,6 @@ class CodeFinder:
                         call.line_number as call_line_number,
                         call.args as call_args,
                         call.full_call_name as full_call_name,
-                        call.call_type as call_type,
                         target.file_path as target_file_path
                     ORDER BY caller.is_dependency ASC, caller.file_path, caller.line_number
                     LIMIT 20
@@ -258,7 +257,6 @@ class CodeFinder:
                             call.line_number as call_line_number,
                             call.args as call_args,
                             call.full_call_name as full_call_name,
-                            call.call_type as call_type,
                             target.file_path as target_file_path
                         ORDER BY caller.is_dependency ASC, caller.file_path, caller.line_number
                         LIMIT 20
@@ -278,7 +276,6 @@ class CodeFinder:
                         call.line_number as call_line_number,
                         call.args as call_args,
                         call.full_call_name as full_call_name,
-                        call.call_type as call_type,
                         target.file_path as target_file_path
                     ORDER BY caller.is_dependency ASC, caller.file_path, caller.line_number
                     LIMIT 20
@@ -305,8 +302,7 @@ class CodeFinder:
                         called.is_dependency as called_is_dependency,
                         call.line_number as call_line_number,
                         call.args as call_args,
-                        call.full_call_name as full_call_name,
-                        call.call_type as call_type
+                        call.full_call_name as full_call_name
                     ORDER BY called.is_dependency ASC, called.name
                     LIMIT 20
                 """, function_name=function_name, absolute_file_path=absolute_file_path)
@@ -323,8 +319,7 @@ class CodeFinder:
                         called.is_dependency as called_is_dependency,
                         call.line_number as call_line_number,
                         call.args as call_args,
-                        call.full_call_name as full_call_name,
-                        call.call_type as call_type
+                        call.full_call_name as full_call_name
                     ORDER BY called.is_dependency ASC, called.name
                     LIMIT 20
                 """, function_name=function_name)
