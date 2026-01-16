@@ -4,6 +4,7 @@ theme:
 nav:
   - Home: index.md
   - Installation: installation.md
+  - Windows Setup: windows_setup.md
   - Use Cases: use_cases.md
   - Architecture: architecture.md
   - CLI Reference: cli.md
