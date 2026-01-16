@@ -39,6 +39,18 @@ A powerful **MCP server** and **CLI toolkit** that indexes local code into a gra
 - **License:** MIT License (See [LICENSE](license.md) for details)
 - **Website:** [CodeGraphContext](http://codegraphcontext.vercel.app/)
 
+## 👨‍💻 Maintainer
+
+**CodeGraphContext** is created and actively maintained by:
+
+**Shashank Shekhar Singh**  
+- 📧 Email: [shashankshekharsingh1205@gmail.com](mailto:shashankshekharsingh1205@gmail.com)
+- 🐙 GitHub: [@Shashankss1205](https://github.com/Shashankss1205)
+- 🔗 LinkedIn: [Shashank Shekhar Singh](https://www.linkedin.com/in/shashank-shekhar-singh-a67282228/)
+- 🌐 Website: [codegraphcontext.vercel.app](http://codegraphcontext.vercel.app/)
+
+*Contributions and feedback are always welcome! Feel free to reach out for questions, suggestions, or collaboration opportunities.*
+
 ## Star History
 [![Star History Chart](https://api.star-history.com/svg?repos=CodeGraphContext/CodeGraphContext&type=Date)](https://www.star-history.com/#CodeGraphContext/CodeGraphContext&Date)
 

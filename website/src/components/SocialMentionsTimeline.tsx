@@ -17,7 +17,7 @@ export default function SocialMentionsTimeline() {
     { name: "StackerNews", url: "https://stacker.news/items/1227191", icon: <FaStackOverflow />, color: "#F48024", button: "See on StackerNews" },
     { name: "Glama.ai", url: "https://glama.ai/mcp/servers/@CodeGraphContext/CodeGraphContext/blob/a346d340d8f705ce93626b4b322dd0e2823ba46b/src/codegraphcontext/core/jobs.py", icon: <FaGlobe />, color: "#00B6F0", button: "See on Glama.ai" },
     { name: "Github", url: "https://github.com/punkpeye/awesome-mcp-servers?tab=readme-ov-file#coding-agents", icon: <FaGithub />, button: "See on GitHub" },
-    { name: "Mcpservers.org", url: "https://mcpservers.org/servers/shashankss1205/codegraphcontext", icon: <FaGlobe />, color: "#00B6F0", button: "See on Mcpservers.org" },
+    { name: "Mcpservers.org", url: "https://mcpservers.org/servers/CodeGraphContext/codegraphcontext", icon: <FaGlobe />, color: "#00B6F0", button: "See on Mcpservers.org" },
     { name: "Skyworks", url: "https://skywork.ai/skypage/en/codegraph-smart-code-companion/1978349276941164544", icon: <SiVercel />, button: "See on Skyworks" },
     { name: "Reddit Announcement", url: "https://www.reddit.com/r/mcp/comments/1o22gc5/i_built_codegraphcontext_an_mcp_server_that/", icon: <FaReddit />, color: "#FF5700", button: "See Reddit post" },
   ];

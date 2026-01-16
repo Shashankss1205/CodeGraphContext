@@ -1,20 +1,20 @@
 # CodeGraphContext
 
 <!-- ====== Project stats ====== -->
-[![Stars](https://img.shields.io/github/stars/Shashankss1205/CodeGraphContext?logo=github)](https://github.com/Shashankss1205/CodeGraphContext/stargazers)
-[![Forks](https://img.shields.io/github/forks/Shashankss1205/CodeGraphContext?logo=github)](https://github.com/Shashankss1205/CodeGraphContext/network/members)
-[![Open Issues](https://img.shields.io/github/issues-raw/Shashankss1205/CodeGraphContext?logo=github)](https://github.com/Shashankss1205/CodeGraphContext/issues)
-[![Open PRs](https://img.shields.io/github/issues-pr/Shashankss1205/CodeGraphContext?logo=github)](https://github.com/Shashankss1205/CodeGraphContext/pulls)
-[![Closed PRs](https://img.shields.io/github/issues-pr-closed/Shashankss1205/CodeGraphContext?logo=github&color=lightgrey)](https://github.com/Shashankss1205/CodeGraphContext/pulls?q=is%3Apr+is%3Aclosed)
-[![Contributors](https://img.shields.io/github/contributors/Shashankss1205/CodeGraphContext?logo=github)](https://github.com/Shashankss1205/CodeGraphContext/graphs/contributors)
-[![Languages](https://img.shields.io/github/languages/count/Shashankss1205/CodeGraphContext?logo=github)](https://github.com/Shashankss1205/CodeGraphContext)
-[![Build Status](https://github.com/Shashankss1205/CodeGraphContext/actions/workflows/test.yml/badge.svg)](https://github.com/Shashankss1205/CodeGraphContext/actions/workflows/test.yml)
-[![Build Status](https://github.com/Shashankss1205/CodeGraphContext/actions/workflows/e2e-tests.yml/badge.svg)](https://github.com/Shashankss1205/CodeGraphContext/actions/workflows/e2e-tests.yml)
+[![Stars](https://img.shields.io/github/stars/CodeGraphContext/CodeGraphContext?logo=github)](https://github.com/CodeGraphContext/CodeGraphContext/stargazers)
+[![Forks](https://img.shields.io/github/forks/CodeGraphContext/CodeGraphContext?logo=github)](https://github.com/CodeGraphContext/CodeGraphContext/network/members)
+[![Open Issues](https://img.shields.io/github/issues-raw/CodeGraphContext/CodeGraphContext?logo=github)](https://github.com/CodeGraphContext/CodeGraphContext/issues)
+[![Open PRs](https://img.shields.io/github/issues-pr/CodeGraphContext/CodeGraphContext?logo=github)](https://github.com/CodeGraphContext/CodeGraphContext/pulls)
+[![Closed PRs](https://img.shields.io/github/issues-pr-closed/CodeGraphContext/CodeGraphContext?logo=github&color=lightgrey)](https://github.com/CodeGraphContext/CodeGraphContext/pulls?q=is%3Apr+is%3Aclosed)
+[![Contributors](https://img.shields.io/github/contributors/CodeGraphContext/CodeGraphContext?logo=github)](https://github.com/CodeGraphContext/CodeGraphContext/graphs/contributors)
+[![Languages](https://img.shields.io/github/languages/count/CodeGraphContext/CodeGraphContext?logo=github)](https://github.com/CodeGraphContext/CodeGraphContext)
+[![Build Status](https://github.com/CodeGraphContext/CodeGraphContext/actions/workflows/test.yml/badge.svg)](https://github.com/CodeGraphContext/CodeGraphContext/actions/workflows/test.yml)
+[![Build Status](https://github.com/CodeGraphContext/CodeGraphContext/actions/workflows/e2e-tests.yml/badge.svg)](https://github.com/CodeGraphContext/CodeGraphContext/actions/workflows/e2e-tests.yml)
 [![PyPI version](https://img.shields.io/pypi/v/codegraphcontext?)](https://pypi.org/project/codegraphcontext/)
 [![PyPI downloads](https://img.shields.io/pypi/dm/codegraphcontext?)](https://pypi.org/project/codegraphcontext/)
-[![License](https://img.shields.io/github/license/Shashankss1205/CodeGraphContext?)](LICENSE)
+[![License](https://img.shields.io/github/license/CodeGraphContext/CodeGraphContext?)](LICENSE)
 [![Website](https://img.shields.io/badge/website-up-brightgreen?)](http://codegraphcontext.vercel.app/)
-[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://shashankss1205.github.io/CodeGraphContext/)
+[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://CodeGraphContext.github.io/CodeGraphContext/)
 [![YouTube](https://img.shields.io/badge/YouTube-Watch%20Demo-red?logo=youtube)](https://youtu.be/KYYSdxhg1xU)
 [![Discord](https://img.shields.io/badge/Discord-Join%20Chat-7289da?logo=discord&logoColor=white)](https://discord.gg/dR4QY32uYQ)
 
@@ -23,10 +23,10 @@
 A powerful **MCP server** and **CLI toolkit** that indexes local code into a graph database to provide context to AI assistants and developers. Use it as a standalone CLI for comprehensive code analysis or connect it to your favorite AI IDE via MCP for AI-powered code understanding.
 
 ### Indexing a codebase
-![Indexing using an MCP client](https://github.com/Shashankss1205/CodeGraphContext/blob/main/images/Indexing.gif)
+![Indexing using an MCP client](https://github.com/CodeGraphContext/CodeGraphContext/blob/main/images/Indexing.gif)
 
 ### Using the MCP server
-![Using the MCP server](https://github.com/Shashankss1205/CodeGraphContext/blob/main/images/Usecase.gif)
+![Using the MCP server](https://github.com/CodeGraphContext/CodeGraphContext/blob/main/images/Usecase.gif)
 
 ## Project Details
 - **Version:** 0.1.33
@@ -34,8 +34,20 @@ A powerful **MCP server** and **CLI toolkit** that indexes local code into a gra
 - **License:** MIT License (See [LICENSE](LICENSE) for details)
 - **Website:** [CodeGraphContext](http://codegraphcontext.vercel.app/)
 
+## 👨‍💻 Maintainer
+
+**CodeGraphContext** is created and actively maintained by:
+
+**Shashank Shekhar Singh**  
+- 📧 Email: [shashankshekharsingh1205@gmail.com](mailto:shashankshekharsingh1205@gmail.com)
+- 🐙 GitHub: [@Shashankss1205](https://github.com/Shashankss1205)
+- 🔗 LinkedIn: [Shashank Shekhar Singh](https://www.linkedin.com/in/shashank-shekhar-singh-a67282228/)
+- 🌐 Website: [codegraphcontext.vercel.app](http://codegraphcontext.vercel.app/)
+
+*Contributions and feedback are always welcome! Feel free to reach out for questions, suggestions, or collaboration opportunities.*
+
 ## Star History
-[![Star History Chart](https://api.star-history.com/svg?repos=Shashankss1205/CodeGraphContext&type=Date)](https://www.star-history.com/#Shashankss1205/CodeGraphContext&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=CodeGraphContext/CodeGraphContext&type=Date)](https://www.star-history.com/#CodeGraphContext/CodeGraphContext&Date)
 
 ## Features
 
@@ -167,7 +179,7 @@ Use CodeGraphContext as an **MCP server** for AI assistants:
     **Linux/Mac:**
     ```bash
     # Download the fix script
-    curl -O https://raw.githubusercontent.com/Shashankss1205/CodeGraphContext/main/scripts/post_install_fix.sh
+    curl -O https://raw.githubusercontent.com/CodeGraphContext/CodeGraphContext/main/scripts/post_install_fix.sh
     
     # Make it executable
     chmod +x post_install_fix.sh
@@ -182,7 +194,7 @@ Use CodeGraphContext as an **MCP server** for AI assistants:
     **Windows (PowerShell):**
     ```powershell
     # Download the fix script
-    curl -O https://raw.githubusercontent.com/Shashankss1205/CodeGraphContext/main/scripts/post_install_fix.sh
+    curl -O https://raw.githubusercontent.com/CodeGraphContext/CodeGraphContext/main/scripts/post_install_fix.sh
     
     # Run with bash (requires Git Bash or WSL)
     bash post_install_fix.sh
@@ -395,6 +407,6 @@ Once the server is running, you can interact with it through your AI assistant u
 
 Contributions are welcome! 🎉  
 Please see our [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
-If you have ideas for new features, integrations, or improvements, open an [issue](https://github.com/Shashankss1205/CodeGraphContext/issues) or submit a Pull Request.
+If you have ideas for new features, integrations, or improvements, open an [issue](https://github.com/CodeGraphContext/CodeGraphContext/issues) or submit a Pull Request.
 
 Join discussions and help shape the future of CodeGraphContext.

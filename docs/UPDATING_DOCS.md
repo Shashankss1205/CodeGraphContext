@@ -8,7 +8,7 @@ CodeGraphContext has **two separate web properties**:
 
 ### 1. **MkDocs Documentation** (Main Docs)
 - **Location**: `/docs/`
-- **URL**: https://shashankss1205.github.io/CodeGraphContext/
+- **URL**: https://CodeGraphContext.github.io/CodeGraphContext/
 - **Purpose**: Technical documentation, guides, API reference
 - **Technology**: MkDocs with Material theme
 
@@ -139,7 +139,7 @@ npm run build  # Generates dist/ folder
 
 - **MkDocs Documentation**: https://www.mkdocs.org/
 - **Material Theme**: https://squidfunk.github.io/mkdocs-material/
-- **Current Docs Site**: https://shashankss1205.github.io/CodeGraphContext/
+- **Current Docs Site**: https://CodeGraphContext.github.io/CodeGraphContext/
 
 ---
 
