@@ -96,8 +96,8 @@ const InstallationSection = () => {
               </Card>
             ))}
           </div>
-              
-           
+
+
           <Card className="mb-10">
             <CardHeader>
               <CardTitle className="text-xl font-semibold">Installation (Both Modes)</CardTitle>
@@ -200,81 +200,81 @@ const InstallationSection = () => {
                     <CardTitle className="text-base font-semibold text-left">See all commands</CardTitle>
                   </CardHeader>
                   <CardContent>
-                   <CommandBlock>cgc help</CommandBlock>
+                    <CommandBlock>cgc help</CommandBlock>
 
                   </CardContent>
                 </Card>
               </div>
             </CardContent>
             <div className="mt-4 text-left max-w-lg ml-8 mb-8">
-                  <span className="font-semibold text-muted-foreground">Ex:</span>
-                  <CommandBlock>cgc analyze callers my_function</CommandBlock>
+              <span className="font-semibold text-muted-foreground">Ex:</span>
+              <CommandBlock>cgc analyze callers my_function</CommandBlock>
 
+            </div>
+
+            <div className="mt-3 mb-6">
+
+
+              <a href="https://codegraphcontext.github.io/CodeGraphContext/cli/" target="_blank" rel="noopener noreferrer" className="underline text-primary font-medium">
+                See the full CLI Commands Guide for all available commands and usage scenarios.
+              </a>
+            </div>
+          </Card>
+
+
+        </div>
+
+        <div className="w-full my-10">
+          <div className="h-1 w-full rounded-full bg-gradient-to-r from-primary via-blue-500 to-green-400 opacity-80" />
+        </div>
+
+        <div>
+          <div className="mb-12">
+            <div className="text-center mb-10">
+              <h3 className="text-xl text-muted-foreground max-w-3xl mx-auto">For MCP Server Mode</h3>
+            </div>
+            <Card className="mb-4">
+              <CardHeader>
+                <div className="flex items-center gap-3 mb-1">
+                  <Bot className="h-6 w-6 text-primary" />
+                  <CardTitle className="text-2xl font-bold">Configure your AI assistant to use CodeGraphContext:</CardTitle>
                 </div>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-col gap-4">
+                  {/* Card 1 */}
+                  <Card className="bg-muted/40">
+                    <CardHeader>
+                      <CardTitle className="text-base font-semibold text-left"> Run the MCP setup wizard to configure:</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <CommandBlock>cgc mcp setup</CommandBlock>
 
-            <div className="mt-3 mb-6">
-           
-                
-                 <a href="https://shashankss1205.github.io/CodeGraphContext/cli/" target="_blank" rel="noopener noreferrer" className="underline text-primary font-medium">
-              See the full CLI Commands Guide for all available commands and usage scenarios.
-            </a>
-          </div>
-          </Card>
 
-          
-        </div>
+                    </CardContent>
+                  </Card>
 
-          <div className="w-full my-10">
-            <div className="h-1 w-full rounded-full bg-gradient-to-r from-primary via-blue-500 to-green-400 opacity-80" />
-          </div>
+                  {/* Card 2 */}
+                  <Card className="bg-muted/40">
+                    <CardHeader>
+                      <CardTitle className="text-base font-semibold text-left">Launch the MCP server:</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <CommandBlock>cgc mcp start</CommandBlock>
 
-          <div> 
-            <div className="mb-12">
-          <div className="text-center mb-10">
-            <h3 className="text-xl text-muted-foreground max-w-3xl mx-auto">For MCP Server Mode</h3>
-          </div>
-          <Card className="mb-4">
-            <CardHeader>
-              <div className="flex items-center gap-3 mb-1">
-                <Bot className="h-6 w-6 text-primary" />
-                <CardTitle className="text-2xl font-bold">Configure your AI assistant to use CodeGraphContext:</CardTitle>
+                    </CardContent>
+                  </Card>
+                </div>
+              </CardContent>
+              <div className="mt-3 mb-6">
+                <a href="https://codegraphcontext.github.io/CodeGraphContext/cookbook/" target="_blank" rel="noopener noreferrer" className="underline text-primary font-medium">
+                  Now interact with your codebase through your AI assistant using natural language! See full cookbook.
+                </a>
               </div>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-col gap-4">
-                {/* Card 1 */}
-                <Card className="bg-muted/40">
-                  <CardHeader>
-                    <CardTitle className="text-base font-semibold text-left"> Run the MCP setup wizard to configure:</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <CommandBlock>cgc mcp setup</CommandBlock>
+            </Card>
 
-
-                  </CardContent>
-                </Card>
-                  
-                {/* Card 2 */}
-                <Card className="bg-muted/40">
-                  <CardHeader>
-                    <CardTitle className="text-base font-semibold text-left">Launch the MCP server:</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <CommandBlock>cgc mcp start</CommandBlock>
-
-                  </CardContent>
-                </Card>
-              </div>
-            </CardContent>
-            <div className="mt-3 mb-6">
-                 <a href="https://shashankss1205.github.io/CodeGraphContext/cookbook/" target="_blank" rel="noopener noreferrer" className="underline text-primary font-medium">
-              Now interact with your codebase through your AI assistant using natural language! See full cookbook.
-            </a>
           </div>
-          </Card>
-           
         </div>
-          </div>
 
       </div>
     </section>

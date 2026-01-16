@@ -152,7 +152,7 @@ docker-compose run --rm codegraphcontext cgc analyze complexity --threshold 10
 
 3. **Clone your repository:**
    ```bash
-   git clone https://github.com/Shashankss1205/CodeGraphContext.git
+   git clone https://github.com/CodeGraphContext/CodeGraphContext.git
    cd CodeGraphContext
    ```
 

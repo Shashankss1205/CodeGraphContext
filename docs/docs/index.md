@@ -7,18 +7,18 @@ This is the official documentation for CodeGraphContext.
 # CodeGraphContext
 
 <!-- ====== Project stats ====== -->
-[![Stars](https://img.shields.io/github/stars/Shashankss1205/CodeGraphContext?logo=github)](https://github.com/Shashankss1205/CodeGraphContext/stargazers)
-[![Forks](https://img.shields.io/github/forks/Shashankss1205/CodeGraphContext?logo=github)](https://github.com/Shashankss1205/CodeGraphContext/network/members)
-[![Open Issues](https://img.shields.io/github/issues-raw/Shashankss1205/CodeGraphContext?logo=github)](https://github.com/Shashankss1205/CodeGraphContext/issues)
-[![Open PRs](https://img.shields.io/github/issues-pr/Shashankss1205/CodeGraphContext?logo=github)](https://github.com/Shashankss1205/CodeGraphContext/pulls)
-[![Closed PRs](https://img.shields.io/github/issues-pr-closed/Shashankss1205/CodeGraphContext?logo=github&color=lightgrey)](https://github.com/Shashankss1205/CodeGraphContext/pulls?q=is%3Apr+is%3Aclosed)
-[![Contributors](https://img.shields.io/github/contributors/Shashankss1205/CodeGraphContext?logo=github)](https://github.com/Shashankss1205/CodeGraphContext/graphs/contributors)
-[![Languages](https://img.shields.io/github/languages/count/Shashankss1205/CodeGraphContext?logo=github)](https://github.com/Shashankss1205/CodeGraphContext)
-[![Build Status](https://github.com/Shashankss1205/CodeGraphContext/actions/workflows/test.yml/badge.svg)](https://github.com/Shashankss1205/CodeGraphContext/actions/workflows/test.yml)
-[![Build Status](https://github.com/Shashankss1205/CodeGraphContext/actions/workflows/e2e-tests.yml/badge.svg)](https://github.com/Shashankss1205/CodeGraphContext/actions/workflows/e2e-tests.yml)
+[![Stars](https://img.shields.io/github/stars/CodeGraphContext/CodeGraphContext?logo=github)](https://github.com/CodeGraphContext/CodeGraphContext/stargazers)
+[![Forks](https://img.shields.io/github/forks/CodeGraphContext/CodeGraphContext?logo=github)](https://github.com/CodeGraphContext/CodeGraphContext/network/members)
+[![Open Issues](https://img.shields.io/github/issues-raw/CodeGraphContext/CodeGraphContext?logo=github)](https://github.com/CodeGraphContext/CodeGraphContext/issues)
+[![Open PRs](https://img.shields.io/github/issues-pr/CodeGraphContext/CodeGraphContext?logo=github)](https://github.com/CodeGraphContext/CodeGraphContext/pulls)
+[![Closed PRs](https://img.shields.io/github/issues-pr-closed/CodeGraphContext/CodeGraphContext?logo=github&color=lightgrey)](https://github.com/CodeGraphContext/CodeGraphContext/pulls?q=is%3Apr+is%3Aclosed)
+[![Contributors](https://img.shields.io/github/contributors/CodeGraphContext/CodeGraphContext?logo=github)](https://github.com/CodeGraphContext/CodeGraphContext/graphs/contributors)
+[![Languages](https://img.shields.io/github/languages/count/CodeGraphContext/CodeGraphContext?logo=github)](https://github.com/CodeGraphContext/CodeGraphContext)
+[![Build Status](https://github.com/CodeGraphContext/CodeGraphContext/actions/workflows/test.yml/badge.svg)](https://github.com/CodeGraphContext/CodeGraphContext/actions/workflows/test.yml)
+[![Build Status](https://github.com/CodeGraphContext/CodeGraphContext/actions/workflows/e2e-tests.yml/badge.svg)](https://github.com/CodeGraphContext/CodeGraphContext/actions/workflows/e2e-tests.yml)
 [![PyPI version](https://img.shields.io/pypi/v/codegraphcontext?)](https://pypi.org/project/codegraphcontext/)
 [![PyPI downloads](https://img.shields.io/pypi/dm/codegraphcontext?)](https://pypi.org/project/codegraphcontext/)
-[![License](https://img.shields.io/github/license/Shashankss1205/CodeGraphContext?)](license.md)
+[![License](https://img.shields.io/github/license/CodeGraphContext/CodeGraphContext?)](license.md)
 [![Website](https://img.shields.io/badge/website-up-brightgreen?)](http://codegraphcontext.vercel.app/)
 [![YouTube](https://img.shields.io/badge/YouTube-Watch%20Demo-red?logo=youtube)](https://youtu.be/KYYSdxhg1xU)
 [![Discord](https://img.shields.io/badge/Discord-Join%20Chat-7289da?logo=discord&logoColor=white)](https://discord.gg/dR4QY32uYQ)
@@ -40,7 +40,7 @@ A powerful **MCP server** and **CLI toolkit** that indexes local code into a gra
 - **Website:** [CodeGraphContext](http://codegraphcontext.vercel.app/)
 
 ## Star History
-[![Star History Chart](https://api.star-history.com/svg?repos=Shashankss1205/CodeGraphContext&type=Date)](https://www.star-history.com/#Shashankss1205/CodeGraphContext&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=CodeGraphContext/CodeGraphContext&type=Date)](https://www.star-history.com/#CodeGraphContext/CodeGraphContext&Date)
 
 ## Features
 
@@ -215,12 +215,12 @@ Once the server is running, you can interact with it through your AI assistant u
 -   **Playbooks:** [https://playbooks.com/mcp/codegraphcontext](https://playbooks.com/mcp/codegraphcontext)
 -   **MCPHunt:** [https://mcp-hunt.com/mcp/server/codegraphcontext](https://mcp-hunt.com/mcp/server/codegraphcontext)
 -   **StackerNews:** [https://stacker.news/items/1227191](https://stacker.news/items/1227191)
--   **Glama.ai:** [https://glama.ai/mcp/servers/@Shashankss1205/CodeGraphContext/blob/a346d340d8f705ce93626b4b322dd0e2823ba46b/src/codegraphcontext/core/jobs.py](https://glama.ai/mcp/servers/@Shashankss1205/CodeGraphContext/blob/a346d340d8f705ce93626b4b322dd0e2823ba46b/src/codegraphcontext/core/jobs.py)
+-   **Glama.ai:** [https://glama.ai/mcp/servers/@CodeGraphContext/CodeGraphContext/blob/a346d340d8f705ce93626b4b322dd0e2823ba46b/src/codegraphcontext/core/jobs.py](https://glama.ai/mcp/servers/@CodeGraphContext/CodeGraphContext/blob/a346d340d8f705ce93626b4b322dd0e2823ba46b/src/codegraphcontext/core/jobs.py)
 
 ## Contributing
 
 Contributions are welcome! 🎉  
 Please see our [CONTRIBUTING.md](contributing.md) for detailed guidelines.
-If you have ideas for new features, integrations, or improvements, open an [issue](https://github.com/Shashankss1205/CodeGraphContext/issues) or submit a Pull Request.
+If you have ideas for new features, integrations, or improvements, open an [issue](https://github.com/CodeGraphContext/CodeGraphContext/issues) or submit a Pull Request.
 
 Join discussions and help shape the future of CodeGraphContext.

@@ -23,6 +23,7 @@ For production deployments, review the [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CH
 
 ## 🔗 Related Resources
 
-- Main project README: [../../README.md](../../README.md)
-- Docker scripts: [../../docker-quickstart.sh](../../docker-quickstart.sh), [../../deploy-production.sh](../../deploy-production.sh)
-- Kubernetes configs: [../../k8s/](../../k8s/)
+- Main project README: [README.md](https://github.com/CodeGraphContext/CodeGraphContext/blob/main/README.md)
+- Docker scripts: [docker-quickstart.sh](https://github.com/CodeGraphContext/CodeGraphContext/blob/main/docker-quickstart.sh), [deploy-production.sh](https://github.com/CodeGraphContext/CodeGraphContext/blob/main/deploy-production.sh)
+- Kubernetes configs: [k8s/](https://github.com/CodeGraphContext/CodeGraphContext/tree/main/k8s)
+
