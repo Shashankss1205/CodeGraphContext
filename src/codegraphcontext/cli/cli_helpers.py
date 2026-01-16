@@ -454,25 +454,54 @@ def clean_helper():
     console.print("[cyan]🧹 Cleaning database (removing orphaned nodes)...[/cyan]")
     
     try:
+        # Determine if we're using FalkorDB or Neo4j for query optimization
+        db_type = db_manager.__class__.__name__
+        is_falkordb = "Falkor" in db_type
+        
+        total_deleted = 0
+        batch_size = 1000
+        
         with db_manager.get_driver().session() as session:
-            # Find and delete orphaned nodes (nodes not connected to any repository)
-            # Using OPTIONAL MATCH for FalkorDB compatibility
-            query = """
-            MATCH (n)
-            WHERE NOT (n:Repository)
-            OPTIONAL MATCH path = (n)-[*]-(r:Repository)
-            WITH n, path
-            WHERE path IS NULL
-            WITH n LIMIT 1000
-            DETACH DELETE n
-            RETURN count(n) as deleted
-            """
-            result = session.run(query)
-            record = result.single()
-            deleted_count = record["deleted"] if record else 0
+            # Keep deleting orphaned nodes in batches until none are found
+            while True:
+                if is_falkordb:
+                    # FalkorDB-compatible query using OPTIONAL MATCH
+                    query = """
+                    MATCH (n)
+                    WHERE NOT (n:Repository)
+                    OPTIONAL MATCH path = (n)-[*..10]-(r:Repository)
+                    WITH n, path
+                    WHERE path IS NULL
+                    WITH n LIMIT $batch_size
+                    DETACH DELETE n
+                    RETURN count(n) as deleted
+                    """
+                else:
+                    # Neo4j optimized query using NOT EXISTS with bounded path
+                    # This is much faster than OPTIONAL MATCH with variable-length paths
+                    query = """
+                    MATCH (n)
+                    WHERE NOT (n:Repository)
+                      AND NOT EXISTS {
+                        MATCH (n)-[*..10]-(r:Repository)
+                      }
+                    WITH n LIMIT $batch_size
+                    DETACH DELETE n
+                    RETURN count(n) as deleted
+                    """
+                
+                result = session.run(query, batch_size=batch_size)
+                record = result.single()
+                deleted_count = record["deleted"] if record else 0
+                total_deleted += deleted_count
+                
+                if deleted_count == 0:
+                    break
+                    
+                console.print(f"[dim]Deleted {deleted_count} orphaned nodes (batch)...[/dim]")
             
-            if deleted_count > 0:
-                console.print(f"[green]✓[/green] Deleted {deleted_count} orphaned nodes")
+            if total_deleted > 0:
+                console.print(f"[green]✓[/green] Deleted {total_deleted} orphaned nodes total")
             else:
                 console.print("[green]✓[/green] No orphaned nodes found")
             

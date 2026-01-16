@@ -55,3 +55,4 @@ src/codegraphcontext/cli/nl.py
 temporaryFiles
 codegraph_viz.html
 Temp
+tests_sample
