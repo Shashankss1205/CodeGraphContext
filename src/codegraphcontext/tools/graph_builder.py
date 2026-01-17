@@ -15,6 +15,9 @@ from tree_sitter import Language, Parser
 from ..utils.tree_sitter_manager import get_tree_sitter_manager
 from ..cli.config_manager import get_config_value
 
+INDEX_SOURCE = (get_config_value("INDEX_SOURCE") or "false").lower() == "true"
+
+
 class TreeSitterParser:
     """A generic parser wrapper for a specific language using tree-sitter."""
 
@@ -329,6 +332,12 @@ class GraphBuilder:
                         SET n += $props
                         MERGE (f)-[:CONTAINS]->(n)
                     """
+                    # Respect INDEX_SOURCE config
+                    if not INDEX_SOURCE:
+                        item = item.copy()
+                        item.pop("source", None)
+                        item.pop("source_code", None)
+                        item.pop("docstring", None)
                     session.run(query, file_path=file_path_str, name=item['name'], line_number=item['line_number'], props=item)
                     
                     if label == 'Function':
