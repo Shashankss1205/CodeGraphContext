@@ -2,14 +2,10 @@ from pathlib import Path
 from typing import Dict
 from codegraphcontext.utils.debug_log import debug_log, info_logger, error_logger, warning_logger, debug_logger
 from codegraphcontext.utils.tree_sitter_manager import execute_query
-DTS_ALLOWED_NODES = {
-    "interface_declaration",
-    "type_alias_declaration",
-    "enum_declaration",
-    "function_signature",
-    "import_statement",
-    "export_statement",
-}
+# NOTE:
+# .d.ts files only contain declaration-level information.
+# We intentionally index only interfaces, type aliases, enums,
+# and function signatures, and skip all runtime-specific constructs.
 
 
 TS_QUERIES = {
