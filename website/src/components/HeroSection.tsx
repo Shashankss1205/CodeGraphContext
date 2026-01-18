@@ -15,7 +15,7 @@ const HeroSection = () => {
     async function fetchVersion() {
       try {
         const res = await fetch(
-          "https://raw.githubusercontent.com/Shashankss1205/CodeGraphContext/main/README.md"
+          "https://raw.githubusercontent.com/CodeGraphContext/CodeGraphContext/main/README.md"
         );
         if (!res.ok) throw new Error("Failed to fetch README");
 
@@ -33,7 +33,7 @@ const HeroSection = () => {
     fetchVersion();
   }, []);
   useEffect(() => {
-    fetch("https://api.github.com/repos/Shashankss1205/CodeGraphContext")
+    fetch("https://api.github.com/repos/CodeGraphContext/CodeGraphContext")
       .then((response) => response.json())
       .then((data) => {
         setStars(data.stargazers_count);
@@ -90,14 +90,14 @@ const HeroSection = () => {
             </Button>
 
             <Button variant="outline" size="lg" asChild className="border-gray-300 hover:border-primary/60 bg-white/80 backdrop-blur-sm shadow-sm transition-smooth text-gray-900 dark:bg-transparent dark:text-foreground dark:border-primary/30">
-              <a href="https://github.com/Shashankss1205/CodeGraphContext" target="_blank" rel="noopener noreferrer">
+              <a href="https://github.com/CodeGraphContext/CodeGraphContext" target="_blank" rel="noopener noreferrer">
                 <Github className="mr-2 h-5 w-5" />
                 View on GitHub
                 <ExternalLink className="ml-2 h-4 w-4" />
               </a>
             </Button>
             <Button variant="ghost" size="lg" asChild>
-              <a href="https://shashankss1205.github.io/CodeGraphContext/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+              <a href="https://codegraphcontext.github.io/CodeGraphContext/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
                 <ExternalLink className="h-5 w-5" />
                 Documentation
               </a>

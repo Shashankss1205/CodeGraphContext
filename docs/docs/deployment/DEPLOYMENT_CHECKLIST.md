@@ -236,7 +236,7 @@ Document your emergency contacts:
 ## 📞 Support Resources
 
 - **Documentation:** DOCKER_DEPLOYMENT.md, DOCKER_SUMMARY.md
-- **GitHub Issues:** https://github.com/Shashankss1205/CodeGraphContext/issues
+- **GitHub Issues:** https://github.com/CodeGraphContext/CodeGraphContext/issues
 - **Discord Community:** https://discord.gg/dR4QY32uYQ
 - **Website:** http://codegraphcontext.vercel.app/
 

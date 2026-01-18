@@ -217,5 +217,5 @@ This creates a seamless development experience where your AI assistant stays syn
 ## See Also
 
 - [CLI Reference](cli.md) - Complete list of CLI commands
-- [MCP Tools](mcp-tools.md) - MCP server tools including watch functionality
+- [MCP Tools](tools.md) - MCP server tools including watch functionality
 - [Installation](installation.md) - Getting started with CodeGraphContext

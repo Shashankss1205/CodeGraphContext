@@ -152,7 +152,7 @@ docker-compose run --rm codegraphcontext cgc analyze complexity --threshold 10
 
 3. **Clone your repository:**
    ```bash
-   git clone https://github.com/Shashankss1205/CodeGraphContext.git
+   git clone https://github.com/CodeGraphContext/CodeGraphContext.git
    cd CodeGraphContext
    ```
 
@@ -344,7 +344,7 @@ NEO4J_dbms_memory_heap_max__size=4G
 - [Docker Documentation](https://docs.docker.com/)
 - [Docker Compose Reference](https://docs.docker.com/compose/)
 - [Neo4j Docker Guide](https://neo4j.com/developer/docker/)
-- [CodeGraphContext Documentation](https://shashankss1205.github.io/CodeGraphContext/)
+- [CodeGraphContext Documentation](https://CodeGraphContext.github.io/CodeGraphContext/)
 
 ## 💡 Tips
 

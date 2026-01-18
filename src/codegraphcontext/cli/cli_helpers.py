@@ -227,6 +227,39 @@ def cypher_helper(query: str):
         db_manager.close_driver()
 
 
+def cypher_helper_visual(query: str):
+    """Executes a read-only Cypher query and visualizes the results."""
+    from .visualizer import visualize_cypher_results
+    
+    services = _initialize_services()
+    if not all(services):
+        return
+
+    db_manager, _, _ = services
+    
+    # Replicating safety checks from MCPServer
+    forbidden_keywords = ['CREATE', 'MERGE', 'DELETE', 'SET', 'REMOVE', 'DROP', 'CALL apoc']
+    if any(keyword in query.upper() for keyword in forbidden_keywords):
+        console.print("[bold red]Error: This command only supports read-only queries.[/bold red]")
+        db_manager.close_driver()
+        return
+
+    try:
+        with db_manager.get_driver().session() as session:
+            result = session.run(query)
+            records = [record.data() for record in result]
+            
+            if not records:
+                console.print("[yellow]No results to visualize.[/yellow]")
+                return  # finally block will close driver
+            
+            visualize_cypher_results(records, query)
+    except Exception as e:
+        console.print(f"[bold red]An error occurred while executing query:[/bold red] {e}")
+    finally:
+        db_manager.close_driver()
+
+
 import webbrowser
 
 def visualize_helper(query: str):
@@ -421,25 +454,54 @@ def clean_helper():
     console.print("[cyan]🧹 Cleaning database (removing orphaned nodes)...[/cyan]")
     
     try:
+        # Determine if we're using FalkorDB or Neo4j for query optimization
+        db_type = db_manager.__class__.__name__
+        is_falkordb = "Falkor" in db_type
+        
+        total_deleted = 0
+        batch_size = 1000
+        
         with db_manager.get_driver().session() as session:
-            # Find and delete orphaned nodes (nodes not connected to any repository)
-            # Using OPTIONAL MATCH for FalkorDB compatibility
-            query = """
-            MATCH (n)
-            WHERE NOT (n:Repository)
-            OPTIONAL MATCH path = (n)-[*]-(r:Repository)
-            WITH n, path
-            WHERE path IS NULL
-            WITH n LIMIT 1000
-            DETACH DELETE n
-            RETURN count(n) as deleted
-            """
-            result = session.run(query)
-            record = result.single()
-            deleted_count = record["deleted"] if record else 0
+            # Keep deleting orphaned nodes in batches until none are found
+            while True:
+                if is_falkordb:
+                    # FalkorDB-compatible query using OPTIONAL MATCH
+                    query = """
+                    MATCH (n)
+                    WHERE NOT (n:Repository)
+                    OPTIONAL MATCH path = (n)-[*..10]-(r:Repository)
+                    WITH n, path
+                    WHERE path IS NULL
+                    WITH n LIMIT $batch_size
+                    DETACH DELETE n
+                    RETURN count(n) as deleted
+                    """
+                else:
+                    # Neo4j optimized query using NOT EXISTS with bounded path
+                    # This is much faster than OPTIONAL MATCH with variable-length paths
+                    query = """
+                    MATCH (n)
+                    WHERE NOT (n:Repository)
+                      AND NOT EXISTS {
+                        MATCH (n)-[*..10]-(r:Repository)
+                      }
+                    WITH n LIMIT $batch_size
+                    DETACH DELETE n
+                    RETURN count(n) as deleted
+                    """
+                
+                result = session.run(query, batch_size=batch_size)
+                record = result.single()
+                deleted_count = record["deleted"] if record else 0
+                total_deleted += deleted_count
+                
+                if deleted_count == 0:
+                    break
+                    
+                console.print(f"[dim]Deleted {deleted_count} orphaned nodes (batch)...[/dim]")
             
-            if deleted_count > 0:
-                console.print(f"[green]✓[/green] Deleted {deleted_count} orphaned nodes")
+            if total_deleted > 0:
+                console.print(f"[green]✓[/green] Deleted {total_deleted} orphaned nodes total")
             else:
                 console.print("[green]✓[/green] No orphaned nodes found")
             

@@ -3,6 +3,19 @@
 
 Here is the **complete list** of all CLI commands available in `CodeGraphContext`, categorized by workflow scenario.
 
+## Global Flags
+
+These flags can be used with any command:
+
+| Flag | Aliases | Description |
+| :--- | :--- | :--- |
+| **`--visual`** | `--viz`, `-V` | Shows results as an interactive graph visualization in your browser. Works with analyze, find, and query commands. |
+| **`--database`** | `-d` | Temporarily override the database backend (`falkordb` or `neo4j`) for any command. |
+| **`--version`** | `-v` | Show version and exit. |
+| **`--help`** | `-h` | Show help and exit. |
+
+> **Note:** The visual flag uses uppercase `-V` to avoid conflict with `-v` which is reserved for `--version`.
+
 ## 1. Project Management
 Use these commands to manage the repositories in your code graph.
 
@@ -29,22 +42,23 @@ Understand the structure, quality, and relationships of your code.
 
 | Command | Arguments | Description |
 | :--- | :--- | :--- |
-| **`cgc analyze calls`** | `<func_name>` <br> `--file` | Shows **outgoing** calls: what functions does this function call? |
-| **`cgc analyze callers`** | `<func_name>` <br> `--file` | Shows **incoming** calls: who calls this function? |
-| **`cgc analyze chain`** | `<start> <end>` <br> `--depth` | Finds the call path between two functions. Default depth is 5. |
-| **`cgc analyze deps`** | `<module>` <br> `--no-external` | Inspects dependencies (imports and importers) for a module. |
-| **`cgc analyze tree`** | `<class_name>` <br> `--file` | Visualizes the Class Inheritance hierarchy for a given class. |
+| **`cgc analyze calls`** | `<func_name>` <br> `--file` <br> `--visual` | Shows **outgoing** calls: what functions does this function call? Use `--visual` or `-V` for graph view. |
+| **`cgc analyze callers`** | `<func_name>` <br> `--file` <br> `--visual` | Shows **incoming** calls: who calls this function? Use `--visual` or `-V` for graph view. |
+| **`cgc analyze chain`** | `<start> <end>` <br> `--depth` <br> `--visual` | Finds the call path between two functions. Default depth is 5. Use `--visual` or `-V` for graph view. |
+| **`cgc analyze deps`** | `<module>` <br> `--no-external` <br> `--visual` | Inspects dependencies (imports and importers) for a module. Use `--visual` or `-V` for graph view. |
+| **`cgc analyze tree`** | `<class_name>` <br> `--file` <br> `--visual` | Visualizes the Class Inheritance hierarchy for a given class. Use `--visual` or `-V` for graph view. |
 | **`cgc analyze complexity`**| `[path]` <br> `--threshold` <br> `--limit` | Lists functions with high Cyclomatic Complexity. Default threshold: 10. |
 | **`cgc analyze dead-code`** | `--exclude` | Finds potentially unused functions (0 callers). Use `--exclude` for decorators. |
+| **`cgc analyze overrides`** | `<func_name>` <br> `--visual` | Finds all implementations of a function across different classes. Use `--visual` or `-V` for graph view. |
 
 ## 4. Discovery & Search
 Find code elements when you don't know the exact structure.
 
 | Command | Arguments | Description |
 | :--- | :--- | :--- |
-| **`cgc find name`** | `<name>` <br> `--type` | Finds code elements (Class, Function) by their **exact** name. |
-| **`cgc find pattern`** | `<pattern>` <br> `--case-sensitive` | Finds elements using fuzzy substring matching (e.g. "User" finds "UserHelper"). |
-| **`cgc find type`** | `<type>` <br> `--limit` | Lists all nodes of a specific type (e.g. `function`, `class`, `module`). |
+| **`cgc find name`** | `<name>` <br> `--type` <br> `--visual` | Finds code elements (Class, Function) by their **exact** name. Use `--visual` or `-V` for graph view. |
+| **`cgc find pattern`** | `<pattern>` <br> `--case-sensitive` <br> `--visual` | Finds elements using fuzzy substring matching (e.g. "User" finds "UserHelper"). Use `--visual` or `-V` for graph view. |
+| **`cgc find type`** | `<type>` <br> `--limit` <br> `--visual` | Lists all nodes of a specific type (e.g. `function`, `class`, `module`). Use `--visual` or `-V` for graph view. |
 
 ## 5. Configuration & Setup
 Manage your environment and database connections.
@@ -74,7 +88,7 @@ Helper commands for developers and the MCP server.
 | :--- | :--- | :--- |
 | **`cgc doctor`** | None | Runs system diagnostics (DB connection, dependencies, permissions). |
 | **`cgc visualize`** | `[query]` | Generates a link to open the Neo4j Browser. <br> *(Alias: `cgc v`)* |
-| **`cgc query`** | `<query>` | Executes a raw Cypher query directly against the DB. |
+| **`cgc query`** | `<query>` <br> `--visual` | Executes a raw Cypher query directly against the DB. Use `--visual` or `-V` for graph view. |
 | **`cgc mcp start`** | None | Starts the MCP Server (used by IDEs). |
 | **`cgc mcp tools`** | None | Lists all available MCP tools supported by the server. |
 | **`cgc start`** | None | **Deprecated**. Use `cgc mcp start` instead. |
@@ -181,6 +195,49 @@ cgc index .      # Start indexing
     
 **💡 Tip:** This is perfect for active development sessions where you want your AI assistant to always have the latest code context!
 
+### Scenario G: Visual Graph Exploration
+Use the `--visual` flag (or `-V`) to see results as interactive graphs in your browser.
+
+1.  **Visualize function calls:**
+    ```bash
+    cgc analyze calls process_data --visual
+    # or use the short form
+    cgc analyze calls process_data -V
+    ```
+
+2.  **Visualize call chain between functions:**
+    ```bash
+    cgc analyze chain main handle_request --visual
+    ```
+
+3.  **Visualize class inheritance:**
+    ```bash
+    cgc analyze tree MyBaseClass --visual
+    ```
+
+4.  **Visualize module dependencies:**
+    ```bash
+    cgc analyze deps mymodule --visual
+    ```
+
+5.  **Visualize search results:**
+    ```bash
+    cgc find pattern "Controller" --visual
+    ```
+
+6.  **Visualize Cypher query results:**
+    ```bash
+    cgc query "MATCH (n:Function)-[r:CALLS]->(m:Function) RETURN n,r,m LIMIT 50" --visual
+    ```
+
+7.  **Use global flag (applies to any command):**
+    ```bash
+    cgc -V analyze callers my_function
+    ```
+
+**💡 Tip:** The visualizations are interactive! Drag to pan, scroll to zoom, and click on nodes to highlight connections.
+
+**📍 Output:** Visualization HTML files are saved to `~/.codegraphcontext/visualizations/` and automatically opened in your default browser.
 ### Scenario G: Using Pre-indexed Bundles
 1.  **Download a pre-indexed bundle:**
     ```bash

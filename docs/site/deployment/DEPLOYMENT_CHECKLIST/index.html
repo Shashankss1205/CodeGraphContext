@@ -1,0 +1,2257 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../HOSTING_COMPARISON/">
+      
+      
+        <link rel="next" href="../../contributing/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Deployment Checklist - CodeGraphContext</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#codegraphcontext-docker-deployment-checklist" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="CodeGraphContext" class="md-header__button md-logo" aria-label="CodeGraphContext" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            CodeGraphContext
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Deployment Checklist
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="CodeGraphContext" class="md-nav__button md-logo" aria-label="CodeGraphContext" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    CodeGraphContext
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../use_cases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use Cases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../watching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live Watching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../core/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core Concepts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cookbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cookbook
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deployment
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DOCKER_README/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DOCKER_COMPLETE_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker Complete Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DOCKER_DEPLOYMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../HOSTING_COMPARISON/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hosting Comparison
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment Checklist
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment Checklist
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pre-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📋 Pre-Deployment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📋 Pre-Deployment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#local-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-preparation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code Preparation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#infrastructure-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏗️ Infrastructure Setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏗️ Infrastructure Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#choose-hosting-option" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choose Hosting Option
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-cloud-vm-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Cloud VM Deployment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-container-platform-gcpawsazure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Container Platform (GCP/AWS/Azure)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-kubernetes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Kubernetes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔒 Security Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔒 Security Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#secrets-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secrets Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Security
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#access-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access Control
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Deployment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Deployment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#build-and-deploy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Build and Deploy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#application-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Application Verification
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📊 Monitoring &amp; Maintenance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📊 Monitoring &amp; Maintenance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logging
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Updates
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📈 Performance Optimization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📈 Performance Optimization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#resource-allocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resource Allocation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Optimization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#application-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Application Optimization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧪 Testing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🧪 Testing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#functional-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Functional Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disaster-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disaster Recovery
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📝 Documentation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📝 Documentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deployment-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operational-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operational Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#post-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎯 Post-Deployment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 Post-Deployment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#immediate-first-24-hours" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Immediate (First 24 Hours)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#first-week" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First Week
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ongoing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ongoing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#emergency-contacts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🆘 Emergency Contacts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#support-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📞 Support Resources
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#final-sign-off" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ Final Sign-Off
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Contributing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing_languages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adding New Languages
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../future_work/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Future Work
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../license/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    License
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pre-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📋 Pre-Deployment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📋 Pre-Deployment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#local-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-preparation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code Preparation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#infrastructure-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏗️ Infrastructure Setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏗️ Infrastructure Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#choose-hosting-option" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choose Hosting Option
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-cloud-vm-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Cloud VM Deployment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-container-platform-gcpawsazure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Container Platform (GCP/AWS/Azure)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-kubernetes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Kubernetes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔒 Security Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔒 Security Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#secrets-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secrets Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Security
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#access-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access Control
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Deployment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Deployment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#build-and-deploy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Build and Deploy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#application-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Application Verification
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📊 Monitoring &amp; Maintenance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📊 Monitoring &amp; Maintenance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logging
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Updates
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📈 Performance Optimization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📈 Performance Optimization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#resource-allocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resource Allocation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Optimization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#application-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Application Optimization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧪 Testing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🧪 Testing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#functional-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Functional Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disaster-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disaster Recovery
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📝 Documentation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📝 Documentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deployment-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operational-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operational Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#post-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎯 Post-Deployment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 Post-Deployment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#immediate-first-24-hours" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Immediate (First 24 Hours)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#first-week" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First Week
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ongoing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ongoing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#emergency-contacts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🆘 Emergency Contacts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#support-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📞 Support Resources
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#final-sign-off" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ Final Sign-Off
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="codegraphcontext-docker-deployment-checklist">CodeGraphContext Docker Deployment Checklist</h1>
+<p>Use this checklist to ensure a successful deployment.</p>
+<h2 id="pre-deployment">📋 Pre-Deployment</h2>
+<h3 id="local-testing">Local Testing</h3>
+<ul>
+<li>[ ] Docker and Docker Compose installed</li>
+<li>[ ] Run <code>./docker-quickstart.sh</code> successfully</li>
+<li>[ ] Test basic cgc commands inside container</li>
+<li>[ ] Verify FalkorDB Lite works (default)</li>
+<li>[ ] Test Neo4j connection (if using)</li>
+<li>[ ] Index a sample project</li>
+<li>[ ] Verify data persists after container restart</li>
+</ul>
+<h3 id="code-preparation">Code Preparation</h3>
+<ul>
+<li>[ ] Latest code committed to Git</li>
+<li>[ ] All tests passing</li>
+<li>[ ] Documentation updated</li>
+<li>[ ] <code>.cgcignore</code> configured properly</li>
+<li>[ ] Environment variables documented</li>
+</ul>
+<h2 id="infrastructure-setup">🏗️ Infrastructure Setup</h2>
+<h3 id="choose-hosting-option">Choose Hosting Option</h3>
+<ul>
+<li>[ ] Selected hosting provider (VM/Container Platform/Kubernetes)</li>
+<li>[ ] Account created and billing configured</li>
+<li>[ ] Region/zone selected (choose closest to users)</li>
+<li>[ ] Resource sizing determined (see DOCKER_SUMMARY.md)</li>
+</ul>
+<h3 id="for-cloud-vm-deployment">For Cloud VM Deployment</h3>
+<ul>
+<li>[ ] VM provisioned (Ubuntu 22.04+ recommended)</li>
+<li>[ ] SSH access configured</li>
+<li>[ ] Firewall rules configured</li>
+<li>[ ] Port 22 (SSH) - Your IP only</li>
+<li>[ ] Port 7474 (Neo4j HTTP) - Optional, secure</li>
+<li>[ ] Port 7687 (Neo4j Bolt) - Optional, secure</li>
+<li>[ ] Docker installed on VM</li>
+<li>[ ] Docker Compose installed on VM</li>
+</ul>
+<h3 id="for-container-platform-gcpawsazure">For Container Platform (GCP/AWS/Azure)</h3>
+<ul>
+<li>[ ] Container registry access configured</li>
+<li>[ ] Image pushed to registry</li>
+<li>[ ] Service/task definition created</li>
+<li>[ ] Environment variables configured</li>
+<li>[ ] Persistent storage configured</li>
+</ul>
+<h3 id="for-kubernetes">For Kubernetes</h3>
+<ul>
+<li>[ ] Cluster created and accessible</li>
+<li>[ ] kubectl configured</li>
+<li>[ ] Namespace created</li>
+<li>[ ] Storage class available</li>
+<li>[ ] Ingress controller configured (if needed)</li>
+</ul>
+<h2 id="security-configuration">🔒 Security Configuration</h2>
+<h3 id="secrets-management">Secrets Management</h3>
+<ul>
+<li>[ ] Changed default Neo4j password</li>
+<li>[ ] Secrets stored securely (not in git)</li>
+<li>[ ] Environment variables configured</li>
+<li>[ ] <code>.env</code> file created (if needed)</li>
+<li>[ ] Credentials documented securely</li>
+</ul>
+<h3 id="network-security">Network Security</h3>
+<ul>
+<li>[ ] Firewall rules configured</li>
+<li>[ ] Security groups configured (cloud)</li>
+<li>[ ] VPN configured (if needed)</li>
+<li>[ ] HTTPS/TLS configured (production)</li>
+<li>[ ] Rate limiting configured (if applicable)</li>
+</ul>
+<h3 id="access-control">Access Control</h3>
+<ul>
+<li>[ ] SSH key-based authentication only</li>
+<li>[ ] Sudo access restricted</li>
+<li>[ ] Docker socket secured</li>
+<li>[ ] Database authentication enabled</li>
+<li>[ ] Backup access secured</li>
+</ul>
+<h2 id="deployment">🚀 Deployment</h2>
+<h3 id="build-and-deploy">Build and Deploy</h3>
+<ul>
+<li>[ ] Image built successfully
+  <code>bash
+  docker build -t codegraphcontext:latest .</code></li>
+<li>[ ] Image tagged properly</li>
+<li>[ ] Image pushed to registry (if using)</li>
+<li>[ ] Containers started
+  <code>bash
+  docker-compose up -d</code></li>
+<li>[ ] Health checks passing</li>
+<li>[ ] Logs reviewed for errors</li>
+</ul>
+<h3 id="database-setup">Database Setup</h3>
+<ul>
+<li>[ ] Database service running</li>
+<li>[ ] Database accessible from app</li>
+<li>[ ] Schema created (automatic)</li>
+<li>[ ] Test query executed successfully</li>
+<li>[ ] Backup configured</li>
+</ul>
+<h3 id="application-verification">Application Verification</h3>
+<ul>
+<li>[ ] Container running
+  <code>bash
+  docker-compose ps</code></li>
+<li>[ ] cgc command accessible
+  <code>bash
+  docker-compose exec codegraphcontext cgc --version</code></li>
+<li>[ ] Can index test project</li>
+<li>[ ] Can query indexed data</li>
+<li>[ ] MCP server starts (if using)</li>
+</ul>
+<h2 id="monitoring-maintenance">📊 Monitoring &amp; Maintenance</h2>
+<h3 id="logging">Logging</h3>
+<ul>
+<li>[ ] Log aggregation configured</li>
+<li>[ ] Log retention policy set</li>
+<li>[ ] Error alerting configured</li>
+<li>[ ] Log rotation enabled</li>
+</ul>
+<h3 id="monitoring">Monitoring</h3>
+<ul>
+<li>[ ] Resource monitoring enabled (CPU, RAM, Disk)</li>
+<li>[ ] Container health monitoring</li>
+<li>[ ] Database monitoring</li>
+<li>[ ] Uptime monitoring</li>
+<li>[ ] Alert thresholds configured</li>
+</ul>
+<h3 id="backups">Backups</h3>
+<ul>
+<li>[ ] Backup strategy defined</li>
+<li>[ ] Automated backups configured
+  <code>bash
+  # Example backup script
+  docker run --rm -v cgc-data:/data -v $(pwd):/backup \
+    alpine tar czf /backup/cgc-backup-$(date +%Y%m%d).tar.gz /data</code></li>
+<li>[ ] Backup restoration tested</li>
+<li>[ ] Backup retention policy set</li>
+<li>[ ] Off-site backup configured</li>
+</ul>
+<h3 id="updates">Updates</h3>
+<ul>
+<li>[ ] Update schedule defined</li>
+<li>[ ] Update process documented</li>
+<li>[ ] Rollback procedure documented</li>
+<li>[ ] Automated updates configured (optional)</li>
+</ul>
+<h2 id="performance-optimization">📈 Performance Optimization</h2>
+<h3 id="resource-allocation">Resource Allocation</h3>
+<ul>
+<li>[ ] CPU limits set appropriately</li>
+<li>[ ] Memory limits set appropriately</li>
+<li>[ ] Storage size adequate</li>
+<li>[ ] Swap configured (if needed)</li>
+</ul>
+<h3 id="database-optimization">Database Optimization</h3>
+<ul>
+<li>[ ] Indexes created (automatic)</li>
+<li>[ ] Query performance tested</li>
+<li>[ ] Connection pooling configured</li>
+<li>[ ] Cache configured (if applicable)</li>
+</ul>
+<h3 id="application-optimization">Application Optimization</h3>
+<ul>
+<li>[ ] <code>.cgcignore</code> optimized</li>
+<li>[ ] Batch processing configured</li>
+<li>[ ] Concurrent processing tuned</li>
+<li>[ ] Resource limits tested under load</li>
+</ul>
+<h2 id="testing">🧪 Testing</h2>
+<h3 id="functional-testing">Functional Testing</h3>
+<ul>
+<li>[ ] Index operation works</li>
+<li>[ ] Query operations work</li>
+<li>[ ] Watch functionality works</li>
+<li>[ ] MCP server works (if using)</li>
+<li>[ ] All CLI commands tested</li>
+</ul>
+<h3 id="performance-testing">Performance Testing</h3>
+<ul>
+<li>[ ] Indexing large codebase tested</li>
+<li>[ ] Query performance acceptable</li>
+<li>[ ] Memory usage acceptable</li>
+<li>[ ] Disk usage acceptable</li>
+</ul>
+<h3 id="disaster-recovery">Disaster Recovery</h3>
+<ul>
+<li>[ ] Backup restoration tested</li>
+<li>[ ] Container restart tested</li>
+<li>[ ] Database failover tested (if applicable)</li>
+<li>[ ] Data persistence verified</li>
+</ul>
+<h2 id="documentation">📝 Documentation</h2>
+<h3 id="deployment-documentation">Deployment Documentation</h3>
+<ul>
+<li>[ ] Deployment steps documented</li>
+<li>[ ] Configuration documented</li>
+<li>[ ] Credentials documented (securely)</li>
+<li>[ ] Architecture diagram created</li>
+<li>[ ] Runbook created</li>
+</ul>
+<h3 id="operational-documentation">Operational Documentation</h3>
+<ul>
+<li>[ ] Common operations documented</li>
+<li>[ ] Troubleshooting guide created</li>
+<li>[ ] Escalation procedures defined</li>
+<li>[ ] On-call procedures defined (if applicable)</li>
+</ul>
+<h2 id="post-deployment">🎯 Post-Deployment</h2>
+<h3 id="immediate-first-24-hours">Immediate (First 24 Hours)</h3>
+<ul>
+<li>[ ] Monitor logs continuously</li>
+<li>[ ] Check resource usage</li>
+<li>[ ] Verify all functionality</li>
+<li>[ ] Test backup/restore</li>
+<li>[ ] Document any issues</li>
+</ul>
+<h3 id="first-week">First Week</h3>
+<ul>
+<li>[ ] Review performance metrics</li>
+<li>[ ] Optimize resource allocation</li>
+<li>[ ] Fine-tune monitoring alerts</li>
+<li>[ ] Update documentation</li>
+<li>[ ] Train team members</li>
+</ul>
+<h3 id="ongoing">Ongoing</h3>
+<ul>
+<li>[ ] Weekly log review</li>
+<li>[ ] Monthly security updates</li>
+<li>[ ] Quarterly disaster recovery test</li>
+<li>[ ] Regular performance reviews</li>
+<li>[ ] Continuous improvement</li>
+</ul>
+<h2 id="emergency-contacts">🆘 Emergency Contacts</h2>
+<p>Document your emergency contacts:</p>
+<ul>
+<li>[ ] Cloud provider support: <strong><em>_</em></strong><strong><em>_</em></strong>_</li>
+<li>[ ] Database administrator: <strong><em>_</em></strong><strong><em>_</em></strong>_</li>
+<li>[ ] DevOps team: <strong><em>_</em></strong><strong><em>_</em></strong>_</li>
+<li>[ ] Security team: <strong><em>_</em></strong><strong><em>_</em></strong>_</li>
+<li>[ ] On-call rotation: <strong><em>_</em></strong><strong><em>_</em></strong>_</li>
+</ul>
+<h2 id="support-resources">📞 Support Resources</h2>
+<ul>
+<li><strong>Documentation:</strong> DOCKER_DEPLOYMENT.md, DOCKER_SUMMARY.md</li>
+<li><strong>GitHub Issues:</strong> https://github.com/CodeGraphContext/CodeGraphContext/issues</li>
+<li><strong>Discord Community:</strong> https://discord.gg/dR4QY32uYQ</li>
+<li><strong>Website:</strong> http://codegraphcontext.vercel.app/</li>
+</ul>
+<h2 id="final-sign-off">✅ Final Sign-Off</h2>
+<ul>
+<li>[ ] All checklist items completed</li>
+<li>[ ] Deployment reviewed by team</li>
+<li>[ ] Stakeholders notified</li>
+<li>[ ] Documentation handed off</li>
+<li>[ ] Monitoring confirmed working</li>
+<li>[ ] Backup verified</li>
+<li>[ ] Ready for production! 🚀</li>
+</ul>
+<hr />
+<p><strong>Deployment Date:</strong> <strong><em>_</em></strong><strong><em>_</em></strong><em>
+<strong>Deployed By:</strong> <strong><em>_</em></strong><strong><em>_</em></strong></em>
+<strong>Reviewed By:</strong> <strong><em>_</em></strong><strong><em>_</em></strong><em>
+<strong>Production URL:</strong> <strong><em>_</em></strong><strong><em>_</em></strong></em>
+<strong>Notes:</strong> <strong><em>_</em></strong><strong><em>_</em></strong>_</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

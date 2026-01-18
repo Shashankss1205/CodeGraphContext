@@ -45,7 +45,7 @@ curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
 
 # Clone and deploy
-git clone https://github.com/Shashankss1205/CodeGraphContext.git
+git clone https://github.com/CodeGraphContext/CodeGraphContext.git
 cd CodeGraphContext
 ./docker-quickstart.sh
 ```
@@ -173,7 +173,7 @@ Scale with Kubernetes (as needed)
 ## 📞 Support
 
 - **Documentation:** See files listed above
-- **GitHub Issues:** https://github.com/Shashankss1205/CodeGraphContext/issues
+- **GitHub Issues:** https://github.com/CodeGraphContext/CodeGraphContext/issues
 - **Discord:** https://discord.gg/dR4QY32uYQ
 - **Website:** http://codegraphcontext.vercel.app/
 

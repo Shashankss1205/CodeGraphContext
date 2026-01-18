@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: codegraphcontext
-        image: ghcr.io/shashankss1205/codegraphcontext:latest
+        image: ghcr.io/CodeGraphContext/codegraphcontext:latest
         imagePullPolicy: Always
         command: ["/bin/bash"]
         args: ["-c", "while true; do sleep 30; done"]

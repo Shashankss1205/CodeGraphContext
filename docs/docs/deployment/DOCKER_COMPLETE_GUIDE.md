@@ -303,10 +303,10 @@ Follow the guide for your chosen hosting option.
 6. `k8s/README.md` - Kubernetes guide
 
 ### Community & Help
-- **GitHub Issues:** https://github.com/Shashankss1205/CodeGraphContext/issues
+- **GitHub Issues:** https://github.com/CodeGraphContext/CodeGraphContext/issues
 - **Discord:** https://discord.gg/dR4QY32uYQ
 - **Website:** http://codegraphcontext.vercel.app/
-- **Docs:** https://shashankss1205.github.io/CodeGraphContext/
+- **Docs:** https://CodeGraphContext.github.io/CodeGraphContext/
 
 ## 🎯 Recommended Learning Path
 
