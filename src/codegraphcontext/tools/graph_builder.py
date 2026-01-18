@@ -414,7 +414,7 @@ class GraphBuilder:
                         rel_path = file_obj.relative_to(repo_obj)
                         # Convert to forward slashes and prepend './' for relative imports
                         module_name = './' + str(rel_path).replace('\\', '/')
-                    except (ValueError, KeyError):
+                    except (ValueError, KeyError, TypeError):
                         # Fallback to just the filename
                         module_name = './' + Path(file_path_str).name
                     

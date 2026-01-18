@@ -708,8 +708,11 @@ class CodeFinder:
             # This helps understand what this module is typically used with
             imports_result = session.run("""
                 MATCH (file:File)-[:IMPORTS]->(target_module:Module)
+                WHERE target_module.name = $module_name
+                OPTIONAL MATCH (e:Export {name: $module_name})<-[:EXPORTS]-(alt_module:Module)
+                WITH file, target_module, collect(DISTINCT alt_module) as alt_modules
                 WHERE target_module.name = $module_name 
-                   OR target_module.name IN [(e:Export {name: $module_name})<-[:EXPORTS]-(m:Module) | m.name]
+                   OR target_module IN alt_modules
                 MATCH (file)-[imp:IMPORTS]->(other_module:Module)
                 WHERE other_module <> target_module
                 RETURN DISTINCT
