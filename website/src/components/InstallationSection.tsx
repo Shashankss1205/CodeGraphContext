@@ -11,7 +11,9 @@ const CommandBlock = ({ children }: { children: string }) => {
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(children);
+      // Check if text starts with '$ ' and strip it for clipboard only
+      const textToCopy = children.startsWith("$ ") ? children.slice(2) : children;
+      await navigator.clipboard.writeText(textToCopy);
       setCopied(true);
       toast.success("Copied to clipboard!");
       setTimeout(() => setCopied(false), 2000);
