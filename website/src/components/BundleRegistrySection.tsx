@@ -146,9 +146,9 @@ const BundleRegistrySection = () => {
 
     const filteredBundles = bundles.filter(bundle => {
         const matchesSearch =
-            bundle.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            bundle.repo.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            bundle.description?.toLowerCase().includes(searchQuery.toLowerCase());
+            (bundle.name?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+            (bundle.repo?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+            (bundle.description?.toLowerCase() || '').includes(searchQuery.toLowerCase());
 
         const matchesCategory =
             selectedCategory === 'all' || bundle.category === selectedCategory;
