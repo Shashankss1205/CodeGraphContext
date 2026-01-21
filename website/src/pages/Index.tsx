@@ -9,6 +9,7 @@ import TestimonialSection from "../components/TestimonialSection";
 import SocialMentionsTimeline from "../components/SocialMentionsTimeline";
 import ComparisonTable from "../components/ComparisonTable";
 import BundleGeneratorSection from "../components/BundleGeneratorSection";
+import BundleRegistrySection from "../components/BundleRegistrySection";
 
 const Index = () => {
   return (
@@ -27,6 +28,9 @@ const Index = () => {
       </div>
       <div data-aos="fade-up">
         <InstallationSection />
+      </div>
+      <div data-aos="fade-up">
+        <BundleRegistrySection />
       </div>
       <div data-aos="fade-up">
         <BundleGeneratorSection />
