@@ -68,6 +68,5 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: actions/attest-build-provenance@v1
         with:
-          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          subject-digest: ${{ steps.build.outputs.digest }}
+          subject-path: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           push-to-registry: true
