@@ -29,7 +29,7 @@ A powerful **MCP server** and **CLI toolkit** that indexes local code into a gra
 ![Using the MCP server](https://github.com/CodeGraphContext/CodeGraphContext/blob/main/images/Usecase.gif)
 
 ## Project Details
-- **Version:** 0.1.33
+- **Version:** 0.1.34
 - **Authors:** Shashank Shekhar Singh <shashankshekharsingh1205@gmail.com>
 - **License:** MIT License (See [LICENSE](LICENSE) for details)
 - **Website:** [CodeGraphContext](http://codegraphcontext.vercel.app/)
