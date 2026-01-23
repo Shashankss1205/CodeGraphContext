@@ -55,13 +55,13 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: ${{ matrix.repo.owner }}/${{ matrix.repo.name }}
-          path: target-repo
+          path: ${{ matrix.repo.name }}
           fetch-depth: 1
       
       - name: Get repository metadata
         id: repo-meta
         run: |
-          cd target-repo
+          cd ${{ matrix.repo.name }}
           COMMIT_SHA=$(git rev-parse HEAD)
           COMMIT_SHORT=$(git rev-parse --short HEAD)
           echo "commit_sha=$COMMIT_SHA" >> $GITHUB_OUTPUT
@@ -77,7 +77,7 @@ jobs:
       
       - name: Index repository
         run: |
-          cd target-repo
+          cd ${{ matrix.repo.name }}
           echo "Indexing ${{ matrix.repo.owner }}/${{ matrix.repo.name }}..."
           cgc index .
       
@@ -87,7 +87,7 @@ jobs:
           BUNDLE_NAME="${{ matrix.repo.name }}-${{ steps.repo-meta.outputs.tag }}-${{ steps.repo-meta.outputs.commit_short }}.cgc"
           echo "Creating bundle: $BUNDLE_NAME"
           
-          cgc bundle export "$BUNDLE_NAME" --repo "$(pwd)/target-repo"
+          cgc bundle export "$BUNDLE_NAME" --repo "$(pwd)/${{ matrix.repo.name }}"
           
           # Store bundle name for later steps
           echo "bundle_name=$BUNDLE_NAME" >> $GITHUB_OUTPUT

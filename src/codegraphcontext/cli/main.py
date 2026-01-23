@@ -474,30 +474,57 @@ def bundle_load(
     
     This is a convenience command that will:
     1. Check if the bundle exists locally
-    2. Download from registry if not found (future feature)
+    2. Download from registry if not found
     3. Import the bundle into the database
     
     Examples:
         cgc load numpy
         cgc load numpy.cgc --clear
+        cgc load /path/to/bundle.cgc
     """
     _load_credentials()
     
-    # For now, this is just an alias for import
-    # In the future, this will support downloading from a registry
-    
     bundle_path = Path(bundle_name)
+    
+    # If it's an absolute path or has .cgc extension and exists, use it directly
+    if bundle_path.is_absolute() or (bundle_path.suffix == '.cgc' and bundle_path.exists()):
+        bundle_import(str(bundle_path), clear=clear)
+        return
+    
+    # Add .cgc extension if not present
     if not bundle_path.suffix:
         bundle_path = Path(f"{bundle_name}.cgc")
     
-    if not bundle_path.exists():
-        console.print(f"[yellow]Bundle '{bundle_name}' not found locally.[/yellow]")
-        console.print("[dim]Registry download not yet implemented. Please provide a local .cgc file.[/dim]")
-        console.print(f"[dim]Usage: cgc bundle load /path/to/{bundle_path.name}[/dim]")
-        raise typer.Exit(code=1)
+    # Check if exists locally
+    if bundle_path.exists():
+        console.print(f"[dim]Found local bundle: {bundle_path}[/dim]")
+        bundle_import(str(bundle_path), clear=clear)
+        return
     
-    # Call import
-    bundle_import(str(bundle_path), clear=clear)
+    # Try to download from registry
+    console.print(f"[yellow]Bundle '{bundle_name}' not found locally.[/yellow]")
+    console.print(f"[cyan]Attempting to download from registry...[/cyan]")
+    
+    try:
+        from .registry_commands import download_bundle
+        
+        # Extract just the name (without .cgc extension)
+        name = bundle_path.stem
+        
+        # Download the bundle
+        downloaded_path = download_bundle(name, output_dir=None, auto_load=True)
+        
+        if downloaded_path:
+            # Import the downloaded bundle
+            bundle_import(downloaded_path, clear=clear)
+        else:
+            console.print(f"[bold red]Failed to download bundle '{name}'[/bold red]")
+            raise typer.Exit(code=1)
+    
+    except Exception as e:
+        console.print(f"[bold red]Error: {e}[/bold red]")
+        console.print(f"[dim]Use 'cgc registry list' to see available bundles[/dim]")
+        raise typer.Exit(code=1)
 
 # Shortcut commands at root level
 @app.command("export", rich_help_panel="Bundle Shortcuts")
@@ -515,6 +542,89 @@ def load_shortcut(
 ):
     """Shortcut for 'cgc bundle load'"""
     bundle_load(bundle_name, clear)
+
+# ============================================================================
+# REGISTRY COMMAND GROUP - Browse and Download Bundles
+# ============================================================================
+
+registry_app = typer.Typer(help="Browse and download bundles from the registry")
+app.add_typer(registry_app, name="registry")
+
+@registry_app.command("list")
+def registry_list(
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed information including download URLs")
+):
+    """
+    List all available bundles in the registry.
+    
+    Shows bundles from both weekly pre-indexed releases and on-demand generations.
+    
+    Examples:
+        cgc registry list
+        cgc registry list --verbose
+    """
+    from .registry_commands import list_bundles
+    list_bundles(verbose=verbose)
+
+@registry_app.command("search")
+def registry_search(
+    query: str = typer.Argument(..., help="Search query (matches name, repository, or description)")
+):
+    """
+    Search for bundles in the registry.
+    
+    Searches bundle names, repositories, and descriptions for matches.
+    
+    Examples:
+        cgc registry search numpy
+        cgc registry search web
+        cgc registry search http
+    """
+    from .registry_commands import search_bundles
+    search_bundles(query)
+
+@registry_app.command("download")
+def registry_download(
+    name: str = typer.Argument(..., help="Bundle name to download (e.g., 'numpy')"),
+    output_dir: Optional[str] = typer.Option(None, "--output", "-o", help="Output directory (default: current directory)"),
+    load: bool = typer.Option(False, "--load", "-l", help="Automatically load the bundle after downloading")
+):
+    """
+    Download a bundle from the registry.
+    
+    Downloads the specified bundle to the current directory or specified output directory.
+    Use --load to automatically import the bundle after downloading.
+    
+    Examples:
+        cgc registry download numpy
+        cgc registry download pandas --output ./bundles
+        cgc registry download fastapi --load
+    """
+    from .registry_commands import download_bundle
+    
+    bundle_path = download_bundle(name, output_dir, auto_load=load)
+    
+    if load and bundle_path:
+        console.print(f"\n[cyan]Loading bundle...[/cyan]")
+        bundle_import(bundle_path, clear=False)
+
+@registry_app.command("request")
+def registry_request(
+    repo_url: str = typer.Argument(..., help="GitHub repository URL to index"),
+    wait: bool = typer.Option(False, "--wait", "-w", help="Wait for generation to complete (not yet implemented)")
+):
+    """
+    Request on-demand generation of a bundle.
+    
+    Submits a request to generate a bundle for the specified GitHub repository.
+    The bundle will be available in the registry after 5-10 minutes.
+    
+    Examples:
+        cgc registry request https://github.com/encode/httpx
+        cgc registry request https://github.com/pallets/flask
+    """
+    from .registry_commands import request_bundle
+    request_bundle(repo_url, wait=wait)
 
 # ============================================================================
 # DOCTOR DIAGNOSTIC COMMAND

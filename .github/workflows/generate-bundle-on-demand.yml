@@ -61,13 +61,13 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: ${{ steps.parse-url.outputs.owner }}/${{ steps.parse-url.outputs.repo }}
-          path: target-repo
+          path: ${{ steps.parse-url.outputs.repo }}
           fetch-depth: 1
       
       - name: Get repository metadata
         id: repo-meta
         run: |
-          cd target-repo
+          cd ${{ steps.parse-url.outputs.repo }}
           
           # Get commit SHA
           COMMIT_SHA=$(git rev-parse HEAD)
@@ -90,7 +90,7 @@ jobs:
       - name: Index repository
         id: index
         run: |
-          cd target-repo
+          cd ${{ steps.parse-url.outputs.repo }}
           echo "🔍 Indexing ${{ steps.parse-url.outputs.owner }}/${{ steps.parse-url.outputs.repo }}..."
           
           # Run indexing with timeout (30 minutes max)
@@ -107,7 +107,7 @@ jobs:
           BUNDLE_NAME="${{ steps.parse-url.outputs.repo }}-${{ steps.repo-meta.outputs.tag }}-${{ steps.repo-meta.outputs.commit_short }}.cgc"
           echo "📦 Creating bundle: $BUNDLE_NAME"
           
-          cgc bundle export "$BUNDLE_NAME" --repo "$(pwd)/target-repo"
+          cgc bundle export "$BUNDLE_NAME" --repo "$(pwd)/${{ steps.parse-url.outputs.repo }}"
           
           # Get bundle size
           BUNDLE_SIZE=$(du -h "$BUNDLE_NAME" | cut -f1)

@@ -56,3 +56,6 @@ temporaryFiles
 codegraph_viz.html
 Temp
 tests_sample
+.vercel
+.env*.local
+STATUS.md
