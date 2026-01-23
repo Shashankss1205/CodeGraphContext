@@ -867,13 +867,13 @@ def setup_local_binary():
         ("Adding Neo4j GPG key", "wget -qO- https://debian.neo4j.com/neotechnology.gpg.key | sudo gpg --dearmor --yes -o /etc/apt/keyrings/neotechnology.gpg", True),
         ("Adding Neo4j repository", "echo 'deb [signed-by=/etc/apt/keyrings/neotechnology.gpg] https://debian.neo4j.com stable 5' | sudo tee /etc/apt/sources.list.d/neo4j.list > /dev/null", True),
         ("Updating apt sources", ["sudo", "apt-get", "-qq", "update"]),
-        (f"Installing Neo4j ({NEO4J_VERSION}) and Cypher Shell", ["sudo", "apt-get", "install", "-qq", "-y", f"neo4j={NEO4J_VERSION}", "cypher-shell"])
+        (f"Installing Neo4j ({NEO4J_VERSION}) and Cypher Shell", ["sudo", "apt-get", "install", "-qq", "-y", "--allow-downgrades", f"neo4j={NEO4J_VERSION}", "cypher-shell"])
     ]
 
     for desc, cmd, use_shell in [(c[0], c[1], c[2] if len(c) > 2 else False) for c in install_commands]:
         console.print(f"\n[bold]Step: {desc}...[/bold]")
         if not run_command(cmd, console, shell=use_shell):
-            console.print(f"[bold red]Failed on step: {desc}. Aborting installation.[/bold]")
+            console.print(f"[bold red]Failed on step: {desc}. Aborting installation.[/bold red]")
             return
             
     console.print("\n[bold green]Neo4j installed successfully![/bold green]")
