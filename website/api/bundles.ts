@@ -87,22 +87,12 @@ export default async function handler(req: any, res: any) {
             console.log('Error fetching weekly releases:', err);
         }
 
-        // Remove duplicates (prefer on-demand over weekly if same repo)
-        const uniqueBundles = allBundles.reduce((acc: any[], bundle: any) => {
-            const existing = acc.find(b => b.repo === bundle.repo);
-            if (!existing) {
-                acc.push(bundle);
-            } else if (bundle.source === 'on-demand' && existing.source === 'weekly') {
-                // Replace weekly with on-demand version
-                const index = acc.indexOf(existing);
-                acc[index] = bundle;
-            }
-            return acc;
-        }, []);
+        // NO DEDUPLICATION - Keep all versions
+        // Users can see all available versions and choose which one to download
 
         return res.status(200).json({
-            bundles: uniqueBundles,
-            total: uniqueBundles.length,
+            bundles: allBundles,
+            total: allBundles.length,
             updated_at: new Date().toISOString()
         });
 

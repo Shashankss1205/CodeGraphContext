@@ -10,6 +10,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 interface Bundle {
     name: string;
     repo: string;
+    bundle_name?: string;  // Full bundle filename (e.g., "python-bitcoin-utils-main-61d1969.cgc")
     version?: string;
     commit: string;
     size: string;
@@ -294,7 +295,7 @@ const BundleRegistrySection = () => {
 
                                     {/* Usage Hint */}
                                     <div className="bg-muted p-2 rounded text-xs font-mono">
-                                        cgc load {bundle.name}-{bundle.version || 'latest'}.cgc
+                                        cgc load {bundle.bundle_name || `${bundle.name}-${bundle.version || 'latest'}.cgc`}
                                     </div>
                                 </CardContent>
                             </Card>
