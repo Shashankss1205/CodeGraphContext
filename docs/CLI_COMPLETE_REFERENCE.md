@@ -101,7 +101,7 @@
 
 | Command | Arguments | Description |
 |---------|-----------|-------------|
-| `cgc registry list` | `--verbose` `-v` | List all available bundles in the registry. |
+| `cgc registry list` | `--verbose` `-v` `--unique` `-u` | List all available bundles in the registry. Use `--unique` to show only most recent version per package. |
 | `cgc registry search` | `<query>` | Search for bundles by name/repo/description. |
 | `cgc registry download` | `<name>` `--output` `-o` `--load` `-l` | Download bundle from registry. |
 | `cgc registry request` | `<github-url>` `--wait` | Request on-demand bundle generation. |
