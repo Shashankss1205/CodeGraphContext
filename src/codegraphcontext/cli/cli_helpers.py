@@ -572,28 +572,25 @@ def stats_helper(path: str = None):
             console.print("[cyan]📊 Overall Database Statistics[/cyan]\n")
             
             with db_manager.get_driver().session() as session:
-                # Get overall counts
+                # Get overall counts using separate queries to avoid empty results
+                # when some node types don't exist
                 stats_query = """
                 MATCH (r:Repository)
-                WITH count(r) as repo_count
-                MATCH (f:File)
-                WITH repo_count, count(f) as file_count
-                MATCH (func:Function)
-                WITH repo_count, file_count, count(func) as function_count
-                MATCH (cls:Class)
-                WITH repo_count, file_count, function_count, count(cls) as class_count
-                MATCH (m:Module)
+                OPTIONAL MATCH (f:File)
+                OPTIONAL MATCH (func:Function)
+                OPTIONAL MATCH (cls:Class)
+                OPTIONAL MATCH (m:Module)
                 RETURN 
-                    repo_count,
-                    file_count,
-                    function_count,
-                    class_count,
-                    count(m) as module_count
+                    count(DISTINCT r) as repo_count,
+                    count(DISTINCT f) as file_count,
+                    count(DISTINCT func) as function_count,
+                    count(DISTINCT cls) as class_count,
+                    count(DISTINCT m) as module_count
                 """
                 result = session.run(stats_query)
                 record = result.single()
                 
-                if record:
+                if record and record["repo_count"] > 0:
                     table = Table(show_header=True, header_style="bold magenta")
                     table.add_column("Metric", style="cyan")
                     table.add_column("Count", style="green", justify="right")
