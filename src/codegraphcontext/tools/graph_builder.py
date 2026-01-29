@@ -70,6 +70,9 @@ class TreeSitterParser:
         elif self.language_name == 'swift':
             from .languages.swift import SwiftTreeSitterParser
             self.language_specific_parser = SwiftTreeSitterParser(self)
+        elif self.language_name == 'haskell':
+            from .languages.haskell import HaskellTreeSitterParser
+            self.language_specific_parser = HaskellTreeSitterParser(self)
 
 
 
@@ -114,6 +117,7 @@ class GraphBuilder:
             '.scala': TreeSitterParser('scala'),
             '.sc': TreeSitterParser('scala'),
             '.swift': TreeSitterParser('swift'),
+            '.hs': TreeSitterParser('haskell'),
         }
         self.create_schema()
 
