@@ -1,0 +1,6233 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../use_cases/">
+      
+      
+        <link rel="next" href="../integration_guide/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Detailed Use Cases - CodeGraphContext</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#detailed-use-cases-codegraphcontext" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="CodeGraphContext" class="md-header__button md-logo" aria-label="CodeGraphContext" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            CodeGraphContext
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Detailed Use Cases
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="CodeGraphContext" class="md-nav__button md-logo" aria-label="CodeGraphContext" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    CodeGraphContext
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../windows_setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Windows Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../setup_workflows/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setup Workflows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_journeys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Journeys
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../use_cases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use Cases Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detailed Use Cases
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detailed Use Cases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-case-1-safe-refactoring-renaming-a-critical-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Case 1: Safe Refactoring - Renaming a Critical Function
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Use Case 1: Safe Refactoring - Renaming a Critical Function">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#without-cgc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Without CGC ❌
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Without CGC ❌">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-find-all-occurrences-15-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Find all occurrences (15 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-manually-filter-false-positives-15-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Manually filter false positives (15 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-find-indirect-callers-the-hard-part-45-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Find indirect callers - THE HARD PART (45 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-make-changes-20-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Make changes (20 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-test-and-debug-30-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Test and debug (30+ minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-cgc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With CGC ✅
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="With CGC ✅">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-find-all-callers-30-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Find ALL callers (30 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-review-impact-5-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Review impact (5 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-execute-refactoring-with-confidence-10-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Execute refactoring with confidence (10 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-verify-5-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Verify (5 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#savings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Savings
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-case-2-code-cleanup-finding-dead-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Case 2: Code Cleanup - Finding Dead Code
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Use Case 2: Code Cleanup - Finding Dead Code">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scenario_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#without-cgc_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Without CGC ❌
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Without CGC ❌">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-process-7-8-hours" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Process (7-8 hours)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-cgc_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With CGC ✅
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="With CGC ✅">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#automated-process-45-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automated Process (45 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-find-dead-code-10-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Find dead code (10 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-review-the-list-15-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Review the list (15 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-delete-with-confidence-30-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Delete with confidence (30 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-verify-5-minutes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Verify (5 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#savings_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Savings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#long-term-benefits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Long-term Benefits
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-case-3-technical-debt-assessment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Case 3: Technical Debt Assessment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Use Case 3: Technical Debt Assessment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scenario_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#without-cgc_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Without CGC ❌
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Without CGC ❌">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-process-375-hours" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Process (3.75 hours)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-cgc_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With CGC ✅
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="With CGC ✅">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#automated-process-20-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automated Process (20 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-find-complex-functions-5-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Find complex functions (5 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-find-usage-of-each-complex-function-2-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Find usage of each complex function (2 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-generate-prioritization-matrix-3-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Generate prioritization matrix (3 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-create-refactoring-plan-15-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Create refactoring plan (15 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#savings_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Savings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#business-impact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Business Impact
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-case-4-onboarding-new-developers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Case 4: Onboarding New Developers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Use Case 4: Onboarding New Developers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scenario_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#without-cgc_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Without CGC ❌
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Without CGC ❌">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-process-4-hours" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Process (4 hours)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-cgc_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With CGC ✅
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="With CGC ✅">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#self-service-process-30-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Service Process (30 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-find-authentication-entry-point-10-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Find authentication entry point (10 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-see-what-auth_handler-calls-5-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: See what auth_handler calls (5 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-get-complete-call-chain-5-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Get complete call chain (5 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-visualize-the-architecture-30-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Visualize the architecture (30 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-explore-and-understand-20-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Explore and understand (20 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#savings_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Savings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#long-term-benefits_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Long-term Benefits
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-case-5-bug-investigation-tracing-data-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Case 5: Bug Investigation - Tracing Data Flow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Use Case 5: Bug Investigation - Tracing Data Flow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scenario_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#without-cgc_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Without CGC ❌
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Without CGC ❌">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-investigation-4-hours" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Investigation (4+ hours)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-cgc_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With CGC ✅
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="With CGC ✅">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#systematic-investigation-30-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Systematic Investigation (30 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-find-email-functions-10-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Find email functions (10 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-check-what-calls-international-payment-function-5-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Check what calls international payment function (5 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-verify-domestic-payments-work-correctly-5-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Verify domestic payments work correctly (5 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-verify-the-fix-is-safe-5-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Verify the fix is safe (5 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-make-and-verify-fix-20-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Make and verify fix (20 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#savings_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Savings
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-case-6-api-deprecation-planning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Case 6: API Deprecation Planning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Use Case 6: API Deprecation Planning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scenario_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#without-cgc_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Without CGC ❌
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Without CGC ❌">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-process-25-hours" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Process (2.5 hours)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-cgc_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With CGC ✅
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="With CGC ✅">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#systematic-process-20-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Systematic Process (20 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-find-all-usages-5-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Find all usages (5 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-analyze-impact-5-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Analyze impact (5 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-create-migration-plan-15-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Create migration plan (15 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#communication-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Communication Plan
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Communication Plan">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-2-find-circular-dependencies-5-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Find circular dependencies (5 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-visualize-architecture-10-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Visualize architecture (10 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-generate-architecture-report-20-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Generate architecture report (20 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#savings_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Savings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#business-impact_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Business Impact
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-case-8-security-audit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Case 8: Security Audit
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Use Case 8: Security Audit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scenario_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#without-cgc_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Without CGC ❌
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Without CGC ❌">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-process-5-hours" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Process (5+ hours)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-cgc_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With CGC ✅
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="With CGC ✅">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#systematic-process-35-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Systematic Process (35 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-find-all-database-access-5-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Find all database access (5 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-find-all-api-calls-5-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Find all API calls (5 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-trace-back-to-entry-points-10-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Trace back to entry points (10 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-generate-audit-report-20-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Generate audit report (20 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#savings_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Savings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#business-impact_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Business Impact
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-case-9-performance-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Case 9: Performance Optimization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Use Case 9: Performance Optimization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scenario_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#without-cgc_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Without CGC ❌
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Without CGC ❌">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-process-4-hours_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Process (4+ hours)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-cgc_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With CGC ✅
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="With CGC ✅">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#systematic-process-30-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Systematic Process (30 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-find-all-callers-5-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Find all callers (5 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-identify-likely-hot-paths-10-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Identify likely hot paths (10 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-analyze-hot-path-5-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Analyze hot path (5 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-identify-optimization-15-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Identify optimization (15 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#savings_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Savings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#business-impact_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Business Impact
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-case-10-code-review-pr-impact-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Case 10: Code Review - PR Impact Analysis
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Use Case 10: Code Review - PR Impact Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scenario_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#without-cgc_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Without CGC ❌
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Without CGC ❌">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-process-25-hours_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Process (2.5 hours)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-cgc_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With CGC ✅
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="With CGC ✅">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#systematic-process-30-minutes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Systematic Process (30 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-identify-changed-functions-5-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Identify changed functions (5 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-find-impact-of-each-change-10-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Find impact of each change (10 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-check-test-coverage-5-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Check test coverage (5 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-write-informed-review-20-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Write informed review (20 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#savings_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Savings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#long-term-benefits_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Long-term Benefits
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-total-value-across-all-use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: Total Value Across All Use Cases
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#roi-calculation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ROI Calculation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ROI Calculation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#per-month-assuming-2-use-casesweek" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per Month (assuming 2 use cases/week)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#per-year" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per Year
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#investment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Investment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#break-even" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Break-even
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../integration_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Server (MCP)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../core/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core Concepts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Advanced
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../watching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live Watching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cookbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cookbook
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deployment
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment/DOCKER_README/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment/DOCKER_COMPLETE_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker Complete Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment/DOCKER_DEPLOYMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment/HOSTING_COMPARISON/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hosting Comparison
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment/DEPLOYMENT_CHECKLIST/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment Checklist
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Contributing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing_languages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adding New Languages
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Help
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Help
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../future_work/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Future Work
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../license/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    License
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-case-1-safe-refactoring-renaming-a-critical-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Case 1: Safe Refactoring - Renaming a Critical Function
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Use Case 1: Safe Refactoring - Renaming a Critical Function">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#without-cgc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Without CGC ❌
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Without CGC ❌">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-find-all-occurrences-15-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Find all occurrences (15 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-manually-filter-false-positives-15-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Manually filter false positives (15 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-find-indirect-callers-the-hard-part-45-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Find indirect callers - THE HARD PART (45 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-make-changes-20-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Make changes (20 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-test-and-debug-30-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Test and debug (30+ minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-cgc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With CGC ✅
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="With CGC ✅">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-find-all-callers-30-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Find ALL callers (30 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-review-impact-5-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Review impact (5 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-execute-refactoring-with-confidence-10-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Execute refactoring with confidence (10 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-verify-5-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Verify (5 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#savings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Savings
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-case-2-code-cleanup-finding-dead-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Case 2: Code Cleanup - Finding Dead Code
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Use Case 2: Code Cleanup - Finding Dead Code">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scenario_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#without-cgc_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Without CGC ❌
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Without CGC ❌">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-process-7-8-hours" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Process (7-8 hours)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-cgc_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With CGC ✅
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="With CGC ✅">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#automated-process-45-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automated Process (45 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-find-dead-code-10-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Find dead code (10 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-review-the-list-15-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Review the list (15 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-delete-with-confidence-30-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Delete with confidence (30 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-verify-5-minutes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Verify (5 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#savings_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Savings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#long-term-benefits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Long-term Benefits
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-case-3-technical-debt-assessment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Case 3: Technical Debt Assessment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Use Case 3: Technical Debt Assessment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scenario_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#without-cgc_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Without CGC ❌
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Without CGC ❌">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-process-375-hours" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Process (3.75 hours)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-cgc_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With CGC ✅
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="With CGC ✅">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#automated-process-20-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automated Process (20 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-find-complex-functions-5-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Find complex functions (5 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-find-usage-of-each-complex-function-2-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Find usage of each complex function (2 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-generate-prioritization-matrix-3-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Generate prioritization matrix (3 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-create-refactoring-plan-15-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Create refactoring plan (15 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#savings_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Savings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#business-impact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Business Impact
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-case-4-onboarding-new-developers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Case 4: Onboarding New Developers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Use Case 4: Onboarding New Developers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scenario_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#without-cgc_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Without CGC ❌
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Without CGC ❌">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-process-4-hours" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Process (4 hours)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-cgc_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With CGC ✅
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="With CGC ✅">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#self-service-process-30-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Service Process (30 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-find-authentication-entry-point-10-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Find authentication entry point (10 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-see-what-auth_handler-calls-5-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: See what auth_handler calls (5 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-get-complete-call-chain-5-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Get complete call chain (5 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-visualize-the-architecture-30-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Visualize the architecture (30 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-explore-and-understand-20-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Explore and understand (20 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#savings_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Savings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#long-term-benefits_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Long-term Benefits
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-case-5-bug-investigation-tracing-data-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Case 5: Bug Investigation - Tracing Data Flow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Use Case 5: Bug Investigation - Tracing Data Flow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scenario_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#without-cgc_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Without CGC ❌
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Without CGC ❌">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-investigation-4-hours" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Investigation (4+ hours)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-cgc_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With CGC ✅
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="With CGC ✅">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#systematic-investigation-30-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Systematic Investigation (30 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-find-email-functions-10-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Find email functions (10 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-check-what-calls-international-payment-function-5-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Check what calls international payment function (5 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-verify-domestic-payments-work-correctly-5-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Verify domestic payments work correctly (5 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-verify-the-fix-is-safe-5-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Verify the fix is safe (5 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-make-and-verify-fix-20-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Make and verify fix (20 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#savings_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Savings
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-case-6-api-deprecation-planning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Case 6: API Deprecation Planning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Use Case 6: API Deprecation Planning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scenario_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#without-cgc_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Without CGC ❌
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Without CGC ❌">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-process-25-hours" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Process (2.5 hours)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-cgc_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With CGC ✅
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="With CGC ✅">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#systematic-process-20-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Systematic Process (20 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-find-all-usages-5-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Find all usages (5 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-analyze-impact-5-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Analyze impact (5 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-create-migration-plan-15-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Create migration plan (15 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#communication-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Communication Plan
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Communication Plan">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-2-find-circular-dependencies-5-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Find circular dependencies (5 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-visualize-architecture-10-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Visualize architecture (10 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-generate-architecture-report-20-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Generate architecture report (20 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#savings_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Savings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#business-impact_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Business Impact
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-case-8-security-audit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Case 8: Security Audit
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Use Case 8: Security Audit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scenario_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#without-cgc_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Without CGC ❌
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Without CGC ❌">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-process-5-hours" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Process (5+ hours)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-cgc_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With CGC ✅
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="With CGC ✅">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#systematic-process-35-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Systematic Process (35 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-find-all-database-access-5-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Find all database access (5 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-find-all-api-calls-5-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Find all API calls (5 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-trace-back-to-entry-points-10-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Trace back to entry points (10 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-generate-audit-report-20-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Generate audit report (20 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#savings_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Savings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#business-impact_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Business Impact
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-case-9-performance-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Case 9: Performance Optimization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Use Case 9: Performance Optimization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scenario_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#without-cgc_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Without CGC ❌
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Without CGC ❌">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-process-4-hours_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Process (4+ hours)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-cgc_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With CGC ✅
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="With CGC ✅">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#systematic-process-30-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Systematic Process (30 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-find-all-callers-5-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Find all callers (5 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-identify-likely-hot-paths-10-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Identify likely hot paths (10 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-analyze-hot-path-5-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Analyze hot path (5 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-identify-optimization-15-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Identify optimization (15 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#savings_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Savings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#business-impact_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Business Impact
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-case-10-code-review-pr-impact-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Case 10: Code Review - PR Impact Analysis
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Use Case 10: Code Review - PR Impact Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scenario_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#without-cgc_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Without CGC ❌
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Without CGC ❌">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-process-25-hours_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Process (2.5 hours)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-cgc_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With CGC ✅
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="With CGC ✅">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#systematic-process-30-minutes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Systematic Process (30 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-identify-changed-functions-5-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Identify changed functions (5 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-find-impact-of-each-change-10-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Find impact of each change (10 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-check-test-coverage-5-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Check test coverage (5 seconds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-write-informed-review-20-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Write informed review (20 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#savings_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Savings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#long-term-benefits_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Long-term Benefits
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-total-value-across-all-use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: Total Value Across All Use Cases
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#roi-calculation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ROI Calculation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ROI Calculation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#per-month-assuming-2-use-casesweek" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per Month (assuming 2 use cases/week)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#per-year" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per Year
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#investment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Investment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#break-even" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Break-even
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="detailed-use-cases-codegraphcontext">Detailed Use Cases - CodeGraphContext</h1>
+<p>This document provides <strong>10 detailed, real-world use cases</strong> with concrete examples, exact steps, time/cost savings, and ROI calculations.</p>
+<p>Each use case includes:
+- <strong>Scenario</strong>: Real-world problem
+- <strong>Without CGC</strong>: Traditional approach with time/cost
+- <strong>With CGC</strong>: CGC-powered approach with exact commands
+- <strong>Savings</strong>: Quantified time and cost savings
+- <strong>ROI</strong>: Return on investment calculation</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#use-case-1-safe-refactoring---renaming-a-critical-function">Use Case 1: Safe Refactoring - Renaming a Critical Function</a></li>
+<li><a href="#use-case-2-code-cleanup---finding-dead-code">Use Case 2: Code Cleanup - Finding Dead Code</a></li>
+<li><a href="#use-case-3-technical-debt-assessment">Use Case 3: Technical Debt Assessment</a></li>
+<li><a href="#use-case-4-onboarding-new-developers">Use Case 4: Onboarding New Developers</a></li>
+<li><a href="#use-case-5-bug-investigation---tracing-data-flow">Use Case 5: Bug Investigation - Tracing Data Flow</a></li>
+<li><a href="#use-case-6-api-deprecation-planning">Use Case 6: API Deprecation Planning</a></li>
+<li><a href="#use-case-7-architecture-review">Use Case 7: Architecture Review</a></li>
+<li><a href="#use-case-8-security-audit">Use Case 8: Security Audit</a></li>
+<li><a href="#use-case-9-performance-optimization">Use Case 9: Performance Optimization</a></li>
+<li><a href="#use-case-10-code-review---pr-impact-analysis">Use Case 10: Code Review - PR Impact Analysis</a></li>
+</ol>
+<hr />
+<h2 id="use-case-1-safe-refactoring-renaming-a-critical-function">Use Case 1: Safe Refactoring - Renaming a Critical Function</h2>
+<h3 id="scenario">Scenario</h3>
+<p><strong>Company</strong>: E-commerce platform with 50k LOC<br />
+<strong>Task</strong>: Rename <code>execute_cypher_query</code> to <code>run_graph_query</code> for better clarity<br />
+<strong>Challenge</strong>: Function is used throughout the codebase, need to ensure nothing breaks<br />
+<strong>Developer</strong>: Senior Backend Engineer ($75/hr)</p>
+<h3 id="without-cgc">Without CGC ❌</h3>
+<h4 id="step-1-find-all-occurrences-15-minutes">Step 1: Find all occurrences (15 minutes)</h4>
+<pre><code class="language-bash">grep -r &quot;execute_cypher_query&quot; . --include=&quot;*.py&quot;
+</code></pre>
+<p><strong>Output</strong>: 150+ lines (includes comments, strings, docstrings, imports)</p>
+<h4 id="step-2-manually-filter-false-positives-15-minutes">Step 2: Manually filter false positives (15 minutes)</h4>
+<ul>
+<li>Read through each line</li>
+<li>Identify actual function calls vs comments</li>
+<li>Miss some edge cases (dynamic calls, string references)</li>
+</ul>
+<h4 id="step-3-find-indirect-callers-the-hard-part-45-minutes">Step 3: Find indirect callers - THE HARD PART (45 minutes)</h4>
+<pre><code class="language-bash"># For each caller, manually search what calls THEM
+grep -r &quot;execute_cypher_query_tool&quot; .
+# Then grep for what calls THAT function
+# Repeat for multiple levels...
+</code></pre>
+<p><strong>Problem</strong>: You'll miss indirect callers, leading to runtime errors</p>
+<h4 id="step-4-make-changes-20-minutes">Step 4: Make changes (20 minutes)</h4>
+<ul>
+<li>Manually edit each file</li>
+<li>High risk of missing some occurrences</li>
+</ul>
+<h4 id="step-5-test-and-debug-30-minutes">Step 5: Test and debug (30+ minutes)</h4>
+<ul>
+<li>Run tests</li>
+<li>Find what you missed when tests fail</li>
+<li>Fix broken code</li>
+</ul>
+<p><strong>TOTAL TIME</strong>: 2-3 hours<br />
+<strong>RISK</strong>: Medium-High (likely to miss some usages)<br />
+<strong>COST</strong>: $150-$225</p>
+<h3 id="with-cgc">With CGC ✅</h3>
+<h4 id="step-1-find-all-callers-30-seconds">Step 1: Find ALL callers (30 seconds)</h4>
+<pre><code class="language-bash">cgc analyze callers execute_cypher_query --all
+</code></pre>
+<p><strong>Output</strong>:</p>
+<pre><code>Callers of 'execute_cypher_query':
+
+Direct Callers (1):
+┌────────────────────────────────────────────────────────────┐
+│ Function              │ File                    │ Line     │
+├────────────────────────────────────────────────────────────┤
+│ execute_cypher_query_tool │ server.py          │ 102      │
+└────────────────────────────────────────────────────────────┘
+
+All Callers (Direct + Indirect) (50):
+┌────────────────────────────────────────────────────────────┐
+│ Function              │ File                    │ Line     │
+├────────────────────────────────────────────────────────────┤
+│ execute_cypher_query_tool │ server.py          │ 102      │
+│ index_helper          │ cli_helpers.py          │ 48       │
+│ do_index              │ cli_helpers.py          │ 90       │
+│ add_package_helper    │ cli_helpers.py          │ 117      │
+│ reindex_helper        │ cli_helpers.py          │ 394      │
+│ ... (45 more)
+└────────────────────────────────────────────────────────────┘
+
+Summary:
+- Direct callers: 1
+- Indirect callers: 49
+- Total impact: 50 functions
+- Files affected: 12
+</code></pre>
+<h4 id="step-2-review-impact-5-minutes">Step 2: Review impact (5 minutes)</h4>
+<ul>
+<li>Clear list of all 50 affected functions</li>
+<li>Exact file paths and line numbers</li>
+<li>No false positives</li>
+</ul>
+<h4 id="step-3-execute-refactoring-with-confidence-10-minutes">Step 3: Execute refactoring with confidence (10 minutes)</h4>
+<pre><code class="language-bash"># Use IDE's refactoring tool, knowing you have the complete list
+# Or use sed with exact matches
+find . -name &quot;*.py&quot; -exec sed -i 's/execute_cypher_query/run_graph_query/g' {} \;
+</code></pre>
+<h4 id="step-4-verify-5-minutes">Step 4: Verify (5 minutes)</h4>
+<pre><code class="language-bash"># Verify no references remain
+cgc find &quot;execute_cypher_query&quot;
+# Output: No results found
+
+# Verify new function is properly connected
+cgc analyze callers run_graph_query
+# Output: Shows all 50 callers now point to new function name
+</code></pre>
+<p><strong>TOTAL TIME</strong>: 20 minutes<br />
+<strong>RISK</strong>: Very Low (complete graph-based analysis)<br />
+<strong>COST</strong>: $25</p>
+<h3 id="savings">Savings</h3>
+<ul>
+<li><strong>Time saved</strong>: 2.5 hours</li>
+<li><strong>Cost saved</strong>: $200</li>
+<li><strong>Risk reduction</strong>: 90% (from likely bugs to near-zero bugs)</li>
+<li><strong>ROI</strong>: 800% (saved $200 for $25 of time)</li>
+</ul>
+<hr />
+<h2 id="use-case-2-code-cleanup-finding-dead-code">Use Case 2: Code Cleanup - Finding Dead Code</h2>
+<h3 id="scenario_1">Scenario</h3>
+<p><strong>Company</strong>: SaaS product with 5 years of development (100k LOC)<br />
+<strong>Task</strong>: Find and remove unused code before major release<br />
+<strong>Challenge</strong>: Codebase has accumulated dead code from deprecated features<br />
+<strong>Developer</strong>: Mid-level Engineer ($60/hr)</p>
+<h3 id="without-cgc_1">Without CGC ❌</h3>
+<h4 id="manual-process-7-8-hours">Manual Process (7-8 hours)</h4>
+<ol>
+<li><strong>List all functions</strong> (1 hour)</li>
+<li>Go through each file</li>
+<li>
+<p>Note function names in spreadsheet</p>
+</li>
+<li>
+<p><strong>For each function, search for usages</strong> (4 hours)
+   <code>bash
+   grep -r "function_name_1" .
+   grep -r "function_name_2" .
+   # Repeat 100+ times...</code></p>
+</li>
+<li>
+<p><strong>Analyze results</strong> (2 hours)</p>
+</li>
+<li>Filter false positives (comments, docstrings)</li>
+<li>Check if called only from tests</li>
+<li>
+<p>Check for dynamic calls</p>
+</li>
+<li>
+<p><strong>Verify and delete</strong> (1 hour)</p>
+</li>
+<li>High risk of deleting used code</li>
+<li>Or keeping unused code</li>
+</ol>
+<p><strong>TOTAL TIME</strong>: 7-8 hours<br />
+<strong>RISK</strong>: High (might delete used code or miss unused code)<br />
+<strong>COST</strong>: $420-$480</p>
+<h3 id="with-cgc_1">With CGC ✅</h3>
+<h4 id="automated-process-45-minutes">Automated Process (45 minutes)</h4>
+<h4 id="step-1-find-dead-code-10-seconds">Step 1: Find dead code (10 seconds)</h4>
+<pre><code class="language-bash">cgc analyze dead-code --exclude-decorated @app.route @api.endpoint @celery.task
+</code></pre>
+<p><strong>Output</strong>:</p>
+<pre><code>Potentially Unused Functions:
+
+┌──────────────────────────────────────────────────────────────────────┐
+│ Function              │ File                    │ LOC  │ Complexity  │
+├──────────────────────────────────────────────────────────────────────┤
+│ _legacyHashPassword   │ auth/legacy_auth.py     │ 23   │ 8           │
+│ _migrateUserSession   │ auth/migration.py       │ 34   │ 12          │
+│ validateLegacyToken   │ auth/legacy_auth.py     │ 45   │ 15          │
+│ oldPaymentGateway     │ billing/deprecated.py   │ 123  │ 22          │
+│ formatXMLResponse     │ api/xml_formatter.py    │ 67   │ 18          │
+│ ... (45 more)
+└──────────────────────────────────────────────────────────────────────┘
+
+Summary:
+- Total unused functions: 50
+- Total lines of code: 2,345
+- Potential savings: 2,345 LOC (2.3% of codebase)
+
+Excluded from analysis:
+- Functions decorated with @app.route (API endpoints)
+- Functions decorated with @api.endpoint (public API)
+- Functions decorated with @celery.task (background jobs)
+</code></pre>
+<h4 id="step-2-review-the-list-15-minutes">Step 2: Review the list (15 minutes)</h4>
+<ul>
+<li>Verify each function is truly unused</li>
+<li>Check git history for context</li>
+<li>Confirm with team if unsure</li>
+</ul>
+<h4 id="step-3-delete-with-confidence-30-minutes">Step 3: Delete with confidence (30 minutes)</h4>
+<pre><code class="language-bash"># Delete dead code files
+rm auth/legacy_auth.py
+rm billing/deprecated.py
+rm api/xml_formatter.py
+
+# Or remove specific functions
+# Use IDE or text editor
+</code></pre>
+<h4 id="step-4-verify-5-minutes_1">Step 4: Verify (5 minutes)</h4>
+<pre><code class="language-bash"># Run tests to ensure nothing broke
+pytest
+
+# Verify dead code is gone
+cgc stats
+
+# Output shows:
+# Functions: 3,371 (was 3,421)
+# Removed: 50 functions, 2,345 LOC
+</code></pre>
+<p><strong>TOTAL TIME</strong>: 45 minutes<br />
+<strong>RISK</strong>: Very Low (graph analysis is accurate)<br />
+<strong>COST</strong>: $45</p>
+<h3 id="savings_1">Savings</h3>
+<ul>
+<li><strong>Time saved</strong>: 7 hours</li>
+<li><strong>Cost saved</strong>: $420</li>
+<li><strong>Code reduced</strong>: 2,345 lines (2.3%)</li>
+<li><strong>Maintenance burden reduced</strong>: Fewer lines to maintain, test, understand</li>
+<li><strong>ROI</strong>: 933% (saved $420 for $45 of time)</li>
+</ul>
+<h3 id="long-term-benefits">Long-term Benefits</h3>
+<ul>
+<li><strong>Faster CI/CD</strong>: Less code to test</li>
+<li><strong>Easier onboarding</strong>: Less code to understand</li>
+<li><strong>Reduced bugs</strong>: Less code to have bugs</li>
+<li><strong>Improved performance</strong>: Less code to execute</li>
+</ul>
+<hr />
+<h2 id="use-case-3-technical-debt-assessment">Use Case 3: Technical Debt Assessment</h2>
+<h3 id="scenario_2">Scenario</h3>
+<p><strong>Company</strong>: Fintech startup preparing for Series B<br />
+<strong>Task</strong>: Prioritize refactoring efforts for next quarter<br />
+<strong>Challenge</strong>: Limited engineering resources, need to focus on highest-impact refactoring<br />
+<strong>Team</strong>: Engineering Manager + 2 Senior Engineers</p>
+<h3 id="without-cgc_2">Without CGC ❌</h3>
+<h4 id="manual-process-375-hours">Manual Process (3.75 hours)</h4>
+<ol>
+<li>
+<p><strong>Install complexity tool</strong> (5 minutes)
+   <code>bash
+   pip install radon mccabe</code></p>
+</li>
+<li>
+<p><strong>Run analysis</strong> (10 minutes)
+   <code>bash
+   radon cc . -a -nb &gt; complexity_report.txt</code>
+   <strong>Output</strong>: Huge text file, hard to parse</p>
+</li>
+<li>
+<p><strong>Parse and prioritize</strong> (30 minutes)</p>
+</li>
+<li>Copy to spreadsheet</li>
+<li>Sort by complexity</li>
+<li>
+<p>Manually categorize</p>
+</li>
+<li>
+<p><strong>Find usage of complex functions</strong> (2 hours)
+   <code>bash
+   # For top 20 complex functions
+   grep -r "complex_function_1" .
+   grep -r "complex_function_2" .
+   # Repeat 20 times...</code></p>
+</li>
+<li>
+<p><strong>Create refactoring plan</strong> (1 hour)</p>
+</li>
+<li>Prioritize based on complexity + usage</li>
+<li>Estimate effort</li>
+<li>Assign to engineers</li>
+</ol>
+<p><strong>TOTAL TIME</strong>: 3.75 hours<br />
+<strong>COST</strong>: $281.25 (at $75/hr)</p>
+<h3 id="with-cgc_2">With CGC ✅</h3>
+<h4 id="automated-process-20-minutes">Automated Process (20 minutes)</h4>
+<h4 id="step-1-find-complex-functions-5-seconds">Step 1: Find complex functions (5 seconds)</h4>
+<pre><code class="language-bash">cgc analyze complexity --limit 20
+</code></pre>
+<p><strong>Output</strong>:</p>
+<pre><code>Most Complex Functions:
+
+┌──────────────────────────────────────────────────────────────────────┐
+│ Function              │ File                    │ Complexity │ LOC    │
+├──────────────────────────────────────────────────────────────────────┤
+│ processPayment        │ billing/payment.py      │ 45         │ 234    │
+│ validateTransaction   │ billing/validation.py   │ 38         │ 189    │
+│ calculateFees         │ billing/fees.py         │ 32         │ 156    │
+│ reconcileAccounts     │ accounting/reconcile.py │ 28         │ 145    │
+│ generateReport        │ reports/generator.py    │ 25         │ 123    │
+│ ... (15 more)
+└──────────────────────────────────────────────────────────────────────┘
+
+Average complexity: 12.3
+Recommended max: 10
+Functions exceeding threshold: 20
+</code></pre>
+<h4 id="step-2-find-usage-of-each-complex-function-2-minutes">Step 2: Find usage of each complex function (2 minutes)</h4>
+<pre><code class="language-bash"># For each complex function, find callers
+for func in processPayment validateTransaction calculateFees reconcileAccounts generateReport; do
+  echo &quot;=== $func ===&quot;
+  cgc analyze callers $func --count-only
+done
+</code></pre>
+<p><strong>Output</strong>:</p>
+<pre><code>=== processPayment ===
+Callers: 34
+
+=== validateTransaction ===
+Callers: 23
+
+=== calculateFees ===
+Callers: 18
+
+=== reconcileAccounts ===
+Callers: 5
+
+=== generateReport ===
+Callers: 12
+</code></pre>
+<h4 id="step-3-generate-prioritization-matrix-3-minutes">Step 3: Generate prioritization matrix (3 minutes)</h4>
+<pre><code class="language-bash">cgc analyze complexity --limit 20 --with-callers --output priority_matrix.json
+</code></pre>
+<p><strong>Output</strong> (priority_matrix.json):</p>
+<pre><code class="language-json">[
+  {
+    &quot;function&quot;: &quot;processPayment&quot;,
+    &quot;complexity&quot;: 45,
+    &quot;callers&quot;: 34,
+    &quot;priority_score&quot;: 1530,  // complexity * callers
+    &quot;priority&quot;: &quot;CRITICAL&quot;,
+    &quot;recommendation&quot;: &quot;Refactor immediately - high complexity, widely used&quot;
+  },
+  {
+    &quot;function&quot;: &quot;validateTransaction&quot;,
+    &quot;complexity&quot;: 38,
+    &quot;callers&quot;: 23,
+    &quot;priority_score&quot;: 874,
+    &quot;priority&quot;: &quot;HIGH&quot;,
+    &quot;recommendation&quot;: &quot;Refactor next sprint - high complexity, moderate usage&quot;
+  },
+  {
+    &quot;function&quot;: &quot;reconcileAccounts&quot;,
+    &quot;complexity&quot;: 28,
+    &quot;callers&quot;: 5,
+    &quot;priority_score&quot;: 140,
+    &quot;priority&quot;: &quot;LOW&quot;,
+    &quot;recommendation&quot;: &quot;Refactor when time permits - complex but rarely used&quot;
+  }
+]
+</code></pre>
+<h4 id="step-4-create-refactoring-plan-15-minutes">Step 4: Create refactoring plan (15 minutes)</h4>
+<p><strong>Automated Priority Matrix</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Complexity</th>
+<th>Callers</th>
+<th>Priority</th>
+<th>Effort</th>
+<th>Sprint</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>processPayment</td>
+<td>45</td>
+<td>34</td>
+<td>CRITICAL</td>
+<td>2 weeks</td>
+<td>Q1 Sprint 1</td>
+</tr>
+<tr>
+<td>validateTransaction</td>
+<td>38</td>
+<td>23</td>
+<td>HIGH</td>
+<td>1 week</td>
+<td>Q1 Sprint 2</td>
+</tr>
+<tr>
+<td>calculateFees</td>
+<td>32</td>
+<td>18</td>
+<td>HIGH</td>
+<td>1 week</td>
+<td>Q1 Sprint 3</td>
+</tr>
+<tr>
+<td>generateReport</td>
+<td>25</td>
+<td>12</td>
+<td>MEDIUM</td>
+<td>3 days</td>
+<td>Q1 Sprint 4</td>
+</tr>
+<tr>
+<td>reconcileAccounts</td>
+<td>28</td>
+<td>5</td>
+<td>LOW</td>
+<td>1 week</td>
+<td>Q2 Backlog</td>
+</tr>
+</tbody>
+</table>
+<p><strong>TOTAL TIME</strong>: 20 minutes<br />
+<strong>COST</strong>: $25</p>
+<h3 id="savings_2">Savings</h3>
+<ul>
+<li><strong>Time saved</strong>: 3.5 hours</li>
+<li><strong>Cost saved</strong>: $256</li>
+<li><strong>Better prioritization</strong>: Data-driven decisions vs gut feeling</li>
+<li><strong>ROI</strong>: 1024% (saved $256 for $25 of time)</li>
+</ul>
+<h3 id="business-impact">Business Impact</h3>
+<ul>
+<li><strong>Focused refactoring</strong>: Work on high-impact code first</li>
+<li><strong>Reduced risk</strong>: Refactor widely-used code with more care</li>
+<li><strong>Better estimates</strong>: Know complexity and usage upfront</li>
+<li><strong>Investor confidence</strong>: Show technical debt is managed</li>
+</ul>
+<hr />
+<h2 id="use-case-4-onboarding-new-developers">Use Case 4: Onboarding New Developers</h2>
+<h3 id="scenario_3">Scenario</h3>
+<p><strong>Company</strong>: Open-source project with 200+ contributors<br />
+<strong>New Developer</strong>: Junior engineer (first month)<br />
+<strong>Task</strong>: Understand the authentication system to fix a bug<br />
+<strong>Challenge</strong>: No documentation, complex codebase, senior devs are busy</p>
+<h3 id="without-cgc_3">Without CGC ❌</h3>
+<h4 id="manual-process-4-hours">Manual Process (4 hours)</h4>
+<ol>
+<li><strong>Find entry point</strong> (30 minutes)</li>
+<li>Read README (if exists)</li>
+<li>Search for "auth" in code</li>
+<li>
+<p>Ask in Slack (wait for response)</p>
+</li>
+<li>
+<p><strong>Trace code flow manually</strong> (2 hours)</p>
+</li>
+<li>Open <code>auth_handler.py</code></li>
+<li>See it calls <code>validate_token</code></li>
+<li>Open <code>validate_token</code>, see it calls <code>check_database</code></li>
+<li>Keep following the chain...</li>
+<li>
+<p>Get lost in circular imports</p>
+</li>
+<li>
+<p><strong>Draw diagram</strong> (1 hour)</p>
+</li>
+<li>Manually create call flow diagram</li>
+<li>
+<p>Probably incomplete or incorrect</p>
+</li>
+<li>
+<p><strong>Ask senior developer</strong> (30 minutes)</p>
+</li>
+<li>Schedule meeting</li>
+<li>Explain confusion</li>
+<li>Get clarification</li>
+</ol>
+<p><strong>TOTAL TIME</strong>: 4 hours (new dev) + 30 min (senior dev)<br />
+<strong>COST</strong>: $200 (new dev at $50/hr) + $62.50 (senior dev at $125/hr) = $262.50</p>
+<h3 id="with-cgc_3">With CGC ✅</h3>
+<h4 id="self-service-process-30-minutes">Self-Service Process (30 minutes)</h4>
+<h4 id="step-1-find-authentication-entry-point-10-seconds">Step 1: Find authentication entry point (10 seconds)</h4>
+<pre><code class="language-bash">cgc find &quot;auth&quot; --type function | grep -i &quot;handler\|main\|entry&quot;
+</code></pre>
+<p><strong>Output</strong>:</p>
+<pre><code>Found 3 functions matching 'auth' with 'handler':
+
+1. auth_handler
+   File: src/api/auth.py:23
+
+2. handle_login
+   File: src/api/auth.py:45
+
+3. handle_logout
+   File: src/api/auth.py:78
+</code></pre>
+<h4 id="step-2-see-what-auth_handler-calls-5-seconds">Step 2: See what auth_handler calls (5 seconds)</h4>
+<pre><code class="language-bash">cgc analyze callees auth_handler
+</code></pre>
+<p><strong>Output</strong>:</p>
+<pre><code>Functions called by 'auth_handler':
+
+┌────────────────────────────────────────────────────────────┐
+│ Function              │ File                    │ Line     │
+├────────────────────────────────────────────────────────────┤
+│ validate_token        │ auth/validation.py      │ 34       │
+│ check_permissions     │ auth/permissions.py     │ 67       │
+│ log_auth_attempt      │ logging/audit.py        │ 89       │
+└────────────────────────────────────────────────────────────┘
+</code></pre>
+<h4 id="step-3-get-complete-call-chain-5-seconds">Step 3: Get complete call chain (5 seconds)</h4>
+<pre><code class="language-bash">cgc analyze chain auth_handler database_query
+</code></pre>
+<p><strong>Output</strong>:</p>
+<pre><code>Call Chain from 'auth_handler' to 'database_query':
+
+auth_handler (api/auth.py:23)
+  └─&gt; validate_token (auth/validation.py:34)
+      └─&gt; check_database (auth/db_check.py:56)
+          └─&gt; database_query (core/database.py:89)
+
+Path length: 4 functions
+Execution flow: API → Validation → Database Check → Database
+</code></pre>
+<h4 id="step-4-visualize-the-architecture-30-seconds">Step 4: Visualize the architecture (30 seconds)</h4>
+<pre><code class="language-bash">cgc visualize --focus auth --output auth_architecture.html
+</code></pre>
+<p>Opens interactive graph showing:
+- All authentication-related functions
+- How they connect
+- Module boundaries
+- External dependencies</p>
+<h4 id="step-5-explore-and-understand-20-minutes">Step 5: Explore and understand (20 minutes)</h4>
+<ul>
+<li>Click through visualization</li>
+<li>Read relevant code sections</li>
+<li>Understand the full flow</li>
+<li>No senior dev needed!</li>
+</ul>
+<p><strong>TOTAL TIME</strong>: 30 minutes<br />
+<strong>COST</strong>: $25 (new dev only, no senior dev time)</p>
+<h3 id="savings_3">Savings</h3>
+<ul>
+<li><strong>Time saved</strong>: 3.5 hours</li>
+<li><strong>Cost saved</strong>: $237.50</li>
+<li><strong>Senior dev time saved</strong>: 30 minutes ($62.50)</li>
+<li><strong>Faster onboarding</strong>: Productive in hours vs days</li>
+<li><strong>ROI</strong>: 950% (saved $237.50 for $25 of time)</li>
+</ul>
+<h3 id="long-term-benefits_1">Long-term Benefits</h3>
+<ul>
+<li><strong>Self-sufficient developers</strong>: Less hand-holding needed</li>
+<li><strong>Reduced senior dev interruptions</strong>: More time for architecture work</li>
+<li><strong>Better code understanding</strong>: Visual + structural learning</li>
+<li><strong>Faster ramp-up</strong>: New devs productive in days vs weeks</li>
+</ul>
+<hr />
+<h2 id="use-case-5-bug-investigation-tracing-data-flow">Use Case 5: Bug Investigation - Tracing Data Flow</h2>
+<h3 id="scenario_4">Scenario</h3>
+<p><strong>Company</strong>: E-commerce platform<br />
+<strong>Bug Report</strong>: "Payment confirmation emails not sending for international orders"<br />
+<strong>Developer</strong>: Mid-level Backend Engineer ($65/hr)<br />
+<strong>Challenge</strong>: Complex payment flow, multiple services involved</p>
+<h3 id="without-cgc_4">Without CGC ❌</h3>
+<h4 id="manual-investigation-4-hours">Manual Investigation (4+ hours)</h4>
+<ol>
+<li>
+<p><strong>Search for email code</strong> (10 minutes)
+   <code>bash
+   grep -r "email" . --include="*.py" | grep -i "payment\|confirm"</code>
+   <strong>Output</strong>: 200+ lines, many false positives</p>
+</li>
+<li>
+<p><strong>Search for international payment code</strong> (10 minutes)
+   <code>bash
+   grep -r "international" . --include="*.py"</code></p>
+</li>
+<li>
+<p><strong>Manually trace the flow</strong> (2 hours)</p>
+</li>
+<li>Read <code>process_international_payment</code> function</li>
+<li>See what it calls</li>
+<li>Check if email function is called</li>
+<li>Trace through multiple files</li>
+<li>
+<p>Get confused by similar function names</p>
+</li>
+<li>
+<p><strong>Compare with domestic payments</strong> (1 hour)</p>
+</li>
+<li>Read <code>process_domestic_payment</code> function</li>
+<li>Compare side-by-side</li>
+<li>
+<p>Identify differences</p>
+</li>
+<li>
+<p><strong>Verify the fix</strong> (1 hour)</p>
+</li>
+<li>Make the change</li>
+<li>Test locally</li>
+<li>Hope nothing else breaks</li>
+</ol>
+<p><strong>TOTAL TIME</strong>: 4+ hours<br />
+<strong>COST</strong>: $260+<br />
+<strong>RISK</strong>: Might miss side effects</p>
+<h3 id="with-cgc_4">With CGC ✅</h3>
+<h4 id="systematic-investigation-30-minutes">Systematic Investigation (30 minutes)</h4>
+<h4 id="step-1-find-email-functions-10-seconds">Step 1: Find email functions (10 seconds)</h4>
+<pre><code class="language-bash">cgc find &quot;email&quot; --type function | grep -i &quot;payment\|confirm&quot;
+</code></pre>
+<p><strong>Output</strong>:</p>
+<pre><code>Found 5 functions:
+
+1. sendPaymentConfirmation
+   File: email_service/notifications.py:45
+
+2. sendInternationalPaymentEmail
+   File: email_service/international.py:12
+
+3. queueEmailJob
+   File: workers/email_queue.py:78
+</code></pre>
+<h4 id="step-2-check-what-calls-international-payment-function-5-seconds">Step 2: Check what calls international payment function (5 seconds)</h4>
+<pre><code class="language-bash">cgc analyze callees processInternationalPayment
+</code></pre>
+<p><strong>Output</strong>:</p>
+<pre><code>Functions called by 'processInternationalPayment':
+
+┌────────────────────────────────────────────────────────────┐
+│ Function              │ File                    │ Line     │
+├────────────────────────────────────────────────────────────┤
+│ validateCurrency      │ utils/currency.py       │ 23       │
+│ chargeCard            │ integrations/stripe.py  │ 89       │
+│ logTransaction        │ logging/audit.py        │ 45       │
+│ updateOrderStatus     │ orders/order_service.py │ 167      │
+└────────────────────────────────────────────────────────────┘
+
+⚠️  Notice: sendInternationalPaymentEmail is NOT called
+</code></pre>
+<p><strong>BUG FOUND!</strong> Email function is not being called.</p>
+<h4 id="step-3-verify-domestic-payments-work-correctly-5-seconds">Step 3: Verify domestic payments work correctly (5 seconds)</h4>
+<pre><code class="language-bash">cgc analyze callees processDomesticPayment
+</code></pre>
+<p><strong>Output</strong>:</p>
+<pre><code>Functions called by 'processDomesticPayment':
+
+┌────────────────────────────────────────────────────────────┐
+│ Function              │ File                    │ Line     │
+├────────────────────────────────────────────────────────────┤
+│ validateCurrency      │ utils/currency.py       │ 23       │
+│ chargeCard            │ integrations/stripe.py  │ 89       │
+│ logTransaction        │ logging/audit.py        │ 45       │
+│ updateOrderStatus     │ orders/order_service.py │ 167      │
+│ sendPaymentConfirmation │ email_service/notifications.py │ 45 │
+└────────────────────────────────────────────────────────────┘
+
+✓ Domestic payments DO call email function
+</code></pre>
+<p><strong>ROOT CAUSE IDENTIFIED</strong>: International payments missing email call.</p>
+<h4 id="step-4-verify-the-fix-is-safe-5-seconds">Step 4: Verify the fix is safe (5 seconds)</h4>
+<pre><code class="language-bash">cgc analyze callers sendInternationalPaymentEmail
+</code></pre>
+<p><strong>Output</strong>:</p>
+<pre><code>Callers of 'sendInternationalPaymentEmail':
+
+No callers found.
+
+⚠️  This function appears to be unused (dead code)
+</code></pre>
+<p><strong>PERFECT!</strong> Adding this call won't break anything.</p>
+<h4 id="step-5-make-and-verify-fix-20-minutes">Step 5: Make and verify fix (20 minutes)</h4>
+<ul>
+<li>Add email call to <code>processInternationalPayment</code></li>
+<li>Run tests</li>
+<li>Deploy</li>
+</ul>
+<p><strong>TOTAL TIME</strong>: 30 minutes<br />
+<strong>COST</strong>: $32.50<br />
+<strong>RISK</strong>: Very low (verified no side effects)</p>
+<h3 id="savings_4">Savings</h3>
+<ul>
+<li><strong>Time saved</strong>: 3.5 hours</li>
+<li><strong>Cost saved</strong>: $227.50</li>
+<li><strong>Faster bug resolution</strong>: 30 min vs 4+ hours</li>
+<li><strong>Higher confidence</strong>: Know exactly what's wrong and what's safe</li>
+<li><strong>ROI</strong>: 700% (saved $227.50 for $32.50 of time)</li>
+</ul>
+<hr />
+<h2 id="use-case-6-api-deprecation-planning">Use Case 6: API Deprecation Planning</h2>
+<h3 id="scenario_5">Scenario</h3>
+<p><strong>Company</strong>: SaaS platform with public API<br />
+<strong>Task</strong>: Deprecate <code>add_package_to_graph</code> function, replace with <code>add_package_v2</code><br />
+<strong>Challenge</strong>: Need to know all usages (internal + external examples)<br />
+<strong>Team</strong>: Product Manager + Senior Engineer</p>
+<h3 id="without-cgc_5">Without CGC ❌</h3>
+<h4 id="manual-process-25-hours">Manual Process (2.5 hours)</h4>
+<ol>
+<li>
+<p><strong>Search for direct usages</strong> (5 minutes)
+   <code>bash
+   grep -r "add_package_to_graph" . --include="*.py"</code></p>
+</li>
+<li>
+<p><strong>Check CLI commands</strong> (20 minutes)</p>
+</li>
+<li>Manually review CLI files</li>
+<li>
+<p>Check argument parsing</p>
+</li>
+<li>
+<p><strong>Check MCP tools</strong> (15 minutes)</p>
+</li>
+<li>Review server.py</li>
+<li>
+<p>Check tool wrappers</p>
+</li>
+<li>
+<p><strong>Check tests</strong> (20 minutes)</p>
+</li>
+<li>Search test files</li>
+<li>
+<p>Verify test coverage</p>
+</li>
+<li>
+<p><strong>Check documentation</strong> (30 minutes)</p>
+</li>
+<li>Search docs for examples</li>
+<li>
+<p>Check tutorials</p>
+</li>
+<li>
+<p><strong>Create migration guide</strong> (1 hour)</p>
+</li>
+<li>Document all usages</li>
+<li>Write replacement examples</li>
+<li>Create timeline</li>
+</ol>
+<p><strong>TOTAL TIME</strong>: 2.5 hours<br />
+<strong>COST</strong>: $187.50 (at $75/hr)<br />
+<strong>RISK</strong>: Might miss some usages</p>
+<h3 id="with-cgc_5">With CGC ✅</h3>
+<h4 id="systematic-process-20-minutes">Systematic Process (20 minutes)</h4>
+<h4 id="step-1-find-all-usages-5-seconds">Step 1: Find all usages (5 seconds)</h4>
+<pre><code class="language-bash">cgc analyze callers add_package_to_graph --all
+</code></pre>
+<p><strong>Output</strong>:</p>
+<pre><code>Callers of 'add_package_to_graph':
+
+Direct Callers (3):
+┌────────────────────────────────────────────────────────────┐
+│ Function              │ File                    │ Line     │
+├────────────────────────────────────────────────────────────┤
+│ add_package_to_graph_tool │ server.py          │ 156      │
+│ add_package_helper    │ cli_helpers.py          │ 117      │
+│ test_add_package      │ tests/test_indexing.py  │ 234      │
+└────────────────────────────────────────────────────────────┘
+
+Indirect Callers (0):
+(No indirect callers)
+
+Summary:
+- 3 total usages
+- 2 production code
+- 1 test
+- 0 external dependencies
+</code></pre>
+<h4 id="step-2-analyze-impact-5-minutes">Step 2: Analyze impact (5 minutes)</h4>
+<pre><code>✅ MCP Tool: add_package_to_graph_tool → Update wrapper
+✅ CLI: add_package_helper → Update command
+✅ Tests: test_add_package → Update test
+</code></pre>
+<h4 id="step-3-create-migration-plan-15-minutes">Step 3: Create migration plan (15 minutes)</h4>
+<p><strong>Auto-generated Migration Plan</strong>:</p>
+<pre><code class="language-markdown">## Deprecation Impact: add_package_to_graph
+
+### Summary
+- **Total usages**: 3
+- **Breaking change**: Yes
+- **Migration effort**: Low (only 3 places to update)
+- **Recommended timeline**: 2 sprints
+
+### Direct Callers (3):
+
+1. ✅ **MCP Tool**: `add_package_to_graph_tool` (server.py:156)
+   - **Action**: Update to call `add_package_v2`
+   - **Effort**: 30 minutes
+   - **Risk**: Low
+
+2. ✅ **CLI**: `add_package_helper` (cli_helpers.py:117)
+   - **Action**: Update command implementation
+   - **Effort**: 1 hour
+   - **Risk**: Low (covered by tests)
+
+3. ✅ **Tests**: `test_add_package` (tests/test_indexing.py:234)
+   - **Action**: Update test to use new function
+   - **Effort**: 30 minutes
+   - **Risk**: None
+
+### Migration Timeline
+
+**Sprint 1: Preparation**
+- Week 1: Implement `add_package_v2` with new features
+- Week 2: Add deprecation warning to `add_package_to_graph`
+- Week 2: Update documentation
+
+**Sprint 2: Migration**
+- Week 1: Update MCP tool and CLI
+- Week 1: Update tests
+- Week 2: Release with migration guide
+
+**Sprint 3: Cleanup**
+- Week 1: Monitor usage (should be zero)
+- Week 2: Remove deprecated function
+
+### Deprecation Warning Code
+
+```python
+import warnings
+
+def add_package_to_graph(*args, **kwargs):
+    warnings.warn(
+        &quot;add_package_to_graph is deprecated and will be removed in v2.0. &quot;
+        &quot;Use add_package_v2 instead.&quot;,
+        DeprecationWarning,
+        stacklevel=2
+    )
+    return add_package_v2(*args, **kwargs)
+</code></pre>
+<h3 id="communication-plan">Communication Plan</h3>
+<p><strong>Internal (Sprint 1, Week 2)</strong>
+- Email to engineering team
+- Update internal docs
+- Add to sprint planning notes</p>
+<p><strong>External (Sprint 2, Week 1)</strong>
+- Blog post announcing deprecation
+- Update public API docs
+- Add to changelog</p>
+<p><strong>Final Removal (Sprint 3, Week 2)</strong>
+- Remove function
+- Update version to 2.0
+- Release notes</p>
+<pre><code>
+**TOTAL TIME**: 20 minutes  
+**COST**: $25
+
+### Savings
+- **Time saved**: 2.25 hours
+- **Cost saved**: $162.50
+- **Complete coverage**: No missed usages
+- **Professional migration plan**: Ready to present to stakeholders
+- **ROI**: 650% (saved $162.50 for $25 of time)
+
+---
+
+## Use Case 7: Architecture Review
+
+### Scenario
+
+**Company**: Fintech startup preparing for SOC 2 audit  
+**Task**: Document system architecture and identify circular dependencies  
+**Team**: CTO + 2 Senior Engineers  
+**Challenge**: No up-to-date architecture documentation
+
+### Without CGC ❌
+
+#### Manual Process (4.5 hours)
+
+1. **List all modules** (5 minutes)
+   ```bash
+   ls -R src/
+   ```
+
+2. **For each module, find imports** (2 hours)
+   - Manually read import statements
+   - Create dependency list in spreadsheet
+
+3. **Create dependency graph** (30 minutes)
+   ```bash
+   pip install pydeps
+   pydeps src/ --max-bacon=2
+   ```
+   **Output**: Static image, hard to explore
+
+4. **Analyze circular dependencies** (1 hour)
+   - Manually trace through graph
+   - Identify cycles
+
+5. **Identify refactoring opportunities** (1 hour)
+   - Which modules are too coupled?
+   - What should be extracted?
+
+**TOTAL TIME**: 4.5 hours  
+**COST**: $337.50 (at $75/hr)
+
+### With CGC ✅
+
+#### Automated Process (30 minutes)
+
+#### Step 1: Get module dependencies (5 seconds)
+```bash
+cgc analyze deps codegraphcontext.tools
+</code></pre>
+<p><strong>Output</strong>:</p>
+<pre><code>Module Dependencies for 'codegraphcontext.tools':
+
+Imports (Dependencies):
+┌────────────────────────────────────────────────────────────┐
+│ Module                │ Import Count │ Type                │
+├────────────────────────────────────────────────────────────┤
+│ codegraphcontext.core │ 12           │ Internal            │
+│ codegraphcontext.utils│ 8            │ Internal            │
+│ neo4j                 │ 5            │ External            │
+│ falkordb              │ 3            │ External            │
+└────────────────────────────────────────────────────────────┘
+
+Imported By (Dependents):
+┌────────────────────────────────────────────────────────────┐
+│ Module                │ Import Count │ Type                │
+├────────────────────────────────────────────────────────────┤
+│ codegraphcontext.cli  │ 15           │ Internal            │
+│ codegraphcontext.server│ 10          │ Internal            │
+└────────────────────────────────────────────────────────────┘
+</code></pre>
+<h4 id="step-2-find-circular-dependencies-5-seconds">Step 2: Find circular dependencies (5 seconds)</h4>
+<pre><code class="language-bash">cgc query &quot;
+MATCH (m1:Module)-[:IMPORTS]-&gt;(m2:Module)-[:IMPORTS]-&gt;(m1)
+RETURN m1.name, m2.name
+&quot;
+</code></pre>
+<p><strong>Output</strong>:</p>
+<pre><code>Circular Dependencies Found:
+
+┌────────────────────────────────────────────────────────────┐
+│ Module A              │ Module B                           │
+├────────────────────────────────────────────────────────────┤
+│ tools.graph_builder   │ core.database                      │
+│ core.database         │ tools.query_handlers               │
+└────────────────────────────────────────────────────────────┘
+
+⚠️  2 circular dependencies detected
+</code></pre>
+<h4 id="step-3-visualize-architecture-10-seconds">Step 3: Visualize architecture (10 seconds)</h4>
+<pre><code class="language-bash">cgc visualize --mode architecture --output architecture.html
+</code></pre>
+<p><strong>Opens interactive visualization showing</strong>:
+- All modules as nodes
+- Dependencies as arrows
+- Circular dependencies highlighted in red
+- Module sizes (by LOC)
+- External dependencies in different color</p>
+<h4 id="step-4-generate-architecture-report-20-minutes">Step 4: Generate architecture report (20 minutes)</h4>
+<p><strong>Auto-generated Architecture Report</strong>:</p>
+<pre><code class="language-markdown"># System Architecture Report
+Generated: 2026-01-30
+
+## Overview
+- **Total Modules**: 67
+- **Internal Dependencies**: 234
+- **External Dependencies**: 45
+- **Circular Dependencies**: 2 ⚠️
+
+## Module Structure
+
+### Core Modules (Foundation)
+- `core.database` - Database abstraction layer
+- `core.parser` - Code parsing engine
+- `core.graph` - Graph data structures
+
+### Tool Modules (Features)
+- `tools.graph_builder` - Graph construction
+- `tools.query_handlers` - Query execution
+- `tools.package_resolver` - Package discovery
+
+### Interface Modules (User-facing)
+- `cli` - Command-line interface
+- `server` - MCP server
+- `api` - REST API (future)
+
+## Dependency Analysis
+
+### Most Depended-On Modules (Critical)
+1. `core.database` - 23 modules depend on it
+2. `utils.debug_log` - 18 modules depend on it
+3. `core.parser` - 15 modules depend on it
+
+### Most Dependent Modules (Coupled)
+1. `tools.graph_builder` - depends on 12 modules
+2. `cli.cli_helpers` - depends on 10 modules
+3. `server` - depends on 8 modules
+
+## Issues Identified
+
+### ⚠️ Circular Dependencies (2)
+
+**Issue 1**: tools.graph_builder ↔ core.database
+- **Impact**: High - affects core functionality
+- **Recommendation**: Extract query_handlers to core.queries
+- **Effort**: 2 days
+
+**Issue 2**: core.database ↔ tools.query_handlers
+- **Impact**: Medium - affects query execution
+- **Recommendation**: Move query_handlers to core module
+- **Effort**: 1 day
+
+### ✅ Refactoring Opportunities
+
+1. **Extract Logging Module**
+   - 18 modules depend on `utils.debug_log`
+   - Consider extracting to separate package
+   - Benefit: Reusable across projects
+
+2. **Reduce graph_builder Coupling**
+   - Depends on 12 modules
+   - Consider dependency injection
+   - Benefit: Easier testing
+
+## Recommendations
+
+### Immediate (This Sprint)
+1. Fix circular dependency: tools ↔ core
+2. Document module boundaries
+3. Add architecture tests (prevent future cycles)
+
+### Short-term (Next Quarter)
+1. Extract logging to separate package
+2. Reduce graph_builder coupling
+3. Create module dependency guidelines
+
+### Long-term (Next Year)
+1. Consider microservices architecture
+2. Separate CLI, MCP, and API into services
+3. Shared core library
+</code></pre>
+<p><strong>TOTAL TIME</strong>: 30 minutes<br />
+<strong>COST</strong>: $37.50</p>
+<h3 id="savings_5">Savings</h3>
+<ul>
+<li><strong>Time saved</strong>: 4 hours</li>
+<li><strong>Cost saved</strong>: $300</li>
+<li><strong>Better insights</strong>: Automated analysis vs manual</li>
+<li><strong>Audit-ready</strong>: Professional documentation</li>
+<li><strong>ROI</strong>: 800% (saved $300 for $37.50 of time)</li>
+</ul>
+<h3 id="business-impact_1">Business Impact</h3>
+<ul>
+<li><strong>SOC 2 compliance</strong>: Architecture documented</li>
+<li><strong>Technical debt visible</strong>: Circular dependencies identified</li>
+<li><strong>Refactoring roadmap</strong>: Clear priorities</li>
+<li><strong>Investor confidence</strong>: Professional engineering practices</li>
+</ul>
+<hr />
+<h2 id="use-case-8-security-audit">Use Case 8: Security Audit</h2>
+<h3 id="scenario_6">Scenario</h3>
+<p><strong>Company</strong>: Healthcare SaaS (HIPAA compliance required)<br />
+<strong>Task</strong>: Security audit - find all database and API access points<br />
+<strong>Auditor</strong>: External security consultant ($200/hr)<br />
+<strong>Challenge</strong>: Need complete, accurate list for compliance</p>
+<h3 id="without-cgc_6">Without CGC ❌</h3>
+<h4 id="manual-process-5-hours">Manual Process (5+ hours)</h4>
+<ol>
+<li>
+<p><strong>Search for database calls</strong> (10 minutes)
+   <code>bash
+   grep -r "execute\|query\|session" . --include="*.py"</code>
+   <strong>Output</strong>: 500+ lines, many false positives</p>
+</li>
+<li>
+<p><strong>Search for API calls</strong> (10 minutes)
+   <code>bash
+   grep -r "requests\.\|http\|urllib" . --include="*.py"</code>
+   <strong>Output</strong>: 200+ lines</p>
+</li>
+<li>
+<p><strong>Manually filter and categorize</strong> (3 hours)</p>
+</li>
+<li>Read each result</li>
+<li>Identify actual data access</li>
+<li>Categorize by risk level</li>
+<li>
+<p>Miss some edge cases</p>
+</li>
+<li>
+<p><strong>Document each access point</strong> (2 hours)</p>
+</li>
+<li>Create audit report</li>
+<li>Describe each access point</li>
+<li>Assess risk</li>
+</ol>
+<p><strong>TOTAL TIME</strong>: 5+ hours<br />
+<strong>COST</strong>: $1,000+ (at $200/hr auditor rate)<br />
+<strong>RISK</strong>: Might miss some access points (compliance failure)</p>
+<h3 id="with-cgc_6">With CGC ✅</h3>
+<h4 id="systematic-process-35-minutes">Systematic Process (35 minutes)</h4>
+<h4 id="step-1-find-all-database-access-5-seconds">Step 1: Find all database access (5 seconds)</h4>
+<pre><code class="language-bash">cgc query &quot;
+MATCH (f:Function)-[:CALLS]-&gt;(db:Function)
+WHERE db.name IN ['execute', 'query', 'session', 'execute_cypher_query']
+RETURN DISTINCT f.name, f.path
+ORDER BY f.path
+&quot;
+</code></pre>
+<p><strong>Output</strong>:</p>
+<pre><code>Functions Making Database Calls:
+
+┌────────────────────────────────────────────────────────────┐
+│ Function              │ File                    │ Risk     │
+├────────────────────────────────────────────────────────────┤
+│ execute_cypher_query  │ tools/query_handlers.py │ HIGH     │
+│ create_node           │ tools/graph_builder.py  │ MEDIUM   │
+│ create_relationship   │ tools/graph_builder.py  │ MEDIUM   │
+│ find_code             │ tools/search.py         │ LOW      │
+│ get_stats             │ tools/stats.py          │ LOW      │
+│ ... (15 more)
+└────────────────────────────────────────────────────────────┘
+
+Total: 20 functions with database access
+</code></pre>
+<h4 id="step-2-find-all-api-calls-5-seconds">Step 2: Find all API calls (5 seconds)</h4>
+<pre><code class="language-bash">cgc query &quot;
+MATCH (f:Function)
+WHERE f.code CONTAINS 'requests.' OR f.code CONTAINS 'urllib' OR f.code CONTAINS 'httpx'
+RETURN f.name, f.path
+ORDER BY f.path
+&quot;
+</code></pre>
+<p><strong>Output</strong>:</p>
+<pre><code>Functions Making External API Calls:
+
+┌────────────────────────────────────────────────────────────┐
+│ Function              │ File                    │ Endpoint │
+├────────────────────────────────────────────────────────────┤
+│ _get_npm_package      │ package_resolver.py     │ npm      │
+│ _get_pypi_package     │ package_resolver.py     │ PyPI     │
+│ download_bundle       │ bundle_manager.py       │ GitHub   │
+└────────────────────────────────────────────────────────────┘
+
+Total: 3 functions with external API access
+</code></pre>
+<h4 id="step-3-trace-back-to-entry-points-10-seconds">Step 3: Trace back to entry points (10 seconds)</h4>
+<pre><code class="language-bash"># For each data access function, find who can trigger it
+for func in execute_cypher_query download_bundle; do
+  echo &quot;=== $func ===&quot;
+  cgc analyze callers $func --all --entry-points-only
+done
+</code></pre>
+<p><strong>Output</strong>:</p>
+<pre><code>=== execute_cypher_query ===
+Entry Points (User-accessible):
+- CLI: cgc query &lt;cypher&gt;
+- MCP: execute_cypher_query tool
+- API: /api/query (future)
+
+=== download_bundle ===
+Entry Points (User-accessible):
+- CLI: cgc load &lt;bundle&gt;
+- MCP: load_bundle tool
+</code></pre>
+<h4 id="step-4-generate-audit-report-20-minutes">Step 4: Generate audit report (20 minutes)</h4>
+<p><strong>Auto-generated Security Audit Report</strong>:</p>
+<pre><code class="language-markdown"># Security Audit Report: Data Access Points
+Generated: 2026-01-30
+Auditor: External Security Consultant
+Compliance: HIPAA
+
+## Executive Summary
+- **Database Access Points**: 20 functions
+- **External API Access Points**: 3 functions
+- **High-Risk Functions**: 1
+- **Medium-Risk Functions**: 5
+- **Low-Risk Functions**: 17
+
+## Database Access Analysis
+
+### HIGH RISK: Direct Query Execution
+
+**Function**: `execute_cypher_query`
+- **File**: tools/query_handlers.py:18
+- **Entry Points**: CLI, MCP tool
+- **Risk**: User can execute arbitrary Cypher queries
+- **Current Mitigation**: Read-only queries enforced
+- **Recommendation**: ✅ Add query validation and rate limiting
+- **Status**: REQUIRES ATTENTION
+
+### MEDIUM RISK: Data Modification
+
+**Function**: `create_node`
+- **File**: tools/graph_builder.py:234
+- **Entry Points**: Internal only (indexing)
+- **Risk**: Creates database nodes
+- **Current Mitigation**: Internal use only, no user input
+- **Recommendation**: ✅ Already secure
+- **Status**: ACCEPTABLE
+
+**Function**: `create_relationship`
+- **File**: tools/graph_builder.py:267
+- **Entry Points**: Internal only (indexing)
+- **Risk**: Creates database relationships
+- **Current Mitigation**: Internal use only, no user input
+- **Recommendation**: ✅ Already secure
+- **Status**: ACCEPTABLE
+
+### LOW RISK: Read-Only Access
+
+**Functions**: 17 functions
+- All read-only database queries
+- No user input in queries
+- Parameterized queries used
+- **Status**: ✅ SECURE
+
+## External API Access Analysis
+
+### Function: `_get_npm_package`
+- **File**: package_resolver.py:37
+- **Endpoint**: https://registry.npmjs.org
+- **Data Sent**: Package name only
+- **Data Received**: Package metadata (public)
+- **Risk**: Low - public data only
+- **Recommendation**: ✅ Add timeout and retry logic
+- **Status**: ACCEPTABLE
+
+### Function**: `_get_pypi_package`
+- **File**: package_resolver.py:78
+- **Endpoint**: https://pypi.org/pypi
+- **Data Sent**: Package name only
+- **Data Received**: Package metadata (public)
+- **Risk**: Low - public data only
+- **Recommendation**: ✅ Add timeout and retry logic
+- **Status**: ACCEPTABLE
+
+### Function: `download_bundle`
+- **File**: bundle_manager.py:123
+- **Endpoint**: https://github.com
+- **Data Sent**: Bundle name only
+- **Data Received**: Pre-indexed code bundle
+- **Risk**: Medium - downloading executable code
+- **Recommendation**: ⚠️ Add checksum verification
+- **Status**: REQUIRES ATTENTION
+
+## Compliance Assessment
+
+### HIPAA Requirements
+
+✅ **Access Control**: All database access is authenticated
+✅ **Audit Logging**: All queries are logged
+✅ **Encryption**: Database connections use TLS
+⚠️ **Input Validation**: execute_cypher_query needs validation
+✅ **Data Minimization**: Only necessary data accessed
+
+### Recommendations
+
+**Immediate (This Week)**:
+1. Add query validation to `execute_cypher_query`
+2. Add checksum verification to `download_bundle`
+3. Implement rate limiting on user-facing queries
+
+**Short-term (This Month)**:
+1. Add comprehensive audit logging
+2. Implement query timeout limits
+3. Add input sanitization
+
+**Long-term (This Quarter)**:
+1. Implement role-based access control
+2. Add query complexity analysis
+3. Implement data retention policies
+
+## Conclusion
+
+**Overall Risk Level**: MEDIUM
+
+The system has good security practices in place, with only 2 functions requiring immediate attention. With the recommended changes, the system will meet HIPAA compliance requirements.
+
+**Compliance Status**: CONDITIONAL PASS
+(Pending implementation of immediate recommendations)
+</code></pre>
+<p><strong>TOTAL TIME</strong>: 35 minutes<br />
+<strong>COST</strong>: $116.67 (at $200/hr)</p>
+<h3 id="savings_6">Savings</h3>
+<ul>
+<li><strong>Time saved</strong>: 4.5 hours</li>
+<li><strong>Cost saved</strong>: $883.33</li>
+<li><strong>Comprehensive audit</strong>: No missed access points</li>
+<li><strong>Compliance confidence</strong>: Complete documentation</li>
+<li><strong>ROI</strong>: 757% (saved $883.33 for $116.67 of time)</li>
+</ul>
+<h3 id="business-impact_2">Business Impact</h3>
+<ul>
+<li><strong>HIPAA compliance</strong>: Clear audit trail</li>
+<li><strong>Risk mitigation</strong>: All access points identified</li>
+<li><strong>Customer trust</strong>: Professional security practices</li>
+<li><strong>Reduced liability</strong>: Compliance documented</li>
+</ul>
+<hr />
+<h2 id="use-case-9-performance-optimization">Use Case 9: Performance Optimization</h2>
+<h3 id="scenario_7">Scenario</h3>
+<p><strong>Company</strong>: Analytics platform with slow dashboard loading<br />
+<strong>Issue</strong>: Profiling shows <code>execute_cypher_query</code> called 10,000 times during indexing<br />
+<strong>Developer</strong>: Senior Performance Engineer ($90/hr)<br />
+<strong>Challenge</strong>: Find where excessive calls are coming from</p>
+<h3 id="without-cgc_7">Without CGC ❌</h3>
+<h4 id="manual-process-4-hours_1">Manual Process (4+ hours)</h4>
+<ol>
+<li><strong>Add logging</strong> (15 minutes)</li>
+<li>Modify <code>execute_cypher_query</code> to log caller</li>
+<li>
+<p>Redeploy</p>
+</li>
+<li>
+<p><strong>Run indexing with logging</strong> (30 minutes)</p>
+</li>
+<li>Generate huge log file</li>
+<li>
+<p>Wait for indexing to complete</p>
+</li>
+<li>
+<p><strong>Parse logs</strong> (1 hour)</p>
+</li>
+<li>Write script to count calls per caller</li>
+<li>
+<p>Analyze results</p>
+</li>
+<li>
+<p><strong>Analyze hot paths</strong> (30 minutes)</p>
+</li>
+<li>
+<p>Identify which callers are most frequent</p>
+</li>
+<li>
+<p><strong>Investigate optimization</strong> (2 hours)</p>
+</li>
+<li>For each hot path, understand why</li>
+<li>Research batching opportunities</li>
+<li>Test solutions</li>
+</ol>
+<p><strong>TOTAL TIME</strong>: 4+ hours<br />
+<strong>COST</strong>: $360+</p>
+<h3 id="with-cgc_7">With CGC ✅</h3>
+<h4 id="systematic-process-30-minutes">Systematic Process (30 minutes)</h4>
+<h4 id="step-1-find-all-callers-5-seconds">Step 1: Find all callers (5 seconds)</h4>
+<pre><code class="language-bash">cgc analyze callers execute_cypher_query --all
+</code></pre>
+<p><strong>Output</strong>: 50 callers identified</p>
+<h4 id="step-2-identify-likely-hot-paths-10-minutes">Step 2: Identify likely hot paths (10 minutes)</h4>
+<p>Look for callers in loops or batch operations:
+- <code>graph_builder.process_file</code> (called per file)
+- <code>graph_builder.create_node</code> (called per node)
+- <code>graph_builder.create_relationship</code> (called per relationship)</p>
+<h4 id="step-3-analyze-hot-path-5-seconds">Step 3: Analyze hot path (5 seconds)</h4>
+<pre><code class="language-bash">cgc analyze chain index_repository execute_cypher_query
+</code></pre>
+<p><strong>Output</strong>:</p>
+<pre><code>Call Chain from 'index_repository' to 'execute_cypher_query':
+
+index_repository (cli_helpers.py:90)
+  └─&gt; process_directory (graph_builder.py:123)
+      └─&gt; process_file (graph_builder.py:234)
+          └─&gt; create_node (graph_builder.py:345)
+              └─&gt; execute_cypher_query (query_handlers.py:18)
+
+Execution Pattern:
+- index_repository: called 1 time
+- process_directory: called ~10 times (per directory)
+- process_file: called ~1,000 times (per file)
+- create_node: called ~10,000 times (per node)
+- execute_cypher_query: called ~10,000 times
+
+⚠️  HOT PATH IDENTIFIED: create_node in tight loop
+</code></pre>
+<h4 id="step-4-identify-optimization-15-minutes">Step 4: Identify optimization (15 minutes)</h4>
+<p><strong>Current Code</strong> (in <code>graph_builder.py</code>):</p>
+<pre><code class="language-python">def process_file(self, file_path):
+    nodes = self.parse_file(file_path)
+    for node in nodes:
+        self.create_node(node)  # 1 query per node
+
+def create_node(self, node):
+    query = &quot;CREATE (n:Node {data})&quot;
+    execute_cypher_query(query, data=node)
+</code></pre>
+<p><strong>Optimized Code</strong>:</p>
+<pre><code class="language-python">def process_file(self, file_path):
+    nodes = self.parse_file(file_path)
+    self.create_nodes_batch(nodes)  # 1 query for all nodes
+
+def create_nodes_batch(self, nodes):
+    query = &quot;UNWIND $nodes AS node CREATE (n:Node {node})&quot;
+    execute_cypher_query(query, nodes=nodes)
+</code></pre>
+<p><strong>Result</strong>: 10,000 queries → 1,000 queries (10x improvement)</p>
+<p><strong>TOTAL TIME</strong>: 30 minutes<br />
+<strong>COST</strong>: $45</p>
+<h3 id="savings_7">Savings</h3>
+<ul>
+<li><strong>Time saved</strong>: 3.5 hours</li>
+<li><strong>Cost saved</strong>: $315</li>
+<li><strong>Performance improvement</strong>: 10x faster indexing</li>
+<li><strong>ROI</strong>: 700% (saved $315 for $45 of time)</li>
+</ul>
+<h3 id="business-impact_3">Business Impact</h3>
+<ul>
+<li><strong>Faster indexing</strong>: 10x improvement</li>
+<li><strong>Better user experience</strong>: Dashboards load faster</li>
+<li><strong>Reduced infrastructure costs</strong>: Less database load</li>
+<li><strong>Scalability</strong>: Can handle larger codebases</li>
+</ul>
+<hr />
+<h2 id="use-case-10-code-review-pr-impact-analysis">Use Case 10: Code Review - PR Impact Analysis</h2>
+<h3 id="scenario_8">Scenario</h3>
+<p><strong>Company</strong>: Open-source project with 200+ contributors<br />
+<strong>PR</strong>: Modifies <code>graph_builder.py</code> (core functionality)<br />
+<strong>Reviewer</strong>: Maintainer reviewing PR ($80/hr)<br />
+<strong>Challenge</strong>: Understand blast radius of changes</p>
+<h3 id="without-cgc_8">Without CGC ❌</h3>
+<h4 id="manual-process-25-hours_1">Manual Process (2.5 hours)</h4>
+<ol>
+<li>
+<p><strong>See what changed</strong> (10 minutes)
+   <code>bash
+   git diff main...feature-branch</code></p>
+</li>
+<li>
+<p><strong>Identify modified functions</strong> (5 minutes)</p>
+</li>
+<li>
+<p>Manually list: <code>process_file</code>, <code>create_node</code>, <code>add_relationship</code></p>
+</li>
+<li>
+<p><strong>Find callers of each function</strong> (15 minutes)
+   <code>bash
+   grep -r "process_file" . --include="*.py"
+   grep -r "create_node" . --include="*.py"
+   grep -r "add_relationship" . --include="*.py"</code></p>
+</li>
+<li>
+<p><strong>Assess impact</strong> (1 hour)</p>
+</li>
+<li>Read each caller</li>
+<li>Understand if change affects it</li>
+<li>
+<p>Check for edge cases</p>
+</li>
+<li>
+<p><strong>Check test coverage</strong> (30 minutes)</p>
+</li>
+<li>Manually review test files</li>
+<li>
+<p>Verify tests cover changes</p>
+</li>
+<li>
+<p><strong>Write review comments</strong> (30 minutes)</p>
+</li>
+</ol>
+<p><strong>TOTAL TIME</strong>: 2.5 hours<br />
+<strong>COST</strong>: $200</p>
+<h3 id="with-cgc_8">With CGC ✅</h3>
+<h4 id="systematic-process-30-minutes_1">Systematic Process (30 minutes)</h4>
+<h4 id="step-1-identify-changed-functions-5-minutes">Step 1: Identify changed functions (5 minutes)</h4>
+<p>From git diff:
+- <code>process_file</code> modified
+- <code>create_node</code> modified
+- <code>add_relationship</code> added (new)</p>
+<h4 id="step-2-find-impact-of-each-change-10-seconds">Step 2: Find impact of each change (10 seconds)</h4>
+<pre><code class="language-bash">cgc analyze callers process_file --all
+cgc analyze callers create_node --all
+cgc analyze callers add_relationship --all
+</code></pre>
+<p><strong>Output</strong>:</p>
+<pre><code>=== process_file ===
+Callers: 15 functions
+Files affected: 5
+
+=== create_node ===
+Callers: 23 functions
+Files affected: 8
+
+=== add_relationship ===
+Callers: 0 functions (new function)
+</code></pre>
+<h4 id="step-3-check-test-coverage-5-seconds">Step 3: Check test coverage (5 seconds)</h4>
+<pre><code class="language-bash">cgc query &quot;
+MATCH (test:Function)-[:CALLS]-&gt;(f:Function)
+WHERE test.path CONTAINS 'test'
+  AND f.name IN ['process_file', 'create_node', 'add_relationship']
+RETURN test.name, f.name
+&quot;
+</code></pre>
+<p><strong>Output</strong>:</p>
+<pre><code>Test Coverage:
+
+┌────────────────────────────────────────────────────────────┐
+│ Test Function         │ Covers Function                    │
+├────────────────────────────────────────────────────────────┤
+│ test_process_file     │ process_file                       │
+│ test_indexing_flow    │ process_file                       │
+│ test_create_node      │ create_node                        │
+└────────────────────────────────────────────────────────────┘
+
+⚠️  add_relationship has NO test coverage
+</code></pre>
+<h4 id="step-4-write-informed-review-20-minutes">Step 4: Write informed review (20 minutes)</h4>
+<p><strong>Auto-generated Review Template</strong>:</p>
+<pre><code class="language-markdown">## PR Review: graph_builder.py changes
+
+### Impact Analysis
+
+✅ **process_file** modified
+- **Callers**: 15 functions across 5 files
+- **Test Coverage**: ✅ 2 tests (test_process_file, test_indexing_flow)
+- **Risk**: Medium - widely used but well-tested
+- **Recommendation**: Approve with minor comments
+
+⚠️ **create_node** modified
+- **Callers**: 23 functions across 8 files
+- **Test Coverage**: ⚠️ Only 1 test (test_create_node)
+- **Risk**: Medium-High - widely used, limited test coverage
+- **Recommendation**: Request additional integration tests
+
+❌ **add_relationship** added (new function)
+- **Callers**: 0 (not yet used)
+- **Test Coverage**: ❌ No tests
+- **Risk**: Low (not used yet) but concerning
+- **Recommendation**: MUST add tests before merging
+
+### Detailed Review
+
+#### 1. process_file changes
+**Lines**: 234-267
+**Change**: Added error handling for malformed files
+
+✅ **Good**:
+- Proper exception handling
+- Logging added
+- Backwards compatible
+
+💡 **Suggestions**:
+- Consider adding specific exception types
+- Add test case for malformed file handling
+
+#### 2. create_node changes
+**Lines**: 345-378
+**Change**: Added support for node properties validation
+
+⚠️ **Concerns**:
+- 23 callers affected - high impact
+- Only 1 test covers this function
+- What happens if validation fails?
+
+🔴 **Required Changes**:
+1. Add integration test with real codebase
+2. Add test for validation failure case
+3. Document validation rules in docstring
+
+#### 3. add_relationship (new function)
+**Lines**: 456-489
+
+❌ **Blocking Issues**:
+1. No test coverage
+2. No docstring
+3. Not called anywhere (dead code?)
+
+🔴 **Required Changes**:
+1. Add unit tests
+2. Add docstring with examples
+3. Either use it or remove it
+
+### Risk Assessment
+
+**Overall Risk**: MEDIUM-HIGH
+
+- High usage (38 total callers affected)
+- Partial test coverage
+- New untested code
+
+### Recommendation
+
+**REQUEST CHANGES**
+
+Before merging:
+1. ✅ Add integration test for create_node
+2. ✅ Add unit tests for add_relationship
+3. ✅ Add docstrings for new code
+4. ✅ Consider adding test for process_file error handling
+
+After these changes, I'll approve.
+
+### Testing Checklist
+
+- [ ] Unit tests pass
+- [ ] Integration tests pass
+- [ ] Manual testing on large repository
+- [ ] Performance regression check
+- [ ] Documentation updated
+</code></pre>
+<p><strong>TOTAL TIME</strong>: 30 minutes<br />
+<strong>COST</strong>: $40</p>
+<h3 id="savings_8">Savings</h3>
+<ul>
+<li><strong>Time saved</strong>: 2 hours</li>
+<li><strong>Cost saved</strong>: $160</li>
+<li><strong>Better review quality</strong>: Data-driven, comprehensive</li>
+<li><strong>Fewer bugs</strong>: Caught missing tests before merge</li>
+<li><strong>ROI</strong>: 400% (saved $160 for $40 of time)</li>
+</ul>
+<h3 id="long-term-benefits_2">Long-term Benefits</h3>
+<ul>
+<li><strong>Higher code quality</strong>: Systematic reviews</li>
+<li><strong>Fewer production bugs</strong>: Caught issues early</li>
+<li><strong>Faster reviews</strong>: 30 min vs 2.5 hours</li>
+<li><strong>Contributor satisfaction</strong>: Clear, actionable feedback</li>
+</ul>
+<hr />
+<h2 id="summary-total-value-across-all-use-cases">Summary: Total Value Across All Use Cases</h2>
+<table>
+<thead>
+<tr>
+<th>Use Case</th>
+<th>Time Saved</th>
+<th>Cost Saved</th>
+<th>Risk Reduction</th>
+<th>ROI</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Safe Refactoring</td>
+<td>2.5 hrs</td>
+<td>$200</td>
+<td>90%</td>
+<td>800%</td>
+</tr>
+<tr>
+<td>2. Dead Code Cleanup</td>
+<td>7 hrs</td>
+<td>$420</td>
+<td>95%</td>
+<td>933%</td>
+</tr>
+<tr>
+<td>3. Technical Debt</td>
+<td>3.5 hrs</td>
+<td>$256</td>
+<td>N/A</td>
+<td>1024%</td>
+</tr>
+<tr>
+<td>4. Onboarding</td>
+<td>3.5 hrs</td>
+<td>$238</td>
+<td>N/A</td>
+<td>950%</td>
+</tr>
+<tr>
+<td>5. Bug Investigation</td>
+<td>3.5 hrs</td>
+<td>$228</td>
+<td>80%</td>
+<td>700%</td>
+</tr>
+<tr>
+<td>6. API Deprecation</td>
+<td>2.25 hrs</td>
+<td>$163</td>
+<td>85%</td>
+<td>650%</td>
+</tr>
+<tr>
+<td>7. Architecture Review</td>
+<td>4 hrs</td>
+<td>$300</td>
+<td>N/A</td>
+<td>800%</td>
+</tr>
+<tr>
+<td>8. Security Audit</td>
+<td>4.5 hrs</td>
+<td>$883</td>
+<td>95%</td>
+<td>757%</td>
+</tr>
+<tr>
+<td>9. Performance Optimization</td>
+<td>3.5 hrs</td>
+<td>$315</td>
+<td>N/A</td>
+<td>700%</td>
+</tr>
+<tr>
+<td>10. Code Review</td>
+<td>2 hrs</td>
+<td>$160</td>
+<td>70%</td>
+<td>400%</td>
+</tr>
+<tr>
+<td><strong>TOTAL</strong></td>
+<td><strong>36.25 hrs</strong></td>
+<td><strong>$3,163</strong></td>
+<td><strong>Avg 86%</strong></td>
+<td><strong>Avg 771%</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="roi-calculation">ROI Calculation</h2>
+<h3 id="per-month-assuming-2-use-casesweek">Per Month (assuming 2 use cases/week)</h3>
+<ul>
+<li><strong>Time saved</strong>: ~36 hours/month</li>
+<li><strong>Cost saved</strong>: ~$3,163/month</li>
+<li><strong>Productivity gain</strong>: ~1 week of developer time</li>
+</ul>
+<h3 id="per-year">Per Year</h3>
+<ul>
+<li><strong>Time saved</strong>: 432 hours (10.8 work weeks)</li>
+<li><strong>Cost saved</strong>: $37,956</li>
+<li><strong>Risk reduction</strong>: 86% fewer bugs from incomplete analysis</li>
+</ul>
+<h3 id="investment">Investment</h3>
+<ul>
+<li><strong>Setup time</strong>: 10 minutes</li>
+<li><strong>Learning curve</strong>: 2 hours</li>
+<li><strong>Maintenance</strong>: ~30 minutes/month</li>
+</ul>
+<h3 id="break-even">Break-even</h3>
+<p><strong>After first 2 use cases (&lt; 1 day)</strong></p>
+<hr />
+<h2 id="conclusion">Conclusion</h2>
+<p>CodeGraphContext is not just a tool—it's a <strong>force multiplier</strong> that:</p>
+<p>✅ Saves <strong>36+ hours per month</strong> on code analysis tasks<br />
+✅ Reduces <strong>86% of risk</strong> from incomplete analysis<br />
+✅ Enables <strong>self-service</strong> code exploration (no senior dev needed)<br />
+✅ Provides <strong>100% accurate</strong> dependency analysis (vs 70-80% manual)<br />
+✅ Pays for itself in <strong>less than 1 day</strong><br />
+✅ Delivers <strong>771% average ROI</strong></p>
+<p><strong>The question isn't whether to use CodeGraphContext—it's how much money you're losing by not using it.</strong> 🚀</p>
+<hr />
+<h2 id="next-steps">Next Steps</h2>
+<ul>
+<li><strong>Get started</strong> → <a href="../setup_workflows/">SETUP_WORKFLOWS.md</a></li>
+<li><strong>See real examples</strong> → <a href="../user_journeys/">USER_JOURNEYS.md</a></li>
+<li><strong>Integration patterns</strong> → <a href="../integration_guide/">INTEGRATION_GUIDE.md</a></li>
+<li><strong>CLI reference</strong> → <a href="../cli/">CLI_COMPLETE_REFERENCE.md</a></li>
+<li><strong>MCP reference</strong> → <a href="../server/">MCP_TOOLS.md</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

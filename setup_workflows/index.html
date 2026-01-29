@@ -1,0 +1,3132 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../windows_setup/">
+      
+      
+        <link rel="next" href="../user_journeys/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Setup Workflows - CodeGraphContext</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#setup-workflows-codegraphcontext" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="CodeGraphContext" class="md-header__button md-logo" aria-label="CodeGraphContext" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            CodeGraphContext
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Setup Workflows
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="CodeGraphContext" class="md-nav__button md-logo" aria-label="CodeGraphContext" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    CodeGraphContext
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../windows_setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Windows Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setup Workflows
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setup Workflows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prerequisites">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#required" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optional-for-advanced-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional (for advanced features)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#first-time-setup-cli-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First-Time Setup: CLI Users
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="First-Time Setup: CLI Users">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-install-codegraphcontext" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Install CodeGraphContext
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-choose-database-backend-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Choose Database Backend (Optional)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-index-your-first-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Index Your First Repository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-verify-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Verify Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-explore-available-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Explore Available Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#first-time-setup-mcp-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First-Time Setup: MCP Users
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="First-Time Setup: MCP Users">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-3-same-as-cli-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1-3: Same as CLI Users
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-configure-mcp-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Configure MCP Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-start-mcp-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Start MCP Server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-verify-mcp-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Verify MCP Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#every-time-workflow-cli-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Every-Time Workflow: CLI Users
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Every-Time Workflow: CLI Users">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#typical-daily-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Typical Daily Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Typical Daily Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#morning-start-of-day" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Morning: Start of Day
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#during-development-common-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        During Development: Common Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#end-of-day-cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        End of Day: Cleanup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quick-reference-most-used-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference: Most Used Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#every-time-workflow-mcp-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Every-Time Workflow: MCP Users
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Every-Time Workflow: MCP Users">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#typical-daily-workflow_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Typical Daily Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Typical Daily Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#morning-start-of-day_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Morning: Start of Day
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#during-development-natural-language-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        During Development: Natural Language Queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#end-of-day-cleanup_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        End of Day: Cleanup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-with-ai-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration with AI Workflows
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#issue-1-cgc-command-not-found" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue 1: cgc command not found
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-2-indexing-fails-with-permission-denied" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue 2: Indexing fails with "Permission denied"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-3-mcp-server-not-connecting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue 3: MCP server not connecting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-4-slow-indexing-on-large-repositories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue 4: Slow indexing on large repositories
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-5-graph-out-of-sync-with-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue 5: Graph out of sync with code
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getting-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting Help
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-quick-start-cheat-sheet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: Quick Start Cheat Sheet
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary: Quick Start Cheat Sheet">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#first-time-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First Time (CLI)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#first-time-mcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First Time (MCP)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#every-time-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Every Time (CLI)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#every-time-mcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Every Time (MCP)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_journeys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Journeys
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../use_cases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use Cases Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../use_cases_detailed/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detailed Use Cases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../integration_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Server (MCP)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../core/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core Concepts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Advanced
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../watching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live Watching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cookbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cookbook
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deployment
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment/DOCKER_README/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment/DOCKER_COMPLETE_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker Complete Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment/DOCKER_DEPLOYMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment/HOSTING_COMPARISON/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hosting Comparison
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment/DEPLOYMENT_CHECKLIST/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment Checklist
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Contributing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing_languages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adding New Languages
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Help
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Help
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../future_work/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Future Work
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../license/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    License
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prerequisites">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#required" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optional-for-advanced-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional (for advanced features)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#first-time-setup-cli-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First-Time Setup: CLI Users
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="First-Time Setup: CLI Users">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-install-codegraphcontext" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Install CodeGraphContext
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-choose-database-backend-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Choose Database Backend (Optional)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-index-your-first-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Index Your First Repository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-verify-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Verify Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-explore-available-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Explore Available Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#first-time-setup-mcp-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First-Time Setup: MCP Users
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="First-Time Setup: MCP Users">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-3-same-as-cli-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1-3: Same as CLI Users
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-configure-mcp-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Configure MCP Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-start-mcp-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Start MCP Server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-verify-mcp-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Verify MCP Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#every-time-workflow-cli-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Every-Time Workflow: CLI Users
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Every-Time Workflow: CLI Users">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#typical-daily-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Typical Daily Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Typical Daily Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#morning-start-of-day" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Morning: Start of Day
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#during-development-common-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        During Development: Common Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#end-of-day-cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        End of Day: Cleanup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quick-reference-most-used-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference: Most Used Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#every-time-workflow-mcp-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Every-Time Workflow: MCP Users
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Every-Time Workflow: MCP Users">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#typical-daily-workflow_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Typical Daily Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Typical Daily Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#morning-start-of-day_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Morning: Start of Day
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#during-development-natural-language-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        During Development: Natural Language Queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#end-of-day-cleanup_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        End of Day: Cleanup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-with-ai-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration with AI Workflows
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#issue-1-cgc-command-not-found" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue 1: cgc command not found
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-2-indexing-fails-with-permission-denied" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue 2: Indexing fails with "Permission denied"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-3-mcp-server-not-connecting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue 3: MCP server not connecting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-4-slow-indexing-on-large-repositories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue 4: Slow indexing on large repositories
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-5-graph-out-of-sync-with-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue 5: Graph out of sync with code
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getting-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting Help
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-quick-start-cheat-sheet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: Quick Start Cheat Sheet
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary: Quick Start Cheat Sheet">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#first-time-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First Time (CLI)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#first-time-mcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First Time (MCP)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#every-time-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Every Time (CLI)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#every-time-mcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Every Time (MCP)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="setup-workflows-codegraphcontext">Setup Workflows - CodeGraphContext</h1>
+<p>This document provides <strong>exact, step-by-step workflows</strong> for setting up and using CodeGraphContext, both for first-time setup and everyday use.</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#first-time-setup-cli-users">First-Time Setup: CLI Users</a></li>
+<li><a href="#first-time-setup-mcp-users">First-Time Setup: MCP Users</a></li>
+<li><a href="#every-time-workflow-cli-users">Every-Time Workflow: CLI Users</a></li>
+<li><a href="#every-time-workflow-mcp-users">Every-Time Workflow: MCP Users</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+</ol>
+<hr />
+<h2 id="prerequisites">Prerequisites</h2>
+<h3 id="required">Required</h3>
+<ul>
+<li><strong>Python 3.8+</strong> installed on your system</li>
+<li><strong>pip</strong> package manager</li>
+<li><strong>Git</strong> (for cloning repositories)</li>
+</ul>
+<h3 id="optional-for-advanced-features">Optional (for advanced features)</h3>
+<ul>
+<li><strong>Neo4j</strong> (for large-scale repositories &gt; 100k LOC)</li>
+<li><strong>Docker</strong> (for containerized deployment)</li>
+</ul>
+<h3 id="check-prerequisites">Check Prerequisites</h3>
+<pre><code class="language-bash"># Check Python version
+python --version
+# Expected: Python 3.8.0 or higher
+
+# Check pip
+pip --version
+# Expected: pip 20.0.0 or higher
+
+# Check git
+git --version
+# Expected: git version 2.0.0 or higher
+</code></pre>
+<hr />
+<h2 id="first-time-setup-cli-users">First-Time Setup: CLI Users</h2>
+<p><strong>Time Required</strong>: 5-10 minutes<br />
+<strong>Frequency</strong>: Once per machine</p>
+<h3 id="step-1-install-codegraphcontext">Step 1: Install CodeGraphContext</h3>
+<pre><code class="language-bash"># Install via pip
+pip install codegraphcontext
+
+# Verify installation
+cgc --version
+
+# Expected output:
+# CodeGraphContext version 1.0.0
+</code></pre>
+<p><strong>Troubleshooting</strong>: If <code>cgc</code> command not found, add Python scripts to PATH:</p>
+<pre><code class="language-bash"># Linux/Mac
+export PATH=&quot;$HOME/.local/bin:$PATH&quot;
+
+# Windows
+# Add %APPDATA%\Python\Scripts to PATH
+</code></pre>
+<h3 id="step-2-choose-database-backend-optional">Step 2: Choose Database Backend (Optional)</h3>
+<p>CodeGraphContext automatically uses <strong>FalkorDB</strong> (embedded, no setup needed) for most use cases.</p>
+<p><strong>When to use Neo4j instead:</strong>
+- Repository &gt; 100,000 lines of code
+- Need to share graph across team members
+- Want persistent storage across machines</p>
+<pre><code class="language-bash"># Option A: Use FalkorDB (default, recommended for most users)
+# No action needed - works out of the box
+
+# Option B: Setup Neo4j (for large repositories)
+cgc neo4j setup
+
+# This will:
+# 1. Check if Neo4j is installed
+# 2. If not, provide installation instructions
+# 3. Configure connection settings
+# 4. Test the connection
+</code></pre>
+<p><strong>Neo4j Setup Output:</strong></p>
+<pre><code>Checking for Neo4j installation...
+✗ Neo4j not found
+
+Would you like to install Neo4j? (y/n): y
+
+Installing Neo4j...
+✓ Neo4j 5.x installed
+✓ Started Neo4j service
+✓ Default credentials: neo4j/neo4j
+
+Please change the default password:
+New password: ********
+Confirm password: ********
+
+✓ Password updated
+✓ Connection tested successfully
+
+Configuration saved to: ~/.cgc/config.yml
+</code></pre>
+<h3 id="step-3-index-your-first-repository">Step 3: Index Your First Repository</h3>
+<pre><code class="language-bash"># Navigate to your project
+cd ~/projects/my-project
+
+# Index the repository
+cgc index .
+
+# Expected output:
+# Indexing repository: /home/user/projects/my-project
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Scanning files...        ✓ 1,247 files found
+# Parsing Python files...  ✓ 892 files (71%)
+# Parsing JavaScript...    ✓ 234 files (19%)
+# Parsing TypeScript...    ✓ 121 files (10%)
+# 
+# Building graph...
+# ✓ Created 3,421 function nodes
+# ✓ Created 892 class nodes
+# ✓ Created 234 module nodes
+# ✓ Created 15,234 relationships
+# 
+# Database: FalkorDB (embedded)
+# Indexing completed in 23.4 seconds
+</code></pre>
+<h3 id="step-4-verify-setup">Step 4: Verify Setup</h3>
+<pre><code class="language-bash"># Check repository statistics
+cgc stats
+
+# Expected output:
+# Repository Statistics
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Repository: my-project
+# Path: /home/user/projects/my-project
+# 
+# Code Elements:
+#   Files:      1,247
+#   Functions:  3,421
+#   Classes:    892
+#   Modules:    234
+# 
+# Relationships:
+#   Function calls:    8,234
+#   Imports:           2,456
+#   Inheritance:       234
+#   Total:             15,234
+# 
+# Database: FalkorDB
+# Last indexed: 2026-01-30 01:15:23
+</code></pre>
+<pre><code class="language-bash"># Try a simple query
+cgc find &quot;main&quot; --type function
+
+# Expected output:
+# Found 5 functions matching 'main':
+# 
+# 1. main
+#    File: src/app.py:123
+#    
+# 2. main_loop
+#    File: src/core/event_loop.py:45
+# 
+# ... (3 more)
+</code></pre>
+<h3 id="step-5-explore-available-commands">Step 5: Explore Available Commands</h3>
+<pre><code class="language-bash"># See all available commands
+cgc help
+
+# Expected output:
+# CodeGraphContext CLI
+# 
+# Usage: cgc [COMMAND] [OPTIONS]
+# 
+# Project Management:
+#   index [PATH]              Index a repository
+#   reindex                   Re-index current repository
+#   stats                     Show repository statistics
+#   clean                     Clear the database
+# 
+# Code Discovery:
+#   find &lt;query&gt;              Search for code elements
+#   visualize                 Generate architecture visualization
+# 
+# Code Analysis:
+#   analyze callers &lt;name&gt;    Find who calls a function
+#   analyze callees &lt;name&gt;    Find what a function calls
+#   analyze chain &lt;a&gt; &lt;b&gt;     Show call chain between functions
+#   analyze deps &lt;module&gt;     Show module dependencies
+#   analyze dead-code         Find unused functions
+#   analyze complexity        Find complex functions
+# 
+# ... (more commands)
+</code></pre>
+<p><strong>✅ Setup Complete!</strong> You're ready to use CodeGraphContext.</p>
+<hr />
+<h2 id="first-time-setup-mcp-users">First-Time Setup: MCP Users</h2>
+<p><strong>Time Required</strong>: 10-15 minutes<br />
+<strong>Frequency</strong>: Once per machine</p>
+<h3 id="step-1-3-same-as-cli-users">Step 1-3: Same as CLI Users</h3>
+<p>Follow Steps 1-3 from <a href="#first-time-setup-cli-users">First-Time Setup: CLI Users</a></p>
+<h3 id="step-4-configure-mcp-integration">Step 4: Configure MCP Integration</h3>
+<pre><code class="language-bash"># Setup MCP configuration
+cgc mcp setup
+
+# Interactive prompts:
+# 
+# Select your IDE/Editor:
+# 1. Cursor
+# 2. VS Code (with Continue.dev)
+# 3. Claude Desktop
+# 4. Custom (manual configuration)
+# 
+# Choice: 1
+</code></pre>
+<p><strong>For Cursor:</strong></p>
+<pre><code>Configuring MCP for Cursor...
+
+✓ Found Cursor config at: ~/.config/cursor/mcp.json
+✓ Added CodeGraphContext MCP server
+✓ Server command: cgc mcp start
+
+Configuration:
+{
+  &quot;mcpServers&quot;: {
+    &quot;codegraphcontext&quot;: {
+      &quot;command&quot;: &quot;cgc&quot;,
+      &quot;args&quot;: [&quot;mcp&quot;, &quot;start&quot;],
+      &quot;env&quot;: {
+        &quot;CGC_DB&quot;: &quot;falkordb&quot;
+      }
+    }
+  }
+}
+
+✓ Configuration saved
+
+Next steps:
+1. Restart Cursor
+2. Open Command Palette (Cmd/Ctrl + Shift + P)
+3. Run: &quot;MCP: Reload Servers&quot;
+4. Verify CodeGraphContext appears in MCP server list
+</code></pre>
+<p><strong>For VS Code (Continue.dev):</strong></p>
+<pre><code>Configuring MCP for VS Code (Continue.dev)...
+
+✓ Found Continue config at: ~/.continue/config.json
+✓ Added CodeGraphContext MCP server
+
+Next steps:
+1. Restart VS Code
+2. Open Continue sidebar
+3. Verify CodeGraphContext tools are available
+</code></pre>
+<p><strong>For Claude Desktop:</strong></p>
+<pre><code>Configuring MCP for Claude Desktop...
+
+✓ Created config at: ~/Library/Application Support/Claude/claude_desktop_config.json
+
+Next steps:
+1. Restart Claude Desktop
+2. Start a new conversation
+3. Ask: &quot;What MCP tools do you have access to?&quot;
+4. Verify CodeGraphContext tools are listed
+</code></pre>
+<h3 id="step-5-start-mcp-server">Step 5: Start MCP Server</h3>
+<pre><code class="language-bash"># Start the MCP server
+cgc mcp start
+
+# Expected output:
+# CodeGraphContext MCP Server
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ✓ Server started
+# ✓ Protocol: Model Context Protocol (MCP)
+# ✓ Transport: stdio
+# ✓ Database: FalkorDB connected
+# ✓ Repository: /home/user/projects/my-project
+# ✓ Watching for file changes: enabled
+# 
+# Available tools: 18
+#   - find_code
+#   - analyze_code_relationships
+#   - find_dead_code
+#   - execute_cypher_query
+#   ... (14 more)
+# 
+# Server ready. Listening for requests...
+</code></pre>
+<p><strong>Note</strong>: Keep this terminal open, or run in background:</p>
+<pre><code class="language-bash"># Run in background (Linux/Mac)
+cgc mcp start &amp;
+
+# Or use tmux/screen for persistent session
+tmux new -s cgc
+cgc mcp start
+# Press Ctrl+B, then D to detach
+</code></pre>
+<h3 id="step-6-verify-mcp-integration">Step 6: Verify MCP Integration</h3>
+<p><strong>In Cursor/VS Code:</strong></p>
+<ol>
+<li>Open your IDE</li>
+<li>Start a new chat with AI assistant</li>
+<li>Ask: "What CodeGraphContext tools do you have?"</li>
+</ol>
+<p><strong>Expected AI Response:</strong></p>
+<blockquote>
+<p>"I have access to 18 CodeGraphContext tools:</p>
+<p><strong>Code Discovery:</strong>
+- find_code - Search for functions, classes, files
+- list_indexed_repositories - Show indexed projects</p>
+<p><strong>Code Analysis:</strong>
+- analyze_code_relationships - Find callers, callees, call chains
+- find_dead_code - Find unused functions
+- find_most_complex_functions - Find complex code
+- calculate_cyclomatic_complexity - Measure function complexity</p>
+<p><strong>Graph Queries:</strong>
+- execute_cypher_query - Run custom graph queries
+- visualize_graph_query - Generate graph visualizations</p>
+<p>... (10 more tools)</p>
+<p>How can I help you explore your codebase?"</p>
+</blockquote>
+<p><strong>Test with a real query:</strong></p>
+<p>Ask AI: "Find all functions that call <code>authenticate</code>"</p>
+<p><strong>Expected AI Response:</strong></p>
+<blockquote>
+<p>"I found 12 functions that call <code>authenticate</code>:</p>
+<p><strong>Direct callers (3):</strong>
+1. <code>login</code> in api/auth.py:45
+2. <code>verify_token</code> in middleware/auth.py:89
+3. <code>refresh_session</code> in api/session.py:123</p>
+<p><strong>Indirect callers (9 more):</strong>
+... (AI lists them)</p>
+<p>Would you like me to show the call chain for any of these?"</p>
+</blockquote>
+<p><strong>✅ MCP Setup Complete!</strong> Your AI assistant now has code intelligence.</p>
+<hr />
+<h2 id="every-time-workflow-cli-users">Every-Time Workflow: CLI Users</h2>
+<p><strong>Time Required</strong>: 2-5 minutes per session<br />
+<strong>Frequency</strong>: Daily/as needed</p>
+<h3 id="typical-daily-workflow">Typical Daily Workflow</h3>
+<h4 id="morning-start-of-day"><strong>Morning: Start of Day</strong></h4>
+<pre><code class="language-bash"># 1. Navigate to your project
+cd ~/projects/my-project
+
+# 2. Pull latest changes
+git pull origin main
+
+# 3. Update the code graph (if files changed)
+cgc reindex
+
+# Output:
+# Detecting changes...
+# ✓ 12 files modified
+# ✓ 3 files added
+# ✓ 1 file deleted
+# 
+# Updating graph...
+# ✓ Updated 45 nodes
+# ✓ Updated 123 relationships
+# 
+# Reindexing completed in 3.2 seconds
+</code></pre>
+<p><strong>Alternative</strong>: Use auto-watch mode (set once, forget it)</p>
+<pre><code class="language-bash"># Enable auto-watch for this repository
+cgc watch .
+
+# Output:
+# ✓ Watching: /home/user/projects/my-project
+# ✓ Auto-reindex on file changes: enabled
+# 
+# The graph will automatically update when files change.
+# Press Ctrl+C to stop watching.
+</code></pre>
+<h4 id="during-development-common-tasks"><strong>During Development: Common Tasks</strong></h4>
+<p><strong>Task 1: Understanding a new feature</strong></p>
+<pre><code class="language-bash"># Find the entry point
+cgc find &quot;handle_payment&quot; --type function
+
+# See what it calls
+cgc analyze callees handle_payment
+
+# See the full execution flow
+cgc analyze chain handle_payment process_payment
+</code></pre>
+<p><strong>Task 2: Before refactoring</strong></p>
+<pre><code class="language-bash"># Find all usages of a function
+cgc analyze callers calculate_total
+
+# Check complexity
+cgc analyze complexity calculate_total
+
+# Find dead code to remove first
+cgc analyze dead-code
+</code></pre>
+<p><strong>Task 3: Code review</strong></p>
+<pre><code class="language-bash"># Check what a PR changes
+git diff main...feature-branch --name-only &gt; changed_files.txt
+
+# For each changed file, check impact
+cgc analyze callers MyChangedClass
+
+# Verify test coverage
+cgc find &quot;test_my_changed_class&quot; --type function
+</code></pre>
+<p><strong>Task 4: Debugging</strong></p>
+<pre><code class="language-bash"># Find where a variable is modified
+cgc analyze modifies user_session
+
+# Trace execution path
+cgc analyze chain api_endpoint database_query
+
+# Find similar code patterns
+cgc find &quot;try.*except.*pass&quot; --regex
+</code></pre>
+<h4 id="end-of-day-cleanup"><strong>End of Day: Cleanup</strong></h4>
+<pre><code class="language-bash"># Optional: Clear cache if needed
+cgc clean --cache-only
+
+# Optional: Export graph for documentation
+cgc visualize --output daily_architecture.html
+</code></pre>
+<h3 id="quick-reference-most-used-commands">Quick Reference: Most Used Commands</h3>
+<pre><code class="language-bash"># Search
+cgc find &lt;query&gt;                    # Find code elements
+cgc find &lt;query&gt; --type function    # Find only functions
+cgc find &lt;query&gt; --type class       # Find only classes
+
+# Analysis
+cgc analyze callers &lt;name&gt;          # Who calls this?
+cgc analyze callees &lt;name&gt;          # What does this call?
+cgc analyze chain &lt;a&gt; &lt;b&gt;           # Call path from A to B
+cgc analyze dead-code               # Find unused code
+cgc analyze complexity              # Find complex functions
+
+# Visualization
+cgc visualize                       # Generate architecture diagram
+cgc stats                           # Show repository statistics
+
+# Maintenance
+cgc reindex                         # Update after code changes
+cgc watch .                         # Auto-update on file changes
+</code></pre>
+<hr />
+<h2 id="every-time-workflow-mcp-users">Every-Time Workflow: MCP Users</h2>
+<p><strong>Time Required</strong>: 1-2 minutes per session<br />
+<strong>Frequency</strong>: Daily/as needed</p>
+<h3 id="typical-daily-workflow_1">Typical Daily Workflow</h3>
+<h4 id="morning-start-of-day_1"><strong>Morning: Start of Day</strong></h4>
+<pre><code class="language-bash"># Option 1: Start MCP server manually
+cgc mcp start
+
+# Option 2: Auto-start with system (set once)
+# Add to ~/.bashrc or ~/.zshrc:
+# cgc mcp start &amp;
+
+# Option 3: Use tmux/screen for persistent session
+tmux attach -t cgc || tmux new -s cgc &quot;cgc mcp start&quot;
+</code></pre>
+<p><strong>Verify server is running:</strong></p>
+<pre><code class="language-bash"># Check if MCP server is running
+ps aux | grep &quot;cgc mcp&quot;
+
+# Expected output:
+# user  12345  0.1  0.5  cgc mcp start
+</code></pre>
+<h4 id="during-development-natural-language-queries"><strong>During Development: Natural Language Queries</strong></h4>
+<p>Open your IDE and ask your AI assistant:</p>
+<p><strong>Understanding Code:</strong>
+- "What does the <code>process_payment</code> function do?"
+- "Show me all functions that call <code>authenticate</code>"
+- "What's the call chain from the API endpoint to the database?"</p>
+<p><strong>Before Refactoring:</strong>
+- "What will break if I change <code>calculate_total</code>?"
+- "Find all dead code in the auth module"
+- "Show me the most complex functions"</p>
+<p><strong>Code Review:</strong>
+- "What's the impact of changing <code>UserService</code>?"
+- "Are there any circular dependencies?"
+- "Find all functions that access the database"</p>
+<p><strong>Debugging:</strong>
+- "Trace the execution from <code>handle_request</code> to <code>send_email</code>"
+- "Who modifies the <code>session_state</code> variable?"
+- "Find all error handling code"</p>
+<h4 id="end-of-day-cleanup_1"><strong>End of Day: Cleanup</strong></h4>
+<pre><code class="language-bash"># Optional: Stop MCP server if running manually
+# Press Ctrl+C in the terminal running cgc mcp start
+
+# Or kill the process
+pkill -f &quot;cgc mcp start&quot;
+</code></pre>
+<h3 id="integration-with-ai-workflows">Integration with AI Workflows</h3>
+<p><strong>Example 1: Feature Development</strong></p>
+<ol>
+<li><strong>Ask AI</strong>: "I need to add a new payment method. Show me how existing payment methods are implemented."</li>
+<li><strong>AI uses CGC</strong>: Finds <code>PaymentMethod</code> class, shows all implementations</li>
+<li><strong>AI generates</strong>: Boilerplate code following existing patterns</li>
+<li><strong>You review</strong>: AI-generated code with full context</li>
+</ol>
+<p><strong>Example 2: Bug Investigation</strong></p>
+<ol>
+<li><strong>Ask AI</strong>: "Users report checkout fails for international orders. Help me debug."</li>
+<li><strong>AI uses CGC</strong>: Traces call chain from checkout to payment processing</li>
+<li><strong>AI identifies</strong>: Missing email notification call (like in User Journey #2)</li>
+<li><strong>AI suggests</strong>: Exact fix with line numbers</li>
+</ol>
+<p><strong>Example 3: Refactoring</strong></p>
+<ol>
+<li><strong>Ask AI</strong>: "I want to refactor <code>OldAuthService</code> to <code>NewAuthService</code>. Create a migration plan."</li>
+<li><strong>AI uses CGC</strong>: Finds all 47 usages, analyzes complexity</li>
+<li><strong>AI generates</strong>: Step-by-step migration plan with risk assessment</li>
+<li><strong>You execute</strong>: Safe, incremental migration</li>
+</ol>
+<hr />
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="common-issues">Common Issues</h3>
+<h4 id="issue-1-cgc-command-not-found"><strong>Issue 1: <code>cgc</code> command not found</strong></h4>
+<p><strong>Symptoms:</strong></p>
+<pre><code class="language-bash">cgc --version
+# bash: cgc: command not found
+</code></pre>
+<p><strong>Solution:</strong></p>
+<pre><code class="language-bash"># Find where pip installed cgc
+pip show codegraphcontext | grep Location
+
+# Add to PATH
+export PATH=&quot;$HOME/.local/bin:$PATH&quot;
+
+# Make permanent (add to ~/.bashrc or ~/.zshrc)
+echo 'export PATH=&quot;$HOME/.local/bin:$PATH&quot;' &gt;&gt; ~/.bashrc
+source ~/.bashrc
+</code></pre>
+<h4 id="issue-2-indexing-fails-with-permission-denied"><strong>Issue 2: Indexing fails with "Permission denied"</strong></h4>
+<p><strong>Symptoms:</strong></p>
+<pre><code class="language-bash">cgc index .
+# Error: Permission denied: /some/file.py
+</code></pre>
+<p><strong>Solution:</strong></p>
+<pre><code class="language-bash"># Check file permissions
+ls -la /some/file.py
+
+# Option 1: Fix permissions
+chmod +r /some/file.py
+
+# Option 2: Skip problematic files
+cgc index . --ignore-errors
+</code></pre>
+<h4 id="issue-3-mcp-server-not-connecting"><strong>Issue 3: MCP server not connecting</strong></h4>
+<p><strong>Symptoms:</strong>
+- AI assistant says "CodeGraphContext tools not available"
+- MCP server starts but IDE doesn't see it</p>
+<p><strong>Solution:</strong></p>
+<pre><code class="language-bash"># 1. Verify server is running
+cgc mcp start
+# Should show &quot;Server ready. Listening for requests...&quot;
+
+# 2. Check MCP configuration
+cat ~/.config/cursor/mcp.json
+# Should contain &quot;codegraphcontext&quot; entry
+
+# 3. Restart IDE completely
+# Not just reload - full quit and reopen
+
+# 4. Check IDE logs
+# Cursor: Help &gt; Toggle Developer Tools &gt; Console
+# Look for MCP connection errors
+
+# 5. Test with manual MCP call
+echo '{&quot;method&quot;:&quot;tools/list&quot;}' | cgc mcp start
+# Should return list of 18 tools
+</code></pre>
+<h4 id="issue-4-slow-indexing-on-large-repositories"><strong>Issue 4: Slow indexing on large repositories</strong></h4>
+<p><strong>Symptoms:</strong></p>
+<pre><code class="language-bash">cgc index .
+# Takes &gt; 5 minutes on 100k+ LOC repository
+</code></pre>
+<p><strong>Solution:</strong></p>
+<pre><code class="language-bash"># Option 1: Use Neo4j instead of FalkorDB
+cgc neo4j setup
+cgc index . --db neo4j
+
+# Option 2: Exclude test files and dependencies
+cgc index . --exclude &quot;tests/*&quot; --exclude &quot;node_modules/*&quot;
+
+# Option 3: Index in parallel
+cgc index . --parallel 4
+
+# Option 4: Use pre-built bundle if available
+cgc load &lt;package-name&gt;
+</code></pre>
+<h4 id="issue-5-graph-out-of-sync-with-code"><strong>Issue 5: Graph out of sync with code</strong></h4>
+<p><strong>Symptoms:</strong>
+- CGC shows old function names
+- Missing new files</p>
+<p><strong>Solution:</strong></p>
+<pre><code class="language-bash"># Full reindex
+cgc reindex --force
+
+# Or use watch mode to auto-sync
+cgc watch .
+</code></pre>
+<h3 id="getting-help">Getting Help</h3>
+<pre><code class="language-bash"># Built-in help
+cgc help
+cgc help &lt;command&gt;
+
+# Check version
+cgc --version
+
+# Enable debug logging
+cgc --debug index .
+
+# Report issues
+# GitHub: https://github.com/CodeGraphContext/CodeGraphContext/issues
+</code></pre>
+<hr />
+<h2 id="next-steps">Next Steps</h2>
+<ul>
+<li><strong>Learn by example</strong> → <a href="../user_journeys/">USER_JOURNEYS.md</a></li>
+<li><strong>Detailed use cases</strong> → <a href="../use_cases_detailed/">USE_CASES_DETAILED.md</a></li>
+<li><strong>Integration patterns</strong> → <a href="../integration_guide/">INTEGRATION_GUIDE.md</a></li>
+<li><strong>CLI reference</strong> → <a href="../cli/">CLI_COMPLETE_REFERENCE.md</a></li>
+<li><strong>MCP reference</strong> → <a href="../server/">MCP_TOOLS.md</a></li>
+</ul>
+<hr />
+<h2 id="summary-quick-start-cheat-sheet">Summary: Quick Start Cheat Sheet</h2>
+<h3 id="first-time-cli">First Time (CLI)</h3>
+<pre><code class="language-bash">pip install codegraphcontext
+cd ~/my-project
+cgc index .
+cgc stats
+</code></pre>
+<h3 id="first-time-mcp">First Time (MCP)</h3>
+<pre><code class="language-bash">pip install codegraphcontext
+cd ~/my-project
+cgc index .
+cgc mcp setup
+cgc mcp start
+# Restart IDE
+</code></pre>
+<h3 id="every-time-cli">Every Time (CLI)</h3>
+<pre><code class="language-bash">cd ~/my-project
+cgc reindex  # or cgc watch .
+cgc analyze callers &lt;function&gt;
+</code></pre>
+<h3 id="every-time-mcp">Every Time (MCP)</h3>
+<pre><code class="language-bash">cgc mcp start  # or auto-start
+# Ask AI questions in natural language
+</code></pre>
+<p><strong>That's it! You're ready to use CodeGraphContext.</strong> 🚀</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
