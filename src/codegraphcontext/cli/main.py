@@ -552,19 +552,22 @@ app.add_typer(registry_app, name="registry")
 
 @registry_app.command("list")
 def registry_list(
-    verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed information including download URLs")
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed information including download URLs"),
+    unique: bool = typer.Option(False, "--unique", "-u", help="Show only one version per package (most recent)")
 ):
     """
     List all available bundles in the registry.
     
     Shows bundles from both weekly pre-indexed releases and on-demand generations.
+    By default, shows all versions. Use --unique to see only the most recent version per package.
     
     Examples:
         cgc registry list
         cgc registry list --verbose
+        cgc registry list --unique
     """
     from .registry_commands import list_bundles
-    list_bundles(verbose=verbose)
+    list_bundles(verbose=verbose, unique=unique)
 
 @registry_app.command("search")
 def registry_search(
