@@ -60,3 +60,4 @@ tests_sample
 .env*.local
 STATUS.md
 visualizations/
+tests_new

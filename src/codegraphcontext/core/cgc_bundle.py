@@ -44,6 +44,21 @@ class CGCBundle:
         """
         self.db_manager = db_manager
     
+    def _get_id_function(self) -> str:
+        """
+        Get the appropriate ID function based on the database backend.
+        
+        Returns:
+            str: 'elementId' for Neo4j, 'id' for FalkorDB
+        """
+        # Check if we're using Neo4j or FalkorDB
+        backend = self.db_manager.get_backend_type()
+        if backend == 'neo4j':
+            return 'elementId'
+        else:  # FalkorDB or other backends
+            return 'id'
+
+    
     def export_to_bundle(
         self,
         output_path: Path,
@@ -622,13 +637,16 @@ cgc import <bundle-file>.cgc
     
     def _import_node_batch(self, session, batch: List[Tuple], id_mapping: Dict) -> int:
         """Import a batch of nodes."""
+        # Detect database backend to use appropriate ID function
+        id_function = self._get_id_function()
+        
         for labels, properties, old_id in batch:
             if not labels:
                 continue
             
             # Create node with labels
             label_str = ':'.join(labels)
-            query = f"CREATE (n:{label_str}) SET n = $props RETURN elementId(n) as new_id"
+            query = f"CREATE (n:{label_str}) SET n = $props RETURN {id_function}(n) as new_id"
             
             result = session.run(query, props=properties)
             record = result.single()
@@ -663,6 +681,8 @@ cgc import <bundle-file>.cgc
     def _import_edge_batch(self, session, batch: List[Dict]) -> int:
         """Import a batch of edges."""
         id_mapping = getattr(self, '_id_mapping', {})
+        # Detect database backend to use appropriate ID function
+        id_function = self._get_id_function()
         
         for edge in batch:
             old_from = edge.get('from')
@@ -681,7 +701,7 @@ cgc import <bundle-file>.cgc
             # Create relationship
             query = f"""
                 MATCH (a), (b)
-                WHERE elementId(a) = $from_id AND elementId(b) = $to_id
+                WHERE {id_function}(a) = $from_id AND {id_function}(b) = $to_id
                 CREATE (a)-[r:{rel_type}]->(b)
                 SET r = $props
             """
@@ -689,3 +709,4 @@ cgc import <bundle-file>.cgc
             session.run(query, from_id=new_from, to_id=new_to, props=properties)
         
         return len(batch)
+
