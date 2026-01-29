@@ -2,7 +2,7 @@ from importlib.metadata import files
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 import re
-from codegraphcontext.utils.debug_log import debyg_log, info_logger, error_logger, warning_logger
+from codegraphcontext.utils.debug_log import debug_log, info_logger, error_logger, warning_logger
 from codegraphcontext.utils.tree_sitter_manager import execute_query
 
 HASKELL_QUERIES = {

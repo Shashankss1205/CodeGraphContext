@@ -408,3 +408,77 @@ def request_bundle(repo_url: str, wait: bool = False):
     if wait:
         console.print("\n[yellow]Note: Automatic waiting not yet implemented.[/yellow]")
         console.print("[dim]Please check back in 5-10 minutes and use 'cgc registry download <name>'[/dim]")
+
+
+def load_bundle_command(bundle_name: str, clear_existing: bool = False):
+    """
+    Load a bundle (for MCP tool integration).
+    
+    This is a wrapper around download_bundle that returns structured data
+    instead of using console output and typer.Exit.
+    
+    Args:
+        bundle_name: Name of the bundle to load
+        clear_existing: Whether to clear existing data before loading
+        
+    Returns:
+        Tuple of (success: bool, message: str, stats: dict)
+    """
+    from pathlib import Path
+    from .cli_helpers import _initialize_services
+    from ..core.cgc_bundle import CGCBundle
+    
+    try:
+        # Initialize services
+        services = _initialize_services()
+        if not all(services):
+            return (False, "Failed to initialize database services", {})
+        
+        db_manager, _, _ = services
+        
+        # Check if bundle exists locally
+        bundle_path = Path(bundle_name)
+        if not bundle_path.exists():
+            # Try to download from registry
+            try:
+                download_bundle(bundle_name, output_dir=None, auto_load=False)
+                # After download, the file should exist
+                if not bundle_path.exists():
+                    # Try with .cgc extension
+                    bundle_path = Path(f"{bundle_name}.cgc")
+                    if not bundle_path.exists():
+                        return (False, f"Bundle not found: {bundle_name}", {})
+            except Exception as e:
+                return (False, f"Failed to download bundle: {str(e)}", {})
+        
+        # Load the bundle
+        bundle = CGCBundle(db_manager)
+        success, message = bundle.import_from_bundle(
+            bundle_path=bundle_path,
+            clear_existing=clear_existing
+        )
+        
+        if success:
+            # Extract stats from message if available
+            stats = {}
+            if "Nodes:" in message and "Edges:" in message:
+                try:
+                    parts = message.split("|")
+                    for part in parts:
+                        if "Nodes:" in part:
+                            stats["nodes"] = int(part.split(":")[1].strip().replace(",", ""))
+                        elif "Edges:" in part:
+                            stats["edges"] = int(part.split(":")[1].strip().replace(",", ""))
+                except:
+                    pass
+            
+            return (True, message, stats)
+        else:
+            return (False, message, {})
+    
+    except Exception as e:
+        return (False, f"Error loading bundle: {str(e)}", {})
+    finally:
+        if 'db_manager' in locals():
+            db_manager.close_driver()
+
