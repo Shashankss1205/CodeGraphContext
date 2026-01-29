@@ -71,7 +71,7 @@ class TreeSitterParser:
             from .languages.swift import SwiftTreeSitterParser
             self.language_specific_parser = SwiftTreeSitterParser(self)
         elif self.language_name == 'haskell':
-            from .languages.swift import HaskellTreeSitterParser
+            from .languages.haskell import HaskellTreeSitterParser
             self.language_specific_parser = HaskellTreeSitterParser(self)
 
 
@@ -118,7 +118,6 @@ class GraphBuilder:
             '.sc': TreeSitterParser('scala'),
             '.swift': TreeSitterParser('swift'),
             '.hs': TreeSitterParser('haskell'),
-            
         }
         self.create_schema()
 
@@ -236,9 +235,6 @@ class GraphBuilder:
         if '.swift' in files_by_lang:
             from .languages import swift as swift_lang_module
             imports_map.update(swift_lang_module.pre_scan_swift(files_by_lang['.swift'], self.parsers['.swift']))
-        if '.hs' in files_by_lang:
-            from .languages import haskell as haskell_lang_module
-            imports_map.update(haskell_lang_module.pre_scan_haskell(files_by_lang['.hs'], self.parsers['.hs']))
             
         return imports_map
 
