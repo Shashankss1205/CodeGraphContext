@@ -44,9 +44,11 @@ from .cli_helpers import (
     list_watching_helper,
 )
 
-# Set the log level for the noisy neo4j and asyncio logger to WARNING to keep the output clean.
+# Set the log level for the noisy neo4j, asyncio, and urllib3 loggers to WARNING to keep the output clean.
 logging.getLogger("neo4j").setLevel(logging.WARNING)
 logging.getLogger("asyncio").setLevel(logging.WARNING)
+logging.getLogger("urllib3").setLevel(logging.WARNING)
+
 
 # Import visualization module
 from .visualizer import (
