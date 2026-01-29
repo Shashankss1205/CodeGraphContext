@@ -1745,8 +1745,8 @@ CodeGraphContext is not just a tool—it's a **force multiplier** that:
 
 ## Next Steps
 
-- **Get started** → [SETUP_WORKFLOWS.md](./SETUP_WORKFLOWS.md)
-- **See real examples** → [USER_JOURNEYS.md](./USER_JOURNEYS.md)
-- **Integration patterns** → [INTEGRATION_GUIDE.md](./INTEGRATION_GUIDE.md)
-- **CLI reference** → [CLI_COMPLETE_REFERENCE.md](./CLI_COMPLETE_REFERENCE.md)
-- **MCP reference** → [MCP_TOOLS.md](./MCP_TOOLS.md)
+- **Get started** → [SETUP_WORKFLOWS.md](./setup_workflows.md)
+- **See real examples** → [USER_JOURNEYS.md](./user_journeys.md)
+- **Integration patterns** → [INTEGRATION_GUIDE.md](./integration_guide.md)
+- **CLI reference** → [CLI_COMPLETE_REFERENCE.md](./cli.md)
+- **MCP reference** → [MCP_TOOLS.md](./server.md)

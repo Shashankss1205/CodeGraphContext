@@ -755,11 +755,11 @@ cgc --debug index .
 
 ## Next Steps
 
-- **Learn by example** → [USER_JOURNEYS.md](./USER_JOURNEYS.md)
-- **Detailed use cases** → [USE_CASES_DETAILED.md](./USE_CASES_DETAILED.md)
-- **Integration patterns** → [INTEGRATION_GUIDE.md](./INTEGRATION_GUIDE.md)
-- **CLI reference** → [CLI_COMPLETE_REFERENCE.md](./CLI_COMPLETE_REFERENCE.md)
-- **MCP reference** → [MCP_TOOLS.md](./MCP_TOOLS.md)
+- **Learn by example** → [USER_JOURNEYS.md](./user_journeys.md)
+- **Detailed use cases** → [USE_CASES_DETAILED.md](./use_cases_detailed.md)
+- **Integration patterns** → [INTEGRATION_GUIDE.md](./integration_guide.md)
+- **CLI reference** → [CLI_COMPLETE_REFERENCE.md](./cli.md)
+- **MCP reference** → [MCP_TOOLS.md](./server.md)
 
 ---
 

@@ -1,0 +1,2981 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../setup_workflows/">
+      
+      
+        <link rel="next" href="../use_cases/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>User Journeys - CodeGraphContext</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#user-journeys-codegraphcontext" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="CodeGraphContext" class="md-header__button md-logo" aria-label="CodeGraphContext" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            CodeGraphContext
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              User Journeys
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="CodeGraphContext" class="md-nav__button md-logo" aria-label="CodeGraphContext" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    CodeGraphContext
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../windows_setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Windows Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../setup_workflows/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setup Workflows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Journeys
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Journeys
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#persona-1-ai-assisted-developer-mcp-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persona 1: AI-Assisted Developer (MCP User)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Persona 1: AI-Assisted Developer (MCP User)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#profile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Profile
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#concrete-example-scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concrete Example Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-by-step-journey" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step-by-Step Journey
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step-by-Step Journey">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-one-time-setup-5-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: One-Time Setup (5 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-start-mcp-server-every-time-or-run-in-background" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Start MCP Server (Every time, or run in background)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-use-ai-assistant-with-cgc-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Use AI Assistant with CGC Context
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-deep-dive-with-follow-up-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Deep Dive with Follow-up Questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-make-informed-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Make Informed Changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#time-saved" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Time Saved
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#persona-2-new-developercontributor-cli-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persona 2: New Developer/Contributor (CLI User)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Persona 2: New Developer/Contributor (CLI User)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#profile_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Profile
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#concrete-example-scenario_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concrete Example Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-by-step-journey_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step-by-Step Journey
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step-by-Step Journey">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-setup-first-time-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Setup (First time only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-understand-the-architecture-10-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Understand the Architecture (10 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-find-relevant-code-5-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Find Relevant Code (5 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-trace-the-bug-15-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Trace the Bug (15 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-verify-the-fix-location-5-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Verify the Fix Location (5 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-make-the-fix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Make the Fix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-verify-no-side-effects-5-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Verify No Side Effects (5 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#time-saved_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Time Saved
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#learning-outcome" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Learning Outcome
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#persona-3-experienced-developer-refactoring-cli-mcp-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persona 3: Experienced Developer - Refactoring (CLI + MCP User)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Persona 3: Experienced Developer - Refactoring (CLI + MCP User)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#profile_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Profile
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#concrete-example-scenario_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concrete Example Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-by-step-journey_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step-by-Step Journey
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step-by-Step Journey">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-initial-assessment-10-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Initial Assessment (10 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-find-dead-code-to-remove-first-5-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Find Dead Code to Remove First (5 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-identify-high-risk-areas-10-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Identify High-Risk Areas (10 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-create-migration-checklist-15-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Create Migration Checklist (15 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-use-mcp-for-ai-assisted-migration-ongoing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Use MCP for AI-Assisted Migration (Ongoing)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-execute-migration-over-2-weeks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Execute Migration (Over 2 weeks)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-cleanup-30-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Cleanup (30 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#time-saved_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Time Saved
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#business-impact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Business Impact
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-key-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: Key Takeaways
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary: Key Takeaways">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#for-mcp-users-ai-assisted-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For MCP Users (AI-Assisted Development)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-cli-users-direct-tool-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For CLI Users (Direct Tool Usage)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-both" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Both
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../use_cases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use Cases Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../use_cases_detailed/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detailed Use Cases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../integration_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Server (MCP)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../core/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core Concepts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Advanced
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../watching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live Watching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cookbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cookbook
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deployment
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment/DOCKER_README/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment/DOCKER_COMPLETE_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker Complete Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment/DOCKER_DEPLOYMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment/HOSTING_COMPARISON/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hosting Comparison
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment/DEPLOYMENT_CHECKLIST/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment Checklist
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Contributing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing_languages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adding New Languages
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Help
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Help
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../future_work/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Future Work
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../license/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    License
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#persona-1-ai-assisted-developer-mcp-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persona 1: AI-Assisted Developer (MCP User)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Persona 1: AI-Assisted Developer (MCP User)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#profile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Profile
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#concrete-example-scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concrete Example Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-by-step-journey" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step-by-Step Journey
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step-by-Step Journey">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-one-time-setup-5-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: One-Time Setup (5 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-start-mcp-server-every-time-or-run-in-background" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Start MCP Server (Every time, or run in background)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-use-ai-assistant-with-cgc-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Use AI Assistant with CGC Context
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-deep-dive-with-follow-up-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Deep Dive with Follow-up Questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-make-informed-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Make Informed Changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#time-saved" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Time Saved
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#persona-2-new-developercontributor-cli-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persona 2: New Developer/Contributor (CLI User)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Persona 2: New Developer/Contributor (CLI User)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#profile_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Profile
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#concrete-example-scenario_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concrete Example Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-by-step-journey_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step-by-Step Journey
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step-by-Step Journey">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-setup-first-time-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Setup (First time only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-understand-the-architecture-10-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Understand the Architecture (10 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-find-relevant-code-5-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Find Relevant Code (5 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-trace-the-bug-15-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Trace the Bug (15 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-verify-the-fix-location-5-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Verify the Fix Location (5 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-make-the-fix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Make the Fix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-verify-no-side-effects-5-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Verify No Side Effects (5 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#time-saved_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Time Saved
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#learning-outcome" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Learning Outcome
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#persona-3-experienced-developer-refactoring-cli-mcp-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persona 3: Experienced Developer - Refactoring (CLI + MCP User)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Persona 3: Experienced Developer - Refactoring (CLI + MCP User)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#profile_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Profile
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#concrete-example-scenario_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concrete Example Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-by-step-journey_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step-by-Step Journey
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step-by-Step Journey">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-initial-assessment-10-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Initial Assessment (10 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-find-dead-code-to-remove-first-5-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Find Dead Code to Remove First (5 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-identify-high-risk-areas-10-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Identify High-Risk Areas (10 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-create-migration-checklist-15-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Create Migration Checklist (15 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-use-mcp-for-ai-assisted-migration-ongoing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Use MCP for AI-Assisted Migration (Ongoing)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-execute-migration-over-2-weeks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Execute Migration (Over 2 weeks)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-cleanup-30-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Cleanup (30 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#time-saved_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Time Saved
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#business-impact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Business Impact
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-key-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: Key Takeaways
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary: Key Takeaways">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#for-mcp-users-ai-assisted-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For MCP Users (AI-Assisted Development)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-cli-users-direct-tool-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For CLI Users (Direct Tool Usage)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-both" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Both
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="user-journeys-codegraphcontext">User Journeys - CodeGraphContext</h1>
+<p>This document provides detailed, step-by-step user journeys for different personas using CodeGraphContext. Each journey includes <strong>concrete examples</strong> with actual commands and expected outputs.</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#persona-1-ai-assisted-developer-mcp-user">Persona 1: AI-Assisted Developer (MCP User)</a></li>
+<li><a href="#persona-2-new-developercontributor-cli-user">Persona 2: New Developer/Contributor (CLI User)</a></li>
+<li><a href="#persona-3-experienced-developer---refactoring-cli--mcp-user">Persona 3: Experienced Developer - Refactoring (CLI + MCP User)</a></li>
+</ol>
+<hr />
+<h2 id="persona-1-ai-assisted-developer-mcp-user">Persona 1: AI-Assisted Developer (MCP User)</h2>
+<h3 id="profile">Profile</h3>
+<ul>
+<li><strong>Name</strong>: Sarah, Senior Full-Stack Developer</li>
+<li><strong>Tools</strong>: Uses Cursor IDE with Claude/GPT-4 for daily coding</li>
+<li><strong>Context</strong>: Working on a large e-commerce platform (50k+ lines of code)</li>
+<li><strong>Pain Point</strong>: AI assistant often hallucinates about code relationships or provides incorrect context</li>
+</ul>
+<h3 id="concrete-example-scenario">Concrete Example Scenario</h3>
+<p>Sarah needs to refactor the <code>calculateShippingCost</code> function in the checkout module. She wants to know what will break before making changes.</p>
+<h3 id="step-by-step-journey">Step-by-Step Journey</h3>
+<h4 id="step-1-one-time-setup-5-minutes"><strong>Step 1: One-Time Setup</strong> (5 minutes)</h4>
+<pre><code class="language-bash"># Install CodeGraphContext
+pip install codegraphcontext
+
+# Index the repository
+cd ~/projects/ecommerce-platform
+cgc index .
+
+# Output:
+# ✓ Indexed 1,247 files
+# ✓ Found 3,421 functions
+# ✓ Found 892 classes
+# ✓ Created 15,234 relationships
+# ✓ Database: FalkorDB (auto-selected)
+</code></pre>
+<pre><code class="language-bash"># Setup MCP integration
+cgc mcp setup
+
+# Output:
+# ✓ MCP configuration created at ~/.config/cursor/mcp.json
+# ✓ Server command: cgc mcp start
+# ✓ Restart Cursor to activate
+</code></pre>
+<h4 id="step-2-start-mcp-server-every-time-or-run-in-background"><strong>Step 2: Start MCP Server</strong> (Every time, or run in background)</h4>
+<pre><code class="language-bash"># Start the MCP server
+cgc mcp start
+
+# Output:
+# ✓ CodeGraphContext MCP Server started
+# ✓ Listening on stdio
+# ✓ Database: FalkorDB connected
+# ✓ Watching: /home/sarah/projects/ecommerce-platform
+</code></pre>
+<p><strong>Alternative</strong>: Add to shell startup script for auto-start</p>
+<h4 id="step-3-use-ai-assistant-with-cgc-context"><strong>Step 3: Use AI Assistant with CGC Context</strong></h4>
+<p>Sarah opens Cursor and asks her AI assistant:</p>
+<p><strong>Sarah's Question:</strong></p>
+<blockquote>
+<p>"I want to refactor the calculateShippingCost function. What will be affected?"</p>
+</blockquote>
+<p><strong>Behind the Scenes:</strong>
+1. Cursor AI recognizes this needs code relationship data
+2. Calls CGC MCP tool: <code>find_all_callers</code> with target <code>calculateShippingCost</code>
+3. CGC returns structured data</p>
+<p><strong>CGC Response (via MCP):</strong></p>
+<pre><code class="language-json">{
+  &quot;function&quot;: &quot;calculateShippingCost&quot;,
+  &quot;file&quot;: &quot;src/checkout/shipping.py&quot;,
+  &quot;direct_callers&quot;: 3,
+  &quot;total_callers&quot;: 12,
+  &quot;callers&quot;: [
+    {
+      &quot;function&quot;: &quot;processCheckout&quot;,
+      &quot;file&quot;: &quot;src/checkout/checkout_flow.py&quot;,
+      &quot;line&quot;: 145
+    },
+    {
+      &quot;function&quot;: &quot;estimateTotal&quot;,
+      &quot;file&quot;: &quot;src/cart/cart_service.py&quot;,
+      &quot;line&quot;: 89
+    },
+    {
+      &quot;function&quot;: &quot;generateInvoice&quot;,
+      &quot;file&quot;: &quot;src/billing/invoice_generator.py&quot;,
+      &quot;line&quot;: 234
+    }
+  ],
+  &quot;indirect_callers&quot;: [
+    &quot;handleCheckoutAPI&quot;,
+    &quot;updateCartTotal&quot;,
+    &quot;previewOrder&quot;,
+    // ... 9 more
+  ]
+}
+</code></pre>
+<p><strong>AI Assistant's Response to Sarah:</strong></p>
+<blockquote>
+<p>"The <code>calculateShippingCost</code> function is called by 12 functions across 3 modules:</p>
+<p><strong>Direct callers (3):</strong>
+1. <code>processCheckout</code> in checkout_flow.py - Main checkout flow
+2. <code>estimateTotal</code> in cart_service.py - Cart total calculation
+3. <code>generateInvoice</code> in invoice_generator.py - Invoice generation</p>
+<p><strong>Indirect impact (9 more functions):</strong>
+- API endpoints: <code>handleCheckoutAPI</code>, <code>previewOrder</code>
+- Background jobs: <code>sendOrderConfirmation</code></p>
+<p><strong>Recommendation:</strong> 
+- If you change the function signature, you'll need to update 3 direct callers
+- If you change the return value format, 12 functions are affected
+- Consider adding unit tests for the 3 direct callers before refactoring"</p>
+</blockquote>
+<h4 id="step-4-deep-dive-with-follow-up-questions"><strong>Step 4: Deep Dive with Follow-up Questions</strong></h4>
+<p><strong>Sarah asks:</strong></p>
+<blockquote>
+<p>"Show me the call chain from the API endpoint to calculateShippingCost"</p>
+</blockquote>
+<p><strong>CGC MCP Call:</strong> <code>analyze_code_relationships(query_type="call_chain", target="calculateShippingCost")</code></p>
+<p><strong>AI Response:</strong></p>
+<blockquote>
+<p>"Here's the execution path:
+<code>handleCheckoutAPI (api/checkout.py:45)
+  └─&gt; processCheckout (checkout/checkout_flow.py:145)
+      └─&gt; calculateShippingCost (checkout/shipping.py:78)
+          └─&gt; getShippingRates (integrations/fedex_api.py:23)</code></p>
+<p>This means changes to <code>calculateShippingCost</code> affect the public API endpoint."</p>
+</blockquote>
+<h4 id="step-5-make-informed-changes"><strong>Step 5: Make Informed Changes</strong></h4>
+<p>Sarah now refactors with confidence, knowing:
+- ✅ Exactly what will break
+- ✅ Which tests to update
+- ✅ What documentation to change
+- ✅ The full impact radius</p>
+<h3 id="time-saved">Time Saved</h3>
+<ul>
+<li><strong>Without CGC</strong>: 2-3 hours of manual code searching, likely missing some dependencies</li>
+<li><strong>With CGC</strong>: 10 minutes with complete, accurate information</li>
+<li><strong>Savings</strong>: ~2.5 hours per refactoring task</li>
+</ul>
+<hr />
+<h2 id="persona-2-new-developercontributor-cli-user">Persona 2: New Developer/Contributor (CLI User)</h2>
+<h3 id="profile_1">Profile</h3>
+<ul>
+<li><strong>Name</strong>: Alex, Junior Developer (3 months experience)</li>
+<li><strong>Context</strong>: Just joined a team maintaining a legacy Python project</li>
+<li><strong>Task</strong>: Fix a bug in the payment processing module</li>
+<li><strong>Pain Point</strong>: Doesn't understand the codebase architecture, doesn't know where to start</li>
+</ul>
+<h3 id="concrete-example-scenario_1">Concrete Example Scenario</h3>
+<p>Alex's first task: "Fix bug #1234 - Payment confirmation emails not sending for international orders"</p>
+<h3 id="step-by-step-journey_1">Step-by-Step Journey</h3>
+<h4 id="step-1-setup-first-time-only"><strong>Step 1: Setup</strong> (First time only)</h4>
+<pre><code class="language-bash"># Clone the repository
+git clone https://github.com/company/payment-system.git
+cd payment-system
+
+# Install CGC
+pip install codegraphcontext
+
+# Index the codebase
+cgc index .
+
+# Output:
+# ✓ Indexed 847 files
+# ✓ Found 2,156 functions
+# ✓ Found 423 classes
+# ✓ Database: FalkorDB
+</code></pre>
+<h4 id="step-2-understand-the-architecture-10-minutes"><strong>Step 2: Understand the Architecture</strong> (10 minutes)</h4>
+<pre><code class="language-bash"># Get an overview of the codebase structure
+cgc stats
+
+# Output:
+# Repository Statistics:
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Files:      847
+# Functions:  2,156
+# Classes:    423
+# Modules:    67
+# 
+# Top Modules by Size:
+# 1. payment_processing (234 functions)
+# 2. email_service (156 functions)
+# 3. order_management (189 functions)
+</code></pre>
+<pre><code class="language-bash"># Visualize the architecture
+cgc visualize --output architecture.html
+
+# Output:
+# ✓ Generated visualization: architecture.html
+# ✓ Open in browser to explore
+</code></pre>
+<p><strong>Alex opens <code>architecture.html</code> and sees:</strong>
+- Module dependency graph
+- Payment processing module connects to email_service
+- Clear separation between domestic and international payment flows</p>
+<h4 id="step-3-find-relevant-code-5-minutes"><strong>Step 3: Find Relevant Code</strong> (5 minutes)</h4>
+<pre><code class="language-bash"># Search for email-related code
+cgc find &quot;email&quot; --type function
+
+# Output:
+# Found 23 functions matching 'email':
+# 
+# 1. sendPaymentConfirmation
+#    File: src/email_service/notifications.py:45
+#    
+# 2. sendInternationalPaymentEmail
+#    File: src/email_service/international.py:12
+#    
+# 3. queueEmailJob
+#    File: src/workers/email_queue.py:78
+# 
+# ... (20 more)
+</code></pre>
+<pre><code class="language-bash"># Find international payment handling
+cgc find &quot;international&quot; --type function
+
+# Output:
+# Found 8 functions matching 'international':
+# 
+# 1. processInternationalPayment
+#    File: src/payment_processing/international.py:34
+#    
+# 2. sendInternationalPaymentEmail
+#    File: src/email_service/international.py:12
+</code></pre>
+<h4 id="step-4-trace-the-bug-15-minutes"><strong>Step 4: Trace the Bug</strong> (15 minutes)</h4>
+<pre><code class="language-bash"># See what calls the international payment function
+cgc analyze callers processInternationalPayment
+
+# Output:
+# Callers of 'processInternationalPayment':
+# 
+# Direct Callers (2):
+# ┌────────────────────────────────────────────────────────────┐
+# │ Function              │ File                    │ Line     │
+# ├────────────────────────────────────────────────────────────┤
+# │ handlePayment         │ api/payment_api.py      │ 123      │
+# │ retryFailedPayment    │ workers/retry_worker.py │ 56       │
+# └────────────────────────────────────────────────────────────┘
+</code></pre>
+<pre><code class="language-bash"># Check what processInternationalPayment calls
+cgc analyze callees processInternationalPayment
+
+# Output:
+# Functions called by 'processInternationalPayment':
+# 
+# ┌────────────────────────────────────────────────────────────┐
+# │ Function              │ File                    │ Line     │
+# ├────────────────────────────────────────────────────────────┤
+# │ validateCurrency      │ utils/currency.py       │ 23       │
+# │ chargeCard            │ integrations/stripe.py  │ 89       │
+# │ logTransaction        │ logging/audit.py        │ 45       │
+# │ updateOrderStatus     │ orders/order_service.py │ 167      │
+# └────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>Alex notices:</strong> <code>sendInternationalPaymentEmail</code> is NOT in the callees list! This is the bug!</p>
+<h4 id="step-5-verify-the-fix-location-5-minutes"><strong>Step 5: Verify the Fix Location</strong> (5 minutes)</h4>
+<pre><code class="language-bash"># Check how domestic payments work
+cgc analyze callees processDomesticPayment
+
+# Output:
+# Functions called by 'processDomesticPayment':
+# 
+# ┌────────────────────────────────────────────────────────────┐
+# │ Function              │ File                    │ Line     │
+# ├────────────────────────────────────────────────────────────┤
+# │ validateCurrency      │ utils/currency.py       │ 23       │
+# │ chargeCard            │ integrations/stripe.py  │ 89       │
+# │ logTransaction        │ logging/audit.py        │ 45       │
+# │ updateOrderStatus     │ orders/order_service.py │ 167      │
+# │ sendPaymentConfirmation │ email_service/notifications.py │ 45 │
+# └────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>Aha!</strong> Domestic payments call <code>sendPaymentConfirmation</code>, but international payments don't call <code>sendInternationalPaymentEmail</code>!</p>
+<h4 id="step-6-make-the-fix"><strong>Step 6: Make the Fix</strong></h4>
+<p>Alex adds the missing email call to <code>processInternationalPayment</code> function.</p>
+<h4 id="step-7-verify-no-side-effects-5-minutes"><strong>Step 7: Verify No Side Effects</strong> (5 minutes)</h4>
+<pre><code class="language-bash"># Check if the change affects anything else
+cgc analyze callers sendInternationalPaymentEmail
+
+# Output:
+# Callers of 'sendInternationalPaymentEmail':
+# 
+# No callers found.
+# 
+# ⚠️  This function appears to be unused (dead code)
+</code></pre>
+<p>Perfect! Adding this call won't break anything.</p>
+<h3 id="time-saved_1">Time Saved</h3>
+<ul>
+<li><strong>Without CGC</strong>: 4-6 hours of reading code, asking senior developers, trial and error</li>
+<li><strong>With CGC</strong>: 40 minutes to understand the bug and fix it</li>
+<li><strong>Savings</strong>: ~5 hours, plus reduced senior developer interruptions</li>
+</ul>
+<h3 id="learning-outcome">Learning Outcome</h3>
+<p>Alex now understands:
+- ✅ The payment processing architecture
+- ✅ How domestic vs international payments differ
+- ✅ The email notification system
+- ✅ How to navigate the codebase independently</p>
+<hr />
+<h2 id="persona-3-experienced-developer-refactoring-cli-mcp-user">Persona 3: Experienced Developer - Refactoring (CLI + MCP User)</h2>
+<h3 id="profile_2">Profile</h3>
+<ul>
+<li><strong>Name</strong>: Marcus, Tech Lead</li>
+<li><strong>Context</strong>: Leading a major refactoring of a 5-year-old Django application</li>
+<li><strong>Task</strong>: Remove deprecated <code>OldAuthService</code> and migrate to <code>NewAuthService</code></li>
+<li><strong>Pain Point</strong>: Needs to ensure zero downtime, no broken functionality</li>
+</ul>
+<h3 id="concrete-example-scenario_2">Concrete Example Scenario</h3>
+<p>The team is migrating from a custom authentication system to OAuth2. Marcus needs to:
+1. Find all usages of the old auth system
+2. Identify dead code that can be removed
+3. Plan the migration in safe, incremental steps</p>
+<h3 id="step-by-step-journey_2">Step-by-Step Journey</h3>
+<h4 id="step-1-initial-assessment-10-minutes"><strong>Step 1: Initial Assessment</strong> (10 minutes)</h4>
+<pre><code class="language-bash"># Index the current codebase
+cgc index .
+
+# Find all references to old auth
+cgc find &quot;OldAuthService&quot; --type class
+
+# Output:
+# Found 1 class matching 'OldAuthService':
+# 
+# Class: OldAuthService
+# File: src/auth/legacy_auth.py:23
+# Methods: 12
+</code></pre>
+<pre><code class="language-bash"># Find all functions that use it
+cgc analyze callers OldAuthService
+
+# Output:
+# Callers of 'OldAuthService':
+# 
+# Direct Callers (15):
+# ┌────────────────────────────────────────────────────────────┐
+# │ Function              │ File                    │ Line     │
+# ├────────────────────────────────────────────────────────────┤
+# │ login                 │ api/auth_api.py         │ 34       │
+# │ logout                │ api/auth_api.py         │ 67       │
+# │ validateToken         │ middleware/auth.py      │ 89       │
+# │ refreshSession        │ api/session_api.py      │ 123      │
+# ... (11 more)
+# └────────────────────────────────────────────────────────────┘
+# 
+# Total: 15 direct callers, 47 indirect callers
+</code></pre>
+<p><strong>Marcus realizes:</strong> This affects 47 functions! Need a careful migration plan.</p>
+<h4 id="step-2-find-dead-code-to-remove-first-5-minutes"><strong>Step 2: Find Dead Code to Remove First</strong> (5 minutes)</h4>
+<pre><code class="language-bash"># Find unused code in the auth module
+cgc analyze dead-code --exclude-decorated @api_endpoint @celery_task
+
+# Output:
+# Potentially Unused Functions:
+# 
+# ┌────────────────────────────────────────────────────────────┐
+# │ Function              │ File                    │ Complexity│
+# ├────────────────────────────────────────────────────────────┤
+# │ _legacyHashPassword   │ auth/legacy_auth.py     │ 8         │
+# │ _migrateUserSession   │ auth/migration.py       │ 12        │
+# │ validateLegacyToken   │ auth/legacy_auth.py     │ 15        │
+# └────────────────────────────────────────────────────────────┘
+# 
+# Total: 3 unused functions (can be safely removed)
+</code></pre>
+<p><strong>Marcus notes:</strong> Remove these 3 functions first to reduce complexity.</p>
+<h4 id="step-3-identify-high-risk-areas-10-minutes"><strong>Step 3: Identify High-Risk Areas</strong> (10 minutes)</h4>
+<pre><code class="language-bash"># Find the most complex functions that use OldAuthService
+cgc analyze complexity --filter-calls OldAuthService
+
+# Output:
+# Complex Functions Using 'OldAuthService':
+# 
+# ┌────────────────────────────────────────────────────────────┐
+# │ Function              │ Complexity │ Callers │ Priority    │
+# ├────────────────────────────────────────────────────────────┤
+# │ validateToken         │ 23         │ 34      │ CRITICAL    │
+# │ refreshSession        │ 18         │ 12      │ HIGH        │
+# │ login                 │ 15         │ 8       │ HIGH        │
+# │ logout                │ 7          │ 6       │ MEDIUM      │
+# └────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>Marcus's migration plan:</strong>
+1. Start with low-complexity, low-usage functions (logout)
+2. End with high-complexity, high-usage functions (validateToken)
+3. Add comprehensive tests for each before migrating</p>
+<h4 id="step-4-create-migration-checklist-15-minutes"><strong>Step 4: Create Migration Checklist</strong> (15 minutes)</h4>
+<pre><code class="language-bash"># For each function, see its full call chain
+cgc analyze chain login OldAuthService
+
+# Output:
+# Call Chain from 'login' to 'OldAuthService':
+# 
+# login (api/auth_api.py:34)
+#   └─&gt; OldAuthService.authenticate (auth/legacy_auth.py:45)
+#       └─&gt; _hashPassword (auth/legacy_auth.py:123)
+#       └─&gt; _validateCredentials (auth/legacy_auth.py:156)
+#           └─&gt; database.query (core/db.py:89)
+</code></pre>
+<p>Marcus repeats this for all 15 direct callers, creating a detailed migration map.</p>
+<h4 id="step-5-use-mcp-for-ai-assisted-migration-ongoing"><strong>Step 5: Use MCP for AI-Assisted Migration</strong> (Ongoing)</h4>
+<p>Marcus uses Cursor with CGC MCP to help with the migration:</p>
+<p><strong>Marcus asks AI:</strong></p>
+<blockquote>
+<p>"Generate a migration plan to replace OldAuthService with NewAuthService in the login function"</p>
+</blockquote>
+<p><strong>AI (using CGC MCP):</strong>
+1. Calls <code>find_callees</code> on <code>login</code> to see what it does
+2. Calls <code>find_callers</code> on <code>login</code> to see impact
+3. Analyzes the code structure</p>
+<p><strong>AI Response:</strong></p>
+<blockquote>
+<p>"Migration Plan for <code>login</code> function:</p>
+<p><strong>Current Flow:</strong>
+<code>python
+def login(username, password):
+    auth = OldAuthService()
+    user = auth.authenticate(username, password)
+    session = auth.createSession(user)
+    return session.token</code></p>
+<p><strong>Proposed New Flow:</strong>
+<code>python
+def login(username, password):
+    auth = NewAuthService()
+    user = auth.authenticate(username, password)  # Compatible API
+    session = auth.createSession(user)
+    return session.token</code></p>
+<p><strong>Impact Analysis:</strong>
+- <code>login</code> is called by 8 functions
+- Return value format is the same (session token string)
+- No breaking changes expected</p>
+<p><strong>Testing Checklist:</strong>
+- [ ] Unit test: test_login_success
+- [ ] Unit test: test_login_invalid_credentials
+- [ ] Integration test: test_login_api_endpoint
+- [ ] Load test: Verify performance is similar</p>
+<p><strong>Rollout Strategy:</strong>
+1. Deploy with feature flag <code>use_new_auth_service</code>
+2. Enable for 10% of traffic
+3. Monitor error rates
+4. Gradually increase to 100%
+5. Remove OldAuthService after 2 weeks"</p>
+</blockquote>
+<h4 id="step-6-execute-migration-over-2-weeks"><strong>Step 6: Execute Migration</strong> (Over 2 weeks)</h4>
+<p>Marcus follows the plan:
+- Week 1: Migrate 5 low-risk functions
+- Week 2: Migrate 10 medium-risk functions
+- After each migration, uses CGC to verify:</p>
+<pre><code class="language-bash"># Verify old service usage is decreasing
+cgc analyze callers OldAuthService
+
+# Week 1: 15 callers → 10 callers
+# Week 2: 10 callers → 0 callers
+</code></pre>
+<pre><code class="language-bash"># Final verification: Is OldAuthService still used?
+cgc analyze callers OldAuthService
+
+# Output:
+# Callers of 'OldAuthService':
+# 
+# No callers found.
+# 
+# ✓ Safe to remove OldAuthService
+</code></pre>
+<h4 id="step-7-cleanup-30-minutes"><strong>Step 7: Cleanup</strong> (30 minutes)</h4>
+<pre><code class="language-bash"># Find all dead code after migration
+cgc analyze dead-code
+
+# Output:
+# Potentially Unused Functions:
+# 
+# ┌────────────────────────────────────────────────────────────┐
+# │ Function              │ File                    │ LOC       │
+# ├────────────────────────────────────────────────────────────┤
+# │ OldAuthService.*      │ auth/legacy_auth.py     │ 456       │
+# │ _legacyHashPassword   │ auth/legacy_auth.py     │ 23        │
+# │ _migrateUserSession   │ auth/migration.py       │ 34        │
+# └────────────────────────────────────────────────────────────┘
+# 
+# Total: 513 lines of code can be safely removed
+</code></pre>
+<p>Marcus deletes the old code, reducing technical debt by 513 lines.</p>
+<h3 id="time-saved_2">Time Saved</h3>
+<ul>
+<li><strong>Without CGC</strong>: 3-4 weeks of risky, manual migration with likely bugs</li>
+<li><strong>With CGC</strong>: 2 weeks of safe, incremental migration with zero bugs</li>
+<li><strong>Savings</strong>: 1-2 weeks, plus avoided production incidents</li>
+</ul>
+<h3 id="business-impact">Business Impact</h3>
+<ul>
+<li>✅ Zero downtime migration</li>
+<li>✅ No customer-facing bugs</li>
+<li>✅ 513 lines of dead code removed</li>
+<li>✅ Improved security (OAuth2)</li>
+<li>✅ Team confidence in future refactorings</li>
+</ul>
+<hr />
+<h2 id="summary-key-takeaways">Summary: Key Takeaways</h2>
+<h3 id="for-mcp-users-ai-assisted-development">For MCP Users (AI-Assisted Development)</h3>
+<ul>
+<li><strong>Setup</strong>: One-time 5-minute setup, then seamless integration</li>
+<li><strong>Workflow</strong>: Ask questions in natural language, get precise answers</li>
+<li><strong>Value</strong>: AI provides accurate context instead of hallucinations</li>
+<li><strong>Time Saved</strong>: 2-3 hours per refactoring task</li>
+</ul>
+<h3 id="for-cli-users-direct-tool-usage">For CLI Users (Direct Tool Usage)</h3>
+<ul>
+<li><strong>Setup</strong>: One-time <code>cgc index</code> command</li>
+<li><strong>Workflow</strong>: Use specific commands for specific tasks</li>
+<li><strong>Value</strong>: Self-service code exploration, no senior dev needed</li>
+<li><strong>Time Saved</strong>: 4-6 hours for onboarding, 1-2 hours per bug investigation</li>
+</ul>
+<h3 id="for-both">For Both</h3>
+<ul>
+<li><strong>Integration</strong>: Works alongside existing tools (IDE, git, CI/CD)</li>
+<li><strong>Learning Curve</strong>: Minimal - intuitive commands and natural language</li>
+<li><strong>ROI</strong>: Pays for itself in the first week of use</li>
+<li><strong>Scalability</strong>: Works on codebases from 1k to 1M+ lines</li>
+</ul>
+<hr />
+<h2 id="next-steps">Next Steps</h2>
+<ul>
+<li><strong>New to CGC?</strong> → Start with <a href="../setup_workflows/">SETUP_WORKFLOWS.md</a></li>
+<li><strong>Want specific examples?</strong> → See <a href="../use_cases_detailed/">USE_CASES_DETAILED.md</a></li>
+<li><strong>Need integration help?</strong> → Read <a href="../integration_guide/">INTEGRATION_GUIDE.md</a></li>
+<li><strong>CLI Reference</strong> → See <a href="../cli/">CLI_COMPLETE_REFERENCE.md</a></li>
+<li><strong>MCP Reference</strong> → See <a href="../server/">MCP_TOOLS.md</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

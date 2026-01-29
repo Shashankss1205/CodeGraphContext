@@ -753,8 +753,8 @@ cgc watch .
 
 ## Next Steps
 
-- **Setup MCP integration** → [SETUP_WORKFLOWS.md](./SETUP_WORKFLOWS.md)
-- **See it in action** → [USER_JOURNEYS.md](./USER_JOURNEYS.md)
-- **Detailed use cases** → [USE_CASES_DETAILED.md](./USE_CASES_DETAILED.md)
-- **CLI reference** → [CLI_COMPLETE_REFERENCE.md](./CLI_COMPLETE_REFERENCE.md)
-- **MCP reference** → [MCP_TOOLS.md](./MCP_TOOLS.md)
+- **Setup MCP integration** → [SETUP_WORKFLOWS.md](./setup_workflows.md)
+- **See it in action** → [USER_JOURNEYS.md](./user_journeys.md)
+- **Detailed use cases** → [USE_CASES_DETAILED.md](./use_cases_detailed.md)
+- **CLI reference** → [CLI_COMPLETE_REFERENCE.md](./cli.md)
+- **MCP reference** → [MCP_TOOLS.md](./server.md)

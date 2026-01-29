@@ -3,16 +3,24 @@ theme:
   name: material
 nav:
   - Home: index.md
-  - Installation: installation.md
-  - Windows Setup: windows_setup.md
-  - Use Cases: use_cases.md
-  - Architecture: architecture.md
-  - CLI Reference: cli.md
-  - Live Watching: watching.md
-  - Server: server.md
-  - Core Concepts: core.md
-  - Tools: tools.md
-  - Cookbook: cookbook.md
+  - Getting Started:
+    - Installation: installation.md
+    - Windows Setup: windows_setup.md
+    - Setup Workflows: setup_workflows.md
+  - User Guides:
+    - User Journeys: user_journeys.md
+    - Use Cases Overview: use_cases.md
+    - Detailed Use Cases: use_cases_detailed.md
+    - Integration Guide: integration_guide.md
+  - Reference:
+    - Architecture: architecture.md
+    - CLI Reference: cli.md
+    - Server (MCP): server.md
+    - Core Concepts: core.md
+    - Tools: tools.md
+  - Advanced:
+    - Live Watching: watching.md
+    - Cookbook: cookbook.md
   - Deployment:
     - Overview: deployment/README.md
     - Docker Quick Start: deployment/DOCKER_README.md
@@ -23,6 +31,7 @@ nav:
   - Contributing:
     - Overview: contributing.md
     - Adding New Languages: contributing_languages.md
-  - Troubleshooting: troubleshooting.md
-  - Future Work: future_work.md
+  - Help:
+    - Troubleshooting: troubleshooting.md
+    - Future Work: future_work.md
   - License: license.md
