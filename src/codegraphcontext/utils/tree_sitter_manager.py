@@ -41,6 +41,7 @@ LANGUAGE_ALIASES = {
     "cpp": "cpp",
     "c_sharp": "c_sharp",
     "c": "c",
+    "haskell": "haskell",
     "java": "java",
     "ruby": "ruby",
     "rust": "rust",
