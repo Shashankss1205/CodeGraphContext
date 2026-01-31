@@ -16,8 +16,9 @@ class TestUserJourneys:
 
     def run_cgc(self, args, cwd=None):
         """Helper to run cgc cli."""
-        # Use python -m codegraphcontext.cli.main to ensure we use current code
-        cmd = ["python3", "-m", "codegraphcontext.cli.main"] + args
+        # Use sys.executable to ensure we use the same python environment
+        import sys
+        cmd = [sys.executable, "-m", "codegraphcontext.cli.main"] + args
         return subprocess.run(cmd, capture_output=True, text=True, cwd=cwd)
 
     @pytest.mark.slow
