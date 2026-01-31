@@ -15,7 +15,7 @@
   </a>
   <img src="https://img.shields.io/badge/MCP-Compatible-green?style=flat-square" alt="MCP Compatible">
   <a href="https://discord.gg/VCwUdCnn">
-    <img src="https://img.shields.io/discord/VCwUdCnn?style=flat-square&logo=discord" alt="Discord">
+    <img src="https://img.shields.io/discord/1421769154507309150?label=Discord&logo=discord&logoColor=white&style=flat-square">
   </a>
   <br><br>
   <a href="https://github.com/CodeGraphContext/CodeGraphContext/stargazers">
