@@ -60,4 +60,5 @@ tests_sample
 .env*.local
 STATUS.md
 visualizations/
-tests_new
+tests_backup_final/
+tests_old_backup/
