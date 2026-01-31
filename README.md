@@ -14,8 +14,8 @@
     <img src="https://img.shields.io/github/license/CodeGraphContext/CodeGraphContext?style=flat-square" alt="License">
   </a>
   <img src="https://img.shields.io/badge/MCP-Compatible-green?style=flat-square" alt="MCP Compatible">
-  <a href="https://discord.gg/dR4QY32uYQ">
-    <img src="https://img.shields.io/discord/dR4QY32uYQ?style=flat-square&logo=discord" alt="Discord">
+  <a href="https://discord.gg/VCwUdCnn">
+    <img src="https://img.shields.io/discord/VCwUdCnn?style=flat-square&logo=discord" alt="Discord">
   </a>
   <br><br>
   <a href="https://github.com/CodeGraphContext/CodeGraphContext/stargazers">
