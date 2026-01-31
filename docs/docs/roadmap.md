@@ -4,7 +4,7 @@ CodeGraphContext is an evolving tool. We believe in transparency about where we 
 
 ## 🟢 Currently Supported (Stable)
 
-These features are live and battle-tested in version `0.1.37+`.
+These features are live and battle-tested in version `0.1.38+`.
 
 *   **Core Indexing:** Python, JavaScript, TypeScript, Go, Java, C++, Ruby, PHP.
 *   **Database Backends:**
