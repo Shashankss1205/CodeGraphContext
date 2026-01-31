@@ -1,8 +1,8 @@
 site_name: CodeGraphContext
-theme:
-  name: material
 repo_url: https://github.com/CodeGraphContext/CodeGraphContext
 repo_name: CodeGraphContext/CodeGraphContext
+theme:
+  name: material
   features:
     - navigation.tabs
     - navigation.sections

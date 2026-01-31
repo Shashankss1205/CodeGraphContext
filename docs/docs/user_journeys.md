@@ -8,7 +8,7 @@ This document provides detailed, step-by-step user journeys for different person
 
 1. [Persona 1: AI-Assisted Developer (MCP User)](#persona-1-ai-assisted-developer-mcp-user)
 2. [Persona 2: New Developer/Contributor (CLI User)](#persona-2-new-developercontributor-cli-user)
-3. [Persona 3: Experienced Developer - Refactoring (CLI + MCP User)](#persona-3-experienced-developer---refactoring-cli--mcp-user)
+3. [Persona 3: Experienced Developer - Refactoring (CLI + MCP User)](#persona-3-experienced-developer-refactoring-cli-mcp-user)
 
 ---
 
