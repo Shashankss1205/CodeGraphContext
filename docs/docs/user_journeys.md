@@ -622,5 +622,5 @@ Marcus deletes the old code, reducing technical debt by 513 lines.
 - **New to CGC?** → Start with [SETUP_WORKFLOWS.md](./setup_workflows.md)
 - **Want specific examples?** → See [USE_CASES_DETAILED.md](./use_cases_detailed.md)
 - **Need integration help?** → Read [INTEGRATION_GUIDE.md](./integration_guide.md)
-- **CLI Reference** → See [CLI_COMPLETE_REFERENCE.md](./cli.md)
-- **MCP Reference** → See [MCP_TOOLS.md](./server.md)
+- **CLI Reference** → See [CLI Reference](reference/cli_master.md)
+- **MCP Reference** → See [MCP Reference](reference/mcp_master.md)

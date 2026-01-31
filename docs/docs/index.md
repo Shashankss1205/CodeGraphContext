@@ -25,9 +25,9 @@ CGC sits between your code and your tools. It's not just a script; it's a persis
 
 ## 🚀 Why CodeGraphContext?
 
-*   **Beyond RegEx:** Text search is dumb. CGC understands *structure*. It knows that `User.save()` in `models.py` is called by `AuthController` even if the file names are different.
-*   **Universal Context:** Index once, use everywhere. The same graph powers your CLI queries and your AI's answers.
-*   **Privacy First:** Your code is indexed locally (or in your self-hosted DB). No code is sent to our servers.
+*   **Cut Debugging Time:** Stop manually grepping. Find the exact root cause in seconds, not hours.
+*   **Onboard Faster:** Help new developers understand complex logic without interrupting senior engineers.
+*   **Reduce Technical Debt:** Identify dead code, circular dependencies, and "god objects" instantly.
 
 ---
 
@@ -35,15 +35,18 @@ CGC sits between your code and your tools. It's not just a script; it's a persis
 
 We have organized the documentation to match your journey:
 
-1.  **[Getting Started](getting-started/prerequisites.md):** The linear path to installation.
-2.  **[Core Concepts](concepts/how_it_works.md):** Understand the "magic" (Nodes, Edges, Bundles).
-3.  **[Guides](guides/mcp_guide.md):** Task-based generic tutorials.
-4.  **[Reference](reference/cli_indexing.md):** The complete technical encyclopedia.
+1.  **[Getting Started](getting-started/quickstart.md):** The linear path to installation.
+2.  **[Usage](use_cases_detailed.md):** Real-world ROI scenarios and user stories.
+3.  **[Guides](guides/mcp_guide.md):** Task-based tutorials (Setup, Visualization, CI/CD).
+4.  **[Core Concepts](concepts/how_it_works.md):** Understand the "magic" (Architecture, Graph Model).
+5.  **[CLI Reference](reference/cli_master.md):** Complete terminal command dictionary.
+6.  **[MCP Reference](reference/mcp_master.md):** AI agent tools and queries.
+7.  **[Project Info](contributing.md):** Roadmap, contributing, and configuration.
 
 ---
 
-### :material-rocket-launch: Ready to Start?
+### Ready to Start?
 **[Install CodeGraphContext](getting-started/installation.md)**
 
-### :material-book-open-page-variant: Learn the Concepts
+### Learn the Concepts
 **[How Indexing Works](concepts/how_it_works.md)**

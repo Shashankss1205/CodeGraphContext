@@ -29,7 +29,7 @@ CGC requires a graph database backend. Choose **ONE** path below.
 
     FalkorDB is an embedded, lightweight graph database.
     *   **Pros:** Requires zero configuration. Runs automatically. Persistent storage is managed for you.
-    *   **Cons:** No official GUI "Browser" (unlike Neo4j). Visualization is limited to our CLI tools.
+    *   **Cons:** No built-in Interactive Browser (unlike Neo4j). Use `cgc visualize` for basic graphs.
 
     *If you are on Linux/macOS with Python 3.12+, this is the default.*
 

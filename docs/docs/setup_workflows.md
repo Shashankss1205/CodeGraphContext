@@ -758,8 +758,8 @@ cgc --debug index .
 - **Learn by example** → [USER_JOURNEYS.md](./user_journeys.md)
 - **Detailed use cases** → [USE_CASES_DETAILED.md](./use_cases_detailed.md)
 - **Integration patterns** → [INTEGRATION_GUIDE.md](./integration_guide.md)
-- **CLI reference** → [CLI_COMPLETE_REFERENCE.md](./cli.md)
-- **MCP reference** → [MCP_TOOLS.md](./server.md)
+- **CLI reference** → [CLI Reference](reference/cli_master.md)
+- **MCP reference** → [MCP Reference](reference/mcp_master.md)
 
 ---
 
