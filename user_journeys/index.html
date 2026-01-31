@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../setup_workflows/">
+        <link rel="prev" href="../use_cases_detailed/">
       
       
-        <link rel="next" href="../use_cases/">
+        <link rel="next" href="../integration_guide/">
       
       
         
@@ -23,11 +23,14 @@
     
     
       
-        <title>User Journeys - CodeGraphContext</title>
+        <title>User Journeys (Stories) - CodeGraphContext</title>
       
     
     
       <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -55,7 +58,14 @@
   </head>
   
   
-    <body dir="ltr">
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="purple">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -76,9 +86,7 @@
     
       
 
-  
-
-<header class="md-header md-header--shadow" data-md-component="header">
+<header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href=".." title="CodeGraphContext" class="md-header__button md-logo" aria-label="CodeGraphContext" data-md-component="logo">
       
@@ -100,12 +108,38 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              User Journeys
+              User Journeys (Stories)
             
           </span>
         </div>
       </div>
     </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
     
     
       <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
@@ -162,6 +196,176 @@
       
         
           
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../getting-started/prerequisites/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../use_cases_detailed/" class="md-tabs__link">
+          
+  
+  
+  Usage
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../guides/setup_deep_dive/" class="md-tabs__link">
+          
+  
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../concepts/how_it_works/" class="md-tabs__link">
+          
+  
+  
+  Core Concepts
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../reference/cli_master/" class="md-tabs__link">
+          
+  
+  
+  CLI Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../reference/mcp_master/" class="md-tabs__link">
+          
+  
+  
+  MCP Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../roadmap/" class="md-tabs__link">
+          
+  
+  
+  Project Info
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
         
       
       <main class="md-main" data-md-component="main">
@@ -175,8 +379,10 @@
                     
 
 
+  
 
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href=".." title="CodeGraphContext" class="md-nav__button md-logo" aria-label="CodeGraphContext" data-md-component="logo">
       
@@ -226,12 +432,19 @@
     
     
     
+      
+      
+        
+      
+    
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
@@ -270,7 +483,35 @@
   
   
     <li class="md-nav__item">
-      <a href="../installation/" class="md-nav__link">
+      <a href="../getting-started/prerequisites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prerequisites & Context
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/installation/" class="md-nav__link">
         
   
   
@@ -298,42 +539,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../windows_setup/" class="md-nav__link">
+      <a href="../getting-started/quickstart/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Windows Setup
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../setup_workflows/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Setup Workflows
+    Quickstart (5 min)
   
 
     
@@ -366,22 +579,30 @@
     
     
     
+      
+        
+        
+      
+      
+        
+      
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
             
   
   
   <span class="md-ellipsis">
     
   
-    User Guides
+    Usage
   
 
     
@@ -397,11 +618,39 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    User Guides
+    Usage
   
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../use_cases_detailed/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Real-World Scenarios (ROI)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -426,7 +675,7 @@
   <span class="md-ellipsis">
     
   
-    User Journeys
+    User Journeys (Stories)
   
 
     
@@ -444,7 +693,7 @@
   <span class="md-ellipsis">
     
   
-    User Journeys
+    User Journeys (Stories)
   
 
     
@@ -989,62 +1238,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../use_cases/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Use Cases Overview
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../use_cases_detailed/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Detailed Use Cases
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../integration_guide/" class="md-nav__link">
         
   
@@ -1052,7 +1245,7 @@
   <span class="md-ellipsis">
     
   
-    Integration Guide
+    Integration & Workflows
   
 
     
@@ -1083,12 +1276,19 @@
     
     
     
+      
+      
+        
+      
+    
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
         
           
           <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
@@ -1098,7 +1298,7 @@
   <span class="md-ellipsis">
     
   
-    Reference
+    Guides
   
 
     
@@ -1114,7 +1314,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Reference
+    Guides
   
 
           </label>
@@ -1127,14 +1327,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../architecture/" class="md-nav__link">
+      <a href="../guides/setup_deep_dive/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture
+    Neo4j Setup Wizard
   
 
     
@@ -1155,14 +1355,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/" class="md-nav__link">
+      <a href="../guides/mcp_guide/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    CLI Reference
+    MCP Setup Wizard
   
 
     
@@ -1183,14 +1383,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../server/" class="md-nav__link">
+      <a href="../guides/visualization/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Server (MCP)
+    Visualizing the Graph
   
 
     
@@ -1211,14 +1411,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../core/" class="md-nav__link">
+      <a href="../guides/bundles/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Core Concepts
+    Using On-Demand Bundles
   
 
     
@@ -1239,14 +1439,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../tools/" class="md-nav__link">
+      <a href="../guides/ci_cd/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Tools
+    CI/CD & Advanced
   
 
     
@@ -1277,12 +1477,19 @@
     
     
     
+      
+      
+        
+      
+    
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
         
           
           <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
@@ -1292,7 +1499,7 @@
   <span class="md-ellipsis">
     
   
-    Advanced
+    Core Concepts
   
 
     
@@ -1308,7 +1515,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Advanced
+    Core Concepts
   
 
           </label>
@@ -1321,14 +1528,360 @@
   
   
     <li class="md-nav__item">
-      <a href="../watching/" class="md-nav__link">
+      <a href="../concepts/how_it_works/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Live Watching
+    How it Works
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    System Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../concepts/the_graph/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Graph Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../concepts/modes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI vs MCP Modes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    CLI Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/cli_master/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    All Commands (Master List)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/cli_indexing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Indexing & Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/cli_analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analysis & Querying
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/cli_system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    System & Config
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    MCP Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/mcp_master/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    All Tools (Master List)
   
 
     
@@ -1356,7 +1909,7 @@
   <span class="md-ellipsis">
     
   
-    Cookbook
+    Example Cookbook
   
 
     
@@ -1387,344 +1940,19 @@
     
     
     
+      
+      
+        
+      
+    
     
     <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Deployment
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Deployment
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../deployment/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Overview
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../deployment/DOCKER_README/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Docker Quick Start
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../deployment/DOCKER_COMPLETE_GUIDE/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Docker Complete Guide
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../deployment/DOCKER_DEPLOYMENT/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Docker Deployment
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../deployment/HOSTING_COMPARISON/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Hosting Comparison
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../deployment/DEPLOYMENT_CHECKLIST/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Deployment Checklist
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
-        
-          
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Contributing
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_7">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Contributing
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../contributing/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Overview
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../contributing_languages/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Adding New Languages
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
         
           
           <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
@@ -1734,7 +1962,7 @@
   <span class="md-ellipsis">
     
   
-    Help
+    Project Info
   
 
     
@@ -1750,7 +1978,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Help
+    Project Info
   
 
           </label>
@@ -1763,14 +1991,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../troubleshooting/" class="md-nav__link">
+      <a href="../roadmap/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Troubleshooting
+    Roadmap
   
 
     
@@ -1791,14 +2019,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../future_work/" class="md-nav__link">
+      <a href="../contributing/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Future Work
+    Contributing
   
 
     
@@ -1812,15 +2040,8 @@
 
               
             
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
+              
+                
   
   
   
@@ -1842,6 +2063,98 @@
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/cgcignore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    .cgcignore Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -2415,38 +2728,38 @@
 <p>Sarah needs to refactor the <code>calculateShippingCost</code> function in the checkout module. She wants to know what will break before making changes.</p>
 <h3 id="step-by-step-journey">Step-by-Step Journey</h3>
 <h4 id="step-1-one-time-setup-5-minutes"><strong>Step 1: One-Time Setup</strong> (5 minutes)</h4>
-<pre><code class="language-bash"># Install CodeGraphContext
-pip install codegraphcontext
+<div class="highlight"><pre><span></span><code><span class="c1"># Install CodeGraphContext</span>
+pip<span class="w"> </span>install<span class="w"> </span>codegraphcontext
 
-# Index the repository
-cd ~/projects/ecommerce-platform
-cgc index .
+<span class="c1"># Index the repository</span>
+<span class="nb">cd</span><span class="w"> </span>~/projects/ecommerce-platform
+cgc<span class="w"> </span>index<span class="w"> </span>.
 
-# Output:
-# ✓ Indexed 1,247 files
-# ✓ Found 3,421 functions
-# ✓ Found 892 classes
-# ✓ Created 15,234 relationships
-# ✓ Database: FalkorDB (auto-selected)
-</code></pre>
-<pre><code class="language-bash"># Setup MCP integration
-cgc mcp setup
+<span class="c1"># Output:</span>
+<span class="c1"># ✓ Indexed 1,247 files</span>
+<span class="c1"># ✓ Found 3,421 functions</span>
+<span class="c1"># ✓ Found 892 classes</span>
+<span class="c1"># ✓ Created 15,234 relationships</span>
+<span class="c1"># ✓ Database: FalkorDB (auto-selected)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># Setup MCP integration</span>
+cgc<span class="w"> </span>mcp<span class="w"> </span>setup
 
-# Output:
-# ✓ MCP configuration created at ~/.config/cursor/mcp.json
-# ✓ Server command: cgc mcp start
-# ✓ Restart Cursor to activate
-</code></pre>
+<span class="c1"># Output:</span>
+<span class="c1"># ✓ MCP configuration created at ~/.config/cursor/mcp.json</span>
+<span class="c1"># ✓ Server command: cgc mcp start</span>
+<span class="c1"># ✓ Restart Cursor to activate</span>
+</code></pre></div>
 <h4 id="step-2-start-mcp-server-every-time-or-run-in-background"><strong>Step 2: Start MCP Server</strong> (Every time, or run in background)</h4>
-<pre><code class="language-bash"># Start the MCP server
-cgc mcp start
+<div class="highlight"><pre><span></span><code><span class="c1"># Start the MCP server</span>
+cgc<span class="w"> </span>mcp<span class="w"> </span>start
 
-# Output:
-# ✓ CodeGraphContext MCP Server started
-# ✓ Listening on stdio
-# ✓ Database: FalkorDB connected
-# ✓ Watching: /home/sarah/projects/ecommerce-platform
-</code></pre>
+<span class="c1"># Output:</span>
+<span class="c1"># ✓ CodeGraphContext MCP Server started</span>
+<span class="c1"># ✓ Listening on stdio</span>
+<span class="c1"># ✓ Database: FalkorDB connected</span>
+<span class="c1"># ✓ Watching: /home/sarah/projects/ecommerce-platform</span>
+</code></pre></div>
 <p><strong>Alternative</strong>: Add to shell startup script for auto-start</p>
 <h4 id="step-3-use-ai-assistant-with-cgc-context"><strong>Step 3: Use AI Assistant with CGC Context</strong></h4>
 <p>Sarah opens Cursor and asks her AI assistant:</p>
@@ -2458,37 +2771,37 @@ cgc mcp start
 1. Cursor AI recognizes this needs code relationship data
 2. Calls CGC MCP tool: <code>find_all_callers</code> with target <code>calculateShippingCost</code>
 3. CGC returns structured data</p>
-<p><strong>CGC Response (via MCP):</strong></p>
-<pre><code class="language-json">{
-  &quot;function&quot;: &quot;calculateShippingCost&quot;,
-  &quot;file&quot;: &quot;src/checkout/shipping.py&quot;,
-  &quot;direct_callers&quot;: 3,
-  &quot;total_callers&quot;: 12,
-  &quot;callers&quot;: [
-    {
-      &quot;function&quot;: &quot;processCheckout&quot;,
-      &quot;file&quot;: &quot;src/checkout/checkout_flow.py&quot;,
-      &quot;line&quot;: 145
-    },
-    {
-      &quot;function&quot;: &quot;estimateTotal&quot;,
-      &quot;file&quot;: &quot;src/cart/cart_service.py&quot;,
-      &quot;line&quot;: 89
-    },
-    {
-      &quot;function&quot;: &quot;generateInvoice&quot;,
-      &quot;file&quot;: &quot;src/billing/invoice_generator.py&quot;,
-      &quot;line&quot;: 234
-    }
-  ],
-  &quot;indirect_callers&quot;: [
-    &quot;handleCheckoutAPI&quot;,
-    &quot;updateCartTotal&quot;,
-    &quot;previewOrder&quot;,
-    // ... 9 more
-  ]
-}
-</code></pre>
+<p><strong>CGC Response (via MCP):</strong>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;function&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;calculateShippingCost&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;file&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;src/checkout/shipping.py&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;direct_callers&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;total_callers&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;callers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;function&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;processCheckout&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;file&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;src/checkout/checkout_flow.py&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;line&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">145</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;function&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;estimateTotal&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;file&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;src/cart/cart_service.py&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;line&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">89</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;function&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;generateInvoice&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;file&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;src/billing/invoice_generator.py&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;line&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">234</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;indirect_callers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;handleCheckoutAPI&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;updateCartTotal&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;previewOrder&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="c1">// ... 9 more</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></p>
 <p><strong>AI Assistant's Response to Sarah:</strong></p>
 <blockquote>
 <p>"The <code>calculateShippingCost</code> function is called by 12 functions across 3 modules:</p>
@@ -2513,10 +2826,11 @@ cgc mcp start
 <p><strong>AI Response:</strong></p>
 <blockquote>
 <p>"Here's the execution path:
-<code>handleCheckoutAPI (api/checkout.py:45)
+<div class="highlight"><pre><span></span><code>handleCheckoutAPI (api/checkout.py:45)
   └─&gt; processCheckout (checkout/checkout_flow.py:145)
       └─&gt; calculateShippingCost (checkout/shipping.py:78)
-          └─&gt; getShippingRates (integrations/fedex_api.py:23)</code></p>
+          └─&gt; getShippingRates (integrations/fedex_api.py:23)
+</code></pre></div></p>
 <p>This means changes to <code>calculateShippingCost</code> affect the public API endpoint."</p>
 </blockquote>
 <h4 id="step-5-make-informed-changes"><strong>Step 5: Make Informed Changes</strong></h4>
@@ -2544,142 +2858,142 @@ cgc mcp start
 <p>Alex's first task: "Fix bug #1234 - Payment confirmation emails not sending for international orders"</p>
 <h3 id="step-by-step-journey_1">Step-by-Step Journey</h3>
 <h4 id="step-1-setup-first-time-only"><strong>Step 1: Setup</strong> (First time only)</h4>
-<pre><code class="language-bash"># Clone the repository
-git clone https://github.com/company/payment-system.git
-cd payment-system
+<div class="highlight"><pre><span></span><code><span class="c1"># Clone the repository</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/company/payment-system.git
+<span class="nb">cd</span><span class="w"> </span>payment-system
 
-# Install CGC
-pip install codegraphcontext
+<span class="c1"># Install CGC</span>
+pip<span class="w"> </span>install<span class="w"> </span>codegraphcontext
 
-# Index the codebase
-cgc index .
+<span class="c1"># Index the codebase</span>
+cgc<span class="w"> </span>index<span class="w"> </span>.
 
-# Output:
-# ✓ Indexed 847 files
-# ✓ Found 2,156 functions
-# ✓ Found 423 classes
-# ✓ Database: FalkorDB
-</code></pre>
+<span class="c1"># Output:</span>
+<span class="c1"># ✓ Indexed 847 files</span>
+<span class="c1"># ✓ Found 2,156 functions</span>
+<span class="c1"># ✓ Found 423 classes</span>
+<span class="c1"># ✓ Database: FalkorDB</span>
+</code></pre></div>
 <h4 id="step-2-understand-the-architecture-10-minutes"><strong>Step 2: Understand the Architecture</strong> (10 minutes)</h4>
-<pre><code class="language-bash"># Get an overview of the codebase structure
-cgc stats
+<div class="highlight"><pre><span></span><code><span class="c1"># Get an overview of the codebase structure</span>
+cgc<span class="w"> </span>stats
 
-# Output:
-# Repository Statistics:
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# Files:      847
-# Functions:  2,156
-# Classes:    423
-# Modules:    67
-# 
-# Top Modules by Size:
-# 1. payment_processing (234 functions)
-# 2. email_service (156 functions)
-# 3. order_management (189 functions)
-</code></pre>
-<pre><code class="language-bash"># Visualize the architecture
-cgc visualize --output architecture.html
+<span class="c1"># Output:</span>
+<span class="c1"># Repository Statistics:</span>
+<span class="c1"># ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="c1"># Files:      847</span>
+<span class="c1"># Functions:  2,156</span>
+<span class="c1"># Classes:    423</span>
+<span class="c1"># Modules:    67</span>
+<span class="c1"># </span>
+<span class="c1"># Top Modules by Size:</span>
+<span class="c1"># 1. payment_processing (234 functions)</span>
+<span class="c1"># 2. email_service (156 functions)</span>
+<span class="c1"># 3. order_management (189 functions)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># Visualize the architecture</span>
+cgc<span class="w"> </span>visualize<span class="w"> </span>--output<span class="w"> </span>architecture.html
 
-# Output:
-# ✓ Generated visualization: architecture.html
-# ✓ Open in browser to explore
-</code></pre>
+<span class="c1"># Output:</span>
+<span class="c1"># ✓ Generated visualization: architecture.html</span>
+<span class="c1"># ✓ Open in browser to explore</span>
+</code></pre></div>
 <p><strong>Alex opens <code>architecture.html</code> and sees:</strong>
 - Module dependency graph
 - Payment processing module connects to email_service
 - Clear separation between domestic and international payment flows</p>
 <h4 id="step-3-find-relevant-code-5-minutes"><strong>Step 3: Find Relevant Code</strong> (5 minutes)</h4>
-<pre><code class="language-bash"># Search for email-related code
-cgc find &quot;email&quot; --type function
+<div class="highlight"><pre><span></span><code><span class="c1"># Search for email-related code</span>
+cgc<span class="w"> </span>find<span class="w"> </span><span class="s2">&quot;email&quot;</span><span class="w"> </span>--type<span class="w"> </span><span class="k">function</span>
 
-# Output:
-# Found 23 functions matching 'email':
-# 
-# 1. sendPaymentConfirmation
-#    File: src/email_service/notifications.py:45
-#    
-# 2. sendInternationalPaymentEmail
-#    File: src/email_service/international.py:12
-#    
-# 3. queueEmailJob
-#    File: src/workers/email_queue.py:78
-# 
-# ... (20 more)
-</code></pre>
-<pre><code class="language-bash"># Find international payment handling
-cgc find &quot;international&quot; --type function
+<span class="c1"># Output:</span>
+<span class="c1"># Found 23 functions matching &#39;email&#39;:</span>
+<span class="c1"># </span>
+<span class="c1"># 1. sendPaymentConfirmation</span>
+<span class="c1">#    File: src/email_service/notifications.py:45</span>
+<span class="c1">#    </span>
+<span class="c1"># 2. sendInternationalPaymentEmail</span>
+<span class="c1">#    File: src/email_service/international.py:12</span>
+<span class="c1">#    </span>
+<span class="c1"># 3. queueEmailJob</span>
+<span class="c1">#    File: src/workers/email_queue.py:78</span>
+<span class="c1"># </span>
+<span class="c1"># ... (20 more)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># Find international payment handling</span>
+cgc<span class="w"> </span>find<span class="w"> </span><span class="s2">&quot;international&quot;</span><span class="w"> </span>--type<span class="w"> </span><span class="k">function</span>
 
-# Output:
-# Found 8 functions matching 'international':
-# 
-# 1. processInternationalPayment
-#    File: src/payment_processing/international.py:34
-#    
-# 2. sendInternationalPaymentEmail
-#    File: src/email_service/international.py:12
-</code></pre>
+<span class="c1"># Output:</span>
+<span class="c1"># Found 8 functions matching &#39;international&#39;:</span>
+<span class="c1"># </span>
+<span class="c1"># 1. processInternationalPayment</span>
+<span class="c1">#    File: src/payment_processing/international.py:34</span>
+<span class="c1">#    </span>
+<span class="c1"># 2. sendInternationalPaymentEmail</span>
+<span class="c1">#    File: src/email_service/international.py:12</span>
+</code></pre></div>
 <h4 id="step-4-trace-the-bug-15-minutes"><strong>Step 4: Trace the Bug</strong> (15 minutes)</h4>
-<pre><code class="language-bash"># See what calls the international payment function
-cgc analyze callers processInternationalPayment
+<div class="highlight"><pre><span></span><code><span class="c1"># See what calls the international payment function</span>
+cgc<span class="w"> </span>analyze<span class="w"> </span>callers<span class="w"> </span>processInternationalPayment
 
-# Output:
-# Callers of 'processInternationalPayment':
-# 
-# Direct Callers (2):
-# ┌────────────────────────────────────────────────────────────┐
-# │ Function              │ File                    │ Line     │
-# ├────────────────────────────────────────────────────────────┤
-# │ handlePayment         │ api/payment_api.py      │ 123      │
-# │ retryFailedPayment    │ workers/retry_worker.py │ 56       │
-# └────────────────────────────────────────────────────────────┘
-</code></pre>
-<pre><code class="language-bash"># Check what processInternationalPayment calls
-cgc analyze callees processInternationalPayment
+<span class="c1"># Output:</span>
+<span class="c1"># Callers of &#39;processInternationalPayment&#39;:</span>
+<span class="c1"># </span>
+<span class="c1"># Direct Callers (2):</span>
+<span class="c1"># ┌────────────────────────────────────────────────────────────┐</span>
+<span class="c1"># │ Function              │ File                    │ Line     │</span>
+<span class="c1"># ├────────────────────────────────────────────────────────────┤</span>
+<span class="c1"># │ handlePayment         │ api/payment_api.py      │ 123      │</span>
+<span class="c1"># │ retryFailedPayment    │ workers/retry_worker.py │ 56       │</span>
+<span class="c1"># └────────────────────────────────────────────────────────────┘</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check what processInternationalPayment calls</span>
+cgc<span class="w"> </span>analyze<span class="w"> </span>callees<span class="w"> </span>processInternationalPayment
 
-# Output:
-# Functions called by 'processInternationalPayment':
-# 
-# ┌────────────────────────────────────────────────────────────┐
-# │ Function              │ File                    │ Line     │
-# ├────────────────────────────────────────────────────────────┤
-# │ validateCurrency      │ utils/currency.py       │ 23       │
-# │ chargeCard            │ integrations/stripe.py  │ 89       │
-# │ logTransaction        │ logging/audit.py        │ 45       │
-# │ updateOrderStatus     │ orders/order_service.py │ 167      │
-# └────────────────────────────────────────────────────────────┘
-</code></pre>
+<span class="c1"># Output:</span>
+<span class="c1"># Functions called by &#39;processInternationalPayment&#39;:</span>
+<span class="c1"># </span>
+<span class="c1"># ┌────────────────────────────────────────────────────────────┐</span>
+<span class="c1"># │ Function              │ File                    │ Line     │</span>
+<span class="c1"># ├────────────────────────────────────────────────────────────┤</span>
+<span class="c1"># │ validateCurrency      │ utils/currency.py       │ 23       │</span>
+<span class="c1"># │ chargeCard            │ integrations/stripe.py  │ 89       │</span>
+<span class="c1"># │ logTransaction        │ logging/audit.py        │ 45       │</span>
+<span class="c1"># │ updateOrderStatus     │ orders/order_service.py │ 167      │</span>
+<span class="c1"># └────────────────────────────────────────────────────────────┘</span>
+</code></pre></div>
 <p><strong>Alex notices:</strong> <code>sendInternationalPaymentEmail</code> is NOT in the callees list! This is the bug!</p>
 <h4 id="step-5-verify-the-fix-location-5-minutes"><strong>Step 5: Verify the Fix Location</strong> (5 minutes)</h4>
-<pre><code class="language-bash"># Check how domestic payments work
-cgc analyze callees processDomesticPayment
+<div class="highlight"><pre><span></span><code><span class="c1"># Check how domestic payments work</span>
+cgc<span class="w"> </span>analyze<span class="w"> </span>callees<span class="w"> </span>processDomesticPayment
 
-# Output:
-# Functions called by 'processDomesticPayment':
-# 
-# ┌────────────────────────────────────────────────────────────┐
-# │ Function              │ File                    │ Line     │
-# ├────────────────────────────────────────────────────────────┤
-# │ validateCurrency      │ utils/currency.py       │ 23       │
-# │ chargeCard            │ integrations/stripe.py  │ 89       │
-# │ logTransaction        │ logging/audit.py        │ 45       │
-# │ updateOrderStatus     │ orders/order_service.py │ 167      │
-# │ sendPaymentConfirmation │ email_service/notifications.py │ 45 │
-# └────────────────────────────────────────────────────────────┘
-</code></pre>
+<span class="c1"># Output:</span>
+<span class="c1"># Functions called by &#39;processDomesticPayment&#39;:</span>
+<span class="c1"># </span>
+<span class="c1"># ┌────────────────────────────────────────────────────────────┐</span>
+<span class="c1"># │ Function              │ File                    │ Line     │</span>
+<span class="c1"># ├────────────────────────────────────────────────────────────┤</span>
+<span class="c1"># │ validateCurrency      │ utils/currency.py       │ 23       │</span>
+<span class="c1"># │ chargeCard            │ integrations/stripe.py  │ 89       │</span>
+<span class="c1"># │ logTransaction        │ logging/audit.py        │ 45       │</span>
+<span class="c1"># │ updateOrderStatus     │ orders/order_service.py │ 167      │</span>
+<span class="c1"># │ sendPaymentConfirmation │ email_service/notifications.py │ 45 │</span>
+<span class="c1"># └────────────────────────────────────────────────────────────┘</span>
+</code></pre></div>
 <p><strong>Aha!</strong> Domestic payments call <code>sendPaymentConfirmation</code>, but international payments don't call <code>sendInternationalPaymentEmail</code>!</p>
 <h4 id="step-6-make-the-fix"><strong>Step 6: Make the Fix</strong></h4>
 <p>Alex adds the missing email call to <code>processInternationalPayment</code> function.</p>
 <h4 id="step-7-verify-no-side-effects-5-minutes"><strong>Step 7: Verify No Side Effects</strong> (5 minutes)</h4>
-<pre><code class="language-bash"># Check if the change affects anything else
-cgc analyze callers sendInternationalPaymentEmail
+<div class="highlight"><pre><span></span><code><span class="c1"># Check if the change affects anything else</span>
+cgc<span class="w"> </span>analyze<span class="w"> </span>callers<span class="w"> </span>sendInternationalPaymentEmail
 
-# Output:
-# Callers of 'sendInternationalPaymentEmail':
-# 
-# No callers found.
-# 
-# ⚠️  This function appears to be unused (dead code)
-</code></pre>
+<span class="c1"># Output:</span>
+<span class="c1"># Callers of &#39;sendInternationalPaymentEmail&#39;:</span>
+<span class="c1"># </span>
+<span class="c1"># No callers found.</span>
+<span class="c1"># </span>
+<span class="c1"># ⚠️  This function appears to be unused (dead code)</span>
+</code></pre></div>
 <p>Perfect! Adding this call won't break anything.</p>
 <h3 id="time-saved_1">Time Saved</h3>
 <ul>
@@ -2709,90 +3023,90 @@ cgc analyze callers sendInternationalPaymentEmail
 3. Plan the migration in safe, incremental steps</p>
 <h3 id="step-by-step-journey_2">Step-by-Step Journey</h3>
 <h4 id="step-1-initial-assessment-10-minutes"><strong>Step 1: Initial Assessment</strong> (10 minutes)</h4>
-<pre><code class="language-bash"># Index the current codebase
-cgc index .
+<div class="highlight"><pre><span></span><code><span class="c1"># Index the current codebase</span>
+cgc<span class="w"> </span>index<span class="w"> </span>.
 
-# Find all references to old auth
-cgc find &quot;OldAuthService&quot; --type class
+<span class="c1"># Find all references to old auth</span>
+cgc<span class="w"> </span>find<span class="w"> </span><span class="s2">&quot;OldAuthService&quot;</span><span class="w"> </span>--type<span class="w"> </span>class
 
-# Output:
-# Found 1 class matching 'OldAuthService':
-# 
-# Class: OldAuthService
-# File: src/auth/legacy_auth.py:23
-# Methods: 12
-</code></pre>
-<pre><code class="language-bash"># Find all functions that use it
-cgc analyze callers OldAuthService
+<span class="c1"># Output:</span>
+<span class="c1"># Found 1 class matching &#39;OldAuthService&#39;:</span>
+<span class="c1"># </span>
+<span class="c1"># Class: OldAuthService</span>
+<span class="c1"># File: src/auth/legacy_auth.py:23</span>
+<span class="c1"># Methods: 12</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># Find all functions that use it</span>
+cgc<span class="w"> </span>analyze<span class="w"> </span>callers<span class="w"> </span>OldAuthService
 
-# Output:
-# Callers of 'OldAuthService':
-# 
-# Direct Callers (15):
-# ┌────────────────────────────────────────────────────────────┐
-# │ Function              │ File                    │ Line     │
-# ├────────────────────────────────────────────────────────────┤
-# │ login                 │ api/auth_api.py         │ 34       │
-# │ logout                │ api/auth_api.py         │ 67       │
-# │ validateToken         │ middleware/auth.py      │ 89       │
-# │ refreshSession        │ api/session_api.py      │ 123      │
-# ... (11 more)
-# └────────────────────────────────────────────────────────────┘
-# 
-# Total: 15 direct callers, 47 indirect callers
-</code></pre>
+<span class="c1"># Output:</span>
+<span class="c1"># Callers of &#39;OldAuthService&#39;:</span>
+<span class="c1"># </span>
+<span class="c1"># Direct Callers (15):</span>
+<span class="c1"># ┌────────────────────────────────────────────────────────────┐</span>
+<span class="c1"># │ Function              │ File                    │ Line     │</span>
+<span class="c1"># ├────────────────────────────────────────────────────────────┤</span>
+<span class="c1"># │ login                 │ api/auth_api.py         │ 34       │</span>
+<span class="c1"># │ logout                │ api/auth_api.py         │ 67       │</span>
+<span class="c1"># │ validateToken         │ middleware/auth.py      │ 89       │</span>
+<span class="c1"># │ refreshSession        │ api/session_api.py      │ 123      │</span>
+<span class="c1"># ... (11 more)</span>
+<span class="c1"># └────────────────────────────────────────────────────────────┘</span>
+<span class="c1"># </span>
+<span class="c1"># Total: 15 direct callers, 47 indirect callers</span>
+</code></pre></div>
 <p><strong>Marcus realizes:</strong> This affects 47 functions! Need a careful migration plan.</p>
 <h4 id="step-2-find-dead-code-to-remove-first-5-minutes"><strong>Step 2: Find Dead Code to Remove First</strong> (5 minutes)</h4>
-<pre><code class="language-bash"># Find unused code in the auth module
-cgc analyze dead-code --exclude-decorated @api_endpoint @celery_task
+<div class="highlight"><pre><span></span><code><span class="c1"># Find unused code in the auth module</span>
+cgc<span class="w"> </span>analyze<span class="w"> </span>dead-code<span class="w"> </span>--exclude-decorated<span class="w"> </span>@api_endpoint<span class="w"> </span>@celery_task
 
-# Output:
-# Potentially Unused Functions:
-# 
-# ┌────────────────────────────────────────────────────────────┐
-# │ Function              │ File                    │ Complexity│
-# ├────────────────────────────────────────────────────────────┤
-# │ _legacyHashPassword   │ auth/legacy_auth.py     │ 8         │
-# │ _migrateUserSession   │ auth/migration.py       │ 12        │
-# │ validateLegacyToken   │ auth/legacy_auth.py     │ 15        │
-# └────────────────────────────────────────────────────────────┘
-# 
-# Total: 3 unused functions (can be safely removed)
-</code></pre>
+<span class="c1"># Output:</span>
+<span class="c1"># Potentially Unused Functions:</span>
+<span class="c1"># </span>
+<span class="c1"># ┌────────────────────────────────────────────────────────────┐</span>
+<span class="c1"># │ Function              │ File                    │ Complexity│</span>
+<span class="c1"># ├────────────────────────────────────────────────────────────┤</span>
+<span class="c1"># │ _legacyHashPassword   │ auth/legacy_auth.py     │ 8         │</span>
+<span class="c1"># │ _migrateUserSession   │ auth/migration.py       │ 12        │</span>
+<span class="c1"># │ validateLegacyToken   │ auth/legacy_auth.py     │ 15        │</span>
+<span class="c1"># └────────────────────────────────────────────────────────────┘</span>
+<span class="c1"># </span>
+<span class="c1"># Total: 3 unused functions (can be safely removed)</span>
+</code></pre></div>
 <p><strong>Marcus notes:</strong> Remove these 3 functions first to reduce complexity.</p>
 <h4 id="step-3-identify-high-risk-areas-10-minutes"><strong>Step 3: Identify High-Risk Areas</strong> (10 minutes)</h4>
-<pre><code class="language-bash"># Find the most complex functions that use OldAuthService
-cgc analyze complexity --filter-calls OldAuthService
+<div class="highlight"><pre><span></span><code><span class="c1"># Find the most complex functions that use OldAuthService</span>
+cgc<span class="w"> </span>analyze<span class="w"> </span>complexity<span class="w"> </span>--filter-calls<span class="w"> </span>OldAuthService
 
-# Output:
-# Complex Functions Using 'OldAuthService':
-# 
-# ┌────────────────────────────────────────────────────────────┐
-# │ Function              │ Complexity │ Callers │ Priority    │
-# ├────────────────────────────────────────────────────────────┤
-# │ validateToken         │ 23         │ 34      │ CRITICAL    │
-# │ refreshSession        │ 18         │ 12      │ HIGH        │
-# │ login                 │ 15         │ 8       │ HIGH        │
-# │ logout                │ 7          │ 6       │ MEDIUM      │
-# └────────────────────────────────────────────────────────────┘
-</code></pre>
+<span class="c1"># Output:</span>
+<span class="c1"># Complex Functions Using &#39;OldAuthService&#39;:</span>
+<span class="c1"># </span>
+<span class="c1"># ┌────────────────────────────────────────────────────────────┐</span>
+<span class="c1"># │ Function              │ Complexity │ Callers │ Priority    │</span>
+<span class="c1"># ├────────────────────────────────────────────────────────────┤</span>
+<span class="c1"># │ validateToken         │ 23         │ 34      │ CRITICAL    │</span>
+<span class="c1"># │ refreshSession        │ 18         │ 12      │ HIGH        │</span>
+<span class="c1"># │ login                 │ 15         │ 8       │ HIGH        │</span>
+<span class="c1"># │ logout                │ 7          │ 6       │ MEDIUM      │</span>
+<span class="c1"># └────────────────────────────────────────────────────────────┘</span>
+</code></pre></div>
 <p><strong>Marcus's migration plan:</strong>
 1. Start with low-complexity, low-usage functions (logout)
 2. End with high-complexity, high-usage functions (validateToken)
 3. Add comprehensive tests for each before migrating</p>
 <h4 id="step-4-create-migration-checklist-15-minutes"><strong>Step 4: Create Migration Checklist</strong> (15 minutes)</h4>
-<pre><code class="language-bash"># For each function, see its full call chain
-cgc analyze chain login OldAuthService
+<div class="highlight"><pre><span></span><code><span class="c1"># For each function, see its full call chain</span>
+cgc<span class="w"> </span>analyze<span class="w"> </span>chain<span class="w"> </span>login<span class="w"> </span>OldAuthService
 
-# Output:
-# Call Chain from 'login' to 'OldAuthService':
-# 
-# login (api/auth_api.py:34)
-#   └─&gt; OldAuthService.authenticate (auth/legacy_auth.py:45)
-#       └─&gt; _hashPassword (auth/legacy_auth.py:123)
-#       └─&gt; _validateCredentials (auth/legacy_auth.py:156)
-#           └─&gt; database.query (core/db.py:89)
-</code></pre>
+<span class="c1"># Output:</span>
+<span class="c1"># Call Chain from &#39;login&#39; to &#39;OldAuthService&#39;:</span>
+<span class="c1"># </span>
+<span class="c1"># login (api/auth_api.py:34)</span>
+<span class="c1">#   └─&gt; OldAuthService.authenticate (auth/legacy_auth.py:45)</span>
+<span class="c1">#       └─&gt; _hashPassword (auth/legacy_auth.py:123)</span>
+<span class="c1">#       └─&gt; _validateCredentials (auth/legacy_auth.py:156)</span>
+<span class="c1">#           └─&gt; database.query (core/db.py:89)</span>
+</code></pre></div>
 <p>Marcus repeats this for all 15 direct callers, creating a detailed migration map.</p>
 <h4 id="step-5-use-mcp-for-ai-assisted-migration-ongoing"><strong>Step 5: Use MCP for AI-Assisted Migration</strong> (Ongoing)</h4>
 <p>Marcus uses Cursor with CGC MCP to help with the migration:</p>
@@ -2808,19 +3122,19 @@ cgc analyze chain login OldAuthService
 <blockquote>
 <p>"Migration Plan for <code>login</code> function:</p>
 <p><strong>Current Flow:</strong>
-<code>python
-def login(username, password):
-    auth = OldAuthService()
-    user = auth.authenticate(username, password)
-    session = auth.createSession(user)
-    return session.token</code></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">login</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
+    <span class="n">auth</span> <span class="o">=</span> <span class="n">OldAuthService</span><span class="p">()</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">auth</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+    <span class="n">session</span> <span class="o">=</span> <span class="n">auth</span><span class="o">.</span><span class="n">createSession</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">session</span><span class="o">.</span><span class="n">token</span>
+</code></pre></div></p>
 <p><strong>Proposed New Flow:</strong>
-<code>python
-def login(username, password):
-    auth = NewAuthService()
-    user = auth.authenticate(username, password)  # Compatible API
-    session = auth.createSession(user)
-    return session.token</code></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">login</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
+    <span class="n">auth</span> <span class="o">=</span> <span class="n">NewAuthService</span><span class="p">()</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">auth</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>  <span class="c1"># Compatible API</span>
+    <span class="n">session</span> <span class="o">=</span> <span class="n">auth</span><span class="o">.</span><span class="n">createSession</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">session</span><span class="o">.</span><span class="n">token</span>
+</code></pre></div></p>
 <p><strong>Impact Analysis:</strong>
 - <code>login</code> is called by 8 functions
 - Return value format is the same (session token string)
@@ -2842,39 +3156,39 @@ def login(username, password):
 - Week 1: Migrate 5 low-risk functions
 - Week 2: Migrate 10 medium-risk functions
 - After each migration, uses CGC to verify:</p>
-<pre><code class="language-bash"># Verify old service usage is decreasing
-cgc analyze callers OldAuthService
+<div class="highlight"><pre><span></span><code><span class="c1"># Verify old service usage is decreasing</span>
+cgc<span class="w"> </span>analyze<span class="w"> </span>callers<span class="w"> </span>OldAuthService
 
-# Week 1: 15 callers → 10 callers
-# Week 2: 10 callers → 0 callers
-</code></pre>
-<pre><code class="language-bash"># Final verification: Is OldAuthService still used?
-cgc analyze callers OldAuthService
+<span class="c1"># Week 1: 15 callers → 10 callers</span>
+<span class="c1"># Week 2: 10 callers → 0 callers</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># Final verification: Is OldAuthService still used?</span>
+cgc<span class="w"> </span>analyze<span class="w"> </span>callers<span class="w"> </span>OldAuthService
 
-# Output:
-# Callers of 'OldAuthService':
-# 
-# No callers found.
-# 
-# ✓ Safe to remove OldAuthService
-</code></pre>
+<span class="c1"># Output:</span>
+<span class="c1"># Callers of &#39;OldAuthService&#39;:</span>
+<span class="c1"># </span>
+<span class="c1"># No callers found.</span>
+<span class="c1"># </span>
+<span class="c1"># ✓ Safe to remove OldAuthService</span>
+</code></pre></div>
 <h4 id="step-7-cleanup-30-minutes"><strong>Step 7: Cleanup</strong> (30 minutes)</h4>
-<pre><code class="language-bash"># Find all dead code after migration
-cgc analyze dead-code
+<div class="highlight"><pre><span></span><code><span class="c1"># Find all dead code after migration</span>
+cgc<span class="w"> </span>analyze<span class="w"> </span>dead-code
 
-# Output:
-# Potentially Unused Functions:
-# 
-# ┌────────────────────────────────────────────────────────────┐
-# │ Function              │ File                    │ LOC       │
-# ├────────────────────────────────────────────────────────────┤
-# │ OldAuthService.*      │ auth/legacy_auth.py     │ 456       │
-# │ _legacyHashPassword   │ auth/legacy_auth.py     │ 23        │
-# │ _migrateUserSession   │ auth/migration.py       │ 34        │
-# └────────────────────────────────────────────────────────────┘
-# 
-# Total: 513 lines of code can be safely removed
-</code></pre>
+<span class="c1"># Output:</span>
+<span class="c1"># Potentially Unused Functions:</span>
+<span class="c1"># </span>
+<span class="c1"># ┌────────────────────────────────────────────────────────────┐</span>
+<span class="c1"># │ Function              │ File                    │ LOC       │</span>
+<span class="c1"># ├────────────────────────────────────────────────────────────┤</span>
+<span class="c1"># │ OldAuthService.*      │ auth/legacy_auth.py     │ 456       │</span>
+<span class="c1"># │ _legacyHashPassword   │ auth/legacy_auth.py     │ 23        │</span>
+<span class="c1"># │ _migrateUserSession   │ auth/migration.py       │ 34        │</span>
+<span class="c1"># └────────────────────────────────────────────────────────────┘</span>
+<span class="c1"># </span>
+<span class="c1"># Total: 513 lines of code can be safely removed</span>
+</code></pre></div>
 <p>Marcus deletes the old code, reducing technical debt by 513 lines.</p>
 <h3 id="time-saved_2">Time Saved</h3>
 <ul>
@@ -2919,8 +3233,8 @@ cgc analyze dead-code
 <li><strong>New to CGC?</strong> → Start with <a href="../setup_workflows/">SETUP_WORKFLOWS.md</a></li>
 <li><strong>Want specific examples?</strong> → See <a href="../use_cases_detailed/">USE_CASES_DETAILED.md</a></li>
 <li><strong>Need integration help?</strong> → Read <a href="../integration_guide/">INTEGRATION_GUIDE.md</a></li>
-<li><strong>CLI Reference</strong> → See <a href="../cli/">CLI_COMPLETE_REFERENCE.md</a></li>
-<li><strong>MCP Reference</strong> → See <a href="../server/">MCP_TOOLS.md</a></li>
+<li><strong>CLI Reference</strong> → See <a href="./cli.md">CLI_COMPLETE_REFERENCE.md</a></li>
+<li><strong>MCP Reference</strong> → See <a href="./server.md">MCP_TOOLS.md</a></li>
 </ul>
 
 
@@ -2971,7 +3285,7 @@ cgc analyze dead-code
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "content.code.copy", "toc.follow"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
