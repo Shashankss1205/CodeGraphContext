@@ -28,7 +28,7 @@ jobs:
       - name: Deploy to codegraphcontext.github.io
         uses: peaceiris/actions-gh-pages@v4
         with:
-          personal_token: ${{ secrets.GITHUB_TOKEN }}
+          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
           external_repository: CodeGraphContext/codegraphcontext.github.io
           publish_dir: docs/site
           publish_branch: main

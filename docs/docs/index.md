@@ -50,3 +50,10 @@ We have organized the documentation to match your journey:
 
 ### Learn the Concepts
 **[How Indexing Works](concepts/how_it_works.md)**
+
+### Project Links
+
+*   **GitHub Repository**: [CodeGraphContext/CodeGraphContext](https://github.com/CodeGraphContext/CodeGraphContext)
+*   **Website**: [codegraphcontext.vercel.app](https://codegraphcontext.vercel.app)
+*   **Maintainer**: Shashank
+
