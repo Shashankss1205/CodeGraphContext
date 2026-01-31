@@ -77,7 +77,7 @@ A powerful **MCP server** and **CLI toolkit** that indexes local code into a gra
 ---
 
 ## Project Details
-- **Version:** 0.1.36
+- **Version:** 0.1.37
 - **Authors:** Shashank Shekhar Singh <shashankshekharsingh1205@gmail.com>
 - **License:** MIT License (See [LICENSE](LICENSE) for details)
 - **Website:** [CodeGraphContext](http://codegraphcontext.vercel.app/)
