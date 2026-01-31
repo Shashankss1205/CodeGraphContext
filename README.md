@@ -357,25 +357,6 @@ Add the following server configuration to your client's settings file (e.g., VS 
         "NEO4J_USERNAME": "YOUR_NEO4J_USERNAME",
         "NEO4J_PASSWORD": "YOUR_NEO4J_PASSWORD"
       },
-      "tools": {
-        "alwaysAllow": [
-          "add_code_to_graph",
-          "add_package_to_graph",
-          "check_job_status",
-          "list_jobs",
-          "find_code",
-          "analyze_code_relationships",
-          "watch_directory",
-          "find_dead_code",
-          "execute_cypher_query",
-          "calculate_cyclomatic_complexity",
-          "find_most_complex_functions",
-          "list_indexed_repositories",
-          "delete_repository",
-          "visualize_graph_query",
-          "list_watched_paths",
-          "unwatch_directory"
-        ],
         "disabled": false
       },
       "disabled": false,
