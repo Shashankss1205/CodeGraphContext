@@ -86,15 +86,17 @@ class RubyTreeSitterParser:
                             name = self._get_node_text(n)
                             break
                 if name:
-                    modules.append({
+                    module_data = {
                         "name": name,
                         "line_number": node.start_point[0] + 1,
                         "end_line": node.end_point[0] + 1,
-                        "source": self._get_node_text(node),
-
                         "lang": self.language_name,
                         "is_dependency": False,
-                    })
+                    }
+                    if self.index_source:
+                        module_data["source"] = self._get_node_text(node)
+                    
+                    modules.append(module_data)
         return modules
 
     def _find_module_inclusions(self, root_node: Any) -> list[Dict[str, Any]]:
@@ -177,8 +179,9 @@ class RubyTreeSitterParser:
                 params.append(self._get_node_text(child))
         return params
 
-    def parse(self, file_path: Path, is_dependency: bool = False) -> Dict[str, Any]:
+    def parse(self, file_path: Path, is_dependency: bool = False, index_source: bool = False) -> Dict[str, Any]:
         """Parses a Ruby file and returns its structure."""
+        self.index_source = index_source
         with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
             source_code = f.read()
 
@@ -245,22 +248,19 @@ class RubyTreeSitterParser:
                 class_context = context if context_type in ('class', 'module') else None
                 docstring = self._get_docstring(func_node)
 
-                functions.append({
+                func_data = {
                     "name": name,
                     "line_number": func_node.start_point[0] + 1,
                     "end_line": func_node.end_point[0] + 1,
                     "args": args,
-                    "source": self._get_node_text(func_node),
-
-                    "docstring": docstring,
-                    "cyclomatic_complexity": self._calculate_complexity(func_node),
-                    "context": context,
-                    "context_type": context_type,
-                    "class_context": class_context,
-                    "decorators": [],
                     "lang": self.language_name,
                     "is_dependency": False,
-                })
+                }
+                if self.index_source:
+                    func_data["source"] = self._get_node_text(func_node)
+                    func_data["docstring"] = docstring
+                
+                functions.append(func_data)
 
         return functions
 
@@ -299,22 +299,28 @@ class RubyTreeSitterParser:
                 # Get superclass for inheritance (simplified)
                 bases = []
 
-                # Get docstring
+                # Get context and docstring
+                context, context_type, _ = self._get_parent_context(class_node)
+                class_context = context if context_type in ('class', 'module') else None
                 docstring = self._get_docstring(class_node)
 
-                classes.append({
+                class_data = {
                     "name": name,
                     "line_number": class_node.start_point[0] + 1,
                     "end_line": class_node.end_point[0] + 1,
                     "bases": bases,
-                    "source": self._get_node_text(class_node),
-
-                    "docstring": docstring,
-                    "context": None,
+                    "context": context,
+                    "context_type": context_type,
+                    "class_context": class_context,
                     "decorators": [],
                     "lang": self.language_name,
                     "is_dependency": False,
-                })
+                }
+                if self.index_source:
+                    class_data["source"] = self._get_node_text(class_node)
+                    class_data["docstring"] = docstring
+                
+                classes.append(class_data)
 
         return classes
 

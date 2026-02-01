@@ -141,7 +141,8 @@ class TypescriptTreeSitterParser:
     def _get_docstring(self, body_node):
         return None
 
-    def parse(self, file_path: Path, is_dependency: bool = False) -> Dict:
+    def parse(self, file_path: Path, is_dependency: bool = False, index_source: bool = False) -> Dict:
+        self.index_source = index_source
         with open(file_path, "r", encoding="utf-8") as f:
             source_code = f.read()
         tree = self.parser.parse(bytes(source_code, "utf8"))
@@ -238,9 +239,7 @@ class TypescriptTreeSitterParser:
                 "line_number": func_node.start_point[0] + 1,
                 "end_line": func_node.end_point[0] + 1,
                 "args": args,
-                "source": self._get_node_text(func_node),
-
-                "docstring": docstring,
+                "args": args,
                 "cyclomatic_complexity": self._calculate_complexity(func_node),
                 "context": context,
                 "context_type": context_type,
@@ -249,6 +248,10 @@ class TypescriptTreeSitterParser:
                 "lang": self.language_name,
                 "is_dependency": False,
             }
+
+            if self.index_source:
+                func_data["source"] = self._get_node_text(func_node)
+                func_data["docstring"] = docstring
             functions.append(func_data)
         return functions
 
@@ -310,13 +313,15 @@ class TypescriptTreeSitterParser:
                     "line_number": class_node.start_point[0] + 1,
                     "end_line": class_node.end_point[0] + 1,
                     "bases": bases,
-                    "source": self._get_node_text(class_node),
-                    "docstring": self._get_docstring(class_node),
+                    "bases": bases,
                     "context": None,
                     "decorators": [],
                     "lang": self.language_name,
                     "is_dependency": False,
                 }
+                if self.index_source:
+                    class_data["source"] = self._get_node_text(class_node)
+                    class_data["docstring"] = self._get_docstring(class_node)
                 classes.append(class_data)
         return classes
     
@@ -333,8 +338,10 @@ class TypescriptTreeSitterParser:
                     "name": name,
                     "line_number": node.start_point[0] + 1,
                     "end_line": node.end_point[0] + 1,
-                    "source": self._get_node_text(node),
+                    "end_line": node.end_point[0] + 1,
                 }
+                if self.index_source:
+                    interface_data["source"] = self._get_node_text(node)
                 interfaces.append(interface_data)
         return interfaces
 
@@ -351,8 +358,10 @@ class TypescriptTreeSitterParser:
                     "name": name,
                     "line_number": node.start_point[0] + 1,
                     "end_line": node.end_point[0] + 1,
-                    "source": self._get_node_text(node),
+                    "end_line": node.end_point[0] + 1,
                 }
+                if self.index_source:
+                    type_alias_data["source"] = self._get_node_text(node)
                 type_aliases.append(type_alias_data)
         return type_aliases
 

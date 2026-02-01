@@ -84,8 +84,9 @@ class CSharpTreeSitterParser:
         self.language = generic_parser_wrapper.language
         self.parser = generic_parser_wrapper.parser
 
-    def parse(self, file_path: Path, is_dependency: bool = False) -> Dict[str, Any]:
+    def parse(self, file_path: Path, is_dependency: bool = False, index_source: bool = False) -> Dict[str, Any]:
         try:
+            self.index_source = index_source
             with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
                 source_code = f.read()
 
@@ -221,7 +222,6 @@ class CSharpTreeSitterParser:
                             "attributes": attributes,
                             "line_number": start_line,
                             "end_line": end_line,
-                            "source": source_text,
                             "file_path": str(file_path),
                             "lang": self.language_name,
                         }
@@ -229,6 +229,9 @@ class CSharpTreeSitterParser:
                         # Add class context if found
                         if class_context:
                             func_data["class_context"] = class_context
+
+                        if self.index_source:
+                            func_data["source"] = source_text
                         
                         functions.append(func_data)
                         
@@ -288,7 +291,6 @@ class CSharpTreeSitterParser:
                             "name": type_name,
                             "line_number": start_line,
                             "end_line": end_line,
-                            "source": source_text,
                             "file_path": str(file_path),
                             "lang": self.language_name,
                         }
@@ -296,6 +298,9 @@ class CSharpTreeSitterParser:
                         # Add bases if found
                         if bases:
                             type_data["bases"] = bases
+
+                        if self.index_source:
+                            type_data["source"] = source_text
                         
                         types.append(type_data)
                         
@@ -467,13 +472,15 @@ class CSharpTreeSitterParser:
                             "type": prop_type,
                             "line_number": start_line,
                             "end_line": end_line,
-                            "source": source_text,
                             "file_path": str(file_path),
                             "lang": self.language_name,
                         }
                         
                         if class_context:
                             prop_data["class_context"] = class_context
+                            
+                        if self.index_source:
+                            prop_data["source"] = source_text
                         
                         properties.append(prop_data)
                         

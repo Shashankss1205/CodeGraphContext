@@ -63,8 +63,9 @@ class PhpTreeSitterParser:
         self.language = generic_parser_wrapper.language
         self.parser = generic_parser_wrapper.parser
 
-    def parse(self, file_path: Path, is_dependency: bool = False) -> Dict[str, Any]:
+    def parse(self, file_path: Path, is_dependency: bool = False, index_source: bool = False) -> Dict[str, Any]:
         try:
+            self.index_source = index_source
             with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
                 source_code = f.read()
 
@@ -191,18 +192,22 @@ class PhpTreeSitterParser:
                         # Get class context
                         context_name, context_type, context_line = self._get_parent_context(node)
 
-                        functions.append({
+                        func_data = {
                             "name": func_name,
                             "parameters": parameters,
                             "line_number": start_line,
                             "end_line": end_line,
-                            "source": source_text,
                             "file_path": str(file_path),
                             "lang": self.language_name,
                             "context": context_name,
                             "context_type": context_type,
                             "class_context": context_name if context_type and ("class" in context_type or "interface" in context_type or "trait" in context_type) else None
-                        })
+                        }
+                        
+                        if self.index_source:
+                            func_data["source"] = source_text
+                        
+                        functions.append(func_data)
                         
                 except Exception as e:
                     error_logger(f"Error parsing function in {file_path}: {e}")
@@ -253,10 +258,11 @@ class PhpTreeSitterParser:
                             "line_number": start_line,
                             "end_line": end_line,
                             "bases": bases,
-                            "source": source_text,
                             "file_path": str(file_path),
                             "lang": self.language_name,
                         }
+                        if self.index_source:
+                            type_data["source"] = source_text
                         
                         if capture_name == "class":
                             classes.append(type_data)
